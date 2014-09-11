@@ -10,13 +10,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="de.afarber.geoquiz.QuizActivity" >
 
-    <TextView
-        android:id="@+id/question_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="24dp" />
+  <TextView
+    android:id="@+id/question_text_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:padding="24dp" />
 
-    <LinearLayout
+    <RelativeLayout
     	android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
@@ -25,20 +26,23 @@
             android:id="@+id/true_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:text="@string/true_button" />
 
         <Button
             android:id="@+id/false_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:text="@string/false_button" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
        <Button
            android:id="@+id/next_button"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
+           android:layout_gravity="bottom|right"
            android:drawablePadding="4dp"
            android:drawableRight="@drawable/arrow_right"
            android:text="@string/next_button" />
