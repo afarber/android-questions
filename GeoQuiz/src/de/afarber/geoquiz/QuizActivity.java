@@ -23,6 +23,7 @@ public class QuizActivity extends ActionBarActivity {
 
 	private Button mTrueButton;
 	private Button mFalseButton;
+	private Button mCheatButton;
 	private Button mNextButton;
 	private TextView mQuestionTextView;
 	
@@ -65,6 +66,18 @@ public class QuizActivity extends ActionBarActivity {
         mQuestionTextView = (TextView)findViewById(R.id.question_text_view);
         updateQuestion();
         
+        mCheatButton = (Button)findViewById(R.id.cheat_button);
+        mCheatButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+            	Intent i = new Intent(QuizActivity.this, CheatActivity.class);
+            	boolean answerIsTrue = mQuestionBank[mCurrentIndex].isTrueQuestion();
+                i.putExtra(CheatActivity.EXTRA_ANSWER_IS_TRUE, answerIsTrue);
+                startActivity(i);
+            }
+        });
+
         mNextButton = (Button)findViewById(R.id.next_button);
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,7 +132,7 @@ public class QuizActivity extends ActionBarActivity {
         		messageResId, 
         		Toast.LENGTH_SHORT).show();
         
-        DisplayNotification("QuizActivity","Hello world!");
+        //DisplayNotification("QuizActivity","Hello world!");
     }
 
     protected void DisplayNotification(String title,String message) { 
