@@ -74,7 +74,7 @@ public class QuizActivity extends ActionBarActivity {
             	Intent i = new Intent(QuizActivity.this, CheatActivity.class);
             	boolean answerIsTrue = mQuestionBank[mCurrentIndex].isTrueQuestion();
                 i.putExtra(CheatActivity.EXTRA_ANSWER_IS_TRUE, answerIsTrue);
-                startActivity(i);
+                startActivityForResult(i, 0);
             }
         });
 
@@ -135,8 +135,8 @@ public class QuizActivity extends ActionBarActivity {
         //DisplayNotification("QuizActivity","Hello world!");
     }
 
-    protected void DisplayNotification(String title,String message) { 
-    	NotificationManager notifManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
+    protected void DisplayNotification(String title,String message) {
+    	NotificationManager mgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
     	Notification note = new Notification(R.drawable.ic_launcher, 
     			title, 
     			System.currentTimeMillis()); 
@@ -145,7 +145,7 @@ public class QuizActivity extends ActionBarActivity {
     			new Intent(this, QuizActivity.class), 
     			0); 
     	note.setLatestEventInfo(this, title, message, intent); 
-    	notifManager.notify(NOTIFICATION_ID, note); 
+    	mgr.notify(NOTIFICATION_ID, note); 
     }
     
     @Override
