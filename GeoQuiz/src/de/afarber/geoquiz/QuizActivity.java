@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 public class QuizActivity extends ActionBarActivity {
 	
 	private static final String TAG = "QuizActivity";
@@ -36,6 +35,7 @@ public class QuizActivity extends ActionBarActivity {
     };
 
     private int mCurrentIndex = 0;
+    private boolean mIsCheater = false;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +83,7 @@ public class QuizActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+                mIsCheater = false;
                 updateQuestion();
             }
         });
@@ -128,6 +129,10 @@ public class QuizActivity extends ActionBarActivity {
 
         int messageResId = (userPressedTrue == answerIsTrue ? R.string.correct_toast : R.string.incorrect_toast);
 
+        if (mIsCheater) {
+            messageResId = R.string.judgment_toast;
+        }
+
         Toast.makeText(this, 
         		messageResId, 
         		Toast.LENGTH_SHORT).show();
@@ -155,6 +160,14 @@ public class QuizActivity extends ActionBarActivity {
         savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null) {
+          return;
+        }
+        mIsCheater = data.getBooleanExtra(CheatActivity.EXTRA_ANSWER_SHOWN, false);
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
