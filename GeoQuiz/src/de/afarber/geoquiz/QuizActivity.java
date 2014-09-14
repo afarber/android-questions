@@ -1,9 +1,12 @@
 package de.afarber.geoquiz;
 
+import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -37,11 +40,17 @@ public class QuizActivity extends ActionBarActivity {
     private int mCurrentIndex = 0;
     private boolean mIsCheater = false;
 	
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB) 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate(Bundle) called");
         setContentView(R.layout.activity_quiz);
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+	        ActionBar actionBar = getActionBar();
+	        actionBar.setSubtitle("Bodies of Water");
+        }
         
         mTrueButton = (Button)findViewById(R.id.true_button);
         mTrueButton.setOnClickListener(new View.OnClickListener() {
