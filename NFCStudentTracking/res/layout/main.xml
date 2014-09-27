@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:alignmentMode="alignBounds"
+    android:rowCount="8" 
+    android:columnCount="4"
+    >
+ <TextView
+        android:id="@+id/info"
+        android:layout_row="0"
+        android:layout_column="0"
+        android:layout_columnSpan="3"
+        android:text="@string/emptyText" />
+ 
+    <TextView
+        android:id="@+id/students"
+        android:layout_row="1"
+        android:layout_column="0"
+        android:layout_columnSpan="3"
+        android:inputType="text"
+        android:text="@string/emptyText" />
+
+    <Button	
+	   	android:id="@+id/webServiceButton"
+		android:text="@string/webServiceButtonText"
+        android:layout_row="7"
+        android:layout_column="1"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		/>
+
+	<Button	
+	  	android:id="@+id/emptyButton"
+		android:text="@string/emptyButtonText"
+        android:layout_row="7"
+        android:layout_column="2"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		/>
+
+    <Button 
+        android:id="@+id/exitButton"
+        android:text="@string/exitButtonText" 
+        android:layout_row="7"
+        android:layout_column="3"
+  		android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+</GridLayout>
