@@ -40,7 +40,6 @@ public class TransportationActivity extends Activity {
         students.setInputType(students.getInputType() | InputType.TYPE_TEXT_FLAG_MULTI_LINE); 
         info.setText("Touch NFC tag to read student data");
         
-     
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
        	 	  
          	  NdefMessage[] messages = getNdefMessages(getIntent());
@@ -58,7 +57,6 @@ public class TransportationActivity extends Activity {
              		studentId=temp[0];
              		studentName=temp[1];
                	 }
-               	 
                }
                
                k += 1;
@@ -78,16 +76,11 @@ public class TransportationActivity extends Activity {
 	       				students.setText(students.getText() + "\n" + Group.getStudentAsString( i ) );
 	       			}
                }
-
            }
           else{
-          	
         	  info.setText("Touch NFC tag to read student data");
-
           }
-        
      
-
         Button webServiceButton = (Button)this.findViewById(R.id.webServiceButton);
         webServiceButton.setOnClickListener(new android.view.View.OnClickListener() 
         {

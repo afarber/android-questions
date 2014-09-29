@@ -16,7 +16,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 
 public class CrimeFragment extends Fragment {
-	public static final String EXTRA_CRIME_ID = "criminalintent.crime_id";
+	public static final String EXTRA_CRIME_ID = "extra_crime_id";
 	
 	private Crime mCrime;
 	
@@ -24,11 +24,18 @@ public class CrimeFragment extends Fragment {
 	private Button mDateButton;
 	private CheckBox mSolvedCheckBox;
 	
+	public static CrimeFragment newInstance(UUID crimeId) {
+		Bundle args = new Bundle();
+		args.putSerializable(EXTRA_CRIME_ID, crimeId);
+		CrimeFragment fragment = new CrimeFragment();
+		fragment.setArguments(args);
+		return fragment;
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		UUID crimeId = (UUID)getActivity().getIntent()
-			.getSerializableExtra(EXTRA_CRIME_ID);
+		UUID crimeId = (UUID)getArguments().getSerializable(EXTRA_CRIME_ID);
 		mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);	
 	}
 	
