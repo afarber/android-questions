@@ -18,12 +18,12 @@ public class CrimePagerActivity extends FragmentActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		mViewPager = new ViewPager(this);
-        mViewPager.setId(R.id.viewPager);
-        setContentView(mViewPager);
+		//mViewPager = new ViewPager(this);
+        //mViewPager.setId(R.id.viewPager1);
+        //setContentView(mViewPager);
         
-		//setContentView(R.layout.crime_pager);
-		//mViewPager = (ViewPager)findViewById(R.id.view_pager);
+		setContentView(R.layout.crime_pager);
+		mViewPager = (ViewPager)findViewById(R.id.viewPager2);
 
 		mCrimes = CrimeLab.get(this).getCrimes();
 		
