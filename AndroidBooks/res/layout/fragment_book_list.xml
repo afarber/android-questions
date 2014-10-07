@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    List of Book Titles
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/scrollTitles">
+
+  <RadioGroup
+      android:id="@+id/bookSelectGroup"
+      android:layout_height="wrap_content"
+      android:layout_width="wrap_content"
+      >
+
+    <RadioButton
+        android:id="@+id/dynamicUiBook"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/dynamicUiTitle"
+        android:checked="true"
+        />
+
+    <RadioButton
+        android:id="@+id/android4NewBook"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/android4NewTitle"
+        />
+
+    <RadioButton
+        android:id="@+id/androidSysDevBook"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/androidSysDevTitle"
+        />
+
+    <RadioButton
+        android:id="@+id/androidEngineBook"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/androidEngineTitle"
+        />
+
+    <RadioButton
+        android:id="@+id/androidDbProgBook"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/androidDbProgTitle"
+        />
+  </RadioGroup>
+</ScrollView>

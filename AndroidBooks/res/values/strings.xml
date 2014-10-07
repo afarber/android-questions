@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Android Books</string>
+  <string name="action_settings">Settings</string>
+  <string name="hello_world">Hello world!</string>
+  <string name="dynamicUiTitle">Creating Dynamic UI with Android Fragments</string>
+  <string name="dynamicUiDescription">This book introduces readers to Fragments, the specific
+    scenarios Fragments address and how to use them. The book will take the reader from the basics
+    of using Fragments, through their use in creating more adaptive and dynamic user experiences.
+    The book teaches readers how to capitalize on many of the built-in UI features that are
+    available through Fragments such list-based navigation, tab-based navigation, and layout
+    adaptation, as well as how to customize an app’s UI behavior by directly managing the creation,
+    appearance, and flow of individual Fragments.
+  </string>
+  <string name="android4NewTitle">Android 4: New Features for Application Development</string>
+  <string name="android4NewDescription">A practical and hands-on guide for developing android
+    applications using new features of Android Ice Cream Sandwich (Android 4.0) with a step-by-step
+    approach and clearly explained sample codes. You will learn the new APIs in Android 4.0 with
+    sample code.
+  </string>
+  <string name="androidSysDevTitle">Instant Android Systems Development How-to</string>
+  <string name="androidSysDevDescription">Provides a gentle introduction to the platform internals
+    without sacrificing depth. Source code examples are designed to be meaningful, but at the same
+    time, do not disguise their real purpose, which is to illustrate systems development techniques
+    and common design patterns in android systems programming.
+  </string>
+  <string name="androidEngineTitle">AndEngine for Android Game Development Cookbook</string>
+  <string name="androidEngineDescription">Contains all of the necessary information and examples in
+    order to build the games as you imagine them.
+  </string>
+  <string name="androidDbProgTitle">Android Database Programming</string>
+  <string name="androidDbProgDescription">Designed to help developers create and design data-centric
+    mobile applications on Google’s Android platform. As the world goes increasingly mobile and as
+    consumers’ demand for data-centric applications rises, knowing how to combine the two
+    effectively will become an increasingly important asset to have as a developer. The book starts
+    by looking at the various local data storage methods on Android, and finishes off by examining
+    external databases and ways you can utilize them from within an Android application.
+  </string>
+  <string name="activityMainLabel">Android Books</string>
+  <string name="bookIndexErrorMessage">Book Index Value Out Of Range</string>
+  <string name="title_activity_book_desc">Book Description</string>
+</resources>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string-array name="bookDescriptions">
+    <item>@string/dynamicUiDescription</item>
+    <item>@string/android4NewDescription</item>
+    <item>@string/androidSysDevDescription</item>
+    <item>@string/androidEngineDescription</item>
+    <item>@string/androidDbProgDescription</item>
+  </string-array>
+  <string-array name="bookTitles">
+    <item>@string/dynamicUiTitle</item>
+    <item>@string/android4NewTitle</item>
+    <item>@string/androidSysDevTitle</item>
+    <item>@string/androidEngineTitle</item>
+    <item>@string/androidDbProgTitle</item>
+  </string-array>
+</resources>
