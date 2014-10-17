@@ -1,6 +1,5 @@
 package de.afarber.androidbooks;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -24,7 +23,7 @@ public class MainActivity extends FragmentActivity
 		Fragment bookDescFragment =
 				fm.findFragmentById(R.id.fragmentDescription);
 
-		// If not found that we are doing dynamic mgmt
+		// If not found than we’re doing dynamic mgmt
 		mIsDynamic = bookDescFragment == null ||
 				!bookDescFragment.isInLayout();
 
@@ -52,21 +51,31 @@ public class MainActivity extends FragmentActivity
 
 	@Override
 	public void onSelectedBookChanged(int bookIndex) {
-		// Access the FragmentManager
-		FragmentManager fragmentManager = getSupportFragmentManager();
-		// Get the book description fragment
-		BookDescFragment bookDescFragment = (BookDescFragment)
-				fragmentManager.findFragmentById(R.id.fragmentDescription);
+		BookDescFragment bookDescFragment;
+		FragmentManager fm = getSupportFragmentManager();
 
 		// Check validity of fragment reference
-		if (bookDescFragment == null || !bookDescFragment.isVisible()) {
-			// Use activity to display description
-			Intent intent = new Intent(this, BookDescActivity.class);
+		if (mIsDynamic) {
+			// Handle dynamic switch to description fragment
+			FragmentTransaction ft = fm.beginTransaction();
 
-			intent.putExtra("bookIndex", bookIndex);
-			startActivity(intent);
+			// Create the fragment and attach book index
+			bookDescFragment = new BookDescFragment();
+			Bundle args = new Bundle();
+			args.putInt(BookDescFragment.BOOK_INDEX, bookIndex);
+			bookDescFragment.setArguments(args);
+
+			// Replace the book list with the description
+			ft.replace(R.id.layoutRoot, bookDescFragment, "bookDescription");
+			ft.addToBackStack(null);
+			ft.setCustomAnimations(android.R.animator.fade_in, 
+								   android.R.animator.fade_out);
+			ft.commit();
+
 		} else {
-			// Use contained fragment to display description
+			// Use the already visible description fragment
+			bookDescFragment = (BookDescFragment)
+					fm.findFragmentById(R.id.fragmentDescription);
 			bookDescFragment.setBook(bookIndex);
 		}
 	}
