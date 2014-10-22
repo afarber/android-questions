@@ -1,27 +1,27 @@
 package de.afarber.draganddraw;
 
 import java.util.ArrayList;
-
 import android.content.Context;
-
 import android.graphics.Canvas;
-
 import android.graphics.Paint;
 import android.graphics.PointF;
-
 import android.util.AttributeSet;
-
 import android.view.MotionEvent;
 import android.view.View;
 
 public class BoxDrawingView extends View {
     private static final String TAG = "BoxDrawingView";
+    private static final int NUM = 3;
 
     private ArrayList<Box> mBoxen = new ArrayList<Box>();
     private Box mCurrentBox;
     private Paint mBoxPaint;
     private Paint mBackgroundPaint;
 
+    private ArrayList<SmallTile> mSmallTiles = new ArrayList<SmallTile>();
+
+    private ArrayList<BigTile> mBigTiles = new ArrayList<BigTile>();
+    
     // used when creating the view in code
     public BoxDrawingView(Context context) {
         this(context, null);
@@ -38,6 +38,14 @@ public class BoxDrawingView extends View {
         // paint the background off-white
         mBackgroundPaint = new Paint();
         mBackgroundPaint.setColor(0xfff8efe0);
+        
+        for (int i = 0; i < NUM; i++) {
+        	SmallTile small = new SmallTile(getContext(), null, "S", Integer.toString(i));
+        	mSmallTiles.add(small);
+        	
+        	BigTile big = new BigTile(getContext(), null, "B", Integer.toString(i));
+        	mBigTiles.add(big);
+        }
     }
 
     @Override
