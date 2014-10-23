@@ -15,4 +15,16 @@
       android:layout_x="10dp"
       android:layout_y="60dp" />
 
+   <de.afarber.testabs.SmallTile
+      android:layout_width="100dp"
+      android:layout_height="wrap_content"
+      android:layout_x="10dp"
+      android:layout_y="120dp" />
+   
+   <de.afarber.testabs.BigTile
+      android:layout_width="100dp"
+      android:layout_height="wrap_content"
+      android:layout_x="10dp"
+      android:layout_y="180dp" />
+   
 </AbsoluteLayout>

@@ -17,7 +17,7 @@ public class SmallTile extends LinearLayout {
     }
 
     public SmallTile(Context context, AttributeSet attrs) {
-        this(context, attrs, null, null);
+        this(context, attrs, "S", "1");
     }
     
     public SmallTile(Context context, AttributeSet attrs, String letter, String value) {

@@ -17,7 +17,7 @@ public class BigTile extends LinearLayout {
     }
 
     public BigTile(Context context, AttributeSet attrs) {
-        this(context, attrs, null, null);
+        this(context, attrs, "B", "4");
     }
     
     public BigTile(Context context, AttributeSet attrs, String letter, String value) {
