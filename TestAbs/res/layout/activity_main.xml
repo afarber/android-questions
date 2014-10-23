@@ -1,0 +1,18 @@
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   android:layout_width="fill_parent"
+   android:layout_height="fill_parent">
+   
+   <Button
+      android:layout_width="100dp"
+      android:layout_height="wrap_content"
+      android:text="OK"
+      android:layout_x="10dp"
+      android:layout_y="10dp" />
+   <Button
+      android:layout_width="100dp"
+      android:layout_height="wrap_content"
+      android:text="Cancel"
+      android:layout_x="10dp"
+      android:layout_y="60dp" />
+
+</AbsoluteLayout>
