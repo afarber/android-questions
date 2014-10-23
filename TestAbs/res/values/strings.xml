@@ -2,7 +2,8 @@
 <resources>
 
     <string name="app_name">TestAbs</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-
+    <string name="btn_ok">OK</string>
+    <string name="btn_cancel">Cancel</string>
+    
 </resources>

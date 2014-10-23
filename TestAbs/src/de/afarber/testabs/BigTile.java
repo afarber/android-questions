@@ -1,12 +1,14 @@
 package de.afarber.testabs;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
+import android.view.Gravity;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class BigTile extends LinearLayout {
+public class BigTile extends FrameLayout {
 	
 	private ImageView mImage;
     private TextView mLetter;
@@ -23,25 +25,33 @@ public class BigTile extends LinearLayout {
     public BigTile(Context context, AttributeSet attrs, String letter, String value) {
         super(context, attrs);
         
-        this.setOrientation(VERTICAL);
-
         mImage = new ImageView(context);
         mImage.setImageResource(R.drawable.big_tile);
-        addView(mImage, new LinearLayout.LayoutParams(
+        addView(mImage, new FrameLayout.LayoutParams(
                 LayoutParams.MATCH_PARENT, 
                 LayoutParams.MATCH_PARENT));
 
         mLetter = new TextView(context);
+        mLetter.setTextSize(60);
         mLetter.setText(letter);
-        addView(mLetter, new LinearLayout.LayoutParams(
+        //mLetter.setBackgroundColor(Color.CYAN);
+        FrameLayout.LayoutParams letterParams = new FrameLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, 
-                LayoutParams.WRAP_CONTENT));
+                LayoutParams.WRAP_CONTENT,
+                Gravity.CENTER);
+        letterParams.setMargins(0, 0, 4, 8);
+        addView(mLetter, letterParams);
         
         mValue = new TextView(context);
+        mValue.setTextSize(18);
         mValue.setText(value);
-        addView(mValue, new LinearLayout.LayoutParams(
+        //mValue.setBackgroundColor(Color.CYAN);
+        FrameLayout.LayoutParams valueParams = new FrameLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, 
-                LayoutParams.WRAP_CONTENT));
+                LayoutParams.WRAP_CONTENT,
+                Gravity.BOTTOM | Gravity.RIGHT);
+        valueParams.setMargins(0, 0, 30, 36);
+        addView(mValue, valueParams);
     }
 
 	public String getLetter() {

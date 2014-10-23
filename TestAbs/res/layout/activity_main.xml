@@ -3,26 +3,27 @@
    android:layout_height="fill_parent">
    
    <Button
-      android:layout_width="100dp"
-      android:layout_height="wrap_content"
-      android:text="OK"
-      android:layout_x="10dp"
-      android:layout_y="10dp" />
+       android:layout_width="100dp"
+       android:layout_height="wrap_content"
+       android:layout_x="10dp"
+       android:layout_y="10dp"
+       android:text="@string/btn_ok" />
+
    <Button
-      android:layout_width="100dp"
-      android:layout_height="wrap_content"
-      android:text="Cancel"
-      android:layout_x="10dp"
-      android:layout_y="60dp" />
+       android:layout_width="100dp"
+       android:layout_height="wrap_content"
+       android:layout_x="10dp"
+       android:layout_y="60dp"
+       android:text="@string/btn_cancel" />
 
    <de.afarber.testabs.SmallTile
-      android:layout_width="100dp"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_x="10dp"
       android:layout_y="120dp" />
    
    <de.afarber.testabs.BigTile
-      android:layout_width="100dp"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_x="10dp"
       android:layout_y="180dp" />
