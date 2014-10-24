@@ -19,7 +19,7 @@ public class SmallTile extends FrameLayout {
     }
 
     public SmallTile(Context context, AttributeSet attrs) {
-        this(context, attrs, "S", "1");
+        this(context, attrs, null, null);
     }
     
     public SmallTile(Context context, AttributeSet attrs, String letter, String value) {
@@ -32,23 +32,27 @@ public class SmallTile extends FrameLayout {
                 LayoutParams.MATCH_PARENT));
 
         mLetter = new TextView(context);
+        mLetter.setTextColor(Color.BLACK);
+        //mLetter.setBackgroundColor(Color.CYAN);
         mLetter.setTextSize(28);
         mLetter.setText(letter);
-        //mLetter.setBackgroundColor(Color.CYAN);
         FrameLayout.LayoutParams letterParams = new FrameLayout.LayoutParams(
-                LayoutParams.WRAP_CONTENT, 
-                LayoutParams.WRAP_CONTENT,
-                Gravity.CENTER);
+            LayoutParams.WRAP_CONTENT, 
+            LayoutParams.WRAP_CONTENT,
+            Gravity.CENTER
+        );
         addView(mLetter, letterParams);
         
         mValue = new TextView(context);
+        mValue.setTextColor(Color.BLACK);
+        //mValue.setBackgroundColor(Color.CYAN);
         mValue.setTextSize(12);
         mValue.setText(value);
-        //mValue.setBackgroundColor(Color.CYAN);
         FrameLayout.LayoutParams valueParams = new FrameLayout.LayoutParams(
-                LayoutParams.WRAP_CONTENT, 
-                LayoutParams.WRAP_CONTENT,
-                Gravity.BOTTOM | Gravity.RIGHT);
+            LayoutParams.WRAP_CONTENT, 
+            LayoutParams.WRAP_CONTENT,
+            Gravity.BOTTOM | Gravity.RIGHT
+        );
         valueParams.setMargins(0, 0, 4, 4);
         addView(mValue, valueParams);
     }

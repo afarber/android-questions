@@ -19,7 +19,7 @@ public class BigTile extends FrameLayout {
     }
 
     public BigTile(Context context, AttributeSet attrs) {
-        this(context, attrs, "B", "4");
+        this(context, attrs, null, null);
     }
     
     public BigTile(Context context, AttributeSet attrs, String letter, String value) {
@@ -32,9 +32,10 @@ public class BigTile extends FrameLayout {
                 LayoutParams.MATCH_PARENT));
 
         mLetter = new TextView(context);
+        mLetter.setTextColor(Color.BLACK);
+        //mLetter.setBackgroundColor(Color.CYAN);
         mLetter.setTextSize(60);
         mLetter.setText(letter);
-        //mLetter.setBackgroundColor(Color.CYAN);
         FrameLayout.LayoutParams letterParams = new FrameLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, 
                 LayoutParams.WRAP_CONTENT,
@@ -43,9 +44,10 @@ public class BigTile extends FrameLayout {
         addView(mLetter, letterParams);
         
         mValue = new TextView(context);
+        mValue.setTextColor(Color.BLACK);
+        //mValue.setBackgroundColor(Color.CYAN);
         mValue.setTextSize(18);
         mValue.setText(value);
-        //mValue.setBackgroundColor(Color.CYAN);
         FrameLayout.LayoutParams valueParams = new FrameLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, 
                 LayoutParams.WRAP_CONTENT,
