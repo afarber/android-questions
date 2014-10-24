@@ -18,7 +18,9 @@ public class MyView extends AbsoluteLayout {
 	public final static String STR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	public final static String APP = "de.afarber.testabs";
 	
-	private Random mRandom = new Random();
+	private Random rnd = new Random();
+	private int oldX;
+	private int oldY;
 
     public MyView(Context context) {
         this(context, null, 0);
@@ -32,7 +34,7 @@ public class MyView extends AbsoluteLayout {
         super(context, attrs, defStyle);
         
         for (int i = 0; i < NUM; i++) {
-        	String letter = String.valueOf(STR.charAt(mRandom.nextInt(STR.length())));
+        	String letter = String.valueOf(STR.charAt(rnd.nextInt(STR.length())));
         	
         	SmallTile tile = new SmallTile(
     			getContext(),
@@ -46,18 +48,18 @@ public class MyView extends AbsoluteLayout {
     }
     
     @Override
-    protected void onSizeChanged (int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
+    protected void onSizeChanged (int w, int h, int oldW, int oldH) {
+        super.onSizeChanged(w, h, oldW, oldH);
 
-    	Log.d(APP, "w=" + w + "; h=" + h + ", oldw=" + oldw + ", oldh=" + oldh);
+    	Log.d(APP, "w=" + w + "; h=" + h + ", oldw=" + oldW + ", oldh=" + oldH);
 
         for (int i = getChildCount() - 1; i >= 0; i--) {
             View child = getChildAt(i);
             if (child.getVisibility() == GONE)
             	return;
             
-        	int x = mRandom.nextInt(w - child.getWidth());
-        	int y = mRandom.nextInt(h - child.getHeight());
+        	int x = rnd.nextInt(w - child.getWidth());
+        	int y = rnd.nextInt(h - child.getHeight());
         	AbsoluteLayout.LayoutParams params = new AbsoluteLayout.LayoutParams(
     			LayoutParams.WRAP_CONTENT, 
     			LayoutParams.WRAP_CONTENT, 
@@ -89,29 +91,44 @@ public class MyView extends AbsoluteLayout {
     }
     
     public boolean onTouchEvent(MotionEvent event) {
-        PointF curr = new PointF(event.getX(), event.getY());
-        
-        Log.d(APP, "hit: " + event.getAction() + " " + hitTest((int)event.getX(), (int)event.getY()));
+    	//super.onTouchEvent(event);
+    	
+    	int x = (int)event.getX();
+    	int y = (int)event.getY();
+    	
+        //PointF pt = new PointF(event.getX(), event.getY());
 
-        /*
+        View view = hitTest((int)event.getX(), (int)event.getY());
+        Log.d(APP, "hit: " + event.getAction() + " " + view);
+        if (view == null || !(view instanceof SmallTile))
+        	return false;
+        
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                if (mCurrentBox != null) {
-                    mCurrentBox.setCurrent(curr);
-                    invalidate();
-                }
-
+            	int newX = view.getLeft() + x - oldX;
+            	int newY = view.getTop() + y - oldY;
+            	AbsoluteLayout.LayoutParams params = new AbsoluteLayout.LayoutParams(
+        			LayoutParams.WRAP_CONTENT, 
+        			LayoutParams.WRAP_CONTENT, 
+        			newX, 
+        			newY
+            	);
+            	
+            	view.setLayoutParams(params);
+            	invalidate();
+                
                 break;
 
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 break;
         }
-        */
         
+    	oldX = x;
+    	oldY = y;
         return true;
     }
 }
