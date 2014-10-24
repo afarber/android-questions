@@ -64,9 +64,9 @@ public class MyView extends AbsoluteLayout {
     			y
         	);
         	
+        	child.setLayoutParams(params);
+        	
         	Log.d(APP, i + ": x=" + x + "; y=" + y);
         }
-        
-        requestLayout();
     }
 }
