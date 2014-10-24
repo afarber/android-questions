@@ -73,5 +73,8 @@ public class SmallTile extends FrameLayout {
 		mValue.setText(value);
 	}
     
-    
+    @Override
+    public String toString() {
+		return "SmallTile " + getLetter();
+    }
 }

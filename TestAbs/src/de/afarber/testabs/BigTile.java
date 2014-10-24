@@ -72,5 +72,8 @@ public class BigTile extends FrameLayout {
 		mValue.setText(value);
 	}
     
-    
+    @Override
+    public String toString() {
+		return "BigTile " + getLetter();
+    }
 }
