@@ -37,7 +37,11 @@ public class BoxDrawingView extends View {
 
         // paint the background off-white
         mBackgroundPaint = new Paint();
-        mBackgroundPaint.setColor(0xfff8efe0);
+        mBackgroundPaint.setColor(0xff888888);
+        
+        //setBackgroundResource(R.drawable.game_board);
+        setHorizontalScrollBarEnabled(true);
+        setVerticalScrollBarEnabled(true);
         
         for (int i = 0; i < NUM; i++) {
         	SmallTile small = new SmallTile(getContext(), null, "S", Integer.toString(i));
@@ -84,6 +88,7 @@ public class BoxDrawingView extends View {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 mCurrentBox = null;
+                awakenScrollBars();
                 break;
         }
         
