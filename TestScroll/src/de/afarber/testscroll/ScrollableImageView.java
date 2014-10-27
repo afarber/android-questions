@@ -1,10 +1,10 @@
 package de.afarber.testscroll;
 
 import android.content.Context;
-import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.widget.ImageView;
@@ -13,7 +13,7 @@ import android.widget.OverScroller;
 
 public class ScrollableImageView extends ImageView {
 
-	private GestureDetectorCompat gestureDetector;
+	private GestureDetector gestureDetector;
 	private OverScroller overScroller;
 
 	private final int screenW;
@@ -41,7 +41,7 @@ public class ScrollableImageView extends ImageView {
 		Log.d(MainActivity.DEBUG_TAG, "screenW=" + screenW + ", screenH=" + screenH);
 
 
-		gestureDetector = new GestureDetectorCompat(context, gestureListener);
+		gestureDetector = new GestureDetector(context, gestureListener);
 		overScroller = new OverScroller(context);
 	}
 	
@@ -68,19 +68,19 @@ public class ScrollableImageView extends ImageView {
 	}
 
 	private int getMaxHorizontal() {
-		Log.d(MainActivity.DEBUG_TAG, "getMaxHorizontal=" + (getDrawable().getBounds().width() - screenW));
+		Log.d(MainActivity.DEBUG_TAG, "getMaxHorizontal=" + (getDrawable().getIntrinsicWidth() - screenW));
 		Log.d(MainActivity.DEBUG_TAG, "getMeasuredWidth=" + getMeasuredWidth());
 		Log.d(MainActivity.DEBUG_TAG, "getWidth=" + getWidth());
 		
-		return (getDrawable().getBounds().width() - screenW);
+		return (getDrawable().getIntrinsicWidth() - screenW);
 	}
 
 	private int getMaxVertical() {
-		Log.d(MainActivity.DEBUG_TAG, "getMaxVertical=" + (getDrawable().getBounds().height() - screenH));
+		Log.d(MainActivity.DEBUG_TAG, "getMaxVertical=" + (getDrawable().getIntrinsicHeight() - screenH));
 		Log.d(MainActivity.DEBUG_TAG, "getMeasuredHeight=" + getMeasuredHeight());
 		Log.d(MainActivity.DEBUG_TAG, "getHeight=" + getHeight());
 	
-		return (getDrawable().getBounds().height() - screenH);
+		return (getDrawable().getIntrinsicHeight() - screenH);
 	}
 
 	private SimpleOnGestureListener gestureListener = new SimpleOnGestureListener() {
