@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 
 
 public class MainActivity extends ActionBarActivity {
-	private static final String DEBUG_TAG = "de.afarber.testscroll";
+	public static final String DEBUG_TAG = "de.afarber.testscroll";
 	private ImageView imageView;
 
     @Override
@@ -27,6 +27,10 @@ public class MainActivity extends ActionBarActivity {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_main);
 		new BitmapLoaderTask().execute("game_board.png");
+	
+        //ScrollableImageView siv = (ScrollableImageView)findViewById(id)
+		//setLayoutParams(new RelativeLayout.LayoutParams(780, 780));
+
     }
 
     @Override
@@ -50,6 +54,7 @@ public class MainActivity extends ActionBarActivity {
     
     private void setImageBitmap(Bitmap bmp) {
 		imageView = new ScrollableImageView(this);
+		Log.d(DEBUG_TAG, "W=" + bmp.getWidth() + ", H=" + bmp.getHeight());
 		imageView.setLayoutParams(new RelativeLayout.LayoutParams(bmp.getWidth(), bmp.getHeight()));
 		imageView.setImageBitmap(bmp);
 		ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
