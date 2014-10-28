@@ -6,9 +6,12 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
+import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener;
 import android.view.View;
 import android.widget.OverScroller;
 
@@ -18,9 +21,13 @@ public class MyView extends View {
 
     private int              offsetX = 0;
     private int              offsetY = 0;
+    private float			 scale = 1.0f;
+    private float			 focusX = 0.0f;
+    private float			 focusY = 0.0f;
     
     private OverScroller     scroller;
     private GestureDetector  gestureDetector;
+    private ScaleGestureDetector scaleDetector;
 
     public MyView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -47,15 +54,40 @@ public class MyView extends View {
                 fling(velocityX, velocityY);
                 return true;
             }
+
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+            	Log.d("onDoubleTap", "e" + e);
+            	offsetX = 0;
+            	offsetY = 0;
+            	scale = 1.0f;
+            	invalidate();
+                return true;
+            }
+        };
+        
+        SimpleOnScaleGestureListener scaleListener = new SimpleOnScaleGestureListener() {
+        	@Override
+        	public boolean onScale(ScaleGestureDetector detector) {
+        		scale *= detector.getScaleFactor();
+    			focusX = detector.getFocusX();
+    			focusY = detector.getFocusY();
+        		
+        		Log.d("onScale", "scale=" + scale + ", focusX=" + focusX + ", focusY=" + focusY);
+        		
+        		invalidate();
+        		return true;
+        	}
         };
         
         gestureDetector = new GestureDetector(context, gestureListener);
+        scaleDetector = new ScaleGestureDetector(context, scaleListener);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        // forward all touch events to the GestureDetector
-        return gestureDetector.onTouchEvent(event);
+        return gestureDetector.onTouchEvent(event) ||
+        		scaleDetector.onTouchEvent(event);
     }
 
     @Override
@@ -69,13 +101,17 @@ public class MyView extends View {
             postInvalidateDelayed(50);
         }
         
+        canvas.save();
+        canvas.translate(offsetX, offsetY);
+        canvas.scale(scale, scale, focusX, focusY);
         gameBoard.setBounds(
-        	offsetX, 
-        	offsetY, 
-        	offsetX + gameBoard.getIntrinsicWidth(),
-        	offsetY + gameBoard.getIntrinsicHeight()
+        	0, 
+        	0, 
+        	gameBoard.getIntrinsicWidth(),
+        	gameBoard.getIntrinsicHeight()
         );
         gameBoard.draw(canvas);  
+        canvas.restore();
     }
 
     // called when the GestureListener detects scroll
@@ -106,11 +142,11 @@ public class MyView extends View {
     }
 
     private int getMaxOffsetX() {
-        return gameBoard.getIntrinsicWidth() - getWidth();
+        return (int) (1 * (gameBoard.getIntrinsicWidth() - getWidth()));
     }
 
     private int getMaxOffsetY() {
-        return gameBoard.getIntrinsicHeight() - getHeight();
+        return (int) (1 * (gameBoard.getIntrinsicHeight() - getHeight()));
     }
 
     private void checkOffset() {
