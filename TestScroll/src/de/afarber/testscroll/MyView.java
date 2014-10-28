@@ -142,11 +142,11 @@ public class MyView extends View {
     }
 
     private int getMaxOffsetX() {
-        return (int) (1 * (gameBoard.getIntrinsicWidth() - getWidth()));
+        return (int) (scale * gameBoard.getIntrinsicWidth() - getWidth());
     }
 
     private int getMaxOffsetY() {
-        return (int) (1 * (gameBoard.getIntrinsicHeight() - getHeight()));
+        return (int) (scale * gameBoard.getIntrinsicHeight() - getHeight());
     }
 
     private void checkOffset() {
