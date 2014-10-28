@@ -84,12 +84,12 @@ public class MyView extends View {
         scaleDetector = new ScaleGestureDetector(context, scaleListener);
     }
 
-    @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return gestureDetector.onTouchEvent(event) ||
-        		scaleDetector.onTouchEvent(event);
+        boolean retVal = scaleDetector.onTouchEvent(event);
+        retVal = gestureDetector.onTouchEvent(event) || retVal;
+        return retVal || super.onTouchEvent(event);
     }
-
+    
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -103,6 +103,7 @@ public class MyView extends View {
         
         canvas.save();
         canvas.translate(offsetX, offsetY);
+        //canvas.scale(scale, scale, 0, 0);
         canvas.scale(scale, scale, focusX, focusY);
         gameBoard.setBounds(
         	0, 
