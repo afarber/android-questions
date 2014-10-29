@@ -19,20 +19,21 @@ public class MyView extends View {
     private Drawable         gameBoard;
     //private ArrayList<Drawable> tiles = new ArrayList<Drawable>();
 
-    private int              offsetX = 0;
-    private int              offsetY = 0;
-    private float			 scale = 1.0f;
-    private float			 focusX = 0.0f;
-    private float			 focusY = 0.0f;
+    private int		offsetX = 0;
+    private int     offsetY = 0;
+    private float	scale = 1.0f;
+    private float	focusX = 0.0f;
+    private float	focusY = 0.0f;
+    private float	minZoom;
+    private float	maxZoom;
     
-    private OverScroller     scroller;
-    private GestureDetector  gestureDetector;
+    private OverScroller     	 scroller;
+    private GestureDetector		 gestureDetector;
     private ScaleGestureDetector scaleDetector;
 
     public MyView(Context context, AttributeSet attrs) {
         super(context, attrs);
         gameBoard = getResources().getDrawable(R.drawable.game_board);
-
         scroller = new OverScroller(context);
 
         SimpleOnGestureListener gestureListener = new SimpleOnGestureListener() {
@@ -57,10 +58,7 @@ public class MyView extends View {
 
             @Override
             public boolean onDoubleTap(MotionEvent e) {
-            	Log.d("onDoubleTap", "e" + e);
-            	offsetX = 0;
-            	offsetY = 0;
-            	scale = 1.0f;
+            	adjustZoom();
             	invalidate();
                 return true;
             }
@@ -88,6 +86,31 @@ public class MyView extends View {
         boolean retVal = scaleDetector.onTouchEvent(event);
         retVal = gestureDetector.onTouchEvent(event) || retVal;
         return retVal || super.onTouchEvent(event);
+    }
+    
+    @Override
+    protected void onSizeChanged (int w, int h, int oldW, int oldH) {
+        super.onSizeChanged(w, h, oldW, oldH);
+        
+    	minZoom = Math.min((float) getWidth() / (float) gameBoard.getIntrinsicWidth(), 
+    					   (float) getHeight() / (float) gameBoard.getIntrinsicHeight());
+
+    	maxZoom = 2 * minZoom;
+    	
+    	adjustZoom();
+    }
+    
+    private void adjustZoom() {
+
+    	Log.d("adjustZoom", "getWidth()=" + getWidth() + ", getHeight()=" + getHeight());
+    	Log.d("adjustZoom", "getIntrinsicWidth()=" + gameBoard.getIntrinsicWidth() + ", getIntrinsicHeight()=" + gameBoard.getIntrinsicHeight());
+    	Log.d("adjustZoom", "minZoom=" + minZoom + ", maxZoom=" + maxZoom);
+
+    	scale = (scale > minZoom ? minZoom : maxZoom);
+    	offsetX = (int) (getWidth() - scale * gameBoard.getIntrinsicWidth()) / 2;
+    	offsetY = (int) (getHeight() - scale * gameBoard.getIntrinsicHeight()) / 2;
+
+    	Log.d("adjustZoom", "scale=" + scale + ", offsetX=" + offsetX + ", offsetY=" + offsetY);
     }
     
     @Override
