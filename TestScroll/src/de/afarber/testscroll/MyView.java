@@ -68,6 +68,8 @@ public class MyView extends View {
         	@Override
         	public boolean onScale(ScaleGestureDetector detector) {
         		scale *= detector.getScaleFactor();
+        		scale = Math.max(scale, minZoom);
+        		scale = Math.min(scale, maxZoom);
     			focusX = detector.getFocusX();
     			focusY = detector.getFocusY();
         		
@@ -107,8 +109,8 @@ public class MyView extends View {
     	Log.d("adjustZoom", "minZoom=" + minZoom + ", maxZoom=" + maxZoom);
 
     	scale = (scale > minZoom ? minZoom : maxZoom);
-    	offsetX = (int) (getWidth() - scale * gameBoard.getIntrinsicWidth()) / 2;
-    	offsetY = (int) (getHeight() - scale * gameBoard.getIntrinsicHeight()) / 2;
+    	offsetX = diffX() / 2;
+    	offsetY = diffY() / 2;
 
     	Log.d("adjustZoom", "scale=" + scale + ", offsetX=" + offsetX + ", offsetY=" + offsetY);
     }
@@ -149,41 +151,62 @@ public class MyView extends View {
 
     // called when the GestureListener detects fling
     public void fling(float velocityX, float velocityY) {
+    	int minX = diffX();
+    	int maxX = 0;
+    	
+    	int minY = diffY();
+    	int maxY = 0;
+    	
+    	if (minX > maxX)
+    		minX = maxX = diffX() / 2;
+    			
+    	if (minY > maxY)
+    		minY = maxY = diffY() / 2;
+    	
         scroller.forceFinished(true);
         scroller.fling(
         	offsetX, 
         	offsetY, 
         	(int) velocityX, 
         	(int) velocityY,  
-        	-getMaxOffsetX(),
-        	0,
-        	-getMaxOffsetY(), 
-        	0,
+        	minX,
+        	maxX,
+        	minY, 
+        	maxY,
         	50,
         	50
         );
         invalidate();
     }
 
-    private int getMaxOffsetX() {
-        return (int) (scale * gameBoard.getIntrinsicWidth() - getWidth());
+    private int diffX() {
+    	return (int) (getWidth() - scale * gameBoard.getIntrinsicWidth());
+
     }
 
-    private int getMaxOffsetY() {
-        return (int) (scale * gameBoard.getIntrinsicHeight() - getHeight());
+    private int diffY() {
+    	return (int) (getHeight() - scale * gameBoard.getIntrinsicHeight());
     }
 
     private void checkOffset() {
-        if (offsetX > 0) {
-            offsetX = 0;
-        } else if (offsetX < -getMaxOffsetX()) {
-            offsetX = -getMaxOffsetX();
-        }
-        
-        if (offsetY > 0) {
-            offsetY = 0;
-        } else if (offsetY < -getMaxOffsetY()) {
-            offsetY = -getMaxOffsetY();
-        }
+    	int minX = diffX();
+    	int maxX = 0;
+    	
+    	int minY = diffY();
+    	int maxY = 0;
+    	
+    	if (minX > maxX)
+    		offsetX = diffX() / 2;
+    	else {
+    		offsetX = Math.max(offsetX, minX);
+    		offsetX = Math.min(offsetX, maxX);
+    	}
+    	
+    	if (minY > maxY)
+    		offsetY = diffY() / 2;
+    	else {
+    		offsetY = Math.max(offsetY, minY);
+    		offsetY = Math.min(offsetY, maxY);
+    	}
     }
 }
