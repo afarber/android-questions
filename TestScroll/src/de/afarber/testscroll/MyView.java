@@ -16,25 +16,23 @@ import android.view.View;
 import android.widget.OverScroller;
 
 public class MyView extends View {
-    private Drawable         gameBoard;
-    //private ArrayList<Drawable> tiles = new ArrayList<Drawable>();
+    private Drawable 	gameBoard = getResources().getDrawable(R.drawable.game_board);
+    private ArrayList<Drawable> tiles = new ArrayList<Drawable>();
 
-    private int		offsetX = 0;
-    private int     offsetY = 0;
-    private float	scale = 1.0f;
-    private float	focusX = 0.0f;
-    private float	focusY = 0.0f;
-    private float	minZoom;
-    private float	maxZoom;
+    private int		mOffsetX = 0;
+    private int     mOffsetY = 0;
+    private float	mScale = 1.0f;
+    private float	mMinZoom;
+    private float	mMaxZoom;
     
-    private OverScroller     	 scroller;
-    private GestureDetector		 gestureDetector;
-    private ScaleGestureDetector scaleDetector;
+    private OverScroller     	 mScroller;
+    private GestureDetector		 mGestureDetector;
+    private ScaleGestureDetector mScaleDetector;
 
     public MyView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        gameBoard = getResources().getDrawable(R.drawable.game_board);
-        scroller = new OverScroller(context);
+        
+        mScroller = new OverScroller(context);
 
         SimpleOnGestureListener gestureListener = new SimpleOnGestureListener() {
             @Override
@@ -67,26 +65,24 @@ public class MyView extends View {
         SimpleOnScaleGestureListener scaleListener = new SimpleOnScaleGestureListener() {
         	@Override
         	public boolean onScale(ScaleGestureDetector detector) {
-        		scale *= detector.getScaleFactor();
-        		scale = Math.max(scale, minZoom);
-        		scale = Math.min(scale, maxZoom);
-    			focusX = detector.getFocusX();
-    			focusY = detector.getFocusY();
+        		mScale *= detector.getScaleFactor();
+        		mScale = Math.max(mScale, mMinZoom);
+        		mScale = Math.min(mScale, mMaxZoom);
         		
-        		Log.d("onScale", "scale=" + scale + ", focusX=" + focusX + ", focusY=" + focusY);
+        		Log.d("onScale", "mScale=" + mScale + ", focusX=" + detector.getFocusX() + ", focusY=" + detector.getFocusY());
         		
         		invalidate();
         		return true;
         	}
         };
         
-        gestureDetector = new GestureDetector(context, gestureListener);
-        scaleDetector = new ScaleGestureDetector(context, scaleListener);
+        mGestureDetector = new GestureDetector(context, gestureListener);
+        mScaleDetector = new ScaleGestureDetector(context, scaleListener);
     }
 
     public boolean onTouchEvent(MotionEvent event) {
-        boolean retVal = scaleDetector.onTouchEvent(event);
-        retVal = gestureDetector.onTouchEvent(event) || retVal;
+        boolean retVal = mScaleDetector.onTouchEvent(event);
+        retVal = mGestureDetector.onTouchEvent(event) || retVal;
         return retVal || super.onTouchEvent(event);
     }
     
@@ -94,25 +90,25 @@ public class MyView extends View {
     protected void onSizeChanged (int w, int h, int oldW, int oldH) {
         super.onSizeChanged(w, h, oldW, oldH);
         
-    	minZoom = Math.min((float) getWidth() / (float) gameBoard.getIntrinsicWidth(), 
+    	mMinZoom = Math.min((float) getWidth() / (float) gameBoard.getIntrinsicWidth(), 
     					   (float) getHeight() / (float) gameBoard.getIntrinsicHeight());
 
-    	maxZoom = 2 * minZoom;
+    	mMaxZoom = 2 * mMinZoom;
     	
     	adjustZoom();
     }
     
     private void adjustZoom() {
 
-    	Log.d("adjustZoom", "getWidth()=" + getWidth() + ", getHeight()=" + getHeight());
-    	Log.d("adjustZoom", "getIntrinsicWidth()=" + gameBoard.getIntrinsicWidth() + ", getIntrinsicHeight()=" + gameBoard.getIntrinsicHeight());
-    	Log.d("adjustZoom", "minZoom=" + minZoom + ", maxZoom=" + maxZoom);
+    	//Log.d("adjustZoom", "getWidth()=" + getWidth() + ", getHeight()=" + getHeight());
+    	//Log.d("adjustZoom", "getIntrinsicWidth()=" + gameBoard.getIntrinsicWidth() + ", getIntrinsicHeight()=" + gameBoard.getIntrinsicHeight());
+    	//Log.d("adjustZoom", "mMinZoom=" + mMinZoom + ", mMaxZoom=" + mMaxZoom);
 
-    	scale = (scale > minZoom ? minZoom : maxZoom);
-    	offsetX = diffX() / 2;
-    	offsetY = diffY() / 2;
+    	mScale = (mScale > mMinZoom ? mMinZoom : mMaxZoom);
+    	mOffsetX = diffX() / 2;
+    	mOffsetY = diffY() / 2;
 
-    	Log.d("adjustZoom", "scale=" + scale + ", offsetX=" + offsetX + ", offsetY=" + offsetY);
+    	Log.d("adjustZoom", "mScale=" + mScale + ", mOffsetX=" + mOffsetX + ", mOffsetY=" + mOffsetY);
     }
     
     @Override
@@ -120,16 +116,15 @@ public class MyView extends View {
         super.onDraw(canvas);
 
         // computeScrollOffset() returns true if a fling is in progress
-        if (scroller.computeScrollOffset()) {
-            offsetX = scroller.getCurrX();
-            offsetY = scroller.getCurrY();
+        if (mScroller.computeScrollOffset()) {
+            mOffsetX = mScroller.getCurrX();
+            mOffsetY = mScroller.getCurrY();
             postInvalidateDelayed(50);
         }
         
         canvas.save();
-        canvas.translate(offsetX, offsetY);
-        //canvas.scale(scale, scale, 0, 0);
-        canvas.scale(scale, scale, focusX, focusY);
+        canvas.translate(mOffsetX, mOffsetY);
+        canvas.scale(mScale, mScale);
         gameBoard.setBounds(
         	0, 
         	0, 
@@ -142,9 +137,9 @@ public class MyView extends View {
 
     // called when the GestureListener detects scroll
     public void scroll(float distanceX, float distanceY) {
-        scroller.forceFinished(true);
-        offsetX -= (int) distanceX;
-        offsetY -= (int) distanceY;
+        mScroller.forceFinished(true);
+        mOffsetX -= (int) distanceX;
+        mOffsetY -= (int) distanceY;
         checkOffset();
         invalidate();
     }
@@ -163,10 +158,10 @@ public class MyView extends View {
     	if (minY > maxY)
     		minY = maxY = diffY() / 2;
     	
-        scroller.forceFinished(true);
-        scroller.fling(
-        	offsetX, 
-        	offsetY, 
+        mScroller.forceFinished(true);
+        mScroller.fling(
+        	mOffsetX, 
+        	mOffsetY, 
         	(int) velocityX, 
         	(int) velocityY,  
         	minX,
@@ -180,12 +175,12 @@ public class MyView extends View {
     }
 
     private int diffX() {
-    	return (int) (getWidth() - scale * gameBoard.getIntrinsicWidth());
+    	return (int) (getWidth() - mScale * gameBoard.getIntrinsicWidth());
 
     }
 
     private int diffY() {
-    	return (int) (getHeight() - scale * gameBoard.getIntrinsicHeight());
+    	return (int) (getHeight() - mScale * gameBoard.getIntrinsicHeight());
     }
 
     private void checkOffset() {
@@ -196,17 +191,17 @@ public class MyView extends View {
     	int maxY = 0;
     	
     	if (minX > maxX)
-    		offsetX = diffX() / 2;
+    		mOffsetX = diffX() / 2;
     	else {
-    		offsetX = Math.max(offsetX, minX);
-    		offsetX = Math.min(offsetX, maxX);
+    		mOffsetX = Math.max(mOffsetX, minX);
+    		mOffsetX = Math.min(mOffsetX, maxX);
     	}
     	
     	if (minY > maxY)
-    		offsetY = diffY() / 2;
+    		mOffsetY = diffY() / 2;
     	else {
-    		offsetY = Math.max(offsetY, minY);
-    		offsetY = Math.min(offsetY, maxY);
+    		mOffsetY = Math.max(mOffsetY, minY);
+    		mOffsetY = Math.min(mOffsetY, maxY);
     	}
     }
 }
