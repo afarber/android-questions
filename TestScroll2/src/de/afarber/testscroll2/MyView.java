@@ -1,6 +1,7 @@
 package de.afarber.testscroll2;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -16,23 +17,32 @@ import android.view.View;
 import android.widget.OverScroller;
 
 public class MyView extends View {
-    private Drawable 	gameBoard = getResources().getDrawable(R.drawable.game_board);
-    private ArrayList<Drawable> tiles = new ArrayList<Drawable>();
+	private final int NUM_TILES = 3;
+	
+    private Drawable mGameBoard = getResources().getDrawable(R.drawable.game_board);
+    private Drawable mBigTile = getResources().getDrawable(R.drawable.big_tile);
+    private ArrayList<Drawable> mTiles = new ArrayList<Drawable>();
 
-    private int		mOffsetX = 0;
-    private int     mOffsetY = 0;
-    private float	mScale = 1.0f;
-    private float	mMinZoom;
-    private float	mMaxZoom;
+    private Random mRandom = new Random();
+    
+    private int	  mOffsetX = 0;
+    private int   mOffsetY = 0;
+    private float mScale = 1.0f;
+    private float mMinZoom;
+    private float mMaxZoom;
     
     private OverScroller     	 mScroller;
     private GestureDetector		 mGestureDetector;
     private ScaleGestureDetector mScaleDetector;
-
+    
     public MyView(Context context, AttributeSet attrs) {
         super(context, attrs);
         
         mScroller = new OverScroller(context);
+        
+        for (int i = 0; i < NUM_TILES; i++) {
+        	mTiles.add(getResources().getDrawable(R.drawable.small_tile));
+        }
 
         SimpleOnGestureListener gestureListener = new SimpleOnGestureListener() {
             @Override
@@ -92,12 +102,28 @@ public class MyView extends View {
     protected void onSizeChanged (int w, int h, int oldW, int oldH) {
         super.onSizeChanged(w, h, oldW, oldH);
         
-    	mMinZoom = Math.min((float) getWidth() / (float) gameBoard.getIntrinsicWidth(), 
-    					   (float) getHeight() / (float) gameBoard.getIntrinsicHeight());
+    	mMinZoom = Math.min((float) getWidth() / (float) mGameBoard.getIntrinsicWidth(), 
+    					   (float) getHeight() / (float) mGameBoard.getIntrinsicHeight());
 
     	mMaxZoom = 2 * mMinZoom;
     	
     	adjustZoom();
+    	
+        mGameBoard.setBounds(
+        	0, 
+        	0, 
+        	mGameBoard.getIntrinsicWidth(),
+        	mGameBoard.getIntrinsicHeight()
+        );
+
+        for (Drawable tile: mTiles) {
+        	tile.setBounds(
+    			mRandom.nextInt(300), 
+    			mRandom.nextInt(400), 
+    			tile.getIntrinsicWidth(), 
+    			tile.getIntrinsicHeight()
+    		);
+        }
     }
     
     private void adjustZoom() {
@@ -127,13 +153,12 @@ public class MyView extends View {
         canvas.save();
         canvas.translate(mOffsetX, mOffsetY);
         canvas.scale(mScale, mScale);
-        gameBoard.setBounds(
-        	0, 
-        	0, 
-        	gameBoard.getIntrinsicWidth(),
-        	gameBoard.getIntrinsicHeight()
-        );
-        gameBoard.draw(canvas);  
+        mGameBoard.draw(canvas);
+        
+        for (Drawable tile: mTiles) {
+        	tile.draw(canvas);
+        }
+        
         canvas.restore();
     }
 
@@ -177,12 +202,12 @@ public class MyView extends View {
     }
 
     private int diffX() {
-    	return (int) (getWidth() - mScale * gameBoard.getIntrinsicWidth());
+    	return (int) (getWidth() - mScale * mGameBoard.getIntrinsicWidth());
 
     }
 
     private int diffY() {
-    	return (int) (getHeight() - mScale * gameBoard.getIntrinsicHeight());
+    	return (int) (getHeight() - mScale * mGameBoard.getIntrinsicHeight());
     }
 
     private void constrainZoom() {
