@@ -99,7 +99,7 @@ public class MyView extends View {
     }
     
     @Override
-    protected void onSizeChanged (int w, int h, int oldW, int oldH) {
+    protected void onSizeChanged(int w, int h, int oldW, int oldH) {
         super.onSizeChanged(w, h, oldW, oldH);
         
     	mMinZoom = Math.min((float) getWidth() / (float) mGameBoard.getIntrinsicWidth(), 
@@ -117,12 +117,16 @@ public class MyView extends View {
         );
 
         for (Drawable tile: mTiles) {
+        	int x = mRandom.nextInt(100);
+        	int y = mRandom.nextInt(200);
         	tile.setBounds(
-    			mRandom.nextInt(300), 
-    			mRandom.nextInt(400), 
-    			tile.getIntrinsicWidth(), 
-    			tile.getIntrinsicHeight()
+        		x,
+        		y,
+    			x + tile.getIntrinsicWidth(), 
+    			y + tile.getIntrinsicHeight()
     		);
+        	
+	    	Log.d("onSizeChanged", "tile=" + tile.getBounds());
         }
     }
     
