@@ -5,7 +5,9 @@ import java.util.Random;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.text.GetChars;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -93,10 +95,34 @@ public class MyView extends View {
         mScaleDetector = new ScaleGestureDetector(context, scaleListener);
     }
 
-    public boolean onTouchEvent(MotionEvent event) {
-        boolean retVal = mScaleDetector.onTouchEvent(event);
-        retVal = mGestureDetector.onTouchEvent(event) || retVal;
-        return retVal || super.onTouchEvent(event);
+    private Drawable hitTest(int x, int y) {
+        for (Drawable tile: mTiles) {
+            Rect rect = tile.getBounds();
+            if (rect.contains(x, y))
+                return tile;
+        }
+
+        return null;
+    }
+    
+    public boolean onTouchEvent(MotionEvent e) {
+    	Log.d("onToucheEvent", "mScale=" + mScale +
+    			", mOffsetX=" + mOffsetX +
+    			", mOffsetY=" + mOffsetY +
+    			", e.getX()=" + e.getX() +
+    			", e.getY()=" + e.getY() +
+    			", e.getRawX()=" + e.getRawX() +
+    			", e.getRawY()=" + e.getRawY()
+    			);
+    	
+    	int x = (int) (e.getX() / mScale - mOffsetX);
+    	int y = (int) (e.getY() / mScale- mOffsetY);
+    	Drawable tile = hitTest(x, y);
+    	Log.d("onToucheEvent", "tile=" + tile);
+    	
+        boolean retVal = mScaleDetector.onTouchEvent(e);
+        retVal = mGestureDetector.onTouchEvent(e) || retVal;
+        return retVal || super.onTouchEvent(e);
     }
     
     @Override
