@@ -25,8 +25,6 @@ public class MyView extends View {
 
     private Random mRandom = new Random();
     
-    private int	  mOffsetX = 0;
-    private int   mOffsetY = 0;
     private float mScale = 1.0f;
     private float mMinZoom;
     private float mMaxZoom;
@@ -51,16 +49,16 @@ public class MyView extends View {
             }
 
             @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            	//Log.d("onScroll", "distanceX=" + distanceX + ", distanceY=" + distanceY);
-                scroll(distanceX, distanceY);
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float dX, float dY) {
+            	Log.d("onScroll", "dX=" + dX + ", dY=" + dY + ", getScrollX=" + getScrollX() + ", getScrollY=" + getScrollY());
+                scroll(dX, dY);
                 return true;
             }
 
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            	//Log.d("onFling", "velocityX=" + velocityX + ", velocityY=" + velocityY);
-                fling(velocityX, velocityY);
+            	Log.d("onFling", "velocityX=" + velocityX + ", velocityY=" + velocityY);
+                //fling(velocityX, velocityY);
                 return true;
             }
 
@@ -75,12 +73,11 @@ public class MyView extends View {
         SimpleOnScaleGestureListener scaleListener = new SimpleOnScaleGestureListener() {
         	@Override
         	public boolean onScale(ScaleGestureDetector detector) {
-        		mScale *= detector.getScaleFactor();
-        		constrainZoom();
+        		float newScale = getScaleX() * detector.getScaleFactor();
+        		setScaleX(newScale);
+        		setScaleY(newScale);
+        		//constrainZoom();
 
-        		mOffsetX = diffX() / 2;
-        		mOffsetY = diffY() / 2;
-        		
         		Log.d("onScale", "mScale=" + mScale + ", focusX=" + detector.getFocusX() + ", focusY=" + detector.getFocusY());
         		
         		invalidate();
@@ -137,10 +134,10 @@ public class MyView extends View {
     	//Log.d("adjustZoom", "mMinZoom=" + mMinZoom + ", mMaxZoom=" + mMaxZoom);
 
     	mScale = (mScale > mMinZoom ? mMinZoom : mMaxZoom);
-    	mOffsetX = diffX() / 2;
-    	mOffsetY = diffY() / 2;
+    	//mOffsetX = diffX() / 2;
+    	//mOffsetY = diffY() / 2;
 
-    	Log.d("adjustZoom", "mScale=" + mScale + ", mOffsetX=" + mOffsetX + ", mOffsetY=" + mOffsetY);
+    	//Log.d("adjustZoom", "mScale=" + mScale + ", mOffsetX=" + mOffsetX + ", mOffsetY=" + mOffsetY);
     }
     
     @Override
@@ -149,29 +146,42 @@ public class MyView extends View {
 
         // computeScrollOffset() returns true if a fling is in progress
         if (mScroller.computeScrollOffset()) {
-            mOffsetX = mScroller.getCurrX();
-            mOffsetY = mScroller.getCurrY();
+        	scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
             postInvalidateDelayed(50);
         }
         
-        canvas.save();
-        canvas.translate(mOffsetX, mOffsetY);
-        canvas.scale(mScale, mScale);
+        //canvas.save();
+        //canvas.translate(mOffsetX, mOffsetY);
+        //canvas.scale(mScale, mScale);
         mGameBoard.draw(canvas);
         
         for (Drawable tile: mTiles) {
         	tile.draw(canvas);
         }
         
-        canvas.restore();
+        //canvas.restore();
     }
 
     // called when the GestureListener detects scroll
-    public void scroll(float distanceX, float distanceY) {
+    public void scroll(float dX, float dY) {
         mScroller.forceFinished(true);
-        mOffsetX -= (int) distanceX;
-        mOffsetY -= (int) distanceY;
-        constrainOffsets();
+        
+        int maxX = (int) (getScaleX() * mGameBoard.getIntrinsicWidth() - getWidth());
+        int maxY = (int) (getScaleY() * mGameBoard.getIntrinsicHeight() - getHeight());
+        
+        int newX = (int) (getScrollX() + dX);
+        if (newX < 0)
+        	newX = 0;
+        else if (newX > maxX)
+        	newX = maxX;
+        
+        int newY = (int) (getScrollY() + dY);
+        if (newY < 0)
+        	newY = 0;
+        else if (newY > maxY)
+        	newY = maxY;
+        
+        scrollTo(newX, newY);
         invalidate();
     }
 
@@ -191,8 +201,8 @@ public class MyView extends View {
     	
         mScroller.forceFinished(true);
         mScroller.fling(
-        	mOffsetX, 
-        	mOffsetY, 
+        	getScrollX(), 
+        	getScrollY(), 
         	(int) velocityX, 
         	(int) velocityY,  
         	minX,
@@ -226,6 +236,7 @@ public class MyView extends View {
     	int minY = diffY();
     	int maxY = 0;
     	
+    	/*
     	if (minX > maxX)
     		mOffsetX = diffX() / 2;
     	else {
@@ -239,5 +250,6 @@ public class MyView extends View {
     		mOffsetY = Math.max(mOffsetY, minY);
     		mOffsetY = Math.min(mOffsetY, maxY);
     	}
+    	*/
     }
 }
