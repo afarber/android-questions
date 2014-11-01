@@ -118,6 +118,7 @@ public class MyView extends View {
 			scroller.forceFinished(true);
 			scroller.fling(getScrollX(), getScrollY(), (int) -velocityX,
 					(int) -velocityY, 0, getMaxOffsetX(), 0, getMaxOffsetY(), 10, 10);
+			invalidate();
 			return true;
 		}
 
