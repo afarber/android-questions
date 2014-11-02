@@ -188,8 +188,6 @@ public class MyView extends View {
     
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
         // computeScrollOffset() returns true if a fling is in progress
         if (mScroller.computeScrollOffset()) {
             mOffsetX = mScroller.getCurrX();
@@ -207,7 +205,6 @@ public class MyView extends View {
         for (Drawable tile: mTiles) {
         	tile.draw(canvas);
         }
-        canvas.restore();
     }
 
     // called when the GestureListener detects scroll
