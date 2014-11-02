@@ -66,8 +66,18 @@ public class MyView extends View {
         	@Override
         	public boolean onScale(ScaleGestureDetector detector) {
         		mScale *= detector.getScaleFactor();
-        		// XXX how to adjust mOffsetX and mOffsetY ?
+
         		constrainZoom();
+
+        		float focusX = detector.getFocusX();
+                float focusY = detector.getFocusY();
+        		
+                mOffsetX = (int) ((mOffsetX + focusX) * mScale - focusX);
+                mOffsetX = Math.min(Math.max(mOffsetX, 0), (int) getWidth() - gameBoard.getIntrinsicWidth());
+        		
+                mOffsetY = (int) ((mOffsetY + focusY) * mScale - focusY);
+                mOffsetY = Math.min(Math.max(mOffsetY, 0), (int) getHeight() - gameBoard.getIntrinsicHeight());
+        		
         		constrainOffsets();
         		
         		Log.d("onScale", "mScale=" + mScale + ", focusX=" + detector.getFocusX() + ", focusY=" + detector.getFocusY());

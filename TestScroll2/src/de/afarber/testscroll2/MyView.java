@@ -3,8 +3,10 @@ package de.afarber.testscroll2;
 import java.util.ArrayList;
 import java.util.Random;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.GetChars;
@@ -26,6 +28,7 @@ public class MyView extends View {
     private ArrayList<Drawable> mTiles = new ArrayList<Drawable>();
 
     private Random mRandom = new Random();
+    private Matrix mMatrix = new Matrix();
     
     private int	  mOffsetX = 0;
     private int   mOffsetY = 0;
@@ -105,7 +108,7 @@ public class MyView extends View {
         return null;
     }
     
-    public boolean onTouchEvent(MotionEvent e) {
+    @SuppressLint("NewApi") public boolean onTouchEvent(MotionEvent e) {
     	Log.d("onToucheEvent", "mScale=" + mScale +
     			", mOffsetX=" + mOffsetX +
     			", mOffsetY=" + mOffsetY +
@@ -115,9 +118,17 @@ public class MyView extends View {
     			", e.getRawY()=" + e.getRawY()
     			);
     	
-    	int x = (int) (e.getX() / mScale - mOffsetX);
-    	int y = (int) (e.getY() / mScale- mOffsetY);
-    	Drawable tile = hitTest(x, y);
+    	float[] point = new float[] {e.getX(), e.getY()};
+
+    	Matrix inverse = new Matrix();
+    	mMatrix.invert(inverse);
+    	inverse.mapPoints(point);
+
+    	float density = getResources().getDisplayMetrics().density;
+    	point[0] /= density;
+    	point[1] /= density;
+    	
+    	Drawable tile = hitTest((int) point[0], (int) point[1]);
     	Log.d("onToucheEvent", "tile=" + tile);
     	
         boolean retVal = mScaleDetector.onTouchEvent(e);
@@ -186,15 +197,16 @@ public class MyView extends View {
             postInvalidateDelayed(50);
         }
         
-        canvas.save();
-        canvas.translate(mOffsetX, mOffsetY);
-        canvas.scale(mScale, mScale);
+        mMatrix.reset();
+        mMatrix.setTranslate(mOffsetX, mOffsetY);
+        mMatrix.postScale(mScale, mScale);
+        canvas.setMatrix(mMatrix);
+        
         mGameBoard.draw(canvas);
         
         for (Drawable tile: mTiles) {
         	tile.draw(canvas);
         }
-        
         canvas.restore();
     }
 
