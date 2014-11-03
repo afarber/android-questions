@@ -3,7 +3,6 @@ package de.afarber.testscroll2;
 import java.util.ArrayList;
 import java.util.Random;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -80,14 +79,21 @@ public class MyView extends View {
         ScaleGestureDetector.SimpleOnScaleGestureListener scaleListener = new ScaleGestureDetector.SimpleOnScaleGestureListener() {
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
-                //mScale *= detector.getScaleFactor();
-                constrainZoom();
+                mMatrix.getValues(mValues);
+                float scaleX = mValues[Matrix.MSCALE_X];
+                //float scaleY = mValues[Matrix.MSCALE_Y];        
 
-                mMatrix.reset();
-                //mMatrix.postTranslate(-100, -100);
+                float newScale = scaleX * detector.getScaleFactor();
 
-                //Log.d("onScale", "mScale=" + mScale + ", focusX=" + detector.getFocusX() + ", focusY=" + detector.getFocusY());
-
+                Log.d("onScale", "scaleX=" + scaleX + ", newScale=" + newScale);
+                
+                if (newScale > mMaxZoom)
+                	mMatrix.setScale(mMaxZoom, mMaxZoom);
+                else if (newScale < mMinZoom)
+                	mMatrix.setScale(mMinZoom, mMinZoom);
+                else
+                	mMatrix.postScale(detector.getScaleFactor(), detector.getScaleFactor());
+                
                 invalidate();
                 return true;
             }
@@ -95,10 +101,6 @@ public class MyView extends View {
 
         mGestureDetector = new GestureDetector(context, gestureListener);
         mScaleDetector = new ScaleGestureDetector(context, scaleListener);
-
-        // pskink just to simulate initial scaling since i am too lazy to test it on
-        // multi touch device
-        // mMatrix.postScale(2, 2);
     }
 
     private Drawable hitTest(int x, int y) {
@@ -110,7 +112,6 @@ public class MyView extends View {
         return null;
     }
 
-    //@SuppressLint("NewApi")
     public boolean onTouchEvent(MotionEvent e) {
     	/*
         Log.d("onToucheEvent", "mScale=" + mScale +
@@ -128,10 +129,6 @@ public class MyView extends View {
         Matrix inverse = new Matrix();
         mMatrix.invert(inverse);
         inverse.mapPoints(point);
-
-        float density = getResources().getDisplayMetrics().density;
-        point[0] /= density;
-        point[1] /= density;
 
         Drawable tile = hitTest((int) point[0], (int) point[1]);
         Log.d("onToucheEvent", "tile = " + tile);
@@ -180,27 +177,20 @@ public class MyView extends View {
     }
 
     private void adjustZoom() {
-        //Log.d("adjustZoom", "getWidth()=" + getWidth() + ", getHeight()=" + getHeight());
-        //Log.d("adjustZoom", "getIntrinsicWidth()=" + gameBoard.getIntrinsicWidth() + ", getIntrinsicHeight()=" + gameBoard.getIntrinsicHeight());
-        //Log.d("adjustZoom", "mMinZoom=" + mMinZoom + ", mMaxZoom=" + mMaxZoom);
-
         mMatrix.getValues(mValues);
-        
         float scaleX = mValues[Matrix.MSCALE_X];
         //float scaleY = mValues[Matrix.MSCALE_Y];        
     	
         float newScale = (scaleX > mMinZoom ? mMinZoom : mMaxZoom);
         
-        mMatrix.setScale(newScale, newScale);
-        //mOffsetX = diffX() / 2;
-        //mOffsetY = diffY() / 2;
+        Log.d("adjustZoom", "scaleX=" + scaleX + ", newScale=" + newScale);
 
-        //Log.d("adjustZoom", "mScale=" + mScale + ", mOffsetX=" + mOffsetX + ", mOffsetY=" + mOffsetY);
+        mMatrix.setScale(newScale, newScale);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        // computeScrollOffset() returns true if a fling is in progress
+        // if fling is in progress
         if (mScroller.computeScrollOffset()) {
             Log.d("onDraw", "getCurrX()=" + mScroller.getCurrX() + ", getCurrY()=" + mScroller.getCurrY());
         	
@@ -282,26 +272,4 @@ public class MyView extends View {
         );
         invalidate();
     }
-
-    private int diffX() {
-        mMatrix.getValues(mValues);
-        float scaleX = mValues[Matrix.MSCALE_X];
-        //float scaleY = mValues[Matrix.MSCALE_Y];        
-    	
-        return (int) (getWidth() - scaleX * mGameBoard.getIntrinsicWidth());
-    }
-
-    private int diffY() {
-        mMatrix.getValues(mValues);
-        //float scaleX = mValues[Matrix.MSCALE_X];
-        float scaleY = mValues[Matrix.MSCALE_Y];        
-    	
-        return (int) (getHeight() - scaleY * mGameBoard.getIntrinsicHeight());
-    }
-
-    private void constrainZoom() {
-        //mScale = Math.max(mScale, mMinZoom);
-        //mScale = Math.min(mScale, mMaxZoom);
-    }
-
 }
