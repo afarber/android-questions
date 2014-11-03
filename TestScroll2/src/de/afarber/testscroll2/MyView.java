@@ -83,16 +83,17 @@ public class MyView extends View {
                 float scaleX = mValues[Matrix.MSCALE_X];
                 //float scaleY = mValues[Matrix.MSCALE_Y];        
 
-                float newScale = scaleX * detector.getScaleFactor();
+                float factor = detector.getScaleFactor();
+                float newScale = scaleX * factor;
 
                 Log.d("onScale", "scaleX=" + scaleX + ", newScale=" + newScale);
-                
+
                 if (newScale > mMaxZoom)
-                	mMatrix.setScale(mMaxZoom, mMaxZoom);
+                	factor = mMaxZoom / scaleX;
                 else if (newScale < mMinZoom)
-                	mMatrix.setScale(mMinZoom, mMinZoom);
-                else
-                	mMatrix.postScale(detector.getScaleFactor(), detector.getScaleFactor());
+                	factor = mMinZoom / scaleX;
+                
+                mMatrix.postScale(factor, factor);
                 
                 invalidate();
                 return true;
@@ -225,7 +226,7 @@ public class MyView extends View {
 			", oldX=" + oldX + ", oldY=" + oldY +
 			", newX=" + newX + ", newY=" + newY +
 			", minX=" + minX + ", minY=" + minY);
-
+/*
         if (newX > 0)
         	dX += newX;
         else if (newX < minX)
@@ -235,7 +236,7 @@ public class MyView extends View {
         	dY += newY;
         else if (newY < minY)
         	dY -= (minY - newY);
-        
+*/        
         mMatrix.postTranslate(-dX, -dY);
         invalidate();
     }
