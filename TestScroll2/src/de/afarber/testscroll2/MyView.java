@@ -55,14 +55,12 @@ public class MyView extends View {
 
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float dX, float dY) {
-                //Log.d("onScroll", "dX=" + dX + ", deY=" + dY);
                 scroll(dX, dY);
                 return true;
             }
 
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float vX, float vY) {
-                //Log.d("onFling", "vX=" + vX + ", vY=" + vY);
                 fling(vX, vY);
                 return true;
             }
@@ -79,10 +77,13 @@ public class MyView extends View {
         ScaleGestureDetector.SimpleOnScaleGestureListener scaleListener = new ScaleGestureDetector.SimpleOnScaleGestureListener() {
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
+                mScroller.forceFinished(true);
                 mMatrix.getValues(mValues);
+                //float oldX = mValues[Matrix.MTRANS_X];
+                //float oldY = mValues[Matrix.MTRANS_Y];
                 float scaleX = mValues[Matrix.MSCALE_X];
-                //float scaleY = mValues[Matrix.MSCALE_Y];        
-
+                //float scaleY = mValues[Matrix.MSCALE_Y];
+                
                 float factor = detector.getScaleFactor();
                 float newScale = scaleX * factor;
 
@@ -116,8 +117,6 @@ public class MyView extends View {
     public boolean onTouchEvent(MotionEvent e) {
     	/*
         Log.d("onToucheEvent", "mScale=" + mScale +
-                        ", mOffsetX=" + mOffsetX +
-                        ", mOffsetY=" + mOffsetY +
                         ", e.getX()=" + e.getX() +
                         ", e.getY()=" + e.getY() +
                         ", e.getRawX()=" + e.getRawX() +
@@ -178,15 +177,22 @@ public class MyView extends View {
     }
 
     private void adjustZoom() {
+        mScroller.forceFinished(true);
         mMatrix.getValues(mValues);
+        //float oldX = mValues[Matrix.MTRANS_X];
+        //float oldY = mValues[Matrix.MTRANS_Y];
         float scaleX = mValues[Matrix.MSCALE_X];
-        //float scaleY = mValues[Matrix.MSCALE_Y];        
-    	
-        float newScale = (scaleX > mMinZoom ? mMinZoom : mMaxZoom);
+        //float scaleY = mValues[Matrix.MSCALE_Y];
         
-        Log.d("adjustZoom", "scaleX=" + scaleX + ", newScale=" + newScale);
+        float newScale = (scaleX > mMinZoom ? mMinZoom : mMaxZoom);
+        float minX = getWidth() - newScale * mGameBoard.getIntrinsicWidth();
+        float minY = getHeight() - newScale * mGameBoard.getIntrinsicHeight();
+      
+        Log.d("adjustZoom", "scaleX=" + scaleX + ", newScale=" + newScale +
+        		", minX=" + minX + ", minY=" + minY);
 
         mMatrix.setScale(newScale, newScale);
+        mMatrix.postTranslate(minX / 2, minY / 2);
     }
 
     @Override
@@ -209,16 +215,15 @@ public class MyView extends View {
 
     public void scroll(float dX, float dY) {
         mScroller.forceFinished(true);
-
         mMatrix.getValues(mValues);
-        
         float oldX = mValues[Matrix.MTRANS_X];
         float oldY = mValues[Matrix.MTRANS_Y];
+        float scaleX = mValues[Matrix.MSCALE_X];
+        float scaleY = mValues[Matrix.MSCALE_Y];
+        
         float newX = oldX - dX;
         float newY = oldY - dY;
         
-        float scaleX = mValues[Matrix.MSCALE_X];
-        float scaleY = mValues[Matrix.MSCALE_Y];
         float minX = getWidth() - scaleX * mGameBoard.getIntrinsicWidth();
         float minY = getHeight() - scaleY * mGameBoard.getIntrinsicHeight();
 
@@ -226,7 +231,7 @@ public class MyView extends View {
 			", oldX=" + oldX + ", oldY=" + oldY +
 			", newX=" + newX + ", newY=" + newY +
 			", minX=" + minX + ", minY=" + minY);
-/*
+
         if (newX > 0)
         	dX += newX;
         else if (newX < minX)
@@ -236,19 +241,18 @@ public class MyView extends View {
         	dY += newY;
         else if (newY < minY)
         	dY -= (minY - newY);
-*/        
+        
         mMatrix.postTranslate(-dX, -dY);
         invalidate();
     }
 
     public void fling(float vX, float vY) {
+        mScroller.forceFinished(true);
         mMatrix.getValues(mValues);
-        
         float oldX = mValues[Matrix.MTRANS_X];
         float oldY = mValues[Matrix.MTRANS_Y];
-        
         float scaleX = mValues[Matrix.MSCALE_X];
-        float scaleY = mValues[Matrix.MSCALE_Y];        
+        float scaleY = mValues[Matrix.MSCALE_Y];
 
         float minX = getWidth() - scaleX * mGameBoard.getIntrinsicWidth();
         float minY = getHeight() - scaleY * mGameBoard.getIntrinsicHeight();
