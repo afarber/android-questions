@@ -199,9 +199,19 @@ public class MyView extends View {
     protected void onDraw(Canvas canvas) {
         // if fling is in progress
         if (mScroller.computeScrollOffset()) {
-            Log.d("onDraw", "getCurrX()=" + mScroller.getCurrX() + ", getCurrY()=" + mScroller.getCurrY());
-        	
-            mMatrix.setTranslate(mScroller.getCurrX(), mScroller.getCurrY());
+        	mMatrix.getValues(mValues);
+            float oldX = mValues[Matrix.MTRANS_X];
+            float oldY = mValues[Matrix.MTRANS_Y];
+            //float scaleX = mValues[Matrix.MSCALE_X];
+            //float scaleY = mValues[Matrix.MSCALE_Y];
+            
+            float dX = mScroller.getCurrX() - oldX;
+            float dY = mScroller.getCurrY() - oldY;
+/*            
+            Log.d("onDraw", "oldX=" + oldX + ", oldY=" + oldY +
+            		", getCurrX()=" + mScroller.getCurrX() + ", getCurrY()=" + mScroller.getCurrY());
+*/
+            mMatrix.postTranslate(dX, dY);
             postInvalidateDelayed(50);
         }
 
