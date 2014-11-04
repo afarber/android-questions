@@ -224,8 +224,8 @@ public class MyView extends View {
     public void fling(float vX, float vY) {
         mScroller.forceFinished(true);
         mMatrix.getValues(mValues);
-        float oldX = mValues[Matrix.MTRANS_X];
-        float oldY = mValues[Matrix.MTRANS_Y];
+        float x = mValues[Matrix.MTRANS_X];
+        float y = mValues[Matrix.MTRANS_Y];
         float scaleX = mValues[Matrix.MSCALE_X];
         float scaleY = mValues[Matrix.MSCALE_Y];
 
@@ -242,14 +242,14 @@ public class MyView extends View {
         	minY = maxY = minY / 2;
       
         Log.d("fling", "vX=" + vX + ", vY=" + vY +
-			", oldX=" + oldX + ", oldY=" + oldY +
+			", x=" + x + ", y=" + y +
 			", scaleX=" + scaleX + ", scaleY=" + scaleY +
 			", minX=" + minX + ", minY=" + minY);
         
         mScroller.forceFinished(true);
         mScroller.fling(
-                (int) oldX,
-                (int) oldY,
+                (int) x,
+                (int) y,
                 (int) vX,
                 (int) vY,
                 (int) minX,
