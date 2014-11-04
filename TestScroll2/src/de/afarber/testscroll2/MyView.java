@@ -132,6 +132,11 @@ public class MyView extends View {
 
         Drawable tile = hitTest((int) point[0], (int) point[1]);
         Log.d("onToucheEvent", "tile = " + tile);
+        
+        if (tile != null) {
+        	// XXX display/drag/hide big tile
+        	return true;
+        }
 
         boolean retVal = mScaleDetector.onTouchEvent(e);
         retVal = mGestureDetector.onTouchEvent(e) || retVal;
@@ -241,13 +246,17 @@ public class MyView extends View {
 			", oldX=" + oldX + ", oldY=" + oldY +
 			", newX=" + newX + ", newY=" + newY +
 			", minX=" + minX + ", minY=" + minY);
-
-        if (newX > 0)
+        
+        if (minX >= 0)
+        	dX = oldX - minX / 2;
+        else if (newX > 0)
         	dX += newX;
         else if (newX < minX)
         	dX -= (minX - newX);
         
-        if (newY > 0)
+        if (minY >= 0)
+        	dY = oldY - minY / 2;
+        else if (newY > 0)
         	dY += newY;
         else if (newY < minY)
         	dY -= (minY - newY);
@@ -266,6 +275,15 @@ public class MyView extends View {
 
         float minX = getWidth() - scaleX * mGameBoard.getIntrinsicWidth();
         float minY = getHeight() - scaleY * mGameBoard.getIntrinsicHeight();
+        float maxX = 0;
+        float maxY = 0;
+        
+        // if scaled game board is smaller than this view -
+        // then place it in the middle of the view
+        if (minX >= 0)
+        	minX = maxX = minX / 2;
+        if (minY >= 0)
+        	minY = maxY = minY / 2;
       
         Log.d("fling", "vX=" + vX + ", vY=" + vY +
 			", oldX=" + oldX + ", oldY=" + oldY +
@@ -279,9 +297,9 @@ public class MyView extends View {
                 (int) vX,
                 (int) vY,
                 (int) minX,
-                0,
+                (int) maxX,
                 (int) minY,
-                0,
+                (int) maxY,
                 50,
                 50
         );
