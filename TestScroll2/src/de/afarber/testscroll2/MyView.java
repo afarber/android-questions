@@ -78,24 +78,10 @@ public class MyView extends View {
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
                 mScroller.forceFinished(true);
-                mMatrix.getValues(mValues);
-                //float oldX = mValues[Matrix.MTRANS_X];
-                //float oldY = mValues[Matrix.MTRANS_Y];
-                float scaleX = mValues[Matrix.MSCALE_X];
-                //float scaleY = mValues[Matrix.MSCALE_Y];
-                
                 float factor = detector.getScaleFactor();
-                float newScale = scaleX * factor;
-
-                Log.d("onScale", "scaleX=" + scaleX + ", newScale=" + newScale);
-
-                if (newScale > mMaxZoom)
-                	factor = mMaxZoom / scaleX;
-                else if (newScale < mMinZoom)
-                	factor = mMinZoom / scaleX;
-                
+                Log.d("onScale", "factor=" + factor);
                 mMatrix.postScale(factor, factor);
-                
+                fixScaling();
                 invalidate();
                 return true;
             }
@@ -230,38 +216,8 @@ public class MyView extends View {
 
     public void scroll(float dX, float dY) {
         mScroller.forceFinished(true);
-        mMatrix.getValues(mValues);
-        float oldX = mValues[Matrix.MTRANS_X];
-        float oldY = mValues[Matrix.MTRANS_Y];
-        float scaleX = mValues[Matrix.MSCALE_X];
-        float scaleY = mValues[Matrix.MSCALE_Y];
-        
-        float newX = oldX - dX;
-        float newY = oldY - dY;
-        
-        float minX = getWidth() - scaleX * mGameBoard.getIntrinsicWidth();
-        float minY = getHeight() - scaleY * mGameBoard.getIntrinsicHeight();
-
-        Log.d("scroll", "dX=" + dX + ", dY=" + dY +
-			", oldX=" + oldX + ", oldY=" + oldY +
-			", newX=" + newX + ", newY=" + newY +
-			", minX=" + minX + ", minY=" + minY);
-        
-        if (minX >= 0)
-        	dX = oldX - minX / 2;
-        else if (newX > 0)
-        	dX += newX;
-        else if (newX < minX)
-        	dX -= (minX - newX);
-        
-        if (minY >= 0)
-        	dY = oldY - minY / 2;
-        else if (newY > 0)
-        	dY += newY;
-        else if (newY < minY)
-        	dY -= (minY - newY);
-        
         mMatrix.postTranslate(-dX, -dY);
+        fixTranslation();
         invalidate();
     }
 
@@ -305,4 +261,56 @@ public class MyView extends View {
         );
         invalidate();
     }
+    
+    private void fixScaling() {
+        mMatrix.getValues(mValues);
+        //float x = mValues[Matrix.MTRANS_X];
+        //float y = mValues[Matrix.MTRANS_Y];
+        float scaleX = mValues[Matrix.MSCALE_X];
+        //float scaleY = mValues[Matrix.MSCALE_Y];
+
+        //float minX = getWidth() - scaleX * mGameBoard.getIntrinsicWidth();
+        //float minY = getHeight() - scaleY * mGameBoard.getIntrinsicHeight();   
+        
+        if (scaleX > mMaxZoom) {
+        	float factor = mMaxZoom / scaleX;
+            mMatrix.postScale(factor, factor);
+        } else if (scaleX < mMinZoom) {
+        	float factor = mMinZoom / scaleX;
+            mMatrix.postScale(factor, factor);
+        }
+    }
+    
+    private void fixTranslation() {
+        mMatrix.getValues(mValues);
+        float x = mValues[Matrix.MTRANS_X];
+        float y = mValues[Matrix.MTRANS_Y];
+        float scaleX = mValues[Matrix.MSCALE_X];
+        float scaleY = mValues[Matrix.MSCALE_Y];
+
+        float minX = getWidth() - scaleX * mGameBoard.getIntrinsicWidth();
+        float minY = getHeight() - scaleY * mGameBoard.getIntrinsicHeight();    	
+
+        float dX = 0.0f;
+        float dY = 0.0f;
+        
+        if (minX >= 0)
+        	dX = minX / 2 - x;
+        else if (x > 0)
+        	dX = -x;
+        else if (x < minX)
+        	dX = minX - x;
+        
+        if (minY >= 0)
+        	dY = minY / 2 - y;
+        else if (y > 0)
+        	dY = -y;
+        else if (y < minY)
+        	dY = minY - y;
+        
+        if (dX != 0.0 || dY != 0.0)
+        	mMatrix.postTranslate(dX, dY);
+    }
+    
+    
 }
