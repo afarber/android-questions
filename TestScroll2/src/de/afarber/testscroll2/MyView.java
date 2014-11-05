@@ -149,8 +149,8 @@ public class MyView extends View {
 	            	mPrevY = y;
 
 	            	Rect rect = mDragged.copyBounds();
-	            	rect.left += dX;
-	            	rect.top  += dY;
+	            	rect.left += Math.round(dX);
+	            	rect.top  += Math.round(dY);
 	            	rect.right  = rect.left + mDragged.getIntrinsicWidth();
 	            	rect.bottom = rect.top + mDragged.getIntrinsicHeight();
 	            	mDragged.setBounds(rect);
