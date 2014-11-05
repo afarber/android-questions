@@ -22,6 +22,7 @@ public class MyView extends View {
     private Drawable mGameBoard = getResources().getDrawable(R.drawable.game_board);
     private Drawable mBigTile = getResources().getDrawable(R.drawable.big_tile);
     private ArrayList<Drawable> mTiles = new ArrayList<Drawable>();
+    private Drawable mDragged = null;
 
     private Random mRandom = new Random();
     private Matrix mMatrix = new Matrix();
@@ -43,8 +44,11 @@ public class MyView extends View {
 
         mScroller = new OverScroller(context);
 
+        mBigTile.setAlpha(200);
         for (int i = 0; i < NUM_TILES; i++) {
-            mTiles.add(getResources().getDrawable(R.drawable.small_tile));
+        	Drawable tile = getResources().getDrawable(R.drawable.small_tile);
+        	tile.setAlpha(200);
+            mTiles.add(tile);
         }
 
         GestureDetector.SimpleOnGestureListener gestureListener = new GestureDetector.SimpleOnGestureListener() {
@@ -97,10 +101,10 @@ public class MyView extends View {
         );
     }
 
-    private Drawable hitTest(int x, int y) {
+    private Drawable hitTest(float x, float y) {
         for (Drawable tile: mTiles) {
             Rect rect = tile.getBounds();
-            if (rect.contains(x, y))
+            if (rect.contains((int) x, (int) y))
                 return tile;
         }
         return null;
@@ -117,19 +121,44 @@ public class MyView extends View {
 		*/
     	
         float[] point = new float[] {e.getX(), e.getY()};
-
         Matrix inverse = new Matrix();
         mMatrix.invert(inverse);
         inverse.mapPoints(point);
+        float x = point[0];
+        float y = point[1];
 
-        Drawable tile = hitTest((int) point[0], (int) point[1]);
-        Log.d("onToucheEvent", "tile = " + tile);
-        
-        if (tile != null) {
-        	// XXX display/drag/hide big tile
-        	return true;
+        switch (e.getAction()) {
+	        case MotionEvent.ACTION_DOWN: 
+	            Drawable tile = hitTest(x, y);
+	            Log.d("onToucheEvent", "tile = " + tile);
+	            if (tile != null) {
+	            	mDragged = tile;
+	            	return true;
+	            }
+	        break;
+	            
+	        case MotionEvent.ACTION_MOVE:
+	        	if (mDragged != null) {
+	        		mDragged.setBounds(
+        				(int) x, 
+        				(int) y, 
+        				(int) x + mDragged.getIntrinsicWidth(), 
+        				(int) y + mDragged.getIntrinsicHeight()
+        			);
+	        		invalidate();
+	        		return true;
+	        	}
+	        break;
+	
+	        case MotionEvent.ACTION_UP:
+	        case MotionEvent.ACTION_CANCEL:
+	        	if (mDragged != null) {
+	        		mDragged = null;
+	        		return true;
+	        	}
+	        break;
         }
-
+        
         boolean retVal = mScaleDetector.onTouchEvent(e);
         retVal = mGestureDetector.onTouchEvent(e) || retVal;
         return retVal || super.onTouchEvent(e);
