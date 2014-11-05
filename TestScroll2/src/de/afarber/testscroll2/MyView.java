@@ -30,6 +30,8 @@ public class MyView extends View {
 
     private float mMinZoom;
     private float mMaxZoom;
+    
+    private Rect mPrevRect;
     private float mPrevX;
     private float mPrevY;
 
@@ -135,6 +137,7 @@ public class MyView extends View {
 	            Log.d("onToucheEvent", "tile = " + tile);
 	            if (tile != null) {
 	            	mDragged = tile;
+	            	mPrevRect = mDragged.copyBounds();
 	            	mPrevX = x;
 	            	mPrevY = y;
 	            	return true;
@@ -143,17 +146,12 @@ public class MyView extends View {
 	            
 	        case MotionEvent.ACTION_MOVE:
 	        	if (mDragged != null) {
-	        		float dX = x - mPrevX;
-	        		float dY = y - mPrevY;
-	            	mPrevX = x;
-	            	mPrevY = y;
-
-	            	Rect rect = mDragged.copyBounds();
-	            	rect.left += Math.round(dX);
-	            	rect.top  += Math.round(dY);
-	            	rect.right  = rect.left + mDragged.getIntrinsicWidth();
-	            	rect.bottom = rect.top + mDragged.getIntrinsicHeight();
-	            	mDragged.setBounds(rect);
+	        		int dX = Math.round(x - mPrevX);
+	        		int dY = Math.round(y - mPrevY);
+	        		
+	        		Rect rect = new Rect(mPrevRect);
+	        		rect.offset(dX, dY);
+	        		mDragged.setBounds(rect);
 	        		invalidate();
 	        		return true;
 	        	}
