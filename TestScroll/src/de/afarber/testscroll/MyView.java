@@ -14,16 +14,17 @@ import android.view.View;
 import android.widget.OverScroller;
 
 public class MyView extends View {
+    private Drawable mGameBoard = getResources().getDrawable(R.drawable.game_board);
+    
     private OverScroller     	 mScroller;
     private GestureDetector		 mGestureDetector;
     private ScaleGestureDetector mScaleDetector;
-    private Drawable mGameBoard = getResources().getDrawable(R.drawable.game_board);
 
-    private int		mOffsetX = 0;
-    private int     mOffsetY = 0;
-    private float	mScale = 1.0f;
-    private float	mMinZoom;
-    private float	mMaxZoom;
+    private float mOffsetX = 0;
+    private float mOffsetY = 0;
+    private float mScale   = 1.0f;
+    private float mMinZoom = 1.0f;
+    private float mMaxZoom = 1.0f;
 
     public MyView(Context context) {
         this(context, null);
@@ -147,11 +148,11 @@ public class MyView extends View {
     }
 
     public void fling(float vX, float vY) {
-    	int minX = diffX();
-    	int maxX = 0;
+    	float minX = diffX();
+    	float maxX = 0.0f;
     	
-    	int minY = diffY();
-    	int maxY = 0;
+    	float minY = diffY();
+    	float maxY = 0.0f;
     	
     	if (minX > maxX)
     		minX = maxX = diffX() / 2;
@@ -161,27 +162,27 @@ public class MyView extends View {
     	
         mScroller.forceFinished(true);
         mScroller.fling(
-        	mOffsetX, 
-        	mOffsetY, 
+        	(int) mOffsetX, 
+        	(int) mOffsetY, 
         	(int) vX, 
         	(int) vY,  
-        	minX,
-        	maxX,
-        	minY, 
-        	maxY,
+        	(int) minX,
+        	(int) maxX,
+        	(int) minY, 
+        	(int) maxY,
         	50,
         	50
         );
         invalidate();
     }
 
-    private int diffX() {
-    	return (int) (getWidth() - mScale * mGameBoard.getIntrinsicWidth());
+    private float diffX() {
+    	return getWidth() - mScale * mGameBoard.getIntrinsicWidth();
 
     }
 
-    private int diffY() {
-    	return (int) (getHeight() - mScale * mGameBoard.getIntrinsicHeight());
+    private float diffY() {
+    	return getHeight() - mScale * mGameBoard.getIntrinsicHeight();
     }
 
     private void constrainZoom() {
@@ -190,11 +191,11 @@ public class MyView extends View {
     }
     
     private void constrainOffsets() {
-    	int minX = diffX();
-    	int maxX = 0;
+    	float minX = diffX();
+    	float maxX = 0.0f;
     	
-    	int minY = diffY();
-    	int maxY = 0;
+    	float minY = diffY();
+    	float maxY = 0.0f;
     	
     	if (minX > maxX)
     		mOffsetX = diffX() / 2;
