@@ -68,7 +68,6 @@ public class MyView extends View {
             @Override
             public boolean onDoubleTap(MotionEvent e) {
                 adjustZoom();
-                shuffleTiles(getWidth(), getHeight());
                 invalidate();
                 return true;
             }
@@ -89,6 +88,13 @@ public class MyView extends View {
 
         mGestureDetector = new GestureDetector(context, gestureListener);
         mScaleDetector = new ScaleGestureDetector(context, scaleListener);
+        
+        mGameBoard.setBounds(
+                0,
+                0,
+                mGameBoard.getIntrinsicWidth(),
+                mGameBoard.getIntrinsicHeight()
+        );
     }
 
     private Drawable hitTest(int x, int y) {
@@ -139,28 +145,35 @@ public class MyView extends View {
         mMaxZoom = 2 * mMinZoom;
 
         adjustZoom();
-
-        mGameBoard.setBounds(
-                0,
-                0,
-                mGameBoard.getIntrinsicWidth(),
-                mGameBoard.getIntrinsicHeight()
-        );
-
-        shuffleTiles(w, h);
     }
 
-    private void shuffleTiles(int w, int h) {
+    private void shuffleTiles() {
+    	int w = mGameBoard.getIntrinsicWidth();
+    	int h = mGameBoard.getIntrinsicHeight();
+    	
+        Log.d("shuffleTiles", "w=" + w + ", h=" + h);
+
+        int bigW = mBigTile.getIntrinsicWidth();
+        int bigH = mBigTile.getIntrinsicHeight();
+        int bigX = mRandom.nextInt(w - bigW);
+        int bigY = mRandom.nextInt(h - bigH);
+        mBigTile.setBounds(
+                bigX,
+                bigY,
+                bigX + bigW,
+                bigY + bigH
+        );
+        
         for (Drawable tile: mTiles) {
-            int tileW = tile.getIntrinsicWidth();
-            int tileH = tile.getIntrinsicHeight();
-            int x = mRandom.nextInt(w - tileW);
-            int y = mRandom.nextInt(h - tileH);
+            int smallW = tile.getIntrinsicWidth();
+            int smallH = tile.getIntrinsicHeight();
+            int smallX = mRandom.nextInt(w - smallW);
+            int smallY = mRandom.nextInt(h - smallH);
             tile.setBounds(
-                    x,
-                    y,
-                    x + tileW,
-                    y + tileH
+                    smallX,
+                    smallY,
+                    smallX + smallW,
+                    smallY + smallH
             );
 
             Log.d("shuffleTiles", "tile=" + tile.getBounds());
@@ -184,6 +197,9 @@ public class MyView extends View {
 
         mMatrix.setScale(newScale, newScale);
         mMatrix.postTranslate(minX / 2, minY / 2);
+        
+        if (newScale == mMinZoom)
+        	shuffleTiles();
     }
 
     @Override
@@ -209,6 +225,7 @@ public class MyView extends View {
         canvas.concat(mMatrix);
 
         mGameBoard.draw(canvas);
+        mBigTile.draw(canvas);
         for (Drawable tile: mTiles) {
             tile.draw(canvas);
         }
@@ -240,12 +257,12 @@ public class MyView extends View {
         	minX = maxX = minX / 2;
         if (minY >= 0)
         	minY = maxY = minY / 2;
-      
+/*      
         Log.d("fling", "vX=" + vX + ", vY=" + vY +
 			", x=" + x + ", y=" + y +
 			", scaleX=" + scaleX + ", scaleY=" + scaleY +
 			", minX=" + minX + ", minY=" + minY);
-        
+*/        
         mScroller.forceFinished(true);
         mScroller.fling(
                 (int) x,
