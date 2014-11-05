@@ -30,6 +30,8 @@ public class MyView extends View {
 
     private float mMinZoom;
     private float mMaxZoom;
+    private float mPrevX;
+    private float mPrevY;
 
     private OverScroller mScroller;
     private GestureDetector mGestureDetector;
@@ -133,18 +135,25 @@ public class MyView extends View {
 	            Log.d("onToucheEvent", "tile = " + tile);
 	            if (tile != null) {
 	            	mDragged = tile;
+	            	mPrevX = x;
+	            	mPrevY = y;
 	            	return true;
 	            }
 	        break;
 	            
 	        case MotionEvent.ACTION_MOVE:
 	        	if (mDragged != null) {
-	        		mDragged.setBounds(
-        				(int) x, 
-        				(int) y, 
-        				(int) x + mDragged.getIntrinsicWidth(), 
-        				(int) y + mDragged.getIntrinsicHeight()
-        			);
+	        		float dX = x - mPrevX;
+	        		float dY = y - mPrevY;
+	            	mPrevX = x;
+	            	mPrevY = y;
+
+	            	Rect rect = mDragged.copyBounds();
+	            	rect.left += dX;
+	            	rect.top  += dY;
+	            	rect.right  = rect.left + mDragged.getIntrinsicWidth();
+	            	rect.bottom = rect.top + mDragged.getIntrinsicHeight();
+	            	mDragged.setBounds(rect);
 	        		invalidate();
 	        		return true;
 	        	}
