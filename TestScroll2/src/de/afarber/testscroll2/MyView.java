@@ -131,39 +131,41 @@ public class MyView extends View {
         float x = point[0];
         float y = point[1];
 
-        switch (e.getAction()) {
-	        case MotionEvent.ACTION_DOWN: 
-	            Drawable tile = hitTest(x, y);
-	            Log.d("onToucheEvent", "tile = " + tile);
-	            if (tile != null) {
-	            	mDragged = tile;
-	            	mPrevRect = mDragged.copyBounds();
-	            	mPrevX = x;
-	            	mPrevY = y;
-	            	return true;
-	            }
-	        break;
-	            
-	        case MotionEvent.ACTION_MOVE:
-	        	if (mDragged != null) {
-	        		int dX = Math.round(x - mPrevX);
-	        		int dY = Math.round(y - mPrevY);
-	        		
-	        		Rect rect = new Rect(mPrevRect);
-	        		rect.offset(dX, dY);
-	        		mDragged.setBounds(rect);
-	        		invalidate();
-	        		return true;
-	        	}
-	        break;
-	
-	        case MotionEvent.ACTION_UP:
-	        case MotionEvent.ACTION_CANCEL:
-	        	if (mDragged != null) {
-	        		mDragged = null;
-	        		return true;
-	        	}
-	        break;
+        if (1 == e.getPointerCount()) {
+        	switch (e.getAction()) {
+		        case MotionEvent.ACTION_DOWN: 
+		            Drawable tile = hitTest(x, y);
+		            Log.d("onToucheEvent", "tile = " + tile);
+		            if (tile != null) {
+		            	mDragged = tile;
+		            	mPrevRect = mDragged.copyBounds();
+		            	mPrevX = x;
+		            	mPrevY = y;
+		            	return true;
+		            }
+		        break;
+		            
+		        case MotionEvent.ACTION_MOVE:
+		        	if (mDragged != null) {
+		        		int dX = Math.round(x - mPrevX);
+		        		int dY = Math.round(y - mPrevY);
+		        		
+		        		Rect rect = new Rect(mPrevRect);
+		        		rect.offset(dX, dY);
+		        		mDragged.setBounds(rect);
+		        		invalidate();
+		        		return true;
+		        	}
+		        break;
+		
+		        case MotionEvent.ACTION_UP:
+		        case MotionEvent.ACTION_CANCEL:
+		        	if (mDragged != null) {
+		        		mDragged = null;
+		        		return true;
+		        	}
+		        break;
+	        }
         }
         
         boolean retVal = mScaleDetector.onTouchEvent(e);
@@ -255,7 +257,7 @@ public class MyView extends View {
             		", getCurrX()=" + mScroller.getCurrX() + ", getCurrY()=" + mScroller.getCurrY());
 */
             mMatrix.postTranslate(dX, dY);
-            postInvalidateDelayed(50);
+            postInvalidateDelayed(30);
         }
 
         canvas.concat(mMatrix);
