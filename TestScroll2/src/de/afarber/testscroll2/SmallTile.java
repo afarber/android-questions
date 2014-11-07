@@ -2,7 +2,6 @@ package de.afarber.testscroll2;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 
 public class SmallTile {
@@ -58,5 +57,9 @@ public class SmallTile {
 	public void move(int x, int y) {
 		left = x;
 		top = y;
+	}
+	
+	public String toString() {
+		return letter + " " + value;
 	}
 }
