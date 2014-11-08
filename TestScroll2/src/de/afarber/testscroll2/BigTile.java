@@ -16,6 +16,7 @@ public class BigTile {
 	public int top;
 	public int width;
 	public int height;
+	public boolean visible = false;
 	
 	private Drawable mImage;
 	private int mSavedLeft;
@@ -53,6 +54,9 @@ public class BigTile {
     }
     
 	public void draw(Canvas canvas) {
+		if (!visible)
+			return;
+		
 		canvas.save();
 		canvas.translate(left, top);
 		mImage.draw(canvas);
@@ -115,5 +119,12 @@ public class BigTile {
     	mValuePaint.getTextBounds(mValue, 0, mValue.length(), valueBounds);
     	mValueX = width - VALUE_FACTOR_X * valueBounds.width();
     	mValueY = height - VALUE_FACTOR_Y * valueBounds.height();
+	}
+	
+	public void copy(SmallTile tile) {
+		setLetter(tile.getLetter());
+		setValue(tile.getValue());
+		left = tile.left - (width - tile.width) / 2;
+		top = tile.top - (height - tile.height) / 2;
 	}
 }

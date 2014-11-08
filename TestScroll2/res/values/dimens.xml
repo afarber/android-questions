@@ -5,6 +5,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 	<dimen name="big_tile_letter">60dp</dimen>
 	<dimen name="big_tile_value">24dp</dimen>
-	<dimen name="small_tile_letter">36dp</dimen>
+	<dimen name="small_tile_letter">24dp</dimen>
 	<dimen name="small_tile_value">12dp</dimen>
 </resources>

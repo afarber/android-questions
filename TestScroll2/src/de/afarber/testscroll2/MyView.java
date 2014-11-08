@@ -47,13 +47,13 @@ public class MyView extends View {
         mScroller = new OverScroller(context);
 
         mBigTile = new BigTile(getContext());
-        mBigTile.setLetter("W");
-        mBigTile.setValue(10);
+        mBigTile.visible = false;
        
         for (int i = 0; i < NUM_TILES; i++) {
         	SmallTile tile = new SmallTile(getContext());
         	tile.setLetter("A");
         	tile.setValue(i + 1);
+        	tile.visible = true;
             mTiles.add(tile);
         }
 
@@ -109,6 +109,8 @@ public class MyView extends View {
 
     private SmallTile hitTest(float x, float y) {
         for (SmallTile tile: mTiles) {
+        	if (!tile.visible)
+        		continue;
             if (tile.contains((int) x, (int) y))
                 return tile;
         }
@@ -140,8 +142,12 @@ public class MyView extends View {
 		            if (tile != null) {
 		            	mDragged = tile;
 		            	mDragged.save();
+		            	mBigTile.copy(mDragged);
+		            	mDragged.visible = false;
+		            	mBigTile.visible = true;
 		            	mSavedX = x;
 		            	mSavedY = y;
+		            	invalidate();
 		            	return true;
 		            }
 		        break;
@@ -151,6 +157,7 @@ public class MyView extends View {
 		        		int dX = Math.round(x - mSavedX);
 		        		int dY = Math.round(y - mSavedY);
 		        		mDragged.offset(dX, dY);
+		            	mBigTile.copy(mDragged);
 		        		invalidate();
 		        		return true;
 		        	}
@@ -159,7 +166,10 @@ public class MyView extends View {
 		        case MotionEvent.ACTION_UP:
 		        case MotionEvent.ACTION_CANCEL:
 		        	if (mDragged != null) {
+		            	mDragged.visible = true;
+		            	mBigTile.visible = false;
 		        		mDragged = null;
+		        		invalidate();
 		        		return true;
 		        	}
 		        break;
@@ -248,10 +258,10 @@ public class MyView extends View {
         canvas.concat(mMatrix);
 
         mGameBoard.draw(canvas);
-        mBigTile.draw(canvas);
         for (SmallTile tile: mTiles) {
             tile.draw(canvas);
         }
+        mBigTile.draw(canvas);
     }
 
     public void scroll(float dX, float dY) {

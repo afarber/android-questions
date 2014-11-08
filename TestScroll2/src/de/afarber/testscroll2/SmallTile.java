@@ -16,6 +16,7 @@ public class SmallTile {
 	public int top;
 	public int width;
 	public int height;
+	public boolean visible = false;
 	
 	private Drawable mImage;
 	private int mSavedLeft;
@@ -53,6 +54,9 @@ public class SmallTile {
     }
     
 	public void draw(Canvas canvas) {
+		if (!visible)
+			return;
+		
 		canvas.save();
 		canvas.translate(left, top);
 		mImage.draw(canvas);
