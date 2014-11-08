@@ -9,18 +9,18 @@ import android.graphics.drawable.Drawable;
 public class BigTile {
 	private static final float LETTER_FACTOR_X = 0.4f;
 	private static final float LETTER_FACTOR_Y = 0.4f;
-	private static final float VALUE_FACTOR_X = 2.0f;
-	private static final float VALUE_FACTOR_Y = 2.0f;
+	private static final float VALUE_FACTOR_X = 1.5f;
+	private static final float VALUE_FACTOR_Y = 1.5f;
 	
 	public int left;
 	public int top;
+	public int savedLeft;
+	public int savedTop;
 	public int width;
 	public int height;
-	public boolean visible = false;
+	public boolean visible = true;
 	
 	private Drawable mImage;
-	private int mSavedLeft;
-	private int mSavedTop;
 	
 	private String mLetter;
 	private int mLetterSize;
@@ -73,13 +73,13 @@ public class BigTile {
 	}
 	
 	public void save() {
-		mSavedLeft = left;
-		mSavedTop = top;
+		savedLeft = left;
+		savedTop = top;
 	}
 	
 	public void offset(int dx, int dy) {
-		left = mSavedLeft + dx;
-		top = mSavedTop + dy;
+		left = savedLeft + dx;
+		top = savedTop + dy;
 	}
 	
 	public void move(int x, int y) {
@@ -122,9 +122,13 @@ public class BigTile {
 	}
 	
 	public void copy(SmallTile tile) {
+		int dX = (width - tile.width) / 2;
+		int dY = (height - tile.height) / 2;
+		left = tile.left - dX;
+		top = tile.top - dY;
+		savedLeft = tile.savedLeft - dX;
+		savedTop = tile.savedTop - dY;
 		setLetter(tile.getLetter());
 		setValue(tile.getValue());
-		left = tile.left - (width - tile.width) / 2;
-		top = tile.top - (height - tile.height) / 2;
 	}
 }

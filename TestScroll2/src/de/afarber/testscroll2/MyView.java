@@ -19,9 +19,9 @@ public class MyView extends View {
     private final int NUM_TILES = 3;
 
     private Drawable mGameBoard = getResources().getDrawable(R.drawable.game_board);
-    private BigTile mBigTile;
     private ArrayList<SmallTile> mTiles = new ArrayList<SmallTile>();
-    private SmallTile mDragged = null;
+    private SmallTile mSmallTile = null;
+    private BigTile mBigTile;
 
     private Random mRandom = new Random();
     private Matrix mMatrix = new Matrix();
@@ -140,10 +140,10 @@ public class MyView extends View {
 		            SmallTile tile = hitTest(x, y);
 		            Log.d("onToucheEvent", "tile = " + tile);
 		            if (tile != null) {
-		            	mDragged = tile;
-		            	mDragged.save();
-		            	mBigTile.copy(mDragged);
-		            	mDragged.visible = false;
+		            	mSmallTile = tile;
+		            	mSmallTile.save();
+		            	mSmallTile.visible = false;
+		            	mBigTile.copy(mSmallTile);
 		            	mBigTile.visible = true;
 		            	mSavedX = x;
 		            	mSavedY = y;
@@ -153,11 +153,11 @@ public class MyView extends View {
 		        break;
 		            
 		        case MotionEvent.ACTION_MOVE:
-		        	if (mDragged != null) {
+		        	if (mSmallTile != null) {
 		        		int dX = Math.round(x - mSavedX);
 		        		int dY = Math.round(y - mSavedY);
-		        		mDragged.offset(dX, dY);
-		            	mBigTile.copy(mDragged);
+		        		mSmallTile.offset(dX, dY);
+		            	mBigTile.offset(dX, dY);
 		        		invalidate();
 		        		return true;
 		        	}
@@ -165,10 +165,10 @@ public class MyView extends View {
 		
 		        case MotionEvent.ACTION_UP:
 		        case MotionEvent.ACTION_CANCEL:
-		        	if (mDragged != null) {
-		            	mDragged.visible = true;
+		        	if (mSmallTile != null) {
 		            	mBigTile.visible = false;
-		        		mDragged = null;
+		            	mSmallTile.visible = true;
+		        		mSmallTile = null;
 		        		invalidate();
 		        		return true;
 		        	}

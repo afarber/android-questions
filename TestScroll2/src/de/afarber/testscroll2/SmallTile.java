@@ -9,18 +9,18 @@ import android.graphics.drawable.Drawable;
 public class SmallTile {
 	private static final float LETTER_FACTOR_X = 0.5f;
 	private static final float LETTER_FACTOR_Y = 0.5f;
-	private static final float VALUE_FACTOR_X = 2.0f;
+	private static final float VALUE_FACTOR_X = 1.5f;
 	private static final float VALUE_FACTOR_Y = 0.5f;
 	
 	public int left;
 	public int top;
+	public int savedLeft;
+	public int savedTop;
 	public int width;
 	public int height;
-	public boolean visible = false;
+	public boolean visible = true;
 	
 	private Drawable mImage;
-	private int mSavedLeft;
-	private int mSavedTop;
 	
 	private String mLetter;
 	private int mLetterSize;
@@ -73,13 +73,13 @@ public class SmallTile {
 	}
 	
 	public void save() {
-		mSavedLeft = left;
-		mSavedTop = top;
+		savedLeft = left;
+		savedTop = top;
 	}
 	
 	public void offset(int dx, int dy) {
-		left = mSavedLeft + dx;
-		top = mSavedTop + dy;
+		left = savedLeft + dx;
+		top = savedTop + dy;
 	}
 	
 	public void move(int x, int y) {
