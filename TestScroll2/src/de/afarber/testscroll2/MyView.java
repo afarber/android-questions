@@ -47,8 +47,13 @@ public class MyView extends View {
         mScroller = new OverScroller(context);
 
         mBigTile = new BigTile(getContext());
+        mBigTile.setLetter("W");
+        mBigTile.setValue(10);
+       
         for (int i = 0; i < NUM_TILES; i++) {
         	SmallTile tile = new SmallTile(getContext());
+        	tile.setLetter("A");
+        	tile.setValue(i + 1);
             mTiles.add(tile);
         }
 
