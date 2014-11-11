@@ -35,7 +35,7 @@ public class SmallTile {
 
     	mStripe = BitmapFactory.decodeResource(context.getResources(),R.drawable.small_english);
 		int h = mStripe.getHeight();
-		mSrc = new Rect(0, 0, h, h);
+		mSrc = new Rect(h, 0, 2 * h, h);
 		mDst = new Rect(0, 0, h, h);
 	}
     
