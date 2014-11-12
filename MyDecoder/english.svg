@@ -9,15 +9,15 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="1170.0586"
-   height="45.25391"
+   width="1170"
+   height="45"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.5 r10040"
    sodipodi:docname="english.svg"
-   inkscape:export-filename="C:\Users\U299FAV\git\android-newbie\MyStripe\res\drawable-mdpi\big_english.png"
-   inkscape:export-xdpi="238.68036"
-   inkscape:export-ydpi="238.68036">
+   inkscape:export-filename="C:\Users\U299FAV\git\android-newbie\MyDecoder\res\drawable-xxhdpi\small_english.png"
+   inkscape:export-xdpi="180"
+   inkscape:export-ydpi="180">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -28,7 +28,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.979899"
-     inkscape:cx="867.78344"
+     inkscape:cx="839.22515"
      inkscape:cy="-121.70033"
      inkscape:document-units="px"
      inkscape:current-layer="g2995-4"
@@ -63,7 +63,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -71,7 +71,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-44.941406,-62.362181)">
+     transform="translate(-44.941406,-62.616091)">
     <g
        id="g2995">
       <text
@@ -333,7 +333,7 @@
            id="tspan2993-14-1"
            x="383.70117"
            y="103.11804"
-           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans">10</tspan></text>
+           style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans">10</tspan></text>
       <text
          xml:space="preserve"
          style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -350,13 +350,13 @@
          xml:space="preserve"
          style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
          x="434.80988"
-         y="101.995"
+         y="103.995"
          id="text2991-77"
          sodipodi:linespacing="125%"><tspan
            sodipodi:role="line"
            id="tspan2993-93"
            x="434.80988"
-           y="101.995"
+           y="103.995"
            style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans">5</tspan></text>
       <text
          xml:space="preserve"
@@ -481,14 +481,14 @@
       <text
          xml:space="preserve"
          style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-         x="673.45313"
+         x="675.45313"
          y="90.588737"
          id="text2987-7-6"
          sodipodi:linespacing="125%"><tspan
            style="font-size:36px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
            sodipodi:role="line"
            id="tspan2989-4-6"
-           x="673.45313"
+           x="675.45313"
            y="90.588737">Q</tspan></text>
       <text
          xml:space="preserve"
@@ -501,7 +501,7 @@
            id="tspan2993-9-8"
            x="698.79883"
            y="102.48327"
-           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans">12</tspan></text>
+           style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans">12</tspan></text>
       <text
          sodipodi:linespacing="125%"
          id="text2987-8-9"
@@ -717,7 +717,7 @@
            id="tspan2993-1-3-7"
            x="1103.7012"
            y="102.99499"
-           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans">10</tspan></text>
+           style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans">10</tspan></text>
     </g>
   </g>
 </svg>
