@@ -2,7 +2,9 @@ package de.afarber.mydecoder;
 
 import java.io.IOException;
 import java.io.InputStream;
-
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
+import java.util.HashMap;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapRegionDecoder;
@@ -12,9 +14,13 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 
 public class BigTile {
-	private static BitmapRegionDecoder mDecoder;
-	private static int mHeight;
-
+	private static final int EN = R.drawable.big_english;
+	private static final int TILE = R.drawable.big_tile;
+	
+	private static final CharacterIterator it = new StringCharacterIterator("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+	private static HashMap<Character, Bitmap> mImages;
+	private static Context mContext;
+	
 	public int left;
 	public int top;
 	public int savedLeft;
@@ -24,32 +30,45 @@ public class BigTile {
 	public boolean visible = true;
 	
 	private Drawable mImage;
-	private Bitmap mText;
 	private Paint mPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
 	
-	private String mLetter;
-	private String mValue;
+	private char mLetter;
+	private int mValue;
+	
+	public static HashMap<Character, Bitmap> getImages() {
+		BitmapRegionDecoder decoder = null;
+		
+		if (mImages != null)
+			return mImages;
+		
+		InputStream is = mContext.getResources().openRawResource(EN);
+
+		try {
+			decoder = BitmapRegionDecoder.newInstance(is, false);
+		} catch (IOException ex) {
+		}
+		
+		int h = decoder.getHeight();
+		mImages = new HashMap<Character, Bitmap>();
+		Rect r = new Rect(0, 0, h, h);
+		for (char c = it.first(); 
+			c != CharacterIterator.DONE; 
+			c = it.next(), r.offset(h, 0)) {
+			   Bitmap bmp = decoder.decodeRegion(r, null);
+			   mImages.put(c, bmp);
+		}
+		
+		return mImages;
+	}
 	
     public BigTile(Context context) {
-    	mImage = context.getResources().getDrawable(R.drawable.big_tile);
+    	mContext = context;
+    	
+    	mImage = mContext.getResources().getDrawable(TILE);
         mImage.setAlpha(200);
     	width = mImage.getIntrinsicWidth();
     	height = mImage.getIntrinsicHeight();
     	mImage.setBounds(0, 0, width, height); 
-
-    	if (mDecoder == null) {
-			InputStream is = context.getResources().openRawResource(R.drawable.big_english);
-			try {
-				mDecoder = BitmapRegionDecoder.newInstance(is, false);
-			} catch (IOException ex) {
-				
-			}
-			
-			mHeight = mDecoder.getHeight();
-    	}
-    	
-		Rect r = new Rect(0, 0, mHeight, mHeight);
-		mText = mDecoder.decodeRegion(r, null);
 	}
     
 	public void draw(Canvas canvas) {
@@ -59,7 +78,8 @@ public class BigTile {
 		canvas.save();
 		canvas.translate(left, top);
 		mImage.draw(canvas);
-		canvas.drawBitmap(mText, 0, 0, mPaint);
+		Bitmap bmp = getImages().get(mLetter);
+		canvas.drawBitmap(bmp, 0, 0, mPaint);
 		canvas.restore();
 	}
 
@@ -89,28 +109,20 @@ public class BigTile {
 		return mLetter + " " + mValue;
 	}
 
-	public String getLetter() {
+	public char getLetter() {
 		return mLetter;
 	}
 
-	public void setLetter(String str) {
-		mLetter = str;
-		
-		// TODO
+	public void setLetter(char c) {
+		mLetter = c;
 	}
 
-	public String getValue() {
+	public int getValue() {
 		return mValue;
 	}
 
 	public void setValue(int n) {
-		setValue(String.valueOf(n));
-	}
-	
-	public void setValue(String str) {
-		mValue = str;
-		
-		// TODO
+		mValue = n;
 	}
 	
 	public void copy(SmallTile tile) {

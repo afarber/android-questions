@@ -1,5 +1,7 @@
 package de.afarber.mydecoder;
 
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -16,7 +18,7 @@ import android.view.View;
 import android.widget.OverScroller;
 
 public class MyView extends View {
-    private final int NUM_TILES = 3;
+	private static final CharacterIterator it = new StringCharacterIterator("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
     private Drawable mGameBoard = getResources().getDrawable(R.drawable.game_board);
     private ArrayList<SmallTile> mTiles = new ArrayList<SmallTile>();
@@ -49,10 +51,9 @@ public class MyView extends View {
         mBigTile = new BigTile(getContext());
         mBigTile.visible = false;
        
-        for (int i = 0; i < NUM_TILES; i++) {
+		for (char c = it.first(); c != CharacterIterator.DONE; c = it.next()) {
         	SmallTile tile = new SmallTile(getContext());
-        	tile.setLetter("A");
-        	tile.setValue(i + 1);
+        	tile.setLetter(c);
         	tile.visible = true;
             mTiles.add(tile);
         }
