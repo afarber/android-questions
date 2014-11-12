@@ -17,9 +17,9 @@ public class BigTile {
 	private static final int EN = R.drawable.big_english;
 	private static final int TILE = R.drawable.big_tile;
 	
-	private static final CharacterIterator it = new StringCharacterIterator("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-	private static HashMap<Character, Bitmap> mImages;
-	private static Context mContext;
+	private static final CharacterIterator ABC = new StringCharacterIterator("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+	private static HashMap<Character, Bitmap> sImages;
+	private static Context sContext;
 	
 	public int left;
 	public int top;
@@ -38,10 +38,10 @@ public class BigTile {
 	public static HashMap<Character, Bitmap> getImages() {
 		BitmapRegionDecoder decoder = null;
 		
-		if (mImages != null)
-			return mImages;
+		if (sImages != null)
+			return sImages;
 		
-		InputStream is = mContext.getResources().openRawResource(EN);
+		InputStream is = sContext.getResources().openRawResource(EN);
 
 		try {
 			decoder = BitmapRegionDecoder.newInstance(is, false);
@@ -49,22 +49,22 @@ public class BigTile {
 		}
 		
 		int h = decoder.getHeight();
-		mImages = new HashMap<Character, Bitmap>();
+		sImages = new HashMap<Character, Bitmap>();
 		Rect r = new Rect(0, 0, h, h);
-		for (char c = it.first(); 
+		for (char c = ABC.first(); 
 			c != CharacterIterator.DONE; 
-			c = it.next(), r.offset(h, 0)) {
+			c = ABC.next(), r.offset(h, 0)) {
 			   Bitmap bmp = decoder.decodeRegion(r, null);
-			   mImages.put(c, bmp);
+			   sImages.put(c, bmp);
 		}
 		
-		return mImages;
+		return sImages;
 	}
 	
     public BigTile(Context context) {
-    	mContext = context;
+    	sContext = context;
     	
-    	mImage = mContext.getResources().getDrawable(TILE);
+    	mImage = sContext.getResources().getDrawable(TILE);
         mImage.setAlpha(200);
     	width = mImage.getIntrinsicWidth();
     	height = mImage.getIntrinsicHeight();
