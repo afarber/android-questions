@@ -18,7 +18,7 @@ import android.view.View;
 import android.widget.OverScroller;
 
 public class MyView extends View {
-	private static final CharacterIterator it = new StringCharacterIterator("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+	private static final CharacterIterator ABC = new StringCharacterIterator("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
     private Drawable mGameBoard = getResources().getDrawable(R.drawable.game_board);
     private ArrayList<SmallTile> mTiles = new ArrayList<SmallTile>();
@@ -51,7 +51,7 @@ public class MyView extends View {
         mBigTile = new BigTile(getContext());
         mBigTile.visible = false;
        
-		for (char c = it.first(); c != CharacterIterator.DONE; c = it.next()) {
+		for (char c = ABC.first(); c != CharacterIterator.DONE; c = ABC.next()) {
         	SmallTile tile = new SmallTile(getContext());
         	tile.setLetter(c);
         	tile.visible = true;
@@ -141,6 +141,12 @@ public class MyView extends View {
 		            SmallTile tile = hitTest(x, y);
 		            Log.d("onToucheEvent", "tile = " + tile);
 		            if (tile != null) {
+		            	int i = mTiles.indexOf(tile);
+		            	if (i >= 0) {
+			            	mTiles.remove(i);
+			            	mTiles.add(tile);
+		            	}
+		            	
 		            	mSmallTile = tile;
 		            	mSmallTile.save();
 		            	mSmallTile.visible = false;

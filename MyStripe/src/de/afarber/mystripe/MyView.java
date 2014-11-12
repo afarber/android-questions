@@ -16,7 +16,7 @@ import android.view.View;
 import android.widget.OverScroller;
 
 public class MyView extends View {
-    private final int NUM_TILES = 3;
+    private final int NUM_TILES = 5;
 
     private Drawable mGameBoard = getResources().getDrawable(R.drawable.game_board);
     private ArrayList<SmallTile> mTiles = new ArrayList<SmallTile>();
@@ -140,6 +140,13 @@ public class MyView extends View {
 		            SmallTile tile = hitTest(x, y);
 		            Log.d("onToucheEvent", "tile = " + tile);
 		            if (tile != null) {
+		            	// move the touched tile to the top
+		            	int i = mTiles.indexOf(tile);
+		            	if (i >= 0) {
+			            	mTiles.remove(i);
+			            	mTiles.add(tile);
+		            	}
+		            	
 		            	mSmallTile = tile;
 		            	mSmallTile.save();
 		            	mSmallTile.visible = false;

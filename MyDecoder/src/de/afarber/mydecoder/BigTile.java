@@ -16,6 +16,7 @@ import android.graphics.drawable.Drawable;
 public class BigTile {
 	private static final int EN = R.drawable.big_english;
 	private static final int TILE = R.drawable.big_tile;
+	private static final int ALPHA = 200;
 	
 	private static final CharacterIterator ABC = new StringCharacterIterator("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 	private static HashMap<Character, Bitmap> sImages;
@@ -65,7 +66,7 @@ public class BigTile {
     	sContext = context;
     	
     	mImage = sContext.getResources().getDrawable(TILE);
-        mImage.setAlpha(200);
+        mImage.setAlpha(ALPHA);
     	width = mImage.getIntrinsicWidth();
     	height = mImage.getIntrinsicHeight();
     	mImage.setBounds(0, 0, width, height); 
