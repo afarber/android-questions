@@ -12,6 +12,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 public class BigTile {
 	private static final int EN = R.drawable.big_english;
@@ -56,6 +57,7 @@ public class BigTile {
 				   sBitmaps.put(c, scaled);
 			}
 		} catch (IOException ex) {
+			Log.e("BigTile", "Can not decode region", ex);
 		}
 	}
     
