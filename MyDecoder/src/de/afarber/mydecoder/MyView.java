@@ -109,7 +109,8 @@ public class MyView extends View {
     }
 
     private SmallTile hitTest(float x, float y) {
-        for (SmallTile tile: mTiles) {
+    	for (int i = mTiles.size() - 1; i >= 0; i--) {
+    		SmallTile tile = mTiles.get(i);
         	if (!tile.visible)
         		continue;
             if (tile.contains((int) x, (int) y))

@@ -16,11 +16,11 @@ import android.graphics.drawable.Drawable;
 public class BigTile {
 	private static final int EN = R.drawable.big_english;
 	private static final int TILE = R.drawable.big_tile;
+	private static final float SCALE = 0.9f;
 	private static final int ALPHA = 200;
 	
 	private static final CharacterIterator ABC = new StringCharacterIterator("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-	private static HashMap<Character, Bitmap> sBitmaps;
-	private static Context sContext;
+	private static HashMap<Character, Bitmap> sBitmaps = new HashMap<Character, Bitmap>();
 	
 	public int left;
 	public int top;
@@ -36,40 +36,27 @@ public class BigTile {
 	private char mLetter;
 	private int mValue;
 	
-	public static HashMap<Character, Bitmap> getImages() {
-		BitmapRegionDecoder decoder = null;
-		
-		if (sBitmaps != null)
-			return sBitmaps;
-		
-		InputStream is = sContext.getResources().openRawResource(EN);
-
-		try {
-			decoder = BitmapRegionDecoder.newInstance(is, false);
-		} catch (IOException ex) {
-		}
-		
-		int h = decoder.getHeight();
-		sBitmaps = new HashMap<Character, Bitmap>();
-		Rect r = new Rect(0, 0, h, h);
-		for (char c = ABC.first(); 
-			c != CharacterIterator.DONE; 
-			c = ABC.next(), r.offset(h, 0)) {
-			   Bitmap bmp = decoder.decodeRegion(r, null);
-			   sBitmaps.put(c, bmp);
-		}
-		
-		return sBitmaps;
-	}
-	
     public BigTile(Context context) {
-    	sContext = context;
-    	
-    	mBackground = sContext.getResources().getDrawable(TILE);
+    	mBackground = context.getResources().getDrawable(TILE);
         mBackground.setAlpha(ALPHA);
     	width = mBackground.getIntrinsicWidth();
     	height = mBackground.getIntrinsicHeight();
-    	mBackground.setBounds(0, 0, width, height); 
+    	mBackground.setBounds(0, 0, width, height);
+    	
+		try {
+			InputStream is = context.getResources().openRawResource(EN);
+			BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(is, false);
+			int h = decoder.getHeight();
+			Rect r = new Rect(0, 0, h, h);
+			for (char c = ABC.first(); 
+				c != CharacterIterator.DONE; 
+				c = ABC.next(), r.offset(h, 0)) {
+				   Bitmap unscaled = decoder.decodeRegion(r, null);
+				   Bitmap scaled = Bitmap.createScaledBitmap(unscaled, (int) (SCALE * width), (int) (SCALE * height), true);
+				   sBitmaps.put(c, scaled);
+			}
+		} catch (IOException ex) {
+		}
 	}
     
 	public void draw(Canvas canvas) {
@@ -79,8 +66,8 @@ public class BigTile {
 		canvas.save();
 		canvas.translate(left, top);
 		mBackground.draw(canvas);
-		Bitmap bmp = getImages().get(mLetter);
-		canvas.drawBitmap(bmp, null, mBackground.getBounds(), mPaint);
+		Bitmap bmp = sBitmaps.get(mLetter);
+		canvas.drawBitmap(bmp, 0, 0, mPaint);
 		canvas.restore();
 	}
 
