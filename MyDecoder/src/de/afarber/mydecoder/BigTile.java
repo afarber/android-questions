@@ -7,11 +7,13 @@ import java.text.StringCharacterIterator;
 import java.util.HashMap;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 public class BigTile {
 	private static final int EN = R.drawable.big_english;
@@ -59,6 +61,7 @@ public class BigTile {
 			   sImages.put(c, bmp);
 		}
 		
+		Log.d("getImages", "float=" + sContext.getResources().getDisplayMetrics().density);
 		return sImages;
 	}
 	
@@ -80,7 +83,7 @@ public class BigTile {
 		canvas.translate(left, top);
 		mImage.draw(canvas);
 		Bitmap bmp = getImages().get(mLetter);
-		canvas.drawBitmap(bmp, 0, 0, mPaint);
+		canvas.drawBitmap(bmp, null, mImage.getBounds(), mPaint);
 		canvas.restore();
 	}
 

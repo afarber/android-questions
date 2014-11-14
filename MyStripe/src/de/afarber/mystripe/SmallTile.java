@@ -33,7 +33,7 @@ public class SmallTile {
     	height = mImage.getIntrinsicHeight();
     	mImage.setBounds(0, 0, width, height); 
 
-    	mStripe = BitmapFactory.decodeResource(context.getResources(),R.drawable.small_english);
+    	mStripe = BitmapFactory.decodeResource(context.getResources(), R.drawable.small_english);
 		int h = mStripe.getHeight();
 		mSrc = new Rect(h, 0, 2 * h, h);
 		mDst = new Rect(0, 0, h, h);

@@ -100,8 +100,10 @@ public class BigTile {
     	
     	Rect letterBounds = new Rect();  
     	mLetterPaint.getTextBounds(mLetter, 0, mLetter.length(), letterBounds);
-    	mLetterX = LETTER_FACTOR_X * (width - letterBounds.width());
-    	mLetterY = LETTER_FACTOR_Y * (height + letterBounds.height());
+//    	mLetterX = LETTER_FACTOR_X * (width - letterBounds.width());
+//    	mLetterY = LETTER_FACTOR_Y * (height + letterBounds.height());
+    	mLetterX = (width - letterBounds.width()) / 2;
+    	mLetterY = (height + letterBounds.height()) / 2;
 	}
 
 	public String getValue() {
@@ -117,8 +119,10 @@ public class BigTile {
 
     	Rect valueBounds = new Rect();  
     	mValuePaint.getTextBounds(mValue, 0, mValue.length(), valueBounds);
-    	mValueX = width - VALUE_FACTOR_X * valueBounds.width();
-    	mValueY = height - VALUE_FACTOR_Y * valueBounds.height();
+//    	mValueX = width - VALUE_FACTOR_X * valueBounds.width();
+//    	mValueY = height - VALUE_FACTOR_Y * valueBounds.height();
+    	mValueX = width - valueBounds.width();
+    	mValueY = height - valueBounds.height();
 	}
 	
 	public void copy(SmallTile tile) {

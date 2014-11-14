@@ -80,7 +80,7 @@ public class SmallTile {
 		canvas.translate(left, top);
 		mImage.draw(canvas);
 		Bitmap bmp = getImages().get(mLetter);
-		canvas.drawBitmap(bmp, 0, 0, mPaint);
+		canvas.drawBitmap(bmp, null, mImage.getBounds(), mPaint);
 		canvas.restore();
 	}
 
