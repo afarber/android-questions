@@ -3,14 +3,13 @@ package de.afarber.mytiles;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.HashMap;
-import java.util.Random;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 public class BigTile {
+	private static final String PREFIX = "big_";
 	private static final int TILE = R.drawable.big_tile;
 	private static final int ALPHA = 200;
 	
@@ -25,26 +24,30 @@ public class BigTile {
 	public int height;
 	public boolean visible = true;
 	
-	private Context mContext;
 	private Drawable mBackground;
-	private Drawable mForeground;
 	
 	private char mLetter;
 	private int mValue;
 	
     public BigTile(Context context) {
-    	mContext = context;
-    	
     	mBackground = context.getResources().getDrawable(TILE);
         mBackground.setAlpha(ALPHA);
     	width = mBackground.getIntrinsicWidth();
     	height = mBackground.getIntrinsicHeight();
     	mBackground.setBounds(0, 0, width, height);
     	
-    	int n = (new Random()).nextInt(26);
-    	int id = context.getResources().getIdentifier("big_" + n,"drawable", context.getPackageName());
-	    mForeground = context.getResources().getDrawable(id);
-	    mForeground.setBounds(0, 0, mForeground.getIntrinsicWidth(), mForeground.getIntrinsicHeight());
+	    if (sDrawables.size() > 0)
+	    	return;
+	    
+	    int i = 0;
+	    for (char c = ABC.first(); 
+	    		c != CharacterIterator.DONE; 
+	    		c = ABC.next(), i++) {
+	    	int id = context.getResources().getIdentifier(PREFIX + i, "drawable", context.getPackageName());
+	    	Drawable d = context.getResources().getDrawable(id);
+	    	d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+	    	sDrawables.put(c, d);
+	    }	    
 	}
     
 	public void draw(Canvas canvas) {
@@ -54,7 +57,8 @@ public class BigTile {
 		canvas.save();
 		canvas.translate(left, top);
 		mBackground.draw(canvas);
-		mForeground.draw(canvas);
+		Drawable d = sDrawables.get(mLetter);
+		d.draw(canvas);
 		canvas.restore();
 	}
 
