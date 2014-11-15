@@ -1,27 +1,21 @@
 package de.afarber.mytiles;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.HashMap;
+import java.util.Random;
+
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapRegionDecoder;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 public class SmallTile {
-	private static final int EN = R.drawable.small_english;
 	private static final int TILE = R.drawable.small_tile;
-	private static final float SCALE = 1.0f;
 	private static final int ALPHA = 220;
 	
 	private static final CharacterIterator ABC = new StringCharacterIterator("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-	private static HashMap<Character, Bitmap> sBitmaps = new HashMap<Character, Bitmap>();
+	private static HashMap<Character, Drawable> sDrawables = new HashMap<Character, Drawable>();
 	
 	public int left;
 	public int top;
@@ -31,34 +25,26 @@ public class SmallTile {
 	public int height;
 	public boolean visible = true;
 	
+	private Context mContext;
 	private Drawable mBackground;
-	private Paint mPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
+	private Drawable mForeground;
 	
 	private char mLetter;
 	private int mValue;
 	
     public SmallTile(Context context) {
+    	mContext = context;
+    	
     	mBackground = context.getResources().getDrawable(TILE);
         mBackground.setAlpha(ALPHA);
     	width = mBackground.getIntrinsicWidth();
     	height = mBackground.getIntrinsicHeight();
     	mBackground.setBounds(0, 0, width, height);
     	
-		try {
-			InputStream is = context.getResources().openRawResource(EN);
-			BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(is, false);
-			int h = decoder.getHeight();
-			Rect r = new Rect(0, 0, h, h);
-			for (char c = ABC.first(); 
-				c != CharacterIterator.DONE; 
-				c = ABC.next(), r.offset(h, 0)) {
-				   Bitmap unscaled = decoder.decodeRegion(r, null);
-				   Bitmap scaled = Bitmap.createScaledBitmap(unscaled, (int) (SCALE * width), (int) (SCALE * height), true);
-				   sBitmaps.put(c, scaled);
-			}
-		} catch (IOException ex) {
-			Log.e("SmallTile", "Can not decode region", ex);
-		}
+    	int n = (new Random()).nextInt(26);
+    	int id = context.getResources().getIdentifier("small_" + n,"drawable", context.getPackageName());
+	    mForeground = context.getResources().getDrawable(id);
+	    mForeground.setBounds(0, 0, mForeground.getIntrinsicWidth(), mForeground.getIntrinsicHeight());
 	}
     
 	public void draw(Canvas canvas) {
@@ -68,8 +54,7 @@ public class SmallTile {
 		canvas.save();
 		canvas.translate(left, top);
 		mBackground.draw(canvas);
-		Bitmap bmp = sBitmaps.get(mLetter);
-		canvas.drawBitmap(bmp, 0, 0, mPaint);
+		mForeground.draw(canvas);
 		canvas.restore();
 	}
 
