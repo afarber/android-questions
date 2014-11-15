@@ -44,6 +44,9 @@ public class BigTile {
     	height = mBackground.getIntrinsicHeight();
     	mBackground.setBounds(0, 0, width, height);
     	
+    	if (sBitmaps.size() > 0)
+    		return;
+    	
 		try {
 			InputStream is = context.getResources().openRawResource(EN);
 			BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(is, false);
