@@ -7,13 +7,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
+import android.support.v4.widget.ScrollerCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
-import android.widget.OverScroller;
 
 public class MyView extends View {
 	private static final char[] LETTERS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
@@ -33,7 +33,7 @@ public class MyView extends View {
     private float mSavedX;
     private float mSavedY;
 
-    private OverScroller mScroller;
+    private ScrollerCompat mScroller;
     private GestureDetector mGestureDetector;
     private ScaleGestureDetector mScaleDetector;
 
@@ -44,7 +44,7 @@ public class MyView extends View {
     public MyView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        mScroller = new OverScroller(context);
+        mScroller = ScrollerCompat.create(context);
 
         mBigTile = new BigTile(getContext());
         mBigTile.visible = false;
@@ -85,7 +85,7 @@ public class MyView extends View {
         ScaleGestureDetector.SimpleOnScaleGestureListener scaleListener = new ScaleGestureDetector.SimpleOnScaleGestureListener() {
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
-                mScroller.forceFinished(true);
+                mScroller.abortAnimation();
                 float factor = detector.getScaleFactor();
                 Log.d("onScale", "factor=" + factor);
                 mMatrix.postScale(factor, factor);
@@ -220,7 +220,7 @@ public class MyView extends View {
     }
 
     private void adjustZoom() {
-        mScroller.forceFinished(true);
+        mScroller.abortAnimation();
         mMatrix.getValues(mValues);
         //float oldX = mValues[Matrix.MTRANS_X];
         //float oldY = mValues[Matrix.MTRANS_Y];
@@ -271,14 +271,14 @@ public class MyView extends View {
     }
 
     public void scroll(float dX, float dY) {
-        mScroller.forceFinished(true);
+        mScroller.abortAnimation();
         mMatrix.postTranslate(-dX, -dY);
         fixTranslation();
         invalidate();
     }
 
     public void fling(float vX, float vY) {
-        mScroller.forceFinished(true);
+        mScroller.abortAnimation();
         mMatrix.getValues(mValues);
         float x = mValues[Matrix.MTRANS_X];
         float y = mValues[Matrix.MTRANS_Y];
@@ -302,7 +302,7 @@ public class MyView extends View {
 			", scaleX=" + scaleX + ", scaleY=" + scaleY +
 			", minX=" + minX + ", minY=" + minY);
 */        
-        mScroller.forceFinished(true);
+        mScroller.abortAnimation();
         mScroller.fling(
                 (int) x,
                 (int) y,
