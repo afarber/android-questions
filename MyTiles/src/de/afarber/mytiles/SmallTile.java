@@ -1,7 +1,5 @@
 package de.afarber.mytiles;
 
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
 import java.util.HashMap;
 
 import android.content.Context;
@@ -13,8 +11,10 @@ public class SmallTile {
 	private static final int TILE = R.drawable.small_tile;
 	private static final int ALPHA = 220;
 	
-	private static final CharacterIterator ABC = new StringCharacterIterator("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-	private static HashMap<Character, Drawable> sDrawables = new HashMap<Character, Drawable>();
+	private static final char[] LETTERS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+	private static final int[] VALUES =   { 1,   4,   4,   2,   1,   4,   3,   3,   1,  10,   5,   2,   4,   2,   1,   4,  12,   1,   1,   1,   2,   5,   4,   8,   3,  10 };
+	private static HashMap<Character, Drawable> sLetters = new HashMap<Character, Drawable>();
+	private static HashMap<Character, Integer> sValues = new HashMap<Character, Integer>();
 	
 	public int left;
 	public int top;
@@ -36,17 +36,17 @@ public class SmallTile {
     	height = mBackground.getIntrinsicHeight();
     	mBackground.setBounds(0, 0, width, height);
     	
-	    if (sDrawables.size() > 0)
+	    if (sLetters.size() > 0)
 	    	return;
 	    
-	    int i = 0;
-	    for (char c = ABC.first(); 
-	    		c != CharacterIterator.DONE; 
-	    		c = ABC.next(), i++) {
+	    for (int i = 0; i < LETTERS.length; i++) {
+	    	char c = LETTERS[i];
+	    	int v = VALUES[i];
 	    	int id = context.getResources().getIdentifier(PREFIX + i, "drawable", context.getPackageName());
 	    	Drawable d = context.getResources().getDrawable(id);
 	    	d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
-	    	sDrawables.put(c, d);
+	    	sLetters.put(c, d);
+	    	sValues.put(c, v);
 	    }	    
 	}
     
@@ -57,7 +57,7 @@ public class SmallTile {
 		canvas.save();
 		canvas.translate(left, top);
 		mBackground.draw(canvas);
-		Drawable d = sDrawables.get(mLetter);
+		Drawable d = sLetters.get(mLetter);
 		d.draw(canvas);
 		canvas.restore();
 	}

@@ -1,7 +1,5 @@
 package de.afarber.mytiles;
 
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -18,7 +16,7 @@ import android.view.View;
 import android.widget.OverScroller;
 
 public class MyView extends View {
-	private static final CharacterIterator ABC = new StringCharacterIterator("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+	private static final char[] LETTERS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
     private Drawable mGameBoard = getResources().getDrawable(R.drawable.game_board);
     private ArrayList<SmallTile> mTiles = new ArrayList<SmallTile>();
@@ -51,7 +49,7 @@ public class MyView extends View {
         mBigTile = new BigTile(getContext());
         mBigTile.visible = false;
        
-		for (char c = ABC.first(); c != CharacterIterator.DONE; c = ABC.next()) {
+	    for (char c: LETTERS) {
         	SmallTile tile = new SmallTile(getContext());
         	tile.setLetter(c);
         	tile.visible = true;
