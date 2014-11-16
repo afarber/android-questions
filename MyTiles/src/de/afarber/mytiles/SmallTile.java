@@ -74,6 +74,11 @@ public class SmallTile {
 		savedTop = top;
 	}
 	
+	public void restore() {
+		left = savedLeft;
+		top = savedTop;
+	}
+	
 	public void offset(int dx, int dy) {
 		left = savedLeft + dx;
 		top = savedTop + dy;

@@ -37,9 +37,9 @@ public class MyView extends View {
     private GestureDetector mGestureDetector;
     private ScaleGestureDetector mScaleDetector;
     
-    private int w;
-    private int h;
-    private int mGridWidth;
+    private int mWidth;
+    private int mHeight;
+    private int mCellWidth;
     private SmallTile[][] mGrid = new SmallTile[15][15];
 
 
@@ -104,11 +104,11 @@ public class MyView extends View {
         mGestureDetector = new GestureDetector(context, gestureListener);
         mScaleDetector = new ScaleGestureDetector(context, scaleListener);
 
-        w = mGameBoard.getIntrinsicWidth();
-        h = mGameBoard.getIntrinsicHeight();
-        mGameBoard.setBounds(0, 0, w, h);
+        mWidth = mGameBoard.getIntrinsicWidth();
+        mHeight = mGameBoard.getIntrinsicHeight();
+        mGameBoard.setBounds(0, 0, mWidth, mHeight);
         // there are 15 cells in a row and 1 padding at each side
-        mGridWidth = Math.round(w / 17.0f);
+        mCellWidth = Math.round(mWidth / 17.0f);
     }
 
     private SmallTile hitTest(float x, float y) {
@@ -145,15 +145,20 @@ public class MyView extends View {
 		            SmallTile tile = hitTest(x, y);
 		            Log.d("onToucheEvent", "tile = " + tile);
 		            if (tile != null) {
-		            	int i = mTiles.indexOf(tile);
-		            	if (i >= 0) {
-			            	mTiles.remove(i);
+		            	int depth = mTiles.indexOf(tile);
+		            	if (depth >= 0) {
+			            	mTiles.remove(depth);
 			            	mTiles.add(tile);
 		            	}
 		            	
 		            	mSmallTile = tile;
 		            	mSmallTile.save();
 		            	mSmallTile.visible = false;
+		            	
+		            	int i = mSmallTile.left / mCellWidth - 1;
+		            	int j = mSmallTile.top / mCellWidth - 1;
+		            	//mGrid[i][j] = null;
+		            	
 		            	mBigTile.copy(mSmallTile);
 		            	mBigTile.visible = true;
 		            	mSavedX = x;
@@ -178,6 +183,11 @@ public class MyView extends View {
 		        case MotionEvent.ACTION_CANCEL:
 		        	if (mSmallTile != null) {
 		            	align(mSmallTile);
+
+		            	int i = mSmallTile.left / mCellWidth - 1;
+		            	int j = mSmallTile.top / mCellWidth - 1;
+		            	//mGrid[i][j] = mSmallTile;
+		            	
 		            	mBigTile.visible = false;
 		            	mSmallTile.visible = true;
 		        		mSmallTile = null;
@@ -197,8 +207,8 @@ public class MyView extends View {
     protected void onSizeChanged(int w, int h, int oldW, int oldH) {
         super.onSizeChanged(w, h, oldW, oldH);
 
-        mMinZoom = Math.min((float) getWidth() / (float) this.w,
-                	        (float) getHeight() / (float) this.h);
+        mMinZoom = Math.min((float) getWidth() / (float) mWidth,
+                	        (float) getHeight() / (float) mHeight);
 
         mMaxZoom = 2 * mMinZoom;
 
@@ -206,27 +216,39 @@ public class MyView extends View {
     }
 
     private void align(SmallTile tile) {
-    	tile.left = (tile.left / mGridWidth) * mGridWidth;
-    	tile.top = (tile.top / mGridWidth) * mGridWidth;
+    	tile.left = (tile.left / mCellWidth) * mCellWidth;
+    	tile.top = (tile.top / mCellWidth) * mCellWidth;
     	
-    	if (tile.left < mGridWidth)
-    		tile.left = mGridWidth;
-    	else if (tile.left > mGridWidth * 16)
-    		tile.left = mGridWidth * 16;
+    	int max = mCellWidth * 15;
     	
-    	if (tile.top < mGridWidth)
-    		tile.top = mGridWidth;
-    	else if (tile.top > mGridWidth * 16)
-    		tile.top = mGridWidth * 16;
+    	if (tile.left < mCellWidth)
+    		tile.left = mCellWidth;
+    	else if (tile.left > max)
+    		tile.left = max;
+    	
+    	if (tile.top < mCellWidth)
+    		tile.top = mCellWidth;
+    	else if (tile.top > max)
+    		tile.top = max;
+    	
+    	int i = tile.left / mCellWidth - 1;
+    	int j = tile.top / mCellWidth - 1;
+    	Log.d("align", "i=" + i + ", j=" + j);
+
+    	/*
+    	if (mGrid[i][j] != null) {
+    		tile.restore();
+    	}
+    	*/
     }
     
     private void shuffleTiles() {
-        Log.d("shuffleTiles", "w=" + w + ", h=" + h + ", mGridWidth=" + mGridWidth);
+        Log.d("shuffleTiles", "mWidth=" + mWidth + ", mHeight=" + mHeight + ", mGridWidth=" + mCellWidth);
         
         for (SmallTile tile: mTiles) {
             tile.move(
-            	mRandom.nextInt(w - tile.width),
-                mRandom.nextInt(h - tile.height)
+            	mRandom.nextInt(mWidth - tile.width),
+                mRandom.nextInt(mHeight - tile.height)
             );
             align(tile);
             Log.d("shuffleTiles", "tile=" + tile);
@@ -242,8 +264,8 @@ public class MyView extends View {
         //float scaleY = mValues[Matrix.MSCALE_Y];
         
         float newScale = (scaleX > mMinZoom ? mMinZoom : mMaxZoom);
-        float minX = getWidth() - newScale * w;
-        float minY = getHeight() - newScale * h;
+        float minX = getWidth() - newScale * mWidth;
+        float minY = getHeight() - newScale * mHeight;
       
         Log.d("adjustZoom", "scaleX=" + scaleX + ", newScale=" + newScale +
         		", minX=" + minX + ", minY=" + minY);
@@ -299,8 +321,8 @@ public class MyView extends View {
         float scaleX = mValues[Matrix.MSCALE_X];
         float scaleY = mValues[Matrix.MSCALE_Y];
 
-        float minX = getWidth() - scaleX * w;
-        float minY = getHeight() - scaleY * h;
+        float minX = getWidth() - scaleX * mWidth;
+        float minY = getHeight() - scaleY * mHeight;
         float maxX = 0;
         float maxY = 0;
         
@@ -358,8 +380,8 @@ public class MyView extends View {
         float scaleX = mValues[Matrix.MSCALE_X];
         float scaleY = mValues[Matrix.MSCALE_Y];
 
-        float minX = getWidth() - scaleX * w;
-        float minY = getHeight() - scaleY * h;    	
+        float minX = getWidth() - scaleX * mWidth;
+        float minY = getHeight() - scaleY * mHeight;    	
 
         float dX = 0.0f;
         float dY = 0.0f;
