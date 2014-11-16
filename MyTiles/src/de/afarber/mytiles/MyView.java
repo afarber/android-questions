@@ -107,8 +107,8 @@ public class MyView extends View {
                 mGameBoard.getIntrinsicHeight()
         );
         
+        // there are 15 cells in a row and 1 padding at each side
         mGridWidth = Math.round(mGameBoard.getIntrinsicWidth() / 17.0f);
-        Log.d("MyView", "mGridWidth=" + mGridWidth);
     }
 
     private SmallTile hitTest(float x, float y) {
@@ -177,10 +177,9 @@ public class MyView extends View {
 		        case MotionEvent.ACTION_UP:
 		        case MotionEvent.ACTION_CANCEL:
 		        	if (mSmallTile != null) {
+		            	align(mSmallTile);
 		            	mBigTile.visible = false;
 		            	mSmallTile.visible = true;
-		            	mSmallTile.left = (mSmallTile.left / mGridWidth) * mGridWidth;
-		            	mSmallTile.top = (mSmallTile.top / mGridWidth) * mGridWidth;
 		        		mSmallTile = null;
 		        		invalidate();
 		        		return true;
@@ -206,22 +205,33 @@ public class MyView extends View {
         adjustZoom();
     }
 
+    private void align(SmallTile tile) {
+    	tile.left = (tile.left / mGridWidth) * mGridWidth;
+    	tile.top = (tile.top / mGridWidth) * mGridWidth;
+    	
+    	if (tile.left < mGridWidth)
+    		tile.left = mGridWidth;
+    	else if (tile.left > mGridWidth * 16)
+    		tile.left = mGridWidth * 16;
+    	
+    	if (tile.top < mGridWidth)
+    		tile.top = mGridWidth;
+    	else if (tile.top > mGridWidth * 16)
+    		tile.top = mGridWidth * 16;
+    }
+    
     private void shuffleTiles() {
     	int w = mGameBoard.getIntrinsicWidth();
     	int h = mGameBoard.getIntrinsicHeight();
     	
-        Log.d("shuffleTiles", "w=" + w + ", h=" + h);
-
-        mBigTile.move(
-        	mRandom.nextInt(w - mBigTile.width),
-            mRandom.nextInt(h - mBigTile.height)
-        );
+        Log.d("shuffleTiles", "w=" + w + ", h=" + h + ", mGridWidth=" + mGridWidth);
         
         for (SmallTile tile: mTiles) {
             tile.move(
             	mRandom.nextInt(w - tile.width),
                 mRandom.nextInt(h - tile.height)
             );
+            align(tile);
             Log.d("shuffleTiles", "tile=" + tile);
         }
     }
