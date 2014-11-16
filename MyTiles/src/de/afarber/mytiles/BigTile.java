@@ -94,16 +94,13 @@ public class BigTile {
 
 	public void setLetter(char c) {
 		mLetter = c;
+		mValue = sValues.get(c);
 	}
 
 	public int getValue() {
 		return mValue;
 	}
 
-	public void setValue(int n) {
-		mValue = n;
-	}
-	
 	public void copy(SmallTile tile) {
 		int dX = (width - tile.width) / 2;
 		int dY = (height - tile.height) / 2;
@@ -112,6 +109,5 @@ public class BigTile {
 		savedLeft = tile.savedLeft - dX;
 		savedTop = tile.savedTop - dY;
 		setLetter(tile.getLetter());
-		setValue(tile.getValue());
 	}	
 }

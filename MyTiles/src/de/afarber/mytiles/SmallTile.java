@@ -94,13 +94,10 @@ public class SmallTile {
 
 	public void setLetter(char c) {
 		mLetter = c;
+		mValue = sValues.get(c);
 	}
 
 	public int getValue() {
 		return mValue;
-	}
-
-	public void setValue(int n) {
-		mValue = n;
 	}
 }
