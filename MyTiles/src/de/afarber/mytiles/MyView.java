@@ -36,6 +36,8 @@ public class MyView extends View {
     private ScrollerCompat mScroller;
     private GestureDetector mGestureDetector;
     private ScaleGestureDetector mScaleDetector;
+    
+    private int mGridWidth;
 
     public MyView(Context context) {
         this(context, null);
@@ -104,6 +106,9 @@ public class MyView extends View {
                 mGameBoard.getIntrinsicWidth(),
                 mGameBoard.getIntrinsicHeight()
         );
+        
+        mGridWidth = Math.round(mGameBoard.getIntrinsicWidth() / 17.0f);
+        Log.d("MyView", "mGridWidth=" + mGridWidth);
     }
 
     private SmallTile hitTest(float x, float y) {
@@ -174,6 +179,8 @@ public class MyView extends View {
 		        	if (mSmallTile != null) {
 		            	mBigTile.visible = false;
 		            	mSmallTile.visible = true;
+		            	mSmallTile.left = (mSmallTile.left / mGridWidth) * mGridWidth;
+		            	mSmallTile.top = (mSmallTile.top / mGridWidth) * mGridWidth;
 		        		mSmallTile = null;
 		        		invalidate();
 		        		return true;
