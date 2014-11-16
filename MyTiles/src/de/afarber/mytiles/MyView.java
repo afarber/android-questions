@@ -37,7 +37,11 @@ public class MyView extends View {
     private GestureDetector mGestureDetector;
     private ScaleGestureDetector mScaleDetector;
     
+    private int w;
+    private int h;
     private int mGridWidth;
+    private SmallTile[][] mGrid = new SmallTile[15][15];
+
 
     public MyView(Context context) {
         this(context, null);
@@ -99,16 +103,12 @@ public class MyView extends View {
 
         mGestureDetector = new GestureDetector(context, gestureListener);
         mScaleDetector = new ScaleGestureDetector(context, scaleListener);
-        
-        mGameBoard.setBounds(
-                0,
-                0,
-                mGameBoard.getIntrinsicWidth(),
-                mGameBoard.getIntrinsicHeight()
-        );
-        
+
+        w = mGameBoard.getIntrinsicWidth();
+        h = mGameBoard.getIntrinsicHeight();
+        mGameBoard.setBounds(0, 0, w, h);
         // there are 15 cells in a row and 1 padding at each side
-        mGridWidth = Math.round(mGameBoard.getIntrinsicWidth() / 17.0f);
+        mGridWidth = Math.round(w / 17.0f);
     }
 
     private SmallTile hitTest(float x, float y) {
@@ -197,8 +197,8 @@ public class MyView extends View {
     protected void onSizeChanged(int w, int h, int oldW, int oldH) {
         super.onSizeChanged(w, h, oldW, oldH);
 
-        mMinZoom = Math.min((float) getWidth() / (float) mGameBoard.getIntrinsicWidth(),
-                (float) getHeight() / (float) mGameBoard.getIntrinsicHeight());
+        mMinZoom = Math.min((float) getWidth() / (float) this.w,
+                	        (float) getHeight() / (float) this.h);
 
         mMaxZoom = 2 * mMinZoom;
 
@@ -221,9 +221,6 @@ public class MyView extends View {
     }
     
     private void shuffleTiles() {
-    	int w = mGameBoard.getIntrinsicWidth();
-    	int h = mGameBoard.getIntrinsicHeight();
-    	
         Log.d("shuffleTiles", "w=" + w + ", h=" + h + ", mGridWidth=" + mGridWidth);
         
         for (SmallTile tile: mTiles) {
@@ -245,8 +242,8 @@ public class MyView extends View {
         //float scaleY = mValues[Matrix.MSCALE_Y];
         
         float newScale = (scaleX > mMinZoom ? mMinZoom : mMaxZoom);
-        float minX = getWidth() - newScale * mGameBoard.getIntrinsicWidth();
-        float minY = getHeight() - newScale * mGameBoard.getIntrinsicHeight();
+        float minX = getWidth() - newScale * w;
+        float minY = getHeight() - newScale * h;
       
         Log.d("adjustZoom", "scaleX=" + scaleX + ", newScale=" + newScale +
         		", minX=" + minX + ", minY=" + minY);
@@ -302,8 +299,8 @@ public class MyView extends View {
         float scaleX = mValues[Matrix.MSCALE_X];
         float scaleY = mValues[Matrix.MSCALE_Y];
 
-        float minX = getWidth() - scaleX * mGameBoard.getIntrinsicWidth();
-        float minY = getHeight() - scaleY * mGameBoard.getIntrinsicHeight();
+        float minX = getWidth() - scaleX * w;
+        float minY = getHeight() - scaleY * h;
         float maxX = 0;
         float maxY = 0;
         
@@ -342,8 +339,8 @@ public class MyView extends View {
         float scaleX = mValues[Matrix.MSCALE_X];
         //float scaleY = mValues[Matrix.MSCALE_Y];
 
-        //float minX = getWidth() - scaleX * mGameBoard.getIntrinsicWidth();
-        //float minY = getHeight() - scaleY * mGameBoard.getIntrinsicHeight();   
+        //float minX = getWidth() - scaleX * w;
+        //float minY = getHeight() - scaleY * h;   
         
         if (scaleX > mMaxZoom) {
         	float factor = mMaxZoom / scaleX;
@@ -361,8 +358,8 @@ public class MyView extends View {
         float scaleX = mValues[Matrix.MSCALE_X];
         float scaleY = mValues[Matrix.MSCALE_Y];
 
-        float minX = getWidth() - scaleX * mGameBoard.getIntrinsicWidth();
-        float minY = getHeight() - scaleY * mGameBoard.getIntrinsicHeight();    	
+        float minX = getWidth() - scaleX * w;
+        float minY = getHeight() - scaleY * h;    	
 
         float dX = 0.0f;
         float dY = 0.0f;
