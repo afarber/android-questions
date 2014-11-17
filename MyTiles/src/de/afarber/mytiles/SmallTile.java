@@ -5,6 +5,7 @@ import java.util.HashMap;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 public class SmallTile {
 	private static final String PREFIX = "small_";
@@ -15,6 +16,8 @@ public class SmallTile {
 	private static final int[] VALUES =   { 1,   4,   4,   2,   1,   4,   3,   3,   1,  10,   5,   2,   4,   2,   1,   4,  12,   1,   1,   1,   2,   5,   4,   8,   3,  10 };
 	private static HashMap<Character, Drawable> sLetters = new HashMap<Character, Drawable>();
 	private static HashMap<Character, Integer> sValues = new HashMap<Character, Integer>();
+	
+	public static int sCellWidth;
 	
 	public int left;
 	public int top;
@@ -105,4 +108,14 @@ public class SmallTile {
 	public int getValue() {
 		return mValue;
 	}
+	
+	/* in which column and row of game board is this tile placed? */
+	public int getColumn() {
+		return left / sCellWidth - 1;
+	}
+
+	public int getRow() {
+		return top / sCellWidth - 1;
+	}
 }
+

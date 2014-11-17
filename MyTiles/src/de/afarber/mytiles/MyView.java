@@ -39,7 +39,6 @@ public class MyView extends View {
     
     private int mWidth;
     private int mHeight;
-    private int mCellWidth;
     private SmallTile[][] mGrid = new SmallTile[15][15];
 
 
@@ -108,7 +107,7 @@ public class MyView extends View {
         mHeight = mGameBoard.getIntrinsicHeight();
         mGameBoard.setBounds(0, 0, mWidth, mHeight);
         // there are 15 cells in a row and 1 padding at each side
-        mCellWidth = Math.round(mWidth / 17.0f);
+        SmallTile.sCellWidth = Math.round(mWidth / 17.0f);
     }
 
     private SmallTile hitTest(float x, float y) {
@@ -155,9 +154,9 @@ public class MyView extends View {
 		            	mSmallTile.save();
 		            	mSmallTile.visible = false;
 		            	
-		            	int i = mSmallTile.left / mCellWidth - 1;
-		            	int j = mSmallTile.top / mCellWidth - 1;
-		            	//mGrid[i][j] = null;
+		            	int col = mSmallTile.getColumn();
+		            	int row = mSmallTile.getRow();
+		            	mGrid[col][row] = null;
 		            	
 		            	mBigTile.copy(mSmallTile);
 		            	mBigTile.visible = true;
@@ -182,11 +181,10 @@ public class MyView extends View {
 		        case MotionEvent.ACTION_UP:
 		        case MotionEvent.ACTION_CANCEL:
 		        	if (mSmallTile != null) {
-		            	align(mSmallTile);
-
-		            	int i = mSmallTile.left / mCellWidth - 1;
-		            	int j = mSmallTile.top / mCellWidth - 1;
-		            	//mGrid[i][j] = mSmallTile;
+		            	fixPosition(mSmallTile);
+		            	int col = mSmallTile.getColumn();
+		            	int row = mSmallTile.getRow();
+		            	mGrid[col][row] = mSmallTile;
 		            	
 		            	mBigTile.visible = false;
 		            	mSmallTile.visible = true;
@@ -215,42 +213,15 @@ public class MyView extends View {
         adjustZoom();
     }
 
-    private void align(SmallTile tile) {
-    	tile.left = (tile.left / mCellWidth) * mCellWidth;
-    	tile.top = (tile.top / mCellWidth) * mCellWidth;
-    	
-    	int max = mCellWidth * 15;
-    	
-    	if (tile.left < mCellWidth)
-    		tile.left = mCellWidth;
-    	else if (tile.left > max)
-    		tile.left = max;
-    	
-    	if (tile.top < mCellWidth)
-    		tile.top = mCellWidth;
-    	else if (tile.top > max)
-    		tile.top = max;
-    	
-    	int i = tile.left / mCellWidth - 1;
-    	int j = tile.top / mCellWidth - 1;
-    	Log.d("align", "i=" + i + ", j=" + j);
-
-    	/*
-    	if (mGrid[i][j] != null) {
-    		tile.restore();
-    	}
-    	*/
-    }
-    
     private void shuffleTiles() {
-        Log.d("shuffleTiles", "mWidth=" + mWidth + ", mHeight=" + mHeight + ", mGridWidth=" + mCellWidth);
+        Log.d("shuffleTiles", "mWidth=" + mWidth + ", mHeight=" + mHeight + ", sCellWidth=" + SmallTile.sCellWidth);
         
         for (SmallTile tile: mTiles) {
             tile.move(
             	mRandom.nextInt(mWidth - tile.width),
                 mRandom.nextInt(mHeight - tile.height)
             );
-            align(tile);
+            fixPosition(tile);
             Log.d("shuffleTiles", "tile=" + tile);
         }
     }
@@ -404,5 +375,21 @@ public class MyView extends View {
         	mMatrix.postTranslate(dX, dY);
     }
     
-    
+    private void fixPosition(SmallTile tile) {
+    	int col = tile.getColumn();
+    	int row = tile.getRow();
+    	
+    	if (col < 0)
+    		col = 0;
+    	else if (col > 14)
+    		col = 14;
+
+    	if (row < 0)
+    		row = 0;
+    	else if (row > 14)
+    		row = 14;
+    	
+    	tile.left = (col + 1) * SmallTile.sCellWidth;
+    	tile.top = (row + 1) * SmallTile.sCellWidth;
+    }
 }
