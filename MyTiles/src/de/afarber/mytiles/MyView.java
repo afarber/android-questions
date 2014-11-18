@@ -77,8 +77,10 @@ public class MyView extends View {
 
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float vX, float vY) {
-            	if (!TOO_OLD)
-            		fling(vX, vY);
+            	if (TOO_OLD)
+            		return false;
+            	
+            	fling(vX, vY);
                 return true;
             }
 
@@ -93,6 +95,9 @@ public class MyView extends View {
         ScaleGestureDetector.SimpleOnScaleGestureListener scaleListener = new ScaleGestureDetector.SimpleOnScaleGestureListener() {
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
+            	if (TOO_OLD)
+            		return false;
+            	
                 mScroller.abortAnimation();
                 float factor = detector.getScaleFactor();
                 Log.d("onScale", "factor=" + factor);
@@ -381,6 +386,15 @@ public class MyView extends View {
     private void alignToGrid(SmallTile tile) {
     	int col = tile.getColumn();
     	int row = tile.getRow();
+    	
+    	while (mGrid[col][row] != null) {
+    		// TODO fix finding a free cell
+    		
+    		col = (col + 1) % 15;
+
+    		if (col == 14)
+        		row = (row + 1) % 15;
+    	}
     	
     	tile.left = (col + 1) * SmallTile.sCellWidth;
     	tile.top = (row + 1) * SmallTile.sCellWidth;
