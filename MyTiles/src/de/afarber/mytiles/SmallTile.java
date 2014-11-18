@@ -9,7 +9,7 @@ import android.util.Log;
 
 public class SmallTile {
 	private static final String PREFIX = "small_";
-	private static final int TILE = R.drawable.small_tile;
+	private static final int TILE = R.drawable.round;
 	private static final int ALPHA = 220;
 	
 	private static final char[] LETTERS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};

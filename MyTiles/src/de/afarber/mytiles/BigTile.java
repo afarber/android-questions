@@ -8,7 +8,7 @@ import android.graphics.drawable.Drawable;
 
 public class BigTile {
 	private static final String PREFIX = "big_";
-	private static final int TILE = R.drawable.big_tile;
+	private static final int TILE = R.drawable.shadow;
 	private static final int ALPHA = 200;
 	
 	private static final char[] LETTERS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
