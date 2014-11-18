@@ -10,15 +10,12 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="255"
-   height="255"
+   width="260"
+   height="250"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.5 r10040"
-   sodipodi:docname="game_board.svg"
-   inkscape:export-filename="C:\Users\U299FAV\git\android-newbie\MyTiles\res\drawable-mdpi\game_board.png"
-   inkscape:export-xdpi="270"
-   inkscape:export-ydpi="270">
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="Blank_Scrabble_board_english.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -28,21 +25,20 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="4.1843137"
-     inkscape:cx="-16.968135"
-     inkscape:cy="219.97337"
+     inkscape:zoom="7.253192"
+     inkscape:cx="117.89964"
+     inkscape:cy="185.76091"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="true"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:window-width="1680"
-     inkscape:window-height="947"
+     inkscape:window-width="1920"
+     inkscape:window-height="996"
      inkscape:window-x="-4"
      inkscape:window-y="-4"
      inkscape:window-maximized="1"
-     inkscape:snap-grids="false"
-     inkscape:snap-bbox="true">
+     inkscape:snap-grids="false">
     <inkscape:grid
        type="xygrid"
        id="grid3146"
@@ -52,8 +48,8 @@
        snapvisiblegridlinesonly="true"
        spacingx="15px"
        spacingy="15px"
-       originy="0px"
-       originx="0px" />
+       originy="-2.5px"
+       originx="2.5px" />
   </sodipodi:namedview>
   <metadata
      id="metadata7">
@@ -63,30 +59,15 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
      inkscape:groupmode="layer"
-     id="layer3"
-     inkscape:label="White background"
-     sodipodi:insensitive="true">
-    <rect
-       style="fill:#ffffff"
-       id="rect3142"
-       width="255.20041"
-       height="256.14157"
-       x="-0.23756552"
-       y="-0.38293174" />
-  </g>
-  <g
-     inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="Squares"
-     transform="translate(15.886475,18.571145)"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     transform="translate(15.886475,13.571145)">
     <use
        x="0"
        y="0"
@@ -97,7 +78,7 @@
        height="250" />
     <g
        id="g3689"
-       transform="translate(-0.28699811,-3.4468005)">
+       transform="translate(1.613526,-1.0711453)">
       <rect
          y="210"
          x="0"
@@ -120,9 +101,9 @@
     </g>
     <g
        id="g3802"
-       transform="translate(14.713002,-18.4468)">
+       transform="translate(16.613526,-16.071145)">
       <rect
-         style="color:#000000;fill:#ff99ff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.105;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         style="color:#000000;fill:#ff99ff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.10500000000000000;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
          id="rect3804"
          width="15"
          height="15"
@@ -146,7 +127,7 @@
        y="0"
        xlink:href="#g3802"
        id="use3812"
-       transform="translate(180,-4.420556e-8)"
+       transform="translate(180,0)"
        width="226"
        height="226" />
     <use
@@ -238,16 +219,16 @@
        width="226"
        height="226" />
     <g
-       transform="translate(29.713002,-33.4468)"
+       transform="translate(31.613526,-31.071145)"
        id="g3836" />
     <g
        id="g3846"
-       transform="translate(44.713002,-48.4468)" />
+       transform="translate(46.613526,-46.071145)" />
     <g
-       transform="translate(59.713002,-63.4468)"
+       transform="translate(61.613526,-61.071145)"
        id="g3856" />
     <g
-       transform="translate(104.713,-108.4468)"
+       transform="translate(106.61353,-106.07115)"
        id="g3866">
       <rect
          y="210"
@@ -255,7 +236,7 @@
          height="15"
          width="15"
          id="rect3868"
-         style="color:#000000;fill:#ff99ff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.105;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+         style="color:#000000;fill:#ff99ff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.10500000000000000;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
     </g>
     <path
        sodipodi:type="star"
@@ -272,10 +253,10 @@
        inkscape:rounded="0"
        inkscape:randomized="0"
        d="m 114.8145,106.5389 1.64817,5.07255 5.33359,0 -4.31496,3.13501 1.64817,5.07255 -4.31497,-3.13501 -4.31497,3.13501 1.64817,-5.07255 -4.31497,-3.13501 5.3336,0 z"
-       transform="translate(-2.6014971,-4.1257582)" />
+       transform="translate(-0.700973,-1.750103)" />
     <g
        id="g3884"
-       transform="translate(74.713002,-18.4468)">
+       transform="translate(76.613526,-16.071145)">
       <rect
          style="color:#000000;fill:#0033ff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.105;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
          id="rect3886"
@@ -301,7 +282,7 @@
        y="0"
        xlink:href="#g3884"
        id="use3894"
-       transform="translate(60,-4.420556e-8)"
+       transform="translate(60,0)"
        width="226"
        height="226" />
     <use
@@ -385,7 +366,7 @@
        width="226"
        height="226" />
     <g
-       transform="translate(44.713002,-3.4468005)"
+       transform="translate(46.613526,-1.0711453)"
        id="g3918">
       <rect
          y="210"
@@ -393,7 +374,7 @@
          height="15"
          width="15"
          id="rect3920"
-         style="color:#000000;fill:#66ccff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.105;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+         style="color:#000000;fill:#66ccff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.10500000000000000;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
       <text
          id="text3922"
          y="221.06372"
@@ -412,7 +393,7 @@
        y="0"
        xlink:href="#g3918"
        id="use3928"
-       transform="translate(120,-4.4205562e-8)"
+       transform="translate(120,0)"
        width="226"
        height="226" />
     <use
@@ -593,84 +574,84 @@
        x="0" />
     <text
        id="text3982"
-       y="8.0113258"
-       x="-8.109376"
+       y="10.386981"
+       x="-7.3093262"
        style="font-size:12.5px;font-style:normal;font-weight:normal;text-align:center;line-height:120.00000477%;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Monospace;-inkscape-font-specification:Monospace"
        xml:space="preserve"
        sodipodi:linespacing="120%"><tspan
          style="font-size:12.5px;font-weight:bold;text-align:center;text-anchor:middle"
-         y="8.0113258"
-         x="-8.109376"
+         y="10.386981"
+         x="-7.3093262"
          id="tspan3984"
          sodipodi:role="line">1</tspan><tspan
          style="font-size:12.5px;font-weight:bold;text-align:center;text-anchor:middle"
-         y="23.011326"
-         x="-8.109376"
+         y="25.386982"
+         x="-7.3093262"
          sodipodi:role="line"
          id="tspan3990">2</tspan><tspan
          style="font-size:12.5px;font-weight:bold;text-align:center;text-anchor:middle"
-         y="38.011326"
-         x="-8.109376"
+         y="40.386982"
+         x="-7.3093262"
          sodipodi:role="line"
          id="tspan3996">3</tspan><tspan
          style="font-size:12.5px;font-weight:bold;text-align:center;text-anchor:middle"
-         y="53.011326"
-         x="-8.109376"
+         y="55.386982"
+         x="-7.3093262"
          sodipodi:role="line"
          id="tspan3998">4</tspan><tspan
          style="font-size:12.5px;font-weight:bold;text-align:center;text-anchor:middle"
-         y="68.01133"
-         x="-8.109376"
+         y="70.386986"
+         x="-7.3093262"
          sodipodi:role="line"
          id="tspan4000">5</tspan><tspan
          style="font-size:12.5px;font-weight:bold;text-align:center;text-anchor:middle"
-         y="83.01133"
-         x="-8.109376"
+         y="85.386986"
+         x="-7.3093262"
          sodipodi:role="line"
          id="tspan4002">6</tspan><tspan
          style="font-size:12.5px;font-weight:bold;text-align:center;text-anchor:middle"
-         y="98.01133"
-         x="-8.109376"
+         y="100.38699"
+         x="-7.3093262"
          sodipodi:role="line"
          id="tspan4004">7</tspan><tspan
          style="font-size:12.5px;font-weight:bold;text-align:center;text-anchor:middle"
-         y="113.01133"
-         x="-8.109376"
+         y="115.38699"
+         x="-7.3093262"
          sodipodi:role="line"
          id="tspan4006">8</tspan><tspan
          style="font-size:12.5px;font-weight:bold;text-align:center;text-anchor:middle"
-         y="128.01134"
-         x="-8.109376"
+         y="130.38699"
+         x="-7.3093262"
          sodipodi:role="line"
          id="tspan4008">9</tspan><tspan
          style="font-size:12.5px;font-weight:bold;text-align:center;text-anchor:middle"
-         y="143.01134"
-         x="-8.109376"
+         y="145.38699"
+         x="-7.3093262"
          sodipodi:role="line"
          id="tspan4010">10</tspan><tspan
          style="font-size:12.5px;font-weight:bold;text-align:center;text-anchor:middle"
-         y="158.01134"
-         x="-8.109376"
+         y="160.38699"
+         x="-7.3093262"
          sodipodi:role="line"
          id="tspan4012">11</tspan><tspan
          style="font-size:12.5px;font-weight:bold;text-align:center;text-anchor:middle"
-         y="173.01134"
-         x="-8.109376"
+         y="175.38699"
+         x="-7.3093262"
          sodipodi:role="line"
          id="tspan4014">12</tspan><tspan
          style="font-size:12.5px;font-weight:bold;text-align:center;text-anchor:middle"
-         y="188.01134"
-         x="-8.109376"
+         y="190.38699"
+         x="-7.3093262"
          sodipodi:role="line"
          id="tspan4016">13</tspan><tspan
          style="font-size:12.5px;font-weight:bold;text-align:center;text-anchor:middle"
-         y="203.01134"
-         x="-8.109376"
+         y="205.38699"
+         x="-7.3093262"
          sodipodi:role="line"
          id="tspan4018">14</tspan><tspan
          style="font-size:12.5px;font-weight:bold;text-align:center;text-anchor:middle"
-         y="218.01134"
-         x="-8.109376"
+         y="220.38699"
+         x="-7.3093262"
          sodipodi:role="line"
          id="tspan4020">15</tspan></text>
     <use
@@ -678,12 +659,11 @@
        y="0"
        xlink:href="#text3982"
        id="use4062"
-       transform="translate(240.368,5.5794448e-8)"
+       transform="translate(242.6687,9.3002313e-8)"
        width="226"
        height="226" />
     <g
-       id="g4570"
-       transform="translate(-1.9005241,-2.3756552)">
+       id="g4570">
       <text
          id="text3974"
          y="-3.4133327"
@@ -855,7 +835,7 @@
        y="0"
        xlink:href="#g4570"
        id="use4604"
-       transform="translate(1.9261666e-7,239.18784)"
+       transform="translate(1.9531249e-7,237.08794)"
        width="260"
        height="250" />
     <use
@@ -885,7 +865,7 @@
     <use
        height="250"
        width="260"
-       transform="translate(210,-4.4205562e-8)"
+       transform="translate(210,0)"
        id="use4667"
        xlink:href="#g3689"
        y="0"
@@ -927,12 +907,12 @@
        y="0"
        xlink:href="#g3689"
        id="use4665"
-       transform="translate(105,-4.4205562e-8)"
+       transform="translate(105,0)"
        width="260"
        height="250" />
     <rect
-       y="-3.4468002"
-       x="-0.28699899"
+       y="-1.0711451"
+       x="1.613525"
        height="225"
        width="225"
        id="rect2852"
@@ -942,12 +922,11 @@
      inkscape:label="Grid"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(16.386475,19.071145)"
-     sodipodi:insensitive="true"
-     style="display:inline">
+     transform="translate(16.386475,14.071145)"
+     sodipodi:insensitive="true">
     <g
        id="g4205"
-       transform="translate(-0.78699914,-3.9468002)">
+       transform="translate(1.113525,-1.571145)">
       <path
          id="path2818"
          d="m 15,0 0,225"

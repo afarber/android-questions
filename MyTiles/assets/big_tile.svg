@@ -7,16 +7,31 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="217.8"
-   height="217.8"
+   width="150"
+   height="150"
    id="svg3164"
    version="1.1"
    inkscape:version="0.48.5 r10040"
-   sodipodi:docname="small_tile.svg">
+   sodipodi:docname="big_tile.svg"
+   inkscape:export-filename="C:\Users\U299FAV\git\android-newbie\MyTiles\res\drawable-mdpi\big_tile.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <defs
      id="defs3166">
+    <linearGradient
+       id="linearGradient3800">
+      <stop
+         style="stop-color:#ffcc00;stop-opacity:1;"
+         offset="0"
+         id="stop3802" />
+      <stop
+         style="stop-color:#fff5cd;stop-opacity:1;"
+         offset="1"
+         id="stop3804" />
+    </linearGradient>
     <filter
        inkscape:label="Drop Shadow"
        id="filter4022"
@@ -48,6 +63,78 @@
          result="composite2"
          id="feComposite4032" />
     </filter>
+    <filter
+       inkscape:label="Drop Shadow"
+       id="filter3770"
+       color-interpolation-filters="sRGB">
+      <feFlood
+         flood-opacity="0.25"
+         flood-color="rgb(0,0,0)"
+         result="flood"
+         id="feFlood3772" />
+      <feComposite
+         in="flood"
+         in2="SourceGraphic"
+         operator="in"
+         result="composite1"
+         id="feComposite3774" />
+      <feGaussianBlur
+         stdDeviation="2"
+         result="blur"
+         id="feGaussianBlur3776" />
+      <feOffset
+         dx="8"
+         dy="8"
+         result="offset"
+         id="feOffset3778" />
+      <feComposite
+         in="SourceGraphic"
+         in2="offset"
+         operator="over"
+         result="composite2"
+         id="feComposite3780" />
+    </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3800"
+       id="linearGradient3806"
+       x1="75.599998"
+       y1="134.39999"
+       x2="75.599998"
+       y2="14.399988"
+       gradientUnits="userSpaceOnUse" />
+    <filter
+       style="color-interpolation-filters:sRGB;"
+       inkscape:label="Drop Shadow"
+       id="filter3808">
+      <feFlood
+         flood-opacity="0.25"
+         flood-color="rgb(0,0,0)"
+         result="flood"
+         id="feFlood3810" />
+      <feComposite
+         in="flood"
+         in2="SourceGraphic"
+         operator="in"
+         result="composite1"
+         id="feComposite3812" />
+      <feGaussianBlur
+         in="composite"
+         stdDeviation="2"
+         result="blur"
+         id="feGaussianBlur3814" />
+      <feOffset
+         dx="8"
+         dy="8"
+         result="offset"
+         id="feOffset3816" />
+      <feComposite
+         in="SourceGraphic"
+         in2="offset"
+         operator="over"
+         result="composite2"
+         id="feComposite3818" />
+    </filter>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -56,18 +143,18 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2"
-     inkscape:cx="110.40292"
-     inkscape:cy="103.2122"
+     inkscape:zoom="6.5674603"
+     inkscape:cx="75.6"
+     inkscape:cy="75.599994"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:snap-bbox="true"
-     inkscape:window-width="669"
-     inkscape:window-height="683"
-     inkscape:window-x="204"
-     inkscape:window-y="181"
-     inkscape:window-maximized="0"
+     inkscape:window-width="1600"
+     inkscape:window-height="1181"
+     inkscape:window-x="1676"
+     inkscape:window-y="-4"
+     inkscape:window-maximized="1"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
@@ -79,10 +166,10 @@
        visible="true"
        enabled="true"
        snapvisiblegridlinesonly="true"
-       spacingx="20px"
-       spacingy="20px"
-       originx="18.9px"
-       originy="-921.1px" />
+       spacingx="15px"
+       spacingy="15px"
+       originx="15.6px"
+       originy="15.600012px" />
   </sodipodi:namedview>
   <metadata
      id="metadata3169">
@@ -100,15 +187,16 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(18.9,86.537817)">
+     transform="translate(34.5,3.1378112)">
     <rect
-       style="fill:#ff6600;stroke:#000000;stroke-width:1.5;stroke-opacity:1;filter:url(#filter4022)"
-       id="rect3176"
-       width="180"
-       height="180"
-       x="0"
-       y="-67.637817"
-       rx="12"
-       ry="12" />
+       style="fill:url(#linearGradient3806);stroke:#d98525;stroke-width:6;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;fill-opacity:1;filter:url(#filter3808)"
+       id="rect3790"
+       width="120"
+       height="120"
+       x="15.6"
+       y="14.399988"
+       transform="translate(-34.5,-3.1378112)"
+       rx="20"
+       ry="20" />
   </g>
 </svg>
