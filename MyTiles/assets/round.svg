@@ -10,12 +10,12 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="210"
-   height="90"
+   width="120"
+   height="120"
    id="svg3164"
    version="1.1"
    inkscape:version="0.48.5 r10040"
-   sodipodi:docname="small_tile.svg"
+   sodipodi:docname="square.svg"
    inkscape:export-filename="C:\Users\U299FAV\git\android-newbie\MyTiles\res\drawable-mdpi\small_tile.png"
    inkscape:export-xdpi="43.09"
    inkscape:export-ydpi="43.09">
@@ -80,7 +80,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2"
-     inkscape:cx="212.5"
+     inkscape:cx="-51.5"
      inkscape:cy="-36.639964"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -102,8 +102,8 @@
        visible="true"
        enabled="true"
        snapvisiblegridlinesonly="true"
-       spacingx="15px"
-       spacingy="15px"
+       spacingx="20px"
+       spacingy="20px"
        originx="0px"
        originy="1.7187503e-008px" />
   </sodipodi:namedview>
@@ -123,7 +123,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0.5,-22.862183)">
+     transform="translate(0.5,7.137817)">
     <path
        style="fill:#000000"
        d=""
@@ -140,26 +140,13 @@
        id="path3765"
        inkscape:connector-curvature="0" />
     <rect
-       style="fill:url(#linearGradient3807);fill-opacity:1;stroke:#d98525;stroke-width:4;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       id="rect3791"
-       width="90"
-       height="90"
-       x="-0.5"
-       y="22.862183"
-       rx="15"
-       ry="15"
-       inkscape:export-filename="C:\Users\U299FAV\git\android-newbie\MyTiles\res\drawable-mdpi\small_tile.png"
-       inkscape:export-xdpi="43.09"
-       inkscape:export-ydpi="43.09" />
-    <rect
-       style="fill:url(#linearGradient3826);fill-opacity:1;stroke:#d98525;stroke-width:4;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       id="rect3791-2"
-       width="90"
-       height="90"
-       x="119.5"
-       y="22.862183"
-       inkscape:export-filename="C:\Users\U299FAV\git\android-newbie\MyTiles\res\drawable-mdpi\small_tile.png"
-       inkscape:export-xdpi="43.09"
-       inkscape:export-ydpi="43.09" />
+       style="fill:#ffcc00;fill-opacity:1;stroke:none"
+       id="rect2997"
+       width="120"
+       height="120"
+       x="0"
+       y="-1.7187503e-008"
+       transform="translate(-0.5,-7.137817)"
+       ry="20" />
   </g>
 </svg>
