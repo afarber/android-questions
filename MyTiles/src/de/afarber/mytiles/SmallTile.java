@@ -111,11 +111,11 @@ public class SmallTile {
 	
 	/* in which column and row of game board is this tile placed? */
 	public int getColumn() {
-		return left / sCellWidth - 1;
+		return (left + width / 2) / sCellWidth - 1;
 	}
 
 	public int getRow() {
-		return top / sCellWidth - 1;
+		return (top + height / 2) / sCellWidth - 1;
 	}
 }
 
