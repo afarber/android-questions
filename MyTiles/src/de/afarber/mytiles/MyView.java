@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.v4.widget.ScrollerCompat;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -17,7 +18,8 @@ import android.view.View;
 
 public class MyView extends View {
 	private static final char[] LETTERS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
-
+	private static final boolean TOO_OLD = (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH);
+	
     private Drawable mGameBoard = getResources().getDrawable(R.drawable.game_board);
     private ArrayList<SmallTile> mTiles = new ArrayList<SmallTile>();
     private SmallTile mSmallTile = null;
@@ -75,7 +77,8 @@ public class MyView extends View {
 
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float vX, float vY) {
-                fling(vX, vY);
+            	if (!TOO_OLD)
+            		fling(vX, vY);
                 return true;
             }
 
@@ -181,7 +184,7 @@ public class MyView extends View {
 		        case MotionEvent.ACTION_UP:
 		        case MotionEvent.ACTION_CANCEL:
 		        	if (mSmallTile != null) {
-		            	fixPosition(mSmallTile);
+		            	alignToGrid(mSmallTile);
 		            	int col = mSmallTile.getColumn();
 		            	int row = mSmallTile.getRow();
 		            	mGrid[col][row] = mSmallTile;
@@ -221,7 +224,7 @@ public class MyView extends View {
             	mRandom.nextInt(mWidth - tile.width),
                 mRandom.nextInt(mHeight - tile.height)
             );
-            fixPosition(tile);
+            alignToGrid(tile);
             Log.d("shuffleTiles", "tile=" + tile);
         }
     }
@@ -375,19 +378,9 @@ public class MyView extends View {
         	mMatrix.postTranslate(dX, dY);
     }
     
-    private void fixPosition(SmallTile tile) {
+    private void alignToGrid(SmallTile tile) {
     	int col = tile.getColumn();
     	int row = tile.getRow();
-    	
-    	if (col < 0)
-    		col = 0;
-    	else if (col > 14)
-    		col = 14;
-
-    	if (row < 0)
-    		row = 0;
-    	else if (row > 14)
-    		row = 14;
     	
     	tile.left = (col + 1) * SmallTile.sCellWidth;
     	tile.top = (row + 1) * SmallTile.sCellWidth;
