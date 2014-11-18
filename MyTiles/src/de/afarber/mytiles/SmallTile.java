@@ -9,6 +9,8 @@ import android.util.Log;
 
 public class SmallTile {
 	private static final String PREFIX = "small_";
+	private static final String SQUARE = "square_";
+	private static final String ROUND = "round_";
 	private static final int TILE = R.drawable.round;
 	private static final int ALPHA = 220;
 	
@@ -16,6 +18,8 @@ public class SmallTile {
 	private static final int[] VALUES =   { 1,   4,   4,   2,   1,   4,   3,   3,   1,  10,   5,   2,   4,   2,   1,   4,  12,   1,   1,   1,   2,   5,   4,   8,   3,  10 };
 	private static HashMap<Character, Drawable> sLetters = new HashMap<Character, Drawable>();
 	private static HashMap<Character, Integer> sValues = new HashMap<Character, Integer>();
+	private static Drawable[] sSquare = new Drawable[4];
+	private static Drawable[] sRound = new Drawable[4];
 	
 	public static int sCellWidth;
 	
@@ -42,10 +46,22 @@ public class SmallTile {
 	    if (sLetters.size() > 0)
 	    	return;
 	    
+	    String packageName = context.getPackageName();
+	    
+	    for (int i = 0; i < 4; i++) {
+	    	int id = context.getResources().getIdentifier(SQUARE + i, "drawable", packageName);
+		    sSquare[i] = context.getResources().getDrawable(id);
+	    }
+	    
+	    for (int i = 0; i < 4; i++) {
+	    	int id = context.getResources().getIdentifier(ROUND + i, "drawable", packageName);
+		    sRound[i] = context.getResources().getDrawable(id);
+	    }
+	    
 	    for (int i = 0; i < LETTERS.length; i++) {
 	    	char c = LETTERS[i];
 	    	int v = VALUES[i];
-	    	int id = context.getResources().getIdentifier(PREFIX + i, "drawable", context.getPackageName());
+	    	int id = context.getResources().getIdentifier(PREFIX + i, "drawable", packageName);
 	    	Drawable d = context.getResources().getDrawable(id);
 	    	d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
 	    	sLetters.put(c, d);
