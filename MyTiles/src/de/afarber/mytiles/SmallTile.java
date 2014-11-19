@@ -31,42 +31,53 @@ public class SmallTile {
 	public int height;
 	public boolean visible = true;
 	
-	private Drawable mBackground;
+	private Drawable[] mBackground = new Drawable[4];
 	
 	private char mLetter;
 	private int mValue;
 	
     public SmallTile(Context context) {
-    	mBackground = context.getResources().getDrawable(TILE);
-        mBackground.setAlpha(ALPHA);
-    	width = mBackground.getIntrinsicWidth();
-    	height = mBackground.getIntrinsicHeight();
-    	mBackground.setBounds(0, 0, width, height);
-    	
-	    if (sLetters.size() > 0)
-	    	return;
-	    
-	    String packageName = context.getPackageName();
-	    
-	    for (int i = 0; i < 4; i++) {
-	    	int id = context.getResources().getIdentifier(SQUARE + i, "drawable", packageName);
-		    sSquare[i] = context.getResources().getDrawable(id);
+	    if (sLetters.size() == 0) {
+		    String packageName = context.getPackageName();
+		    
+		    for (int i = 0; i < 4; i++) {
+		    	int id = context.getResources().getIdentifier(SQUARE + i, "drawable", packageName);
+			    sSquare[i] = context.getResources().getDrawable(id);
+			    sSquare[i].setAlpha(ALPHA);
+		    	int w = sSquare[i].getIntrinsicWidth();
+		    	int h = sSquare[i].getIntrinsicHeight();
+		    	int x = (i % 2) * w;
+		    	int y = (i / 2) * h;
+		    	Log.d("setBounds", "i=" + i + ": x=" + x + ", y=" + y + ", w=" + w + ", h=" + h);
+		    	sSquare[i].setBounds(x, y, x + w, y + h);
+		    }
+		    
+		    for (int i = 0; i < 4; i++) {
+		    	int id = context.getResources().getIdentifier(ROUND + i, "drawable", packageName);
+			    sRound[i] = context.getResources().getDrawable(id);
+			    sRound[i].setAlpha(ALPHA);
+		    	int w = sRound[i].getIntrinsicWidth();
+		    	int h = sRound[i].getIntrinsicHeight();
+		    	int x = (i % 2) * w;
+		    	int y = (i / 2) * h;
+		    	sRound[i].setBounds(x, y, x + w, y + h);
+		    }
+		    
+		    for (int i = 0; i < LETTERS.length; i++) {
+		    	char c = LETTERS[i];
+		    	int v  = VALUES[i];
+		    	int id = context.getResources().getIdentifier(PREFIX + i, "drawable", packageName);
+		    	Drawable d = context.getResources().getDrawable(id);
+		    	d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+		    	sLetters.put(c, d);
+		    	sValues.put(c, v);
+		    }
 	    }
 	    
-	    for (int i = 0; i < 4; i++) {
-	    	int id = context.getResources().getIdentifier(ROUND + i, "drawable", packageName);
-		    sRound[i] = context.getResources().getDrawable(id);
-	    }
+	    width = height = 2 * sSquare[0].getIntrinsicWidth();
 	    
-	    for (int i = 0; i < LETTERS.length; i++) {
-	    	char c = LETTERS[i];
-	    	int v = VALUES[i];
-	    	int id = context.getResources().getIdentifier(PREFIX + i, "drawable", packageName);
-	    	Drawable d = context.getResources().getDrawable(id);
-	    	d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
-	    	sLetters.put(c, d);
-	    	sValues.put(c, v);
-	    }	    
+	    for (int i = 0; i < 4; i++)
+	    	mBackground[i] = sSquare[i];
 	}
     
 	public void draw(Canvas canvas) {
@@ -75,7 +86,8 @@ public class SmallTile {
 		
 		canvas.save();
 		canvas.translate(left, top);
-		mBackground.draw(canvas);
+		for (int i = 0; i < 4; i++)
+			mBackground[i].draw(canvas);
 		Drawable d = sLetters.get(mLetter);
 		d.draw(canvas);
 		canvas.restore();
