@@ -190,10 +190,6 @@ public class MyView extends View {
 		        case MotionEvent.ACTION_CANCEL:
 		        	if (mSmallTile != null) {
 		            	alignToGrid(mSmallTile);
-		            	int col = mSmallTile.getColumn();
-		            	int row = mSmallTile.getRow();
-		            	mGrid[col][row] = mSmallTile;
-		            	
 		            	mBigTile.visible = false;
 		            	mSmallTile.visible = true;
 		        		mSmallTile = null;
@@ -387,14 +383,15 @@ public class MyView extends View {
     	int col = tile.getColumn();
     	int row = tile.getRow();
     	
+    	// find a free cell at the game board
     	while (mGrid[col][row] != null) {
-    		// TODO fix finding a free cell
-    		
     		col = (col + 1) % 15;
 
-    		if (col == 14)
+    		if (col == 0)
         		row = (row + 1) % 15;
     	}
+    	
+    	mGrid[col][row] = tile;
     	
     	tile.left = (col + 1) * SmallTile.sCellWidth;
     	tile.top = (row + 1) * SmallTile.sCellWidth;
