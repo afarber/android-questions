@@ -165,6 +165,7 @@ public class MyView extends View {
 		            	int col = mSmallTile.getColumn();
 		            	int row = mSmallTile.getRow();
 		            	mGrid[col][row] = null;
+		            	updateNeighbors(col, row);
 		            	
 		            	mBigTile.copy(mSmallTile);
 		            	mBigTile.visible = true;
@@ -383,6 +384,55 @@ public class MyView extends View {
         	mMatrix.postTranslate(dX, dY);
     }
     
+    private boolean[] buildCorners(int col, int row) {
+	    boolean[] corner = {
+		    // top left corner (true means: there is a neighbor tile)
+		    (
+		    	(col > 0 && mGrid[col - 1][row] != null) ||  
+		    	(row > 0 && mGrid[col][row - 1] != null)
+		    ),
+	
+		    // top right corner
+		    (
+		    	(col < 14 && mGrid[col + 1][row] != null) ||  
+		    	(row > 0 && mGrid[col][row - 1] != null)
+		    ),
+			
+		    // bottom left corner
+		    (
+		    	(col > 0 && mGrid[col - 1][row] != null) ||  
+		    	(row < 14 && mGrid[col][row + 1] != null)
+		    ),
+		    
+		    // bottom right corner
+		    (
+		    	(col < 14 && mGrid[col + 1][row] != null) ||  
+		    	(row < 14 && mGrid[col][row + 1] != null)
+		    )
+	    };
+		    
+	    return corner;
+    }
+
+    // check the tiles at 3 x 3 or 2 x 2 sub-grid
+    private void updateNeighbors(int col, int row) {
+    	
+    	int startCol = Math.max(0, col - 1);
+    	int endCol   = Math.min(14, col + 1);
+    	int startRow = Math.max(0, row - 1);
+    	int endRow   = Math.min(14, row + 1);
+    	
+    	for (int i = startCol; i <= endCol; i++) {
+        	for (int j = startRow; j <= endRow; j++) {
+        		SmallTile tile = mGrid[i][j]; 
+        		if (tile != null) {
+        	    	boolean[] corner = buildCorners(i, j);
+        		    tile.setCorners(corner);
+        		}
+        	}
+    	}
+    }
+    
     private void alignToGrid(SmallTile tile) {
     	int col = tile.getColumn();
     	int row = tile.getRow();
@@ -396,8 +446,10 @@ public class MyView extends View {
     	}
     	
     	mGrid[col][row] = tile;
+    	updateNeighbors(col, row);
     	
     	tile.left = (col + 1) * SmallTile.sCellWidth;
     	tile.top = (row + 1) * SmallTile.sCellWidth;
     }
 }
+

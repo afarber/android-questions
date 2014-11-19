@@ -3,7 +3,9 @@ package de.afarber.mytiles;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
@@ -12,7 +14,7 @@ public class SmallTile {
 	private static final String SQUARE = "square_";
 	private static final String ROUND = "round_";
 	private static final int TILE = R.drawable.round;
-	private static final int ALPHA = 220;
+	private static final int ALPHA = 200;
 	
 	private static final char[] LETTERS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 	private static final int[] VALUES =   { 1,   4,   4,   2,   1,   4,   3,   3,   1,  10,   5,   2,   4,   2,   1,   4,  12,   1,   1,   1,   2,   5,   4,   8,   3,  10 };
@@ -31,7 +33,8 @@ public class SmallTile {
 	public int height;
 	public boolean visible = true;
 	
-	private Drawable[] mBackground = new Drawable[4];
+	private Bitmap mBitmap;
+	private Paint mPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
 	
 	private char mLetter;
 	private int mValue;
@@ -48,7 +51,6 @@ public class SmallTile {
 		    	int h = sSquare[i].getIntrinsicHeight();
 		    	int x = (i % 2) * w;
 		    	int y = (i / 2) * h;
-		    	Log.d("setBounds", "i=" + i + ": x=" + x + ", y=" + y + ", w=" + w + ", h=" + h);
 		    	sSquare[i].setBounds(x, y, x + w, y + h);
 		    }
 		    
@@ -75,10 +77,22 @@ public class SmallTile {
 	    }
 	    
 	    width = height = 2 * sSquare[0].getIntrinsicWidth();
-	    
-	    for (int i = 0; i < 4; i++)
-	    	mBackground[i] = sSquare[i];
+	    boolean[] corner = {false, false, false, false};
+	    setCorners(corner);
 	}
+    
+    public void setCorners(boolean[] corner) {
+	    mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+	    Canvas canvas = new Canvas(mBitmap);
+	    
+	    // true means: there is a neighbor tile
+	    for (int i = 0; i < 4; i++) {
+	    	if (corner[i])
+	    		sSquare[i].draw(canvas);
+	    	else
+	    		sRound[i].draw(canvas);
+	    }
+    }
     
 	public void draw(Canvas canvas) {
 		if (!visible)
@@ -86,8 +100,7 @@ public class SmallTile {
 		
 		canvas.save();
 		canvas.translate(left, top);
-		for (int i = 0; i < 4; i++)
-			mBackground[i].draw(canvas);
+		canvas.drawBitmap(mBitmap, 0, 0, mPaint);
 		Drawable d = sLetters.get(mLetter);
 		d.draw(canvas);
 		canvas.restore();
