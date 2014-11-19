@@ -220,6 +220,10 @@ public class MyView extends View {
     private void shuffleTiles() {
         Log.d("shuffleTiles", "mWidth=" + mWidth + ", mHeight=" + mHeight + ", sCellWidth=" + SmallTile.sCellWidth);
         
+        for (int col = 0; col < 15; col++)
+            for (int row = 0; row < 15; row++)
+            	mGrid[col][row] = null;
+        
         for (SmallTile tile: mTiles) {
             tile.move(
             	mRandom.nextInt(mWidth - tile.width),
