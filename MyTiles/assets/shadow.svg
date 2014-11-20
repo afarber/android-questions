@@ -10,17 +10,36 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="120"
-   height="120"
+   width="144"
+   height="144"
    id="svg3164"
    version="1.1"
    inkscape:version="0.48.5 r10040"
    sodipodi:docname="shadow.svg"
-   inkscape:export-filename="C:\Users\U299FAV\git\android-newbie\MyTiles\res\drawable-mdpi\small_tile.png"
-   inkscape:export-xdpi="43.09"
-   inkscape:export-ydpi="43.09">
+   inkscape:export-filename="C:\Users\U299FAV\android-newbie\MyTiles\res\drawable-xxhdpi\shadow.png"
+   inkscape:export-xdpi="150"
+   inkscape:export-ydpi="150">
   <defs
      id="defs3166">
+    <linearGradient
+       id="linearGradient3766">
+      <stop
+         style="stop-color:#fffdf5;stop-opacity:1;"
+         offset="0"
+         id="stop3768" />
+      <stop
+         id="stop3774"
+         offset="0.16666667"
+         style="stop-color:#ffcc00;stop-opacity:1;" />
+      <stop
+         style="stop-color:#ffcc00;stop-opacity:1;"
+         offset="0.83333331"
+         id="stop3776" />
+      <stop
+         style="stop-color:#b49000;stop-opacity:1;"
+         offset="1"
+         id="stop3770" />
+    </linearGradient>
     <linearGradient
        id="linearGradient3801">
       <stop
@@ -71,37 +90,45 @@
        id="linearGradient3826"
        xlink:href="#linearGradient3801-8"
        inkscape:collect="always" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3766"
+       id="linearGradient3772"
+       x1="0"
+       y1="-1.7187503e-008"
+       x2="120"
+       y2="120"
+       gradientUnits="userSpaceOnUse" />
     <filter
-       style="color-interpolation-filters:sRGB;"
        inkscape:label="Drop Shadow"
-       id="filter3767">
+       id="filter3014"
+       color-interpolation-filters="sRGB">
       <feFlood
          flood-opacity="0.2"
          flood-color="rgb(0,0,0)"
          result="flood"
-         id="feFlood3769" />
+         id="feFlood3016" />
       <feComposite
          in="flood"
          in2="SourceGraphic"
          operator="in"
          result="composite1"
-         id="feComposite3771" />
+         id="feComposite3018" />
       <feGaussianBlur
-         in="composite"
          stdDeviation="2"
          result="blur"
-         id="feGaussianBlur3773" />
+         id="feGaussianBlur3020" />
       <feOffset
-         dx="8"
-         dy="8"
+         dx="12"
+         dy="12"
          result="offset"
-         id="feOffset3775" />
+         id="feOffset3022" />
       <feComposite
          in="SourceGraphic"
          in2="offset"
          operator="over"
          result="composite2"
-         id="feComposite3777" />
+         id="feComposite3024" />
     </filter>
   </defs>
   <sodipodi:namedview
@@ -111,9 +138,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2"
-     inkscape:cx="-51.5"
-     inkscape:cy="-36.639964"
+     inkscape:zoom="4.4724504"
+     inkscape:cx="31.286524"
+     inkscape:cy="84"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -136,8 +163,8 @@
        snapvisiblegridlinesonly="true"
        spacingx="20px"
        spacingy="20px"
-       originx="0px"
-       originy="1.7187503e-008px" />
+       originx="12px"
+       originy="12px" />
   </sodipodi:namedview>
   <metadata
      id="metadata3169">
@@ -155,7 +182,8 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0.5,7.137817)">
+     transform="translate(12.5,19.137817)"
+     sodipodi:insensitive="true">
     <path
        style="fill:#000000"
        d=""
@@ -172,7 +200,7 @@
        id="path3765"
        inkscape:connector-curvature="0" />
     <rect
-       style="fill:#ffcc00;fill-opacity:1;stroke:none;filter:url(#filter3767)"
+       style="fill:url(#linearGradient3772);fill-opacity:1;stroke:none;filter:url(#filter3014)"
        id="rect2997"
        width="120"
        height="120"
