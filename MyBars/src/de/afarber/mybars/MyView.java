@@ -5,7 +5,9 @@ import java.util.Random;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.widget.ScrollerCompat;
@@ -43,6 +45,7 @@ public class MyView extends View {
     private int mHeight;
     private SmallTile[][] mGrid = new SmallTile[15][15];
 
+    private ColorDrawable mBar = new ColorDrawable(Color.RED);
 
     public MyView(Context context) {
         this(context, null);
@@ -116,6 +119,12 @@ public class MyView extends View {
         mGameBoard.setBounds(0, 0, mWidth, mHeight);
         // there are 15 cells in a row and 1 padding at each side
         SmallTile.sCellWidth = Math.round(mWidth / 17.0f);
+        
+        //mBarPaint.setAlpha(60);
+        //Color fillColor = new Color();
+        //mBarPaint.setColor(fillColor);
+        
+        mBar.setAlpha(100);
     }
 
     private SmallTile hitTest(float x, float y) {
@@ -210,10 +219,12 @@ public class MyView extends View {
     protected void onSizeChanged(int w, int h, int oldW, int oldH) {
         super.onSizeChanged(w, h, oldW, oldH);
 
-        mMinZoom = Math.min((float) getWidth() / (float) mWidth,
-                	        (float) getHeight() / (float) mHeight);
+        mMinZoom = Math.min((float) w / (float) mWidth,
+                	        (float) h / (float) mHeight);
 
         mMaxZoom = 2 * mMinZoom;
+        
+        mBar.setBounds(0, h - 100, w, h);
 
         adjustZoom();
     }
@@ -277,13 +288,20 @@ public class MyView extends View {
             postInvalidateDelayed(30);
         }
 
+        canvas.save();
         canvas.concat(mMatrix);
-
         mGameBoard.draw(canvas);
         for (SmallTile tile: mTiles) {
             tile.draw(canvas);
         }
+        canvas.restore();
+        
+        mBar.draw(canvas);
+        
+        canvas.save();
+        canvas.concat(mMatrix);
         mBigTile.draw(canvas);
+        canvas.restore();
     }
 
     public void scroll(float dX, float dY) {
