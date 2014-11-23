@@ -196,6 +196,27 @@ public class MyView extends View {
 		        		int dY = Math.round(y - mSavedY);
 		        		mSmallTile.offset(dX, dY);
 		            	mBigTile.offset(dX, dY);
+		            	
+		                mMatrix.getValues(mValues);
+		                float mX = mValues[Matrix.MTRANS_X];
+		                float mY = mValues[Matrix.MTRANS_Y];
+		                
+		            	if (e.getX() < mBigTile.width) {
+		            		mScroller.abortAnimation();
+		            		mScroller.startScroll((int) mX, (int) mY, +100, 0);
+		            	} else if (e.getX() > getWidth() - mBigTile.width) {
+		            		mScroller.abortAnimation();
+		            		mScroller.startScroll((int) mX, (int) mY, -100, 0);
+		        	    }
+		        	
+		            	if (e.getY() < mBigTile.height) {
+		            		mScroller.abortAnimation();
+		            		mScroller.startScroll((int) mX, (int) mY, 0, +100);
+		            	} else if (e.getY() > getHeight() - mBigTile.height) {
+		            		mScroller.abortAnimation();
+		            		mScroller.startScroll((int) mX, (int) mY, 0, -100);
+		        	    }
+		        	
 		        		invalidate();
 		        		return true;
 		        	}
