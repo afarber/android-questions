@@ -23,7 +23,8 @@ public class MyView extends View {
 	private static final boolean TOO_OLD = (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH);
 	
     private Drawable mGameBoard = getResources().getDrawable(R.drawable.game_board);
-    private ArrayList<SmallTile> mTiles = new ArrayList<SmallTile>();
+    private ArrayList<SmallTile> mBoardTiles = new ArrayList<SmallTile>();
+    private ArrayList<SmallTile> mBarTiles = new ArrayList<SmallTile>();
     private SmallTile mSmallTile = null;
     private BigTile mBigTile;
 
@@ -45,7 +46,7 @@ public class MyView extends View {
     private int mHeight;
     private SmallTile[][] mGrid = new SmallTile[15][15];
 
-    private ColorDrawable mBar = new ColorDrawable(Color.RED);
+    private ColorDrawable mBar = new ColorDrawable(Color.BLUE);
 
     public MyView(Context context) {
         this(context, null);
@@ -63,7 +64,15 @@ public class MyView extends View {
         	SmallTile tile = new SmallTile(getContext());
         	tile.setLetter(c);
         	tile.visible = true;
-            mTiles.add(tile);
+            mBoardTiles.add(tile);
+        }
+
+	    for (int i = 0; i < 7; i++) {
+        	SmallTile tile = new SmallTile(getContext());
+        	char c = LETTERS[i];
+        	tile.setLetter(c);
+        	tile.visible = true;
+            mBarTiles.add(tile);
         }
 
         GestureDetector.SimpleOnGestureListener gestureListener = new GestureDetector.SimpleOnGestureListener() {
@@ -120,16 +129,12 @@ public class MyView extends View {
         // there are 15 cells in a row and 1 padding at each side
         SmallTile.sCellWidth = Math.round(mWidth / 17.0f);
         
-        //mBarPaint.setAlpha(60);
-        //Color fillColor = new Color();
-        //mBarPaint.setColor(fillColor);
-        
-        mBar.setAlpha(100);
+        mBar.setAlpha(60);
     }
 
     private SmallTile hitTest(float x, float y) {
-    	for (int i = mTiles.size() - 1; i >= 0; i--) {
-    		SmallTile tile = mTiles.get(i);
+    	for (int i = mBoardTiles.size() - 1; i >= 0; i--) {
+    		SmallTile tile = mBoardTiles.get(i);
         	if (!tile.visible)
         		continue;
             if (tile.contains((int) x, (int) y))
@@ -161,10 +166,10 @@ public class MyView extends View {
 		            SmallTile tile = hitTest(x, y);
 		            Log.d("onToucheEvent", "tile = " + tile);
 		            if (tile != null) {
-		            	int depth = mTiles.indexOf(tile);
+		            	int depth = mBoardTiles.indexOf(tile);
 		            	if (depth >= 0) {
-			            	mTiles.remove(depth);
-			            	mTiles.add(tile);
+			            	mBoardTiles.remove(depth);
+			            	mBoardTiles.add(tile);
 		            	}
 		            	
 		            	mSmallTile = tile;
@@ -236,13 +241,18 @@ public class MyView extends View {
             for (int row = 0; row < 15; row++)
             	mGrid[col][row] = null;
         
-        for (SmallTile tile: mTiles) {
+        for (SmallTile tile: mBoardTiles) {
             tile.move(
             	mRandom.nextInt(mWidth - tile.width),
                 mRandom.nextInt(mHeight - tile.height)
             );
             alignToGrid(tile);
             Log.d("shuffleTiles", "tile=" + tile);
+        }
+        
+        for (int i = mBarTiles.size() - 1; i >= 0; i--) {
+        	SmallTile tile = mBarTiles.get(i);
+        	tile.move(i * tile.width, getHeight() - tile.height);
         }
     }
 
@@ -291,12 +301,15 @@ public class MyView extends View {
         canvas.save();
         canvas.concat(mMatrix);
         mGameBoard.draw(canvas);
-        for (SmallTile tile: mTiles) {
+        for (SmallTile tile: mBoardTiles) {
             tile.draw(canvas);
         }
         canvas.restore();
         
         mBar.draw(canvas);
+        for (SmallTile tile: mBarTiles) {
+            tile.draw(canvas);
+        }
         
         canvas.save();
         canvas.concat(mMatrix);
@@ -413,12 +426,12 @@ public class MyView extends View {
 		    // top right corner
 		    (
 		    	(col < 14 && mGrid[col + 1][row] != null) ||  
-		    	(row > 0 && mGrid[col][row - 1] != null)
+		    	(row > 0  && mGrid[col][row - 1] != null)
 		    ),
 			
 		    // bottom left corner
 		    (
-		    	(col > 0 && mGrid[col - 1][row] != null) ||  
+		    	(col > 0  && mGrid[col - 1][row] != null) ||  
 		    	(row < 14 && mGrid[col][row + 1] != null)
 		    ),
 		    
