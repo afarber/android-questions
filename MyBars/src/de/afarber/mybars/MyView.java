@@ -198,23 +198,27 @@ public class MyView extends View {
 		            	mBigTile.offset(dX, dY);
 		            	
 		                mMatrix.getValues(mValues);
-		                float mX = mValues[Matrix.MTRANS_X];
-		                float mY = mValues[Matrix.MTRANS_Y];
+		                float oldX = mValues[Matrix.MTRANS_X];
+		                float oldY = mValues[Matrix.MTRANS_Y];
+		                float scaleX = mValues[Matrix.MSCALE_X];
+		                float scaleY = mValues[Matrix.MSCALE_Y];
+		                float minX = getWidth() - scaleX * mWidth;
+		                float minY = getHeight() - scaleY * mHeight;    	
 		                
-		            	if (e.getX() < mBigTile.width) {
+		            	if (e.getX() < 50) {
 		            		mScroller.abortAnimation();
-		            		mScroller.startScroll((int) mX, (int) mY, +100, 0);
-		            	} else if (e.getX() > getWidth() - mBigTile.width) {
+		            		mScroller.startScroll((int) oldX, (int) oldY, +100, 0);
+		            	} else if (e.getX() > getWidth() - 50) {
 		            		mScroller.abortAnimation();
-		            		mScroller.startScroll((int) mX, (int) mY, -100, 0);
+		            		mScroller.startScroll((int) oldX, (int) oldY, -100, 0);
 		        	    }
 		        	
-		            	if (e.getY() < mBigTile.height) {
+		            	if (e.getY() < 50) {
 		            		mScroller.abortAnimation();
-		            		mScroller.startScroll((int) mX, (int) mY, 0, +100);
-		            	} else if (e.getY() > getHeight() - mBigTile.height) {
+		            		mScroller.startScroll((int) oldX, (int) oldY, 0, +100);
+		            	} else if (e.getY() > getHeight() - 50) {
 		            		mScroller.abortAnimation();
-		            		mScroller.startScroll((int) mX, (int) mY, 0, -100);
+		            		mScroller.startScroll((int) oldX, (int) oldY, 0, -100);
 		        	    }
 		        	
 		        		invalidate();
@@ -348,8 +352,8 @@ public class MyView extends View {
     public void fling(float vX, float vY) {
         mScroller.abortAnimation();
         mMatrix.getValues(mValues);
-        float x = mValues[Matrix.MTRANS_X];
-        float y = mValues[Matrix.MTRANS_Y];
+        float oldX = mValues[Matrix.MTRANS_X];
+        float oldY = mValues[Matrix.MTRANS_Y];
         float scaleX = mValues[Matrix.MSCALE_X];
         float scaleY = mValues[Matrix.MSCALE_Y];
 
@@ -372,8 +376,8 @@ public class MyView extends View {
 */        
         mScroller.abortAnimation();
         mScroller.fling(
-                (int) x,
-                (int) y,
+                (int) oldX,
+                (int) oldY,
                 (int) vX,
                 (int) vY,
                 (int) minX,
@@ -388,8 +392,8 @@ public class MyView extends View {
     
     private void fixScaling() {
         mMatrix.getValues(mValues);
-        //float x = mValues[Matrix.MTRANS_X];
-        //float y = mValues[Matrix.MTRANS_Y];
+        //float oldX = mValues[Matrix.MTRANS_X];
+        //float oldY = mValues[Matrix.MTRANS_Y];
         float scaleX = mValues[Matrix.MSCALE_X];
         //float scaleY = mValues[Matrix.MSCALE_Y];
 
@@ -407,8 +411,8 @@ public class MyView extends View {
     
     private void fixTranslation() {
         mMatrix.getValues(mValues);
-        float x = mValues[Matrix.MTRANS_X];
-        float y = mValues[Matrix.MTRANS_Y];
+        float oldX = mValues[Matrix.MTRANS_X];
+        float oldY = mValues[Matrix.MTRANS_Y];
         float scaleX = mValues[Matrix.MSCALE_X];
         float scaleY = mValues[Matrix.MSCALE_Y];
 
@@ -419,18 +423,18 @@ public class MyView extends View {
         float dY = 0.0f;
         
         if (minX >= 0)
-        	dX = minX / 2 - x;
-        else if (x > 0)
-        	dX = -x;
-        else if (x < minX)
-        	dX = minX - x;
+        	dX = minX / 2 - oldX;
+        else if (oldX > 0)
+        	dX = -oldX;
+        else if (oldX < minX)
+        	dX = minX - oldX;
         
         if (minY >= 0)
-        	dY = minY / 2 - y;
-        else if (y > 0)
-        	dY = -y;
-        else if (y < minY)
-        	dY = minY - y;
+        	dY = minY / 2 - oldY;
+        else if (oldY > 0)
+        	dY = -oldY;
+        else if (oldY < minY)
+        	dY = minY - oldY;
         
         if (dX != 0.0 || dY != 0.0)
         	mMatrix.postTranslate(dX, dY);
