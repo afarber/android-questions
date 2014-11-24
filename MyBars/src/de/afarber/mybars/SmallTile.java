@@ -10,11 +10,10 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 public class SmallTile {
+	private static final int ALPHA = 200;
 	private static final String PREFIX = "small_";
 	private static final String SQUARE = "square_";
 	private static final String ROUND = "round_";
-	private static final int TILE = R.drawable.round;
-	private static final int ALPHA = 200;
 	
 	private static final char[] LETTERS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 	private static final int[] VALUES =   { 1,   4,   4,   2,   1,   4,   3,   3,   1,  10,   5,   2,   4,   2,   1,   4,  12,   1,   1,   1,   2,   5,   4,   8,   3,  10 };

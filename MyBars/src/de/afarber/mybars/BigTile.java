@@ -7,9 +7,9 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 
 public class BigTile {
+	private static final int ALPHA = 200;
 	private static final String PREFIX = "big_";
 	private static final int TILE = R.drawable.shadow;
-	private static final int ALPHA = 200;
 	
 	private static final char[] LETTERS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 	private static final int[] VALUES =   { 1,   4,   4,   2,   1,   4,   3,   3,   1,  10,   5,   2,   4,   2,   1,   4,  12,   1,   1,   1,   2,   5,   4,   8,   3,  10 };
@@ -106,13 +106,10 @@ public class BigTile {
 		return mValue;
 	}
 
-	public void copy(SmallTile tile) {
-		int dX = (width - tile.width) / 2;
-		int dY = (height - tile.height) / 2;
-		left = tile.left - dX;
-		top = tile.top - dY;
-		savedLeft = tile.savedLeft - dX;
-		savedTop = tile.savedTop - dY;
-		setLetter(tile.getLetter());
+	public void copy(char c, float x, float y) {
+		savedLeft = left = (int) (x - width / 2);
+		savedTop = top = (int) (y - height / 2);
+		
+		setLetter(c);
 	}	
 }

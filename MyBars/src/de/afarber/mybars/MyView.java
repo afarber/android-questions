@@ -35,8 +35,11 @@ public class MyView extends View {
     private float mMinZoom;
     private float mMaxZoom;
     
-    private float mSavedX;
-    private float mSavedY;
+    private float mBoardX;
+    private float mBoardY;
+
+    private float mScreenX;
+    private float mScreenY;
 
     private ScrollerCompat mScroller;
     private GestureDetector mGestureDetector;
@@ -183,10 +186,12 @@ public class MyView extends View {
 		            	mGrid[col][row] = null;
 		            	updateNeighbors(col, row);
 		            	
-		            	mBigTile.copy(mSmallTile);
+		            	mBigTile.copy(mSmallTile.getLetter(), e.getX(), e.getY());
 		            	mBigTile.visible = true;
-		            	mSavedX = x;
-		            	mSavedY = y;
+		            	mBoardX = x;
+		            	mBoardY = y;
+		            	mScreenX = e.getX();
+		            	mScreenY = e.getY();
 		            	invalidate();
 		            	return true;
 		            }
@@ -194,10 +199,8 @@ public class MyView extends View {
 		            
 		        case MotionEvent.ACTION_MOVE:
 		        	if (mSmallTile != null) {
-		        		int dX = Math.round(x - mSavedX);
-		        		int dY = Math.round(y - mSavedY);
-		        		mSmallTile.offset(dX, dY);
-		            	mBigTile.offset(dX, dY);
+		        		mSmallTile.offset(Math.round(x - mBoardX), Math.round(y - mBoardY));
+		            	mBigTile.offset(Math.round(e.getX() - mScreenX), Math.round(e.getY() - mScreenY));
 		            	draggedToEdge(e.getX(), e.getY());
 		        		invalidate();
 		        		return true;
@@ -318,10 +321,7 @@ public class MyView extends View {
             tile.draw(canvas);
         }
         
-        canvas.save();
-        canvas.concat(mMatrix);
         mBigTile.draw(canvas);
-        canvas.restore();
     }
 
     public void scroll(float dX, float dY) {
@@ -383,7 +383,7 @@ public class MyView extends View {
         float maxY    = 0;
         float minX    = getWidth() - scaleX * mWidth;
         float minY    = getHeight() - scaleY * mHeight;
-        float half    = mBigTile.width / 2;
+        float half    = Math.min(mBigTile.width, mBigTile.height) / 2;
         float scrollX = scaleX * mBigTile.width;
         float scrollY = scaleY * mBigTile.height;
         
@@ -395,7 +395,7 @@ public class MyView extends View {
         		mScroller.startScroll((int) oldX, (int) oldY, (int) scrollX, 0);
         	} else if (x > getWidth() - half) {
         		if (oldX - scrollX < minX)
-        			scrollX =  oldX - minX;
+        			scrollX = oldX - minX;
         		mScroller.startScroll((int) oldX, (int) oldY, (int) -scrollX, 0);
     	    }
         }
@@ -406,11 +406,7 @@ public class MyView extends View {
         		if (oldY + scrollY > maxY)
         			scrollY = maxY - oldY;
         		mScroller.startScroll((int) oldX, (int) oldY, 0, (int) scrollY);
-        	} /* else if (y > getHeight() - half) {
-        		if (oldY - scrollY < minY)
-        			scrollY = oldY - minY;
-        		mScroller.startScroll((int) oldX, (int) oldY, 0, (int) -scrollY);
-    	    } */
+        	}
         }
     }
     
