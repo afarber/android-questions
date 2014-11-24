@@ -232,7 +232,7 @@ public class MyView extends View {
 
         mMaxZoom = 2 * mMinZoom;
         
-        mBar.setBounds(0, h - 80, w, h);
+        mBar.setBounds(0, h - mBigTile.height, w, h);
 
         adjustZoom();
     }
@@ -253,9 +253,13 @@ public class MyView extends View {
             Log.d("shuffleTiles", "tile=" + tile);
         }
         
-        for (int i = mBarTiles.size() - 1; i >= 0; i--) {
-        	SmallTile tile = mBarTiles.get(i);
-        	tile.move(i * tile.width, getHeight() - tile.height);
+        if (mBarTiles.size() > 0) {
+        	int smallTileWidth = mBarTiles.get(0).width;
+	        int padding = (getWidth() - 7 * smallTileWidth) / 8;
+	        for (int i = mBarTiles.size() - 1; i >= 0; i--) {
+	        	SmallTile tile = mBarTiles.get(i);
+	        	tile.move(padding + i * (padding + tile.width), getHeight() - tile.height - padding);
+	        }
         }
     }
 
@@ -402,11 +406,11 @@ public class MyView extends View {
         		if (oldY + scrollY > maxY)
         			scrollY = maxY - oldY;
         		mScroller.startScroll((int) oldX, (int) oldY, 0, (int) scrollY);
-        	} else if (y > getHeight() - half) {
+        	} /* else if (y > getHeight() - half) {
         		if (oldY - scrollY < minY)
         			scrollY = oldY - minY;
         		mScroller.startScroll((int) oldX, (int) oldY, 0, (int) -scrollY);
-    	    }
+    	    } */
         }
     }
     
