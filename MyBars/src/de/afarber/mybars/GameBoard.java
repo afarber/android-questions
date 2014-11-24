@@ -11,16 +11,16 @@ public class GameBoard {
 	public int width;
 	public int height;
 	
-    private Matrix mMatrix = new Matrix();
+    public Matrix matrix = new Matrix();
     
-    private float mX;
-    private float mY;
-    private float mScaleX;
-    private float mScaleY;
-    private float mMaxX;
-    private float mMaxY;
-    private float mMinX;
-    private float mMinY;	    
+    public float x;
+    public float y;
+    public float scaleX;
+    public float scaleY;
+    public float maxX;
+    public float maxY;
+    public float minX;
+    public float minY;	    
 
     public GameBoard(Context context) {
     	mBackground = context.getResources().getDrawable(R.drawable.game_board);
@@ -29,7 +29,7 @@ public class GameBoard {
     	mBackground.setBounds(0, 0, width, height);
     }
     
-	public void draw(Canvas canvas, Matrix matrix) {
+	public void draw(Canvas canvas) {
         canvas.save();
         canvas.concat(matrix);
         mBackground.draw(canvas);
@@ -38,18 +38,18 @@ public class GameBoard {
 	
 	public void getValues(int parentW, int parentH) {
 	    float[] values = new float[9];
-	    mMatrix.getValues(values);
+	    matrix.getValues(values);
 	    
-        mX = values[Matrix.MTRANS_X];
-        mY = values[Matrix.MTRANS_Y];
+        x = values[Matrix.MTRANS_X];
+        y = values[Matrix.MTRANS_Y];
         
-        mScaleX = values[Matrix.MSCALE_X];
-        mScaleY = values[Matrix.MSCALE_Y];
+        scaleX = values[Matrix.MSCALE_X];
+        scaleY = values[Matrix.MSCALE_Y];
         
-        mMaxX = 0;
-        mMaxY = 0;
+        maxX = 0;
+        maxY = 0;
         
-        mMinX = parentW - mScaleX * width;
-        mMinY = parentH - mScaleY * height;	
+        minX = parentW - scaleX * width;
+        minY = parentH - scaleY * height;	
     }
 }

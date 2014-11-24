@@ -28,7 +28,6 @@ public class MyView extends View {
     private BigTile mBigTile;
 
     private Random mRandom = new Random();
-    private Matrix mMatrix = new Matrix();
     private float[] mValues = new float[9];
 
     private float mMinZoom;
@@ -115,7 +114,7 @@ public class MyView extends View {
                 mScroller.abortAnimation();
                 float factor = detector.getScaleFactor();
                 Log.d("onScale", "factor=" + factor);
-                mMatrix.postScale(factor, factor);
+                mGameBoard.matrix.postScale(factor, factor);
                 fixScaling();
                 invalidate();
                 return true;
@@ -154,7 +153,7 @@ public class MyView extends View {
     	
         float[] point = new float[] {e.getX(), e.getY()};
         Matrix inverse = new Matrix();
-        mMatrix.invert(inverse);
+        mGameBoard.matrix.invert(inverse);
         inverse.mapPoints(point);
         float x = point[0];
         float y = point[1];
@@ -264,7 +263,7 @@ public class MyView extends View {
 
     private void adjustZoom() {
         mScroller.abortAnimation();
-        mMatrix.getValues(mValues);
+        mGameBoard.matrix.getValues(mValues);
         //float oldX = mValues[Matrix.MTRANS_X];
         //float oldY = mValues[Matrix.MTRANS_Y];
         float scaleX = mValues[Matrix.MSCALE_X];
@@ -277,8 +276,8 @@ public class MyView extends View {
         Log.d("adjustZoom", "scaleX=" + scaleX + ", newScale=" + newScale +
         		", minX=" + minX + ", minY=" + minY);
 
-        mMatrix.setScale(newScale, newScale);
-        mMatrix.postTranslate(minX / 2, minY / 2);
+        mGameBoard.matrix.setScale(newScale, newScale);
+        mGameBoard.matrix.postTranslate(minX / 2, minY / 2);
         
         if (newScale == mMinZoom)
         	shuffleTiles();
@@ -288,7 +287,7 @@ public class MyView extends View {
     protected void onDraw(Canvas canvas) {
         // if fling is in progress
         if (mScroller.computeScrollOffset()) {
-        	mMatrix.getValues(mValues);
+        	mGameBoard.matrix.getValues(mValues);
             float oldX = mValues[Matrix.MTRANS_X];
             float oldY = mValues[Matrix.MTRANS_Y];
             //float scaleX = mValues[Matrix.MSCALE_X];
@@ -300,14 +299,14 @@ public class MyView extends View {
             Log.d("onDraw", "oldX=" + oldX + ", oldY=" + oldY +
             		", getCurrX()=" + mScroller.getCurrX() + ", getCurrY()=" + mScroller.getCurrY());
 */
-            mMatrix.postTranslate(dX, dY);
+            mGameBoard.matrix.postTranslate(dX, dY);
             postInvalidateDelayed(30);
         }
 
-        mGameBoard.draw(canvas, mMatrix);
+        mGameBoard.draw(canvas);
         
         canvas.save();
-        canvas.concat(mMatrix);
+        canvas.concat(mGameBoard.matrix);
         for (SmallTile tile: mBoardTiles) {
             tile.draw(canvas);
         }
@@ -323,14 +322,14 @@ public class MyView extends View {
 
     public void scroll(float dX, float dY) {
         mScroller.abortAnimation();
-        mMatrix.postTranslate(-dX, -dY);
+        mGameBoard.matrix.postTranslate(-dX, -dY);
         fixTranslation();
         invalidate();
     }
 
     public void fling(float vX, float vY) {
         mScroller.abortAnimation();
-        mMatrix.getValues(mValues);
+        mGameBoard.matrix.getValues(mValues);
         float oldX = mValues[Matrix.MTRANS_X];
         float oldY = mValues[Matrix.MTRANS_Y];
         float scaleX = mValues[Matrix.MSCALE_X];
@@ -370,7 +369,7 @@ public class MyView extends View {
     
     // scroll game board if a tile has been dragged to screen edge
     private void draggedToEdge(float x, float y) {
-        mMatrix.getValues(mValues);
+        mGameBoard.matrix.getValues(mValues);
         float oldX    = mValues[Matrix.MTRANS_X];
         float oldY    = mValues[Matrix.MTRANS_Y];
         float scaleX  = mValues[Matrix.MSCALE_X];
@@ -408,7 +407,7 @@ public class MyView extends View {
     }
     
     private void fixScaling() {
-        mMatrix.getValues(mValues);
+        mGameBoard.matrix.getValues(mValues);
         // float oldX = mValues[Matrix.MTRANS_X];
         // float oldY = mValues[Matrix.MTRANS_Y];
         float scaleX = mValues[Matrix.MSCALE_X];
@@ -420,15 +419,15 @@ public class MyView extends View {
         
         if (scaleX > mMaxZoom) {
         	float factor = mMaxZoom / scaleX;
-            mMatrix.postScale(factor, factor);
+            mGameBoard.matrix.postScale(factor, factor);
         } else if (scaleX < mMinZoom) {
         	float factor = mMinZoom / scaleX;
-            mMatrix.postScale(factor, factor);
+            mGameBoard.matrix.postScale(factor, factor);
         }
     }
     
     private void fixTranslation() {
-        mMatrix.getValues(mValues);
+        mGameBoard.matrix.getValues(mValues);
         float oldX = mValues[Matrix.MTRANS_X];
         float oldY = mValues[Matrix.MTRANS_Y];
         float scaleX = mValues[Matrix.MSCALE_X];
@@ -456,7 +455,7 @@ public class MyView extends View {
         	dY = minY - oldY;
         
         if (dX != 0.0 || dY != 0.0)
-        	mMatrix.postTranslate(dX, dY);
+        	mGameBoard.matrix.postTranslate(dX, dY);
     }
     
     private boolean[] buildCorners(int col, int row) {
