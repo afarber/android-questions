@@ -161,6 +161,8 @@ public class MyView extends View {
         float y = point[1];
 
         if (e.getPointerCount() == 1) {
+    		mScroller.abortAnimation();
+
         	switch (e.getAction()) {
 		        case MotionEvent.ACTION_DOWN: 
 		            SmallTile tile = hitTest(x, y);
@@ -202,23 +204,30 @@ public class MyView extends View {
 		                float oldY = mValues[Matrix.MTRANS_Y];
 		                float scaleX = mValues[Matrix.MSCALE_X];
 		                float scaleY = mValues[Matrix.MSCALE_Y];
+		                float maxX = 0;
+		                float maxY = 0;
 		                float minX = getWidth() - scaleX * mWidth;
 		                float minY = getHeight() - scaleY * mHeight;    	
+		                float diff = 100;
 		                
 		            	if (e.getX() < 50) {
-		            		mScroller.abortAnimation();
-		            		mScroller.startScroll((int) oldX, (int) oldY, +100, 0);
+		            		if (oldX + diff > maxX)
+		            			diff = maxX - oldX;
+		            		mScroller.startScroll((int) oldX, (int) oldY, (int) diff, 0);
 		            	} else if (e.getX() > getWidth() - 50) {
-		            		mScroller.abortAnimation();
-		            		mScroller.startScroll((int) oldX, (int) oldY, -100, 0);
+		            		if (oldX - diff < minX)
+		            			diff =  oldX - minX;
+		            		mScroller.startScroll((int) oldX, (int) oldY, (int) -diff, 0);
 		        	    }
 		        	
 		            	if (e.getY() < 50) {
-		            		mScroller.abortAnimation();
-		            		mScroller.startScroll((int) oldX, (int) oldY, 0, +100);
+		            		if (oldY + diff > maxY)
+		            			diff = maxY - oldY;
+		            		mScroller.startScroll((int) oldX, (int) oldY, 0, (int) diff);
 		            	} else if (e.getY() > getHeight() - 50) {
-		            		mScroller.abortAnimation();
-		            		mScroller.startScroll((int) oldX, (int) oldY, 0, -100);
+		            		if (oldY - diff < minY)
+		            			diff = oldY - minY;
+		            		mScroller.startScroll((int) oldX, (int) oldY, 0, (int) -diff);
 		        	    }
 		        	
 		        		invalidate();
@@ -254,7 +263,7 @@ public class MyView extends View {
 
         mMaxZoom = 2 * mMinZoom;
         
-        mBar.setBounds(0, h - 100, w, h);
+        mBar.setBounds(0, h - 80, w, h);
 
         adjustZoom();
     }
