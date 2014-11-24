@@ -8,7 +8,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.widget.ScrollerCompat;
 import android.util.AttributeSet;
@@ -22,7 +21,7 @@ public class MyView extends View {
 	private static final char[] LETTERS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 	private static final boolean TOO_OLD = (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH);
 	
-    private Drawable mGameBoard = getResources().getDrawable(R.drawable.game_board);
+	private GameBoard mGameBoard;
     private ArrayList<SmallTile> mBoardTiles = new ArrayList<SmallTile>();
     private ArrayList<SmallTile> mBarTiles = new ArrayList<SmallTile>();
     private SmallTile mSmallTile = null;
@@ -45,8 +44,6 @@ public class MyView extends View {
     private GestureDetector mGestureDetector;
     private ScaleGestureDetector mScaleDetector;
     
-    private int mWidth;
-    private int mHeight;
     private SmallTile[][] mGrid = new SmallTile[15][15];
 
     private ColorDrawable mBar = new ColorDrawable(Color.BLUE);
@@ -60,6 +57,8 @@ public class MyView extends View {
 
         mScroller = ScrollerCompat.create(context);
 
+        mGameBoard = new GameBoard(getContext());
+        
         mBigTile = new BigTile(getContext());
         mBigTile.visible = false;
        
@@ -126,11 +125,8 @@ public class MyView extends View {
         mGestureDetector = new GestureDetector(context, gestureListener);
         mScaleDetector = new ScaleGestureDetector(context, scaleListener);
 
-        mWidth = mGameBoard.getIntrinsicWidth();
-        mHeight = mGameBoard.getIntrinsicHeight();
-        mGameBoard.setBounds(0, 0, mWidth, mHeight);
         // there are 15 cells in a row and 1 padding at each side
-        SmallTile.sCellWidth = Math.round(mWidth / 17.0f);
+        SmallTile.sCellWidth = Math.round(mGameBoard.width / 17.0f);
         
         mBar.setAlpha(60);
     }
@@ -230,8 +226,8 @@ public class MyView extends View {
     protected void onSizeChanged(int w, int h, int oldW, int oldH) {
         super.onSizeChanged(w, h, oldW, oldH);
 
-        mMinZoom = Math.min((float) w / (float) mWidth,
-                	        (float) h / (float) mHeight);
+        mMinZoom = Math.min((float) w / (float) mGameBoard.width,
+                	        (float) h / (float) mGameBoard.height);
 
         mMaxZoom = 2 * mMinZoom;
         
@@ -241,7 +237,7 @@ public class MyView extends View {
     }
 
     private void shuffleTiles() {
-        Log.d("shuffleTiles", "mWidth=" + mWidth + ", mHeight=" + mHeight + ", sCellWidth=" + SmallTile.sCellWidth);
+        Log.d("shuffleTiles", "mGameBoard.width=" + mGameBoard.width + ", mGameBoard.height=" + mGameBoard.height + ", sCellWidth=" + SmallTile.sCellWidth);
         
         for (int col = 0; col < 15; col++)
             for (int row = 0; row < 15; row++)
@@ -249,8 +245,8 @@ public class MyView extends View {
         
         for (SmallTile tile: mBoardTiles) {
             tile.move(
-            	mRandom.nextInt(mWidth - tile.width),
-                mRandom.nextInt(mHeight - tile.height)
+            	mRandom.nextInt(mGameBoard.width - tile.width),
+                mRandom.nextInt(mGameBoard.height - tile.height)
             );
             alignToGrid(tile);
             Log.d("shuffleTiles", "tile=" + tile);
@@ -275,8 +271,8 @@ public class MyView extends View {
         //float scaleY = mValues[Matrix.MSCALE_Y];
         
         float newScale = (scaleX > mMinZoom ? mMinZoom : mMaxZoom);
-        float minX = getWidth() - newScale * mWidth;
-        float minY = getHeight() - newScale * mHeight;
+        float minX = getWidth() - newScale * mGameBoard.width;
+        float minY = getHeight() - newScale * mGameBoard.height;
       
         Log.d("adjustZoom", "scaleX=" + scaleX + ", newScale=" + newScale +
         		", minX=" + minX + ", minY=" + minY);
@@ -308,9 +304,10 @@ public class MyView extends View {
             postInvalidateDelayed(30);
         }
 
+        mGameBoard.draw(canvas, mMatrix);
+        
         canvas.save();
         canvas.concat(mMatrix);
-        mGameBoard.draw(canvas);
         for (SmallTile tile: mBoardTiles) {
             tile.draw(canvas);
         }
@@ -338,11 +335,10 @@ public class MyView extends View {
         float oldY = mValues[Matrix.MTRANS_Y];
         float scaleX = mValues[Matrix.MSCALE_X];
         float scaleY = mValues[Matrix.MSCALE_Y];
-
-        float minX = getWidth() - scaleX * mWidth;
-        float minY = getHeight() - scaleY * mHeight;
         float maxX = 0;
         float maxY = 0;
+        float minX = getWidth() - scaleX * mGameBoard.width;
+        float minY = getHeight() - scaleY * mGameBoard.height;
         
         // if scaled game board is smaller than this view -
         // then place it in the middle of the view
@@ -381,8 +377,9 @@ public class MyView extends View {
         float scaleY  = mValues[Matrix.MSCALE_Y];
         float maxX    = 0;
         float maxY    = 0;
-        float minX    = getWidth() - scaleX * mWidth;
-        float minY    = getHeight() - scaleY * mHeight;
+        float minX    = getWidth() - scaleX * mGameBoard.width;
+        float minY    = getHeight() - scaleY * mGameBoard.height;
+        
         float half    = Math.min(mBigTile.width, mBigTile.height) / 2;
         float scrollX = scaleX * mBigTile.width;
         float scrollY = scaleY * mBigTile.height;
@@ -412,13 +409,14 @@ public class MyView extends View {
     
     private void fixScaling() {
         mMatrix.getValues(mValues);
-        //float oldX = mValues[Matrix.MTRANS_X];
-        //float oldY = mValues[Matrix.MTRANS_Y];
+        // float oldX = mValues[Matrix.MTRANS_X];
+        // float oldY = mValues[Matrix.MTRANS_Y];
         float scaleX = mValues[Matrix.MSCALE_X];
-        //float scaleY = mValues[Matrix.MSCALE_Y];
-
-        //float minX = getWidth() - scaleX * w;
-        //float minY = getHeight() - scaleY * h;   
+        // float scaleY = mValues[Matrix.MSCALE_Y];
+        // float maxX = 0;
+        // float maxY = 0;
+        // float minX = getWidth() - scaleX * w;
+        // float minY = getHeight() - scaleY * h;   
         
         if (scaleX > mMaxZoom) {
         	float factor = mMaxZoom / scaleX;
@@ -435,9 +433,10 @@ public class MyView extends View {
         float oldY = mValues[Matrix.MTRANS_Y];
         float scaleX = mValues[Matrix.MSCALE_X];
         float scaleY = mValues[Matrix.MSCALE_Y];
-
-        float minX = getWidth() - scaleX * mWidth;
-        float minY = getHeight() - scaleY * mHeight;    	
+        // float maxX = 0;
+        // float maxY = 0;
+        float minX = getWidth() - scaleX * mGameBoard.width;
+        float minY = getHeight() - scaleY * mGameBoard.height;    	
 
         float dX = 0.0f;
         float dY = 0.0f;
