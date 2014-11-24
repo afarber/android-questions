@@ -198,45 +198,7 @@ public class MyView extends View {
 		        		int dY = Math.round(y - mSavedY);
 		        		mSmallTile.offset(dX, dY);
 		            	mBigTile.offset(dX, dY);
-		            	
-		            	// scroll game board when dragged tile is near screen border
-		                mMatrix.getValues(mValues);
-		                float oldX = mValues[Matrix.MTRANS_X];
-		                float oldY = mValues[Matrix.MTRANS_Y];
-		                float scaleX = mValues[Matrix.MSCALE_X];
-		                float scaleY = mValues[Matrix.MSCALE_Y];
-		                float maxX = 0;
-		                float maxY = 0;
-		                float minX = getWidth() - scaleX * mWidth;
-		                float minY = getHeight() - scaleY * mHeight;    	
-		                float diff = 100;
-		                
-		                // positive minX means zoomed out, no scrolling is needed
-		                if (minX < 0) {
-			            	if (e.getX() < 50) {
-			            		if (oldX + diff > maxX)
-			            			diff = maxX - oldX;
-			            		mScroller.startScroll((int) oldX, (int) oldY, (int) diff, 0);
-			            	} else if (e.getX() > getWidth() - 50) {
-			            		if (oldX - diff < minX)
-			            			diff =  oldX - minX;
-			            		mScroller.startScroll((int) oldX, (int) oldY, (int) -diff, 0);
-			        	    }
-		                }
-
-		                // positive minY means zoomed out, no scrolling is needed
-		                if (minY < 0) {
-			            	if (e.getY() < 50) {
-			            		if (oldY + diff > maxY)
-			            			diff = maxY - oldY;
-			            		mScroller.startScroll((int) oldX, (int) oldY, 0, (int) diff);
-			            	} else if (e.getY() > getHeight() - 50) {
-			            		if (oldY - diff < minY)
-			            			diff = oldY - minY;
-			            		mScroller.startScroll((int) oldX, (int) oldY, 0, (int) -diff);
-			        	    }
-		                }
-		        	
+		            	draggedToEdge(e.getX(), e.getY());
 		        		invalidate();
 		        		return true;
 		        	}
@@ -404,6 +366,48 @@ public class MyView extends View {
                 50
         );
         invalidate();
+    }
+    
+    // scroll game board if a tile has been dragged to screen edge
+    private void draggedToEdge(float x, float y) {
+        mMatrix.getValues(mValues);
+        float oldX    = mValues[Matrix.MTRANS_X];
+        float oldY    = mValues[Matrix.MTRANS_Y];
+        float scaleX  = mValues[Matrix.MSCALE_X];
+        float scaleY  = mValues[Matrix.MSCALE_Y];
+        float maxX    = 0;
+        float maxY    = 0;
+        float minX    = getWidth() - scaleX * mWidth;
+        float minY    = getHeight() - scaleY * mHeight;
+        float half    = mBigTile.width / 2;
+        float scrollX = scaleX * mBigTile.width;
+        float scrollY = scaleY * mBigTile.height;
+        
+        // positive minX means: game board is zoomed out and centered, no scrolling is needed
+        if (minX < 0) {
+        	if (x < half) {
+        		if (oldX + scrollX > maxX)
+        			scrollX = maxX - oldX;
+        		mScroller.startScroll((int) oldX, (int) oldY, (int) scrollX, 0);
+        	} else if (x > getWidth() - half) {
+        		if (oldX - scrollX < minX)
+        			scrollX =  oldX - minX;
+        		mScroller.startScroll((int) oldX, (int) oldY, (int) -scrollX, 0);
+    	    }
+        }
+
+        // positive minY means: game board is zoomed out and centered, no scrolling is needed
+        if (minY < 0) {
+        	if (y < half) {
+        		if (oldY + scrollY > maxY)
+        			scrollY = maxY - oldY;
+        		mScroller.startScroll((int) oldX, (int) oldY, 0, (int) scrollY);
+        	} else if (y > getHeight() - half) {
+        		if (oldY - scrollY < minY)
+        			scrollY = oldY - minY;
+        		mScroller.startScroll((int) oldX, (int) oldY, 0, (int) -scrollY);
+    	    }
+        }
     }
     
     private void fixScaling() {
