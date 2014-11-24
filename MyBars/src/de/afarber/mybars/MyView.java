@@ -199,6 +199,7 @@ public class MyView extends View {
 		        		mSmallTile.offset(dX, dY);
 		            	mBigTile.offset(dX, dY);
 		            	
+		            	// scroll game board when dragged tile is near screen border
 		                mMatrix.getValues(mValues);
 		                float oldX = mValues[Matrix.MTRANS_X];
 		                float oldY = mValues[Matrix.MTRANS_Y];
@@ -210,25 +211,31 @@ public class MyView extends View {
 		                float minY = getHeight() - scaleY * mHeight;    	
 		                float diff = 100;
 		                
-		            	if (e.getX() < 50) {
-		            		if (oldX + diff > maxX)
-		            			diff = maxX - oldX;
-		            		mScroller.startScroll((int) oldX, (int) oldY, (int) diff, 0);
-		            	} else if (e.getX() > getWidth() - 50) {
-		            		if (oldX - diff < minX)
-		            			diff =  oldX - minX;
-		            		mScroller.startScroll((int) oldX, (int) oldY, (int) -diff, 0);
-		        	    }
-		        	
-		            	if (e.getY() < 50) {
-		            		if (oldY + diff > maxY)
-		            			diff = maxY - oldY;
-		            		mScroller.startScroll((int) oldX, (int) oldY, 0, (int) diff);
-		            	} else if (e.getY() > getHeight() - 50) {
-		            		if (oldY - diff < minY)
-		            			diff = oldY - minY;
-		            		mScroller.startScroll((int) oldX, (int) oldY, 0, (int) -diff);
-		        	    }
+		                // positive minX means zoomed out, no scrolling is needed
+		                if (minX < 0) {
+			            	if (e.getX() < 50) {
+			            		if (oldX + diff > maxX)
+			            			diff = maxX - oldX;
+			            		mScroller.startScroll((int) oldX, (int) oldY, (int) diff, 0);
+			            	} else if (e.getX() > getWidth() - 50) {
+			            		if (oldX - diff < minX)
+			            			diff =  oldX - minX;
+			            		mScroller.startScroll((int) oldX, (int) oldY, (int) -diff, 0);
+			        	    }
+		                }
+
+		                // positive minY means zoomed out, no scrolling is needed
+		                if (minY < 0) {
+			            	if (e.getY() < 50) {
+			            		if (oldY + diff > maxY)
+			            			diff = maxY - oldY;
+			            		mScroller.startScroll((int) oldX, (int) oldY, 0, (int) diff);
+			            	} else if (e.getY() > getHeight() - 50) {
+			            		if (oldY - diff < minY)
+			            			diff = oldY - minY;
+			            		mScroller.startScroll((int) oldX, (int) oldY, 0, (int) -diff);
+			        	    }
+		                }
 		        	
 		        		invalidate();
 		        		return true;
