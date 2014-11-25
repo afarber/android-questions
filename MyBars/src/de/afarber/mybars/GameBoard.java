@@ -7,15 +7,20 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 public class GameBoard {
 	private Drawable mBackground;
+    private Matrix matrix = new Matrix();
+    
+	private float mParentW;
+    private float mParentH;
+    
+    private float mMinZoom;
+    private float mMaxZoom;
 
 	public int width;
 	public int height;
-	
-    public Matrix matrix = new Matrix();
-    
     public float x;
     public float y;
     public float scaleX;
@@ -32,6 +37,20 @@ public class GameBoard {
     	mBackground.setBounds(0, 0, width, height);
     }
     
+	public void setParentSize(float w, float h) {
+		mParentW = w;
+		mParentH = h;
+		
+        mMinZoom = Math.min(w / width, h / height);
+        mMaxZoom = 2 * mMinZoom;
+        
+        Log.d("setParentSize", 
+        		"w=" + w + 
+        		", h=" + h + 
+        		", min zoom=" + mMinZoom + 
+        		", max zoom=" + mMaxZoom);
+	}
+    
 	public void draw(Canvas canvas, ArrayList<SmallTile> tiles) {
         canvas.save();
         canvas.concat(matrix);
@@ -42,7 +61,7 @@ public class GameBoard {
         canvas.restore();
 	}
 	
-	public void getValues(float parentW, float parentH) {
+	public void getValues() {
 	    float[] values = new float[9];
 	    matrix.getValues(values);
 	    
@@ -55,8 +74,14 @@ public class GameBoard {
         maxX = 0;
         maxY = 0;
         
-        minX = parentW - scaleX * width;
-        minY = parentH - scaleY * height;	
+        minX = mParentW - scaleX * width;
+        minY = mParentH - scaleY * height;
+        
+        // if scaled game board is smaller than parent
+        if (minX >= 0)
+        	minX = maxX = minX / 2;
+        if (minY >= 0)
+        	minY = maxY = 0;        
     }
 	
 	public PointF screenToBoard(float screenX, float screenY) {
@@ -69,20 +94,20 @@ public class GameBoard {
 	    return new PointF(boardX, boardY);
 	}
 	
-    public void scrollTo(float newX, float newY, float parentW, float parentH) {
-        getValues(parentW, parentH);
+    public void scrollTo(float newX, float newY) {
+        getValues();
         float dX = newX - x;
         float dY = newY - y;
         matrix.postTranslate(dX, dY);
     }
     
-    public void scrollBy(float dX, float dY, float parentW, float parentH) {
+    public void scrollBy(float dX, float dY) {
         matrix.postTranslate(dX, dY);
-        fixTranslation(parentW, parentH);
+        fixTranslation();
    }
 
-    private void fixTranslation(float parentW, float parentH) {
-        getValues(parentW, parentH);
+    private void fixTranslation() {
+        getValues();
 
         float dX = 0.0f;
         float dY = 0.0f;
@@ -104,4 +129,36 @@ public class GameBoard {
         if (dX != 0.0 || dY != 0.0)
         	matrix.postTranslate(dX, dY);
     }
+    
+    public void toggleScale() {
+        getValues();
+        float oldScale = Math.min(scaleX, scaleY);
+        float newScale = (oldScale > mMinZoom ? mMinZoom : mMaxZoom);
+        Log.d("toggleScale", "oldScale=" + oldScale + ", newScale=" + newScale);
+        matrix.setScale(newScale, newScale);
+        
+        // center the game board after scaling it
+        getValues();
+        float midX = minX / 2;
+        float midY = minY / 2;
+        scrollTo(midX, midY);
+    }
+    
+    public void scaleBy(float factor) {
+    	matrix.postScale(factor, factor);
+        fixScaling();
+    }
+    
+    private void fixScaling() {
+        getValues();
+        float oldScale = Math.min(scaleX, scaleY);
+        if (oldScale > mMaxZoom) {
+        	float factor = mMaxZoom / oldScale;
+            matrix.postScale(factor, factor);
+        } else if (oldScale < mMinZoom) {
+        	float factor = mMinZoom / oldScale;
+            matrix.postScale(factor, factor);
+        }
+    }
+    
 }

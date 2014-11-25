@@ -29,9 +29,6 @@ public class MyView extends View {
 
     private Random mRandom = new Random();
 
-    private float mMinZoom;
-    private float mMaxZoom;
-    
     private float mBoardX;
     private float mBoardY;
 
@@ -98,8 +95,7 @@ public class MyView extends View {
 
             @Override
             public boolean onDoubleTap(MotionEvent e) {
-                adjustZoom();
-                invalidate();
+                doubleTap();
                 return true;
             }
         };
@@ -113,8 +109,7 @@ public class MyView extends View {
                 mScroller.abortAnimation();
                 float factor = detector.getScaleFactor();
                 Log.d("onScale", "factor=" + factor);
-                mGameBoard.matrix.postScale(factor, factor);
-                fixScaling();
+                mGameBoard.scaleBy(factor);
                 invalidate();
                 return true;
             }
@@ -142,12 +137,9 @@ public class MyView extends View {
 
     public boolean onTouchEvent(MotionEvent e) {
     	/*
-        Log.d("onToucheEvent", "mScale=" + mScale +
-                        ", e.getX()=" + e.getX() +
-                        ", e.getY()=" + e.getY() +
-                        ", e.getRawX()=" + e.getRawX() +
-                        ", e.getRawY()=" + e.getRawY()
-        );
+        Log.d("onToucheEvent", 
+        	"e.getX()=" + e.getX() +
+            ", e.getY()=" + e.getY());
 		*/
     	
     	PointF boardPoint = mGameBoard.screenToBoard(e.getX(), e.getY());
@@ -158,7 +150,7 @@ public class MyView extends View {
         	switch (e.getAction()) {
 		        case MotionEvent.ACTION_DOWN: 
 		            SmallTile tile = hitTest(boardPoint.x, boardPoint.y);
-		            Log.d("onToucheEvent", "tile = " + tile);
+		            Log.d("onToucheEvent", "touched tile = " + tile);
 		            if (tile != null) {
 		            	int depth = mBoardTiles.indexOf(tile);
 		            	if (depth >= 0) {
@@ -219,17 +211,14 @@ public class MyView extends View {
     protected void onSizeChanged(int w, int h, int oldW, int oldH) {
         super.onSizeChanged(w, h, oldW, oldH);
 
-        mMinZoom = Math.min((float) w / (float) mGameBoard.width,
-                	        (float) h / (float) mGameBoard.height);
-
-        mMaxZoom = 2 * mMinZoom;
-        
+        mGameBoard.setParentSize(w, h);        
+        mGameBoard.toggleScale();
         mBar.setBounds(0, h - mBigTile.height, w, h);
-
-        adjustZoom();
+        placeTiles();
+        invalidate();
     }
 
-    private void shuffleTiles() {
+    private void placeTiles() {
         Log.d("shuffleTiles", "mGameBoard.width=" + mGameBoard.width + ", mGameBoard.height=" + mGameBoard.height + ", sCellWidth=" + SmallTile.sCellWidth);
         
         for (int col = 0; col < 15; col++)
@@ -255,24 +244,10 @@ public class MyView extends View {
         }
     }
 
-    private void adjustZoom() {
+    private void doubleTap() {
         mScroller.abortAnimation();
-        mGameBoard.getValues(getWidth(), getHeight());
-        
-        float oldScale = Math.min(mGameBoard.scaleX, mGameBoard.scaleY);
-        float newScale = (oldScale > mMinZoom ? mMinZoom : mMaxZoom);
-        Log.d("adjustZoom", "oldScale=" + oldScale + ", newScale=" + newScale);
-        mGameBoard.matrix.setScale(newScale, newScale);
-        
-        // center the game board after scaling it
-        mGameBoard.getValues(getWidth(), getHeight());
-        float midX = mGameBoard.minX / 2;
-        float midY = mGameBoard.minY / 2;
-        Log.d("adjustZoom", "midX=" + midX + ", midY=" + midY);
-        mGameBoard.scrollTo(midX, midY, getWidth(), getHeight());
-        
-        if (newScale == mMinZoom)
-        	shuffleTiles();
+        mGameBoard.toggleScale();
+        invalidate();
     }
 
     @Override
@@ -284,7 +259,7 @@ public class MyView extends View {
             	"getCurrX()=" + mScroller.getCurrX() + 
             	", getCurrY()=" + mScroller.getCurrY());
 */
-            mGameBoard.scrollTo(mScroller.getCurrX(), mScroller.getCurrY(), getWidth(), getHeight());
+            mGameBoard.scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
             postInvalidateDelayed(30);
         }
 
@@ -300,27 +275,19 @@ public class MyView extends View {
 
     public void scroll(float dX, float dY) {
         mScroller.abortAnimation();
-        mGameBoard.scrollBy(-dX, -dY, getWidth(), getHeight());
+        mGameBoard.scrollBy(-dX, -dY);
         invalidate();
     }
 
     public void fling(float vX, float vY) {
         mScroller.abortAnimation();
-        mGameBoard.getValues(getWidth(), getHeight());
-        
-        // if scaled game board is smaller than this view -
-        // then place it in the middle of the view
-        if (mGameBoard.minX >= 0)
-        	mGameBoard.minX = mGameBoard.maxX = mGameBoard.minX / 2;
-        if (mGameBoard.minY >= 0)
-        	mGameBoard.minY = mGameBoard.maxY = mGameBoard.minY / 2;
+        mGameBoard.getValues();
 /*      
         Log.d("fling", "vX=" + vX + ", vY=" + vY +
 			", x=" + x + ", y=" + y +
 			", scaleX=" + scaleX + ", scaleY=" + scaleY +
 			", minX=" + minX + ", minY=" + minY);
 */        
-        mScroller.abortAnimation();
         mScroller.fling(
                 (int) mGameBoard.x,
                 (int) mGameBoard.y,
@@ -338,7 +305,7 @@ public class MyView extends View {
     
     // scroll game board if a tile has been dragged to screen edge
     private void draggedToEdge(float x, float y) {
-        mGameBoard.getValues(getWidth(), getHeight());
+        mGameBoard.getValues();
         
         float half    = Math.min(mBigTile.width, mBigTile.height) / 2;
         float scrollX = mGameBoard.scaleX * mBigTile.width;
@@ -364,19 +331,6 @@ public class MyView extends View {
         			scrollY = mGameBoard.maxY - mGameBoard.y;
         		mScroller.startScroll((int) mGameBoard.x, (int) mGameBoard.y, 0, (int) scrollY);
         	}
-        }
-    }
-    
-    private void fixScaling() {
-        mGameBoard.getValues(getWidth(), getHeight());
-        float oldScale = Math.min(mGameBoard.scaleX, mGameBoard.scaleY);
-        
-        if (oldScale > mMaxZoom) {
-        	float factor = mMaxZoom / oldScale;
-            mGameBoard.matrix.postScale(factor, factor);
-        } else if (oldScale < mMinZoom) {
-        	float factor = mMinZoom / oldScale;
-            mGameBoard.matrix.postScale(factor, factor);
         }
     }
     
