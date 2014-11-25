@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.PointF;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.support.v4.widget.ScrollerCompat;
@@ -150,19 +151,14 @@ public class MyView extends View {
         );
 		*/
     	
-        float[] point = new float[] {e.getX(), e.getY()};
-        Matrix inverse = new Matrix();
-        mGameBoard.matrix.invert(inverse);
-        inverse.mapPoints(point);
-        float x = point[0];
-        float y = point[1];
+    	PointF boardPoint = mGameBoard.screenToBoard(e.getX(), e.getY());
 
         if (e.getPointerCount() == 1) {
     		mScroller.abortAnimation();
 
         	switch (e.getAction()) {
 		        case MotionEvent.ACTION_DOWN: 
-		            SmallTile tile = hitTest(x, y);
+		            SmallTile tile = hitTest(boardPoint.x, boardPoint.y);
 		            Log.d("onToucheEvent", "tile = " + tile);
 		            if (tile != null) {
 		            	int depth = mBoardTiles.indexOf(tile);
@@ -182,8 +178,8 @@ public class MyView extends View {
 		            	
 		            	mBigTile.copy(mSmallTile.getLetter(), e.getX(), e.getY());
 		            	mBigTile.visible = true;
-		            	mBoardX = x;
-		            	mBoardY = y;
+		            	mBoardX = boardPoint.x;
+		            	mBoardY = boardPoint.y;
 		            	mScreenX = e.getX();
 		            	mScreenY = e.getY();
 		            	invalidate();
@@ -193,7 +189,7 @@ public class MyView extends View {
 		            
 		        case MotionEvent.ACTION_MOVE:
 		        	if (mSmallTile != null) {
-		        		mSmallTile.offset(Math.round(x - mBoardX), Math.round(y - mBoardY));
+		        		mSmallTile.offset(Math.round(boardPoint.x - mBoardX), Math.round(boardPoint.y - mBoardY));
 		            	mBigTile.offset(Math.round(e.getX() - mScreenX), Math.round(e.getY() - mScreenY));
 		            	draggedToEdge(e.getX(), e.getY());
 		        		invalidate();

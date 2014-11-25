@@ -3,6 +3,7 @@ package de.afarber.mybars;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 
 public class GameBoard {
@@ -52,4 +53,15 @@ public class GameBoard {
         minX = parentW - scaleX * width;
         minY = parentH - scaleY * height;	
     }
+	
+	public PointF screenToBoard(float screenX, float screenY) {
+	    float[] point = new float[] {screenX, screenY};
+	    Matrix inverse = new Matrix();
+	    matrix.invert(inverse);
+	    inverse.mapPoints(point);
+	    float boardX = point[0];
+	    float boardY = point[1];
+	    return new PointF(boardX, boardY);
+	}
+
 }
