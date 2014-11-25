@@ -281,57 +281,50 @@ public class MyView extends View {
 
     public void fling(float vX, float vY) {
         mScroller.abortAnimation();
+        float half = Math.min(mBigTile.width, mBigTile.height) / 2;
         mGameBoard.getValues();
 /*      
-        Log.d("fling", "vX=" + vX + ", vY=" + vY +
-			", x=" + x + ", y=" + y +
-			", scaleX=" + scaleX + ", scaleY=" + scaleY +
-			", minX=" + minX + ", minY=" + minY);
+        Log.d("fling", "vX=" + vX + ", vY=" + vY);
 */        
         mScroller.fling(
-                (int) mGameBoard.x,
-                (int) mGameBoard.y,
-                (int) vX,
-                (int) vY,
-                (int) mGameBoard.minX,
-                (int) mGameBoard.maxX,
-                (int) mGameBoard.minY,
-                (int) mGameBoard.maxY,
-                50,
-                50
+            (int) mGameBoard.x,
+            (int) mGameBoard.y,
+            (int) vX,
+            (int) vY,
+            (int) mGameBoard.minX,
+            (int) mGameBoard.maxX,
+            (int) mGameBoard.minY,
+            (int) mGameBoard.maxY,
+            (int) half,
+            (int) half
         );
         invalidate();
     }
     
     // scroll game board if a tile has been dragged to screen edge
-    private void draggedToEdge(float x, float y) {
-        mGameBoard.getValues();
+    private void draggedToEdge(float screenX, float screenY) {
+        mScroller.abortAnimation();
         
-        float half    = Math.min(mBigTile.width, mBigTile.height) / 2;
-        float scrollX = mGameBoard.scaleX * mBigTile.width;
-        float scrollY = mGameBoard.scaleY * mBigTile.height;
+        float half = Math.min(mBigTile.width, mBigTile.height) / 2;
+        float scrollX = 0;
+        float scrollY = 0;
         
-        // positive minX means: game board is zoomed out and centered, no scrolling is needed
-        if (mGameBoard.minX < 0) {
-        	if (x < half) {
-        		if (mGameBoard.x + scrollX > mGameBoard.maxX)
-        			scrollX = mGameBoard.maxX - mGameBoard.x;
-        		mScroller.startScroll((int) mGameBoard.x, (int) mGameBoard.y, (int) scrollX, 0);
-        	} else if (x > getWidth() - half) {
-        		if (mGameBoard.x - scrollX < mGameBoard.minX)
-        			scrollX = mGameBoard.x - mGameBoard.minX;
-        		mScroller.startScroll((int) mGameBoard.x, (int) mGameBoard.y, (int) -scrollX, 0);
-    	    }
+    	if (screenX < half) {
+    		scrollX = mGameBoard.getScrollLeft();
+    	} else if (screenX > getWidth() - half) {
+    		scrollX = mGameBoard.getScrollRight();
         }
 
-        // positive minY means: game board is zoomed out and centered, no scrolling is needed
-        if (mGameBoard.minY < 0) {
-        	if (y < half) {
-        		if (mGameBoard.y + scrollY > mGameBoard.maxY)
-        			scrollY = mGameBoard.maxY - mGameBoard.y;
-        		mScroller.startScroll((int) mGameBoard.x, (int) mGameBoard.y, 0, (int) scrollY);
-        	}
-        }
+    	if (screenY < half) {
+    		scrollY = mGameBoard.getScrollTop();
+    	}
+        
+		mScroller.startScroll(
+			(int) mGameBoard.x, 
+			(int) mGameBoard.y, 
+			(int) scrollX, 
+			(int) scrollY 
+		);
     }
     
     private boolean[] buildCorners(int col, int row) {

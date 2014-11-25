@@ -28,13 +28,16 @@ public class GameBoard {
     public float maxX;
     public float maxY;
     public float minX;
-    public float minY;	    
+    public float minY;
+    public float cellWidth;
 
     public GameBoard(Context context) {
     	mBackground = context.getResources().getDrawable(R.drawable.game_board);
     	width = mBackground.getIntrinsicWidth();
     	height = mBackground.getIntrinsicHeight();
     	mBackground.setBounds(0, 0, width, height);
+        // there are 15 cells in a row and 1 padding at each side
+        cellWidth = width / (1 + 15 + 1);
     }
     
 	public void setParentSize(float w, float h) {
@@ -161,4 +164,48 @@ public class GameBoard {
         }
     }
     
+    public float getScrollLeft() {
+        getValues();
+        
+        // the board is zoomed out and centered, no need to scroll
+        if (minX >= 0)
+        	return 0;
+        
+        float scale = Math.min(scaleX, scaleY);
+        float scroll = scale * cellWidth;
+   		if (x + scroll > maxX)
+   			scroll = maxX - x;
+   		
+   		return scroll;
+    }
+   		
+    public float getScrollRight() {
+        getValues();
+        
+        // the board is zoomed out and centered, no need to scroll
+        if (minX >= 0)
+        	return 0;
+        
+        float scale = Math.min(scaleX, scaleY);
+        float scroll = -scale * cellWidth;
+   		if (x + scroll < minX)
+   			scroll = minX - x;
+   		
+   		return scroll;
+    }
+    
+    public float getScrollTop() {
+        getValues();
+        
+        // the board is zoomed out, no need to scroll
+        if (minY >= 0)
+        	return 0;
+        
+        float scale = Math.min(scaleX, scaleY);
+        float scroll = scale * cellWidth;
+   		if (y + scroll > maxY)
+   			scroll = maxY - y;
+   		
+   		return scroll;
+    }
 }
