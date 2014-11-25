@@ -269,7 +269,7 @@ public class MyView extends View {
         float midX = mGameBoard.minX / 2;
         float midY = mGameBoard.minY / 2;
         Log.d("adjustZoom", "midX=" + midX + ", midY=" + midY);
-        mGameBoard.matrix.postTranslate(midX, midY);
+        mGameBoard.scrollTo(midX, midY, getWidth(), getHeight());
         
         if (newScale == mMinZoom)
         	shuffleTiles();
@@ -279,18 +279,12 @@ public class MyView extends View {
     protected void onDraw(Canvas canvas) {
         // if fling is in progress
         if (mScroller.computeScrollOffset()) {
-            mGameBoard.getValues(getWidth(), getHeight());
-            
-            float dX = mScroller.getCurrX() - mGameBoard.x;
-            float dY = mScroller.getCurrY() - mGameBoard.y;
 /*            
             Log.d("onDraw", 
-            	"x=" + mGameBoard.x + 
-            	", y=" + mGameBoard.y +
-            	", getCurrX()=" + mScroller.getCurrX() + 
+            	"getCurrX()=" + mScroller.getCurrX() + 
             	", getCurrY()=" + mScroller.getCurrY());
 */
-            mGameBoard.matrix.postTranslate(dX, dY);
+            mGameBoard.scrollTo(mScroller.getCurrX(), mScroller.getCurrY(), getWidth(), getHeight());
             postInvalidateDelayed(30);
         }
 
@@ -306,8 +300,7 @@ public class MyView extends View {
 
     public void scroll(float dX, float dY) {
         mScroller.abortAnimation();
-        mGameBoard.matrix.postTranslate(-dX, -dY);
-        fixTranslation();
+        mGameBoard.scrollBy(-dX, -dY, getWidth(), getHeight());
         invalidate();
     }
 
@@ -385,30 +378,6 @@ public class MyView extends View {
         	float factor = mMinZoom / oldScale;
             mGameBoard.matrix.postScale(factor, factor);
         }
-    }
-    
-    private void fixTranslation() {
-        mGameBoard.getValues(getWidth(), getHeight());
-
-        float dX = 0.0f;
-        float dY = 0.0f;
-        
-        if (mGameBoard.minX >= 0)
-        	dX = mGameBoard.minX / 2 - mGameBoard.x;
-        else if (mGameBoard.x > 0)
-        	dX = -mGameBoard.x;
-        else if (mGameBoard.x < mGameBoard.minX)
-        	dX = mGameBoard.minX - mGameBoard.x;
-        
-        if (mGameBoard.minY >= 0)
-        	dY = mGameBoard.minY / 2 - mGameBoard.y;
-        else if (mGameBoard.y > 0)
-        	dY = -mGameBoard.y;
-        else if (mGameBoard.y < mGameBoard.minY)
-        	dY = mGameBoard.minY - mGameBoard.y;
-        
-        if (dX != 0.0 || dY != 0.0)
-        	mGameBoard.matrix.postTranslate(dX, dY);
     }
     
     private boolean[] buildCorners(int col, int row) {

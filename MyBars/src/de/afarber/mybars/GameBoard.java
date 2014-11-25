@@ -42,7 +42,7 @@ public class GameBoard {
         canvas.restore();
 	}
 	
-	public void getValues(int parentW, int parentH) {
+	public void getValues(float parentW, float parentH) {
 	    float[] values = new float[9];
 	    matrix.getValues(values);
 	    
@@ -68,5 +68,40 @@ public class GameBoard {
 	    float boardY = point[1];
 	    return new PointF(boardX, boardY);
 	}
+	
+    public void scrollTo(float newX, float newY, float parentW, float parentH) {
+        getValues(parentW, parentH);
+        float dX = newX - x;
+        float dY = newY - y;
+        matrix.postTranslate(dX, dY);
+    }
+    
+    public void scrollBy(float dX, float dY, float parentW, float parentH) {
+        matrix.postTranslate(dX, dY);
+        fixTranslation(parentW, parentH);
+   }
 
+    private void fixTranslation(float parentW, float parentH) {
+        getValues(parentW, parentH);
+
+        float dX = 0.0f;
+        float dY = 0.0f;
+        
+        if (minX >= 0)
+        	dX = minX / 2 - x;
+        else if (x > 0)
+        	dX = -x;
+        else if (x < minX)
+        	dX = minX -x;
+        
+        if (minY >= 0)
+        	dY = minY / 2 - y;
+        else if (y > 0)
+        	dY = -y;
+        else if (y < minY)
+        	dY = minY - y;
+        
+        if (dX != 0.0 || dY != 0.0)
+        	matrix.postTranslate(dX, dY);
+    }
 }
