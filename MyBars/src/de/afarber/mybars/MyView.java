@@ -6,7 +6,6 @@ import java.util.Random;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -295,14 +294,7 @@ public class MyView extends View {
             postInvalidateDelayed(30);
         }
 
-        mGameBoard.draw(canvas);
-        
-        canvas.save();
-        canvas.concat(mGameBoard.matrix);
-        for (SmallTile tile: mBoardTiles) {
-            tile.draw(canvas);
-        }
-        canvas.restore();
+        mGameBoard.draw(canvas, mBoardTiles);
         
         mBar.draw(canvas);
         for (SmallTile tile: mBarTiles) {

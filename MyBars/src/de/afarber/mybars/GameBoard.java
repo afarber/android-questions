@@ -1,5 +1,7 @@
 package de.afarber.mybars;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -30,10 +32,13 @@ public class GameBoard {
     	mBackground.setBounds(0, 0, width, height);
     }
     
-	public void draw(Canvas canvas) {
+	public void draw(Canvas canvas, ArrayList<SmallTile> tiles) {
         canvas.save();
         canvas.concat(matrix);
         mBackground.draw(canvas);
+        for (SmallTile tile: tiles) {
+            tile.draw(canvas);
+        }
         canvas.restore();
 	}
 	
