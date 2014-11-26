@@ -35,7 +35,6 @@ public class MyView extends View {
     private float mScreenX;
     private float mScreenY;
 
-    private ScrollerCompat mScroller;
     private GestureDetector mGestureDetector;
     private ScaleGestureDetector mScaleDetector;
     
@@ -49,8 +48,6 @@ public class MyView extends View {
 
     public MyView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        mScroller = ScrollerCompat.create(context);
 
         mGameBoard = new GameBoard(getContext());
         
@@ -80,7 +77,8 @@ public class MyView extends View {
 
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float dX, float dY) {
-                scroll(dX, dY);
+                mGameBoard.scrollBy(-dX, -dY);
+                invalidate();
                 return true;
             }
 
@@ -89,7 +87,8 @@ public class MyView extends View {
             	if (TOO_OLD)
             		return false;
             	
-            	fling(vX, vY);
+                mGameBoard.fling(vX, vY);
+                invalidate();
                 return true;
             }
 
@@ -106,7 +105,6 @@ public class MyView extends View {
             	if (TOO_OLD)
             		return false;
             	
-                mScroller.abortAnimation();
                 float factor = detector.getScaleFactor();
                 Log.d("onScale", "factor=" + factor);
                 mGameBoard.scaleBy(factor);
@@ -137,16 +135,14 @@ public class MyView extends View {
 
     public boolean onTouchEvent(MotionEvent e) {
     	/*
-        Log.d("onToucheEvent", 
-        	"e.getX()=" + e.getX() +
-            ", e.getY()=" + e.getY());
-		*/
-    	
+        Log.d("onToucheEvent",
+        	"getAction=" + e.getAction() +
+        	", getX=" + e.getX() +
+            ", getY=" + e.getY());
+    	*/
     	PointF boardPoint = mGameBoard.screenToBoard(e.getX(), e.getY());
 
         if (e.getPointerCount() == 1) {
-    		mScroller.abortAnimation();
-
         	switch (e.getAction()) {
 		        case MotionEvent.ACTION_DOWN: 
 		            SmallTile tile = hitTest(boardPoint.x, boardPoint.y);
@@ -182,7 +178,7 @@ public class MyView extends View {
 		        	if (mSmallTile != null) {
 		        		mSmallTile.offset(Math.round(boardPoint.x - mBoardX), Math.round(boardPoint.y - mBoardY));
 		            	mBigTile.offset(Math.round(e.getX() - mScreenX), Math.round(e.getY() - mScreenY));
-		            	draggedToEdge(e.getX(), e.getY());
+		            	mGameBoard.draggedToEdge(e.getX(), e.getY());
 		        		invalidate();
 		        		return true;
 		        	}
@@ -245,89 +241,25 @@ public class MyView extends View {
     }
 
     private void doubleTap() {
-        mScroller.abortAnimation();
         mGameBoard.toggleScale();
         invalidate();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        // if fling is in progress
-        if (mScroller.computeScrollOffset()) {
-/*            
-            Log.d("onDraw", 
-            	"getCurrX()=" + mScroller.getCurrX() + 
-            	", getCurrY()=" + mScroller.getCurrY());
-*/
-            mGameBoard.scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
+        // if the game board is still moving
+    	if (mGameBoard.isFlinging())
             postInvalidateDelayed(30);
-        }
-
+ 
         mGameBoard.draw(canvas, mBoardTiles);
         
         mBar.draw(canvas);
-        for (SmallTile tile: mBarTiles) {
+        for (SmallTile tile: mBarTiles)
             tile.draw(canvas);
-        }
         
         mBigTile.draw(canvas);
     }
 
-    public void scroll(float dX, float dY) {
-        mScroller.abortAnimation();
-        mGameBoard.scrollBy(-dX, -dY);
-        invalidate();
-    }
-
-    public void fling(float vX, float vY) {
-        mScroller.abortAnimation();
-        float half = Math.min(mBigTile.width, mBigTile.height) / 2;
-        mGameBoard.getValues();
-/*      
-        Log.d("fling", "vX=" + vX + ", vY=" + vY);
-*/        
-        mScroller.fling(
-            (int) mGameBoard.x,
-            (int) mGameBoard.y,
-            (int) vX,
-            (int) vY,
-            (int) mGameBoard.minX,
-            (int) mGameBoard.maxX,
-            (int) mGameBoard.minY,
-            (int) mGameBoard.maxY,
-            (int) half,
-            (int) half
-        );
-        invalidate();
-    }
-    
-    // scroll game board if a tile has been dragged to screen edge
-    private void draggedToEdge(float screenX, float screenY) {
-        mScroller.abortAnimation();
-        float half = Math.min(mBigTile.width, mBigTile.height) / 2;
-        float scrollX = 0;
-        float scrollY = 0;
-        
-    	if (screenX < half) {
-    		scrollX = mGameBoard.getScrollLeft();
-    	} else if (screenX > getWidth() - half) {
-    		scrollX = mGameBoard.getScrollRight();
-        }
-
-    	if (screenY < half) {
-    		scrollY = mGameBoard.getScrollTop();
-    	}
-        
-    	Log.d("draggedToEdge", "scrollX=" + scrollX + ", scrollY=" + scrollY);
-    	if (Math.abs(scrollX) > 1 || Math.abs(scrollY) > 1)
-			mScroller.startScroll(
-				(int) mGameBoard.x, 
-				(int) mGameBoard.y, 
-				(int) scrollX, 
-				(int) scrollY
-			);
-    }
-    
     private boolean[] buildCorners(int col, int row) {
 	    boolean[] corner = {
 		    // top left corner (true means: there is a neighbor tile)

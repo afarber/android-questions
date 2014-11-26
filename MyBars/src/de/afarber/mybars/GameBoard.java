@@ -7,9 +7,11 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
+import android.support.v4.widget.ScrollerCompat;
 import android.util.Log;
 
 public class GameBoard {
+    private ScrollerCompat mScroller;
 	private Drawable mBackground;
     private Matrix matrix = new Matrix();
     
@@ -32,7 +34,8 @@ public class GameBoard {
     public float cellWidth;
 
     public GameBoard(Context context) {
-    	mBackground = context.getResources().getDrawable(R.drawable.game_board);
+        mScroller = ScrollerCompat.create(context);
+        mBackground = context.getResources().getDrawable(R.drawable.game_board);
     	width = mBackground.getIntrinsicWidth();
     	height = mBackground.getIntrinsicHeight();
     	mBackground.setBounds(0, 0, width, height);
@@ -64,7 +67,7 @@ public class GameBoard {
         canvas.restore();
 	}
 	
-	public void getValues() {
+	private void getValues() {
 	    float[] values = new float[9];
 	    matrix.getValues(values);
 	    
@@ -97,7 +100,7 @@ public class GameBoard {
 	    return new PointF(boardX, boardY);
 	}
 	
-    public void scrollTo(float newX, float newY) {
+    private void scrollTo(float newX, float newY) {
         getValues();
         float dX = newX - x;
         float dY = newY - y;
@@ -105,6 +108,7 @@ public class GameBoard {
     }
     
     public void scrollBy(float dX, float dY) {
+        mScroller.abortAnimation();
         matrix.postTranslate(dX, dY);
         fixTranslation();
    }
@@ -134,6 +138,7 @@ public class GameBoard {
     }
     
     public void toggleScale() {
+        mScroller.abortAnimation();
         getValues();
         float oldScale = Math.min(scaleX, scaleY);
         float newScale = (oldScale > mMinZoom ? mMinZoom : mMaxZoom);
@@ -164,7 +169,61 @@ public class GameBoard {
         }
     }
     
-    public float getScrollLeft() {
+    public void fling(float vX, float vY) {
+        mScroller.abortAnimation();
+        getValues();
+/*      
+        Log.d("fling", "vX=" + vX + ", vY=" + vY);
+*/        
+        mScroller.fling(
+            (int) x,
+            (int) y,
+            (int) vX,
+            (int) vY,
+            (int) minX,
+            (int) maxX,
+            (int) minY,
+            (int) maxY,
+            (int) cellWidth,
+            (int) cellWidth
+        );
+    }
+ 
+    public boolean isFlinging() {
+        if (mScroller.computeScrollOffset()) {
+            scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
+            return true;
+        }
+        
+        return false;
+    }
+    
+    // scroll game board if a tile has been dragged to screen edge
+    public void draggedToEdge(float screenX, float screenY) {
+        float scrollX = 0;
+        float scrollY = 0;
+        
+    	if (screenX < 10) {
+    		scrollX = getScrollLeft();
+    	} else if (screenX > mParentW - 10) {
+    		scrollX = getScrollRight();
+        }
+
+    	if (screenY < 10) {
+    		scrollY = getScrollTop();
+    	}
+        
+    	//Log.d("draggedToEdge", "scrollX=" + scrollX + ", scrollY=" + scrollY);
+    	if (Math.abs(scrollX) > 1 || Math.abs(scrollY) > 1)
+			mScroller.startScroll(
+				(int) x, 
+				(int) y, 
+				(int) scrollX, 
+				(int) scrollY
+			);
+    }
+    
+    private float getScrollLeft() {
         getValues();
         
         // the board is zoomed out and centered, no need to scroll
@@ -179,7 +238,7 @@ public class GameBoard {
    		return scroll;
     }
    		
-    public float getScrollRight() {
+    private float getScrollRight() {
         getValues();
         
         // the board is zoomed out and centered, no need to scroll
@@ -194,7 +253,7 @@ public class GameBoard {
    		return scroll;
     }
     
-    public float getScrollTop() {
+    private float getScrollTop() {
         getValues();
         
         // the board is zoomed out, no need to scroll
@@ -208,4 +267,6 @@ public class GameBoard {
    		
    		return scroll;
     }
+    
+    
 }
