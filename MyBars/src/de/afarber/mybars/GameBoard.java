@@ -14,6 +14,7 @@ public class GameBoard {
     private ScrollerCompat mScroller;
 	private Drawable mBackground;
     private Matrix matrix = new Matrix();
+    private float[] mValues = new float[9];
     
 	private float mParentW;
     private float mParentH;
@@ -21,18 +22,19 @@ public class GameBoard {
     private float mMinZoom;
     private float mMaxZoom;
 
+	private float x;
+	private float y;
+	private float scaleX;
+	private float scaleY;
+	private float maxX;
+	private float maxY;
+	private float minX;
+	private float minY;
+
 	public int width;
 	public int height;
-    public float x;
-    public float y;
-    public float scaleX;
-    public float scaleY;
-    public float maxX;
-    public float maxY;
-    public float minX;
-    public float minY;
-    public float cellWidth;
-
+    public int cellWidth;
+    
     public GameBoard(Context context) {
         mScroller = ScrollerCompat.create(context);
         mBackground = context.getResources().getDrawable(R.drawable.game_board);
@@ -68,14 +70,13 @@ public class GameBoard {
 	}
 	
 	private void getValues() {
-	    float[] values = new float[9];
-	    matrix.getValues(values);
+	    matrix.getValues(mValues);
 	    
-        x = values[Matrix.MTRANS_X];
-        y = values[Matrix.MTRANS_Y];
+        x = mValues[Matrix.MTRANS_X];
+        y = mValues[Matrix.MTRANS_Y];
         
-        scaleX = values[Matrix.MSCALE_X];
-        scaleY = values[Matrix.MSCALE_Y];
+        scaleX = mValues[Matrix.MSCALE_X];
+        scaleY = mValues[Matrix.MSCALE_Y];
         
         maxX = 0;
         maxY = 0;

@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 public class SmallTile {
 	private static final int ALPHA = 200;
@@ -21,8 +20,6 @@ public class SmallTile {
 	private static HashMap<Character, Integer> sValues = new HashMap<Character, Integer>();
 	private static Drawable[] sSquare = new Drawable[4];
 	private static Drawable[] sRound = new Drawable[4];
-	
-	public static int sCellWidth;
 	
 	public int left;
 	public int top;
@@ -150,8 +147,8 @@ public class SmallTile {
 	}
 	
 	/* in which column and row of game board is this tile placed? */
-	public int getColumn() {
-		int col = (left + width / 2) / sCellWidth - 1;
+	public int getColumn(int cellWidth) {
+		int col = (left + width / 2) / cellWidth - 1;
 		
     	if (col < 0)
     		col = 0;
@@ -161,8 +158,8 @@ public class SmallTile {
     	return col;
 	}
 
-	public int getRow() {
-		int row = (top + height / 2) / sCellWidth - 1;
+	public int getRow(int cellWidth) {
+		int row = (top + height / 2) / cellWidth - 1;
 		
     	if (row < 0)
     		row = 0;

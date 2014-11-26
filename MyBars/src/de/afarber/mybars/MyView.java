@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
-import android.support.v4.widget.ScrollerCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -94,7 +93,8 @@ public class MyView extends View {
 
             @Override
             public boolean onDoubleTap(MotionEvent e) {
-                doubleTap();
+                mGameBoard.toggleScale();
+                invalidate();
                 return true;
             }
         };
@@ -116,9 +116,6 @@ public class MyView extends View {
         mGestureDetector = new GestureDetector(context, gestureListener);
         mScaleDetector = new ScaleGestureDetector(context, scaleListener);
 
-        // there are 15 cells in a row and 1 padding at each side
-        SmallTile.sCellWidth = Math.round(mGameBoard.width / 17.0f);
-        
         mBar.setAlpha(60);
     }
 
@@ -158,8 +155,8 @@ public class MyView extends View {
 		            	mSmallTile.save();
 		            	mSmallTile.visible = false;
 		            	
-		            	int col = mSmallTile.getColumn();
-		            	int row = mSmallTile.getRow();
+		            	int col = mSmallTile.getColumn(mGameBoard.cellWidth);
+		            	int row = mSmallTile.getRow(mGameBoard.cellWidth);
 		            	mGrid[col][row] = null;
 		            	updateNeighbors(col, row);
 		            	
@@ -215,8 +212,6 @@ public class MyView extends View {
     }
 
     private void placeTiles() {
-        //Log.d("placeTiles", "mGameBoard.width=" + mGameBoard.width + ", mGameBoard.height=" + mGameBoard.height + ", sCellWidth=" + SmallTile.sCellWidth);
-        
         for (int col = 0; col < 15; col++)
             for (int row = 0; row < 15; row++)
             	mGrid[col][row] = null;
@@ -238,11 +233,6 @@ public class MyView extends View {
 	        	tile.move(padding + i * (padding + tile.width), getHeight() - tile.height - padding);
 	        }
         }
-    }
-
-    private void doubleTap() {
-        mGameBoard.toggleScale();
-        invalidate();
     }
 
     @Override
@@ -310,8 +300,8 @@ public class MyView extends View {
     }
     
     private void alignToGrid(SmallTile tile) {
-    	int col = tile.getColumn();
-    	int row = tile.getRow();
+    	int col = tile.getColumn(mGameBoard.cellWidth);
+    	int row = tile.getRow(mGameBoard.cellWidth);
     	
     	// find a free cell at the game board
     	while (mGrid[col][row] != null) {
@@ -324,8 +314,8 @@ public class MyView extends View {
     	mGrid[col][row] = tile;
     	updateNeighbors(col, row);
     	
-    	tile.left = (col + 1) * SmallTile.sCellWidth;
-    	tile.top = (row + 1) * SmallTile.sCellWidth;
+    	tile.left = (col + 1) * mGameBoard.cellWidth;
+    	tile.top = (row + 1) * mGameBoard.cellWidth;
     }
 }
 
