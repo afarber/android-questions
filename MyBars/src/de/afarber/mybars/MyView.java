@@ -219,7 +219,7 @@ public class MyView extends View {
     }
 
     private void placeTiles() {
-        Log.d("shuffleTiles", "mGameBoard.width=" + mGameBoard.width + ", mGameBoard.height=" + mGameBoard.height + ", sCellWidth=" + SmallTile.sCellWidth);
+        //Log.d("placeTiles", "mGameBoard.width=" + mGameBoard.width + ", mGameBoard.height=" + mGameBoard.height + ", sCellWidth=" + SmallTile.sCellWidth);
         
         for (int col = 0; col < 15; col++)
             for (int row = 0; row < 15; row++)
@@ -231,7 +231,7 @@ public class MyView extends View {
                 mRandom.nextInt(mGameBoard.height - tile.height)
             );
             alignToGrid(tile);
-            Log.d("shuffleTiles", "tile=" + tile);
+            //Log.d("placeTiles", "tile=" + tile);
         }
         
         if (mBarTiles.size() > 0) {
@@ -304,7 +304,6 @@ public class MyView extends View {
     // scroll game board if a tile has been dragged to screen edge
     private void draggedToEdge(float screenX, float screenY) {
         mScroller.abortAnimation();
-        
         float half = Math.min(mBigTile.width, mBigTile.height) / 2;
         float scrollX = 0;
         float scrollY = 0;
@@ -319,12 +318,14 @@ public class MyView extends View {
     		scrollY = mGameBoard.getScrollTop();
     	}
         
-		mScroller.startScroll(
-			(int) mGameBoard.x, 
-			(int) mGameBoard.y, 
-			(int) scrollX, 
-			(int) scrollY 
-		);
+    	Log.d("draggedToEdge", "scrollX=" + scrollX + ", scrollY=" + scrollY);
+    	if (Math.abs(scrollX) > 1 || Math.abs(scrollY) > 1)
+			mScroller.startScroll(
+				(int) mGameBoard.x, 
+				(int) mGameBoard.y, 
+				(int) scrollX, 
+				(int) scrollY
+			);
     }
     
     private boolean[] buildCorners(int col, int row) {
