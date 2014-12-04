@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">MyNotification</string>
+    <string name="action_settings">Settings</string>
+    <string name="show_notification">Show Notification</string>
+    <string name="cancel_notification">Cancel Notification</string>
+	<string name="the_question">Open the car?</string>
+	<string name="car_opened">Car has been opened!</string>
+	<string name="car_closed">Car has been closed!</string>
+			
+</resources>
