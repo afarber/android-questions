@@ -13,12 +13,14 @@
         android:layout_width="fill_parent" 
     	android:layout_height="wrap_content" 
     	android:layout_margin="20dp"
+        android:onClick="openCar"
     	android:text="@string/open_car" />
     
-    <Button android:id="@+id/close" 
+    <Button android:id="@+id/flash" 
         android:layout_width="fill_parent"
     	android:layout_height="wrap_content" 
     	android:layout_margin="20dp"
-    	android:text="@string/close_car" />    
+        android:onClick="flashLights"
+    	android:text="@string/flash_lights" />    
 
 </LinearLayout>

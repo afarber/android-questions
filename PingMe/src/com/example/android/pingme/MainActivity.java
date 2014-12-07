@@ -55,7 +55,7 @@ public class MainActivity extends Activity {
         EditText editText = (EditText)findViewById(R.id.edit_seconds);
         String input = editText.getText().toString();
 
-        if(input == null || input.trim().equals("")){
+        if (input == null || input.trim().equals("")) {
             // If user didn't enter a value, sets to default.
             seconds = R.string.seconds_default;
         } else {

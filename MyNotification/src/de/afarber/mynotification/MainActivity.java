@@ -64,8 +64,6 @@ public class MainActivity extends ActionBarActivity {
 		Button showButton = (Button) findViewById(R.id.show);
 		showButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				openCar();
-
 		        mNotificationManager.notify(NOTIFY_ID, mNotificationBuilder.build());
 			}
 		});
@@ -73,25 +71,11 @@ public class MainActivity extends ActionBarActivity {
 		Button cancelButton = (Button) findViewById(R.id.cancel);
 		cancelButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				closeCar();
-				
 				mNotificationManager.cancel(NOTIFY_ID);
 			}
 		});
     }
     
-    private void openCar() {
-		Toast.makeText(mContext, 
-				getString(R.string.car_opened), 
-				Toast.LENGTH_SHORT).show();
-    }
-
-    private void closeCar() {
-		Toast.makeText(mContext, 
-				getString(R.string.car_closed), 
-				Toast.LENGTH_SHORT).show();
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

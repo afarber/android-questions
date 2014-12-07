@@ -6,9 +6,9 @@
     <string name="show_notification">Show Notification</string>
     <string name="cancel_notification">Cancel Notification</string>
     <string name="open_car">Open the car</string>
-    <string name="close_car">Close the car</string>
-    	<string name="the_question">Open the car?</string>
+    <string name="flash_lights">Flash the lights</string>
+    <string name="the_question">Your car is near</string>
 	<string name="car_opened">Car has been opened!</string>
-	<string name="car_closed">Car has been closed!</string>
+	<string name="lights_flashed">Lights have been flashed!</string>
 			
 </resources>
