@@ -1,5 +1,6 @@
 package de.afarber.mynotification;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -49,13 +50,38 @@ public class MainActivity extends ActionBarActivity {
     		appIntent, 
     		PendingIntent.FLAG_UPDATE_CURRENT);
         
+        // Sets up the Open and Flash action buttons that
+        // will appear in the expanded view of the notification.
+        Intent openIntent = new Intent(this, OpenActivity.class);
+        openIntent.setAction("open");
+        PendingIntent piOpen = PendingIntent.getService(this, 0, openIntent, 0);
+
+        Intent flashIntent = new Intent(this, OpenActivity.class);
+        flashIntent.setAction("flash");
+        PendingIntent piFlash = PendingIntent.getService(this, 0, flashIntent, 0);
+
         mNotificationBuilder = new NotificationCompat.Builder(mContext)
         	.setSmallIcon(R.drawable.ic_launcher)
             .setContentTitle(question)
             .setContentText(question)
             .setTicker(question)
             .setContentIntent(contentIntent)
-            .setAutoCancel(true);
+            .setAutoCancel(true)
+	        .setDefaults(Notification.DEFAULT_ALL) // requires VIBRATE permission
+	        /*
+	         * Sets the big view "big text" style and supplies the
+	         * text (the user's reminder message) that will be displayed
+	         * in the detail area of the expanded notification.
+	         * These calls are ignored by the support library for
+	         * pre-4.1 devices.
+	         */
+	        .setStyle(new NotificationCompat.BigTextStyle()
+	             .bigText(question))
+	        .addAction (R.drawable.ic_launcher,
+	                getString(R.string.open_car), piOpen)
+	        .addAction (R.drawable.ic_launcher,
+	                getString(R.string.flash_lights), piFlash);
+
         
     }
     
