@@ -4,7 +4,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
@@ -12,9 +11,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -22,7 +18,8 @@ public class MainActivity extends ActionBarActivity {
 	private NotificationManager mNotificationManager;
 	private NotificationCompat.Builder mNotificationBuilder;
 	private static final int NOTIFY_ID = 1234;
-	
+
+	/*
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
@@ -32,6 +29,7 @@ public class MainActivity extends ActionBarActivity {
 	        Log.d("onNewIntent", "Extra: " + extras.getString("my_data"));
 	    }
 	}
+	*/
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +40,9 @@ public class MainActivity extends ActionBarActivity {
 		mContext = getApplicationContext();
 		mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 		
-        Intent appIntent = new Intent(mContext, MainActivity.class);
+        Intent appIntent = new Intent(mContext, OpenActivity.class);
         appIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         appIntent.putExtra("my_data", 12345);
-
-		//Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://afarber.de"));
 		
         PendingIntent contentIntent = PendingIntent.getActivity(mContext, 
     		0, 
@@ -61,21 +57,16 @@ public class MainActivity extends ActionBarActivity {
             .setContentIntent(contentIntent)
             .setAutoCancel(true);
         
-		Button showButton = (Button) findViewById(R.id.show);
-		showButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-		        mNotificationManager.notify(NOTIFY_ID, mNotificationBuilder.build());
-			}
-		});
-		
-		Button cancelButton = (Button) findViewById(R.id.cancel);
-		cancelButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				mNotificationManager.cancel(NOTIFY_ID);
-			}
-		});
     }
     
+	public void showNotification(View v) {
+        mNotificationManager.notify(NOTIFY_ID, mNotificationBuilder.build());
+	}
+
+	public void cancelNotification(View v) {
+		mNotificationManager.cancel(NOTIFY_ID);
+	}
+	
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
