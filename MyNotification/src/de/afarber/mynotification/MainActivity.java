@@ -20,18 +20,6 @@ public class MainActivity extends ActionBarActivity {
 	private NotificationCompat.Builder mNotificationBuilder;
 	private static final int NOTIFY_ID = 1234;
 
-	/*
-	@Override
-	protected void onNewIntent(Intent intent) {
-		super.onNewIntent(intent);
-
-	    Bundle extras = getIntent().getExtras();
-	    if (extras != null) {
-	        Log.d("onNewIntent", "Extra: " + extras.getString("my_data"));
-	    }
-	}
-	*/
-	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,11 +40,12 @@ public class MainActivity extends ActionBarActivity {
         
         // Sets up the Open and Flash action buttons that
         // will appear in the expanded view of the notification.
-        Intent openIntent = new Intent(this, OpenActivity.class);
+        
+        Intent openIntent = new Intent(this, RegionService.class);
         openIntent.setAction("open");
         PendingIntent piOpen = PendingIntent.getService(this, 0, openIntent, 0);
 
-        Intent flashIntent = new Intent(this, OpenActivity.class);
+        Intent flashIntent = new Intent(this, RegionService.class);
         flashIntent.setAction("flash");
         PendingIntent piFlash = PendingIntent.getService(this, 0, flashIntent, 0);
 

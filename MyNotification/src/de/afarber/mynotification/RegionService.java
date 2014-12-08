@@ -30,7 +30,7 @@ public class RegionService extends IntentService {
                 public void run() {
                      Toast.makeText(getApplicationContext(), 
                                 getString(R.string.car_opened), 
-                                Toast.LENGTH_SHORT).show();             
+                                Toast.LENGTH_LONG).show();             
                 }
             });
         } else if (action.equals("flash")) {
@@ -39,7 +39,7 @@ public class RegionService extends IntentService {
                 public void run() {
             		Toast.makeText(getApplicationContext(), 
             				getString(R.string.lights_flashed), 
-            				Toast.LENGTH_SHORT).show();
+            				Toast.LENGTH_LONG).show();
                 }
             });
     	}
