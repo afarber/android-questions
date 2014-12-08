@@ -77,10 +77,10 @@ public class MainActivity extends ActionBarActivity {
 	         */
 	        .setStyle(new NotificationCompat.BigTextStyle()
 	             .bigText(question))
-	        .addAction (R.drawable.ic_launcher,
-	                getString(R.string.open_car), piOpen)
-	        .addAction (R.drawable.ic_launcher,
-	                getString(R.string.flash_lights), piFlash);
+	        .addAction(R.drawable.open,
+	                getString(R.string.open_car_short), piOpen)
+	        .addAction(R.drawable.flash,
+	                getString(R.string.flash_lights_short), piFlash);
 
         
     }

@@ -9,18 +9,22 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="de.afarber.mynotification.MainActivity" >
 
-    <Button android:id="@+id/open" 
-        android:layout_width="fill_parent" 
-    	android:layout_height="wrap_content" 
-    	android:layout_margin="20dp"
-        android:onClick="openCar"
-    	android:text="@string/open_car" />
-    
-    <Button android:id="@+id/flash" 
+    <Button
+        android:id="@+id/open"
         android:layout_width="fill_parent"
-    	android:layout_height="wrap_content" 
-    	android:layout_margin="20dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:drawableLeft="@drawable/open"
+        android:onClick="openCar"
+        android:text="@string/open_car" />
+    
+    <Button
+        android:id="@+id/flash"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:drawableLeft="@drawable/flash"
         android:onClick="flashLights"
-    	android:text="@string/flash_lights" />    
+        android:text="@string/flash_lights" />
 
 </LinearLayout>
