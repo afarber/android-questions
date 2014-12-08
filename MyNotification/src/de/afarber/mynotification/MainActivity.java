@@ -18,7 +18,6 @@ public class MainActivity extends ActionBarActivity {
 	private Context mContext;
 	private NotificationManager mNotificationManager;
 	private NotificationCompat.Builder mNotificationBuilder;
-	private static final int NOTIFY_ID = 1234;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +30,6 @@ public class MainActivity extends ActionBarActivity {
 		
         Intent appIntent = new Intent(mContext, OpenActivity.class);
         appIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        appIntent.putExtra("my_data", 12345);
 		
         PendingIntent contentIntent = PendingIntent.getActivity(mContext, 
     		0, 
@@ -42,11 +40,11 @@ public class MainActivity extends ActionBarActivity {
         // will appear in the expanded view of the notification.
         
         Intent openIntent = new Intent(this, RegionService.class);
-        openIntent.setAction("open");
+        openIntent.setAction(CommonConstants.ACTION_OPEN);
         PendingIntent piOpen = PendingIntent.getService(this, 0, openIntent, 0);
 
         Intent flashIntent = new Intent(this, RegionService.class);
-        flashIntent.setAction("flash");
+        flashIntent.setAction(CommonConstants.ACTION_FLASH);
         PendingIntent piFlash = PendingIntent.getService(this, 0, flashIntent, 0);
 
         mNotificationBuilder = new NotificationCompat.Builder(mContext)
@@ -75,11 +73,11 @@ public class MainActivity extends ActionBarActivity {
     }
     
 	public void showNotification(View v) {
-        mNotificationManager.notify(NOTIFY_ID, mNotificationBuilder.build());
+        mNotificationManager.notify(CommonConstants.NOTIFICATION_ID, mNotificationBuilder.build());
 	}
 
 	public void cancelNotification(View v) {
-		mNotificationManager.cancel(NOTIFY_ID);
+		mNotificationManager.cancel(CommonConstants.NOTIFICATION_ID);
 	}
 	
     @Override

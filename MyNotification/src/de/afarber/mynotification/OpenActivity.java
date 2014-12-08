@@ -20,12 +20,12 @@ public class OpenActivity extends Activity {
    }
 
     public void openCar(View v) {
-        mServiceIntent.setAction("open");
+        mServiceIntent.setAction(CommonConstants.ACTION_OPEN);
         startService(mServiceIntent);
     }
 
     public void flashLights(View v) {
-        mServiceIntent.setAction("flash");
+        mServiceIntent.setAction(CommonConstants.ACTION_FLASH);
         startService(mServiceIntent);
     }
 }
