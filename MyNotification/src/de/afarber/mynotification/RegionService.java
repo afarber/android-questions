@@ -2,6 +2,8 @@ package de.afarber.mynotification;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -17,15 +19,29 @@ public class RegionService extends IntentService {
 		Log.d(TAG, "Received an intent: " + intent);
         String action = intent.getAction();
 		Log.d(TAG, "Received an action: " + action);
+		if (action == null)
+			return;
 		
-        if(action.equals("open")) {
-    		Toast.makeText(this, 
-    				getString(R.string.car_opened), 
-    				Toast.LENGTH_SHORT).show();
+    	Handler handler = new Handler(Looper.getMainLooper());
+		
+        if (action.equals("open")) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                     Toast.makeText(getApplicationContext(), 
+                                getString(R.string.car_opened), 
+                                Toast.LENGTH_SHORT).show();             
+                }
+            });
         } else if (action.equals("flash")) {
-    		Toast.makeText(this, 
-    				getString(R.string.lights_flashed), 
-    				Toast.LENGTH_SHORT).show();
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+            		Toast.makeText(getApplicationContext(), 
+            				getString(R.string.lights_flashed), 
+            				Toast.LENGTH_SHORT).show();
+                }
+            });
     	}
 	}
 }
