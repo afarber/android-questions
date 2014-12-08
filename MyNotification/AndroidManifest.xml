@@ -33,6 +33,11 @@
             android:taskAffinity=""
             android:excludeFromRecents="true"/>        
         
+        <service
+            android:name="RegionService"
+            android:label="RegionServiceLabel" android:enabled="true">
+        </service>
+        
     </application>
 
 </manifest>

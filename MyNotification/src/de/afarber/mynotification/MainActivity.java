@@ -36,9 +36,9 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        String question = getString(R.string.the_question);
+        
 		mContext = getApplicationContext();
+        String question = getString(R.string.the_question);
 		mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 		
         Intent appIntent = new Intent(mContext, OpenActivity.class);
@@ -78,11 +78,11 @@ public class MainActivity extends ActionBarActivity {
 	        .setStyle(new NotificationCompat.BigTextStyle()
 	             .bigText(question))
 	        .addAction(R.drawable.open,
-	                getString(R.string.open_car_short), piOpen)
+	                getString(R.string.open_car_short), 
+	                piOpen)
 	        .addAction(R.drawable.flash,
-	                getString(R.string.flash_lights_short), piFlash);
-
-        
+	                getString(R.string.flash_lights_short), 
+	                piFlash);
     }
     
 	public void showNotification(View v) {
