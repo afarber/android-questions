@@ -1,0 +1,22 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="24dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView 
+        android:id="@+id/selectedTextView"
+        android:padding="24dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Nothing selected" />
+        
+    <Button
+        android:id="@+id/selectButton"
+        android:padding="24dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Select item..." />
+
+</LinearLayout>

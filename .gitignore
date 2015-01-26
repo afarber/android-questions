@@ -25,3 +25,8 @@ proguard/
 # Eclipse
 .metadata/
 
+# Android Studio
+.idea
+
+.DS_Store
+
