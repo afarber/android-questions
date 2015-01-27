@@ -63,7 +63,8 @@ public class MainActivity extends Activity
 		editor.putInt(INDEX, index);
 		editor.commit();
 		// dismiss MyListFragment and show MyMainFragment again
-		getFragmentManager().popBackStack();
-		// TODO how to show the index in mSelectedTextView?
+		getFragmentManager().popBackStackImmediate();
+		MyMainFragment fragment = (MyMainFragment) getFragmentManager().findFragmentById(R.id.root);
+		fragment.setText("Selected index: " + index);
 	}
 }

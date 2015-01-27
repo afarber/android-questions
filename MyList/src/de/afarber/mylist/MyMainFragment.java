@@ -55,5 +55,9 @@ public class MyMainFragment extends Fragment {
     	super.onDetach();
     	mListener = null;
     }
+    
+    public void setText(String str) {
+    	mSelectedTextView.setText(str);
+    }
 }
 
