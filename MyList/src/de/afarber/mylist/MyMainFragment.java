@@ -36,24 +36,24 @@ public class MyMainFragment extends Fragment {
     
 
     public interface MainListener {
-            public void selectedButtonClicked();
+    	public void selectedButtonClicked();
     }
 
     @Override
     public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            if (activity instanceof MainListener) {
-                    mListener = (MainListener) activity;
-            } else {
-                    throw new ClassCastException(activity.toString() +
-                        " must implement MyMainFragment.MainListener");
-            }
+    	super.onAttach(activity);
+    	if (activity instanceof MainListener) {
+    		mListener = (MainListener) activity;
+    	} else {
+    		throw new ClassCastException(activity.toString() +
+    				" must implement MyMainFragment.MainListener");
+    	}
     }
 
     @Override
     public void onDetach() {
-            super.onDetach();
-            mListener = null;
+    	super.onDetach();
+    	mListener = null;
     }
 }
 

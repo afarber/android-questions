@@ -1,14 +1,17 @@
 package de.afarber.mylist;
 
-import de.afarber.mylist.MyListFragment.ListListener;
-import de.afarber.mylist.MyMainFragment.MainListener;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import de.afarber.mylist.MyListFragment.ListListener;
+import de.afarber.mylist.MyMainFragment.MainListener;
 
-public class MainActivity extends Activity implements MainListener, ListListener {
+public class MainActivity extends Activity 
+    implements MyConstants, MainListener, ListListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,7 +21,7 @@ public class MainActivity extends Activity implements MainListener, ListListener
         if (savedInstanceState == null) {
             Fragment fragment = new MyMainFragment();
             getFragmentManager().beginTransaction()
-            	.replace(R.id.root, fragment, "main")
+            	.replace(R.id.root, fragment, MAIN)
                 .commit();
         }
     }
@@ -44,16 +47,23 @@ public class MainActivity extends Activity implements MainListener, ListListener
 
 	@Override
 	public void selectedButtonClicked() {
-        Fragment fragment = new MyListFragment();
+		SharedPreferences prefs = getSharedPreferences(PREFS, 0);
+		int index = prefs.getInt(INDEX, -1);
+		Fragment fragment = MyListFragment.newInstance(index);
         getFragmentManager().beginTransaction()
             .addToBackStack(null)
-            .replace(R.id.root, fragment, "list")
+            .replace(R.id.root, fragment, LIST)
             .commit();
 	}
 
 	@Override
-	public void itemSelected() {
-		// TODO Auto-generated method stub
-		
+	public void itemSelected(int index) {
+		SharedPreferences prefs = getSharedPreferences(PREFS, 0);
+		Editor editor = prefs.edit();
+		editor.putInt(INDEX, index);
+		editor.commit();
+		// dismiss MyListFragment and show MyMainFragment again
+		getFragmentManager().popBackStack();
+		// TODO how to show the index in mSelectedTextView?
 	}
 }

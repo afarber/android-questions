@@ -6,7 +6,6 @@ import java.util.Arrays;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +13,17 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
 
-public class MyListFragment extends ListFragment {
-	
-    private ListListener mListener;
-
+public class MyListFragment extends ListFragment implements MyConstants {
     static class ViewHolder {
         public CheckedTextView text1;
     }
 
+    public interface ListListener {
+        public void itemSelected(int index);
+    }
+
+    private ListListener mListener;
+    private ArrayAdapter<String> mAdapter;
     private ArrayList<String> mItems = new ArrayList<String>(Arrays.asList(
     		"Item 01",
     		"Item 02",
@@ -36,12 +38,6 @@ public class MyListFragment extends ListFragment {
     		"Item 11",
     		"Item 12"
     ));
-    private ArrayAdapter<String> mAdapter;
-    private String mSelectedItem = "Item 07";
-
-    public interface ListListener {
-            public void itemSelected();
-    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -60,6 +56,14 @@ public class MyListFragment extends ListFragment {
             mListener = null;
     }
     
+    public static MyListFragment newInstance(int index) {
+    	MyListFragment fragment = new MyListFragment();
+        Bundle args = new Bundle();
+        args.putInt(INDEX, index);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     public void onViewCreated(View v, Bundle savedInstanceState) {
         super.onViewCreated(v, savedInstanceState);
 
@@ -84,16 +88,25 @@ public class MyListFragment extends ListFragment {
 
         		String str = (String) getItem(position);
         		holder.text1.setText(str);
-        		Log.d("XXX", "str=" + str + ", mSelectedItem=" + mSelectedItem + ", eq=" + str.equalsIgnoreCase(mSelectedItem));
-        		holder.text1.setChecked(str.equalsIgnoreCase(mSelectedItem));
-        		//holder.text1.setChecked(true);
         		return convertView;
         	}
         };
 
         getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         setListAdapter(mAdapter);
-        //getListView().setSelection(8);
     }
+    
+    @Override
+    public void onResume() {
+    	super.onResume();
+
+    	int index = getArguments().getInt(INDEX);
+    	getListView().setItemChecked(index, true);
+    }
+    
+    @Override
+	 public void onListItemClick(ListView l, View v, int position, long id) {
+		 mListener.itemSelected(position);
+	}
 }
 
