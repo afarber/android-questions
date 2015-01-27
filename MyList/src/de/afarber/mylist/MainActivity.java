@@ -19,7 +19,9 @@ public class MainActivity extends Activity
         setContentView(R.layout.activity_main);
         
         if (savedInstanceState == null) {
-            Fragment fragment = new MyMainFragment();
+    		SharedPreferences prefs = getSharedPreferences(PREFS, 0);
+    		int index = prefs.getInt(INDEX, -1);
+            Fragment fragment = MyMainFragment.newInstance(index);
             getFragmentManager().beginTransaction()
             	.replace(R.id.root, fragment, MAIN)
                 .commit();
@@ -65,6 +67,6 @@ public class MainActivity extends Activity
 		// dismiss MyListFragment and show MyMainFragment again
 		getFragmentManager().popBackStackImmediate();
 		MyMainFragment fragment = (MyMainFragment) getFragmentManager().findFragmentById(R.id.root);
-		fragment.setText("Selected index: " + index);
+		fragment.getArguments().putInt(INDEX, index);
 	}
 }

@@ -25,6 +25,7 @@ public class MyListFragment extends ListFragment implements MyConstants {
     private ListListener mListener;
     private ArrayAdapter<String> mAdapter;
     private ArrayList<String> mItems = new ArrayList<String>(Arrays.asList(
+    		"Item 00",
     		"Item 01",
     		"Item 02",
     		"Item 03",

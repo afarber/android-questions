@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class MyMainFragment extends Fragment {
+public class MyMainFragment extends Fragment implements MyConstants {
 	
     private MainListener mListener;
 	private TextView mSelectedTextView;
@@ -33,7 +33,6 @@ public class MyMainFragment extends Fragment {
         
         return view;
     }
-    
 
     public interface MainListener {
     	public void selectedButtonClicked();
@@ -54,6 +53,22 @@ public class MyMainFragment extends Fragment {
     public void onDetach() {
     	super.onDetach();
     	mListener = null;
+    }
+    
+    public static MyMainFragment newInstance(int index) {
+    	MyMainFragment fragment = new MyMainFragment();
+        Bundle args = new Bundle();
+        args.putInt(INDEX, index);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onResume() {
+    	super.onResume();
+
+    	int index = getArguments().getInt(INDEX);
+    	mSelectedTextView.setText("Selected index: " + index);
     }
     
     public void setText(String str) {
