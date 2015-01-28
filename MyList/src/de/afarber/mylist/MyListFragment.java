@@ -72,7 +72,7 @@ public class MyListFragment extends ListFragment implements MyConstants {
 
         		if (convertView == null) {
         			LayoutInflater inflater = getActivity().getLayoutInflater();
-        			convertView = inflater.inflate(android.R.layout.simple_list_item_checked, null);
+        			convertView = inflater.inflate(android.R.layout.simple_list_item_checked, parent, false);
         			holder = new ViewHolder();
         			holder.text1 = (CheckedTextView) convertView.findViewById(android.R.id.text1);
         			convertView.setTag(holder);
@@ -95,6 +95,9 @@ public class MyListFragment extends ListFragment implements MyConstants {
     	super.onResume();
 
     	int index = mListener.getIndex();
+    	if (index < 0)
+    		return;
+    	
     	getListView().setItemChecked(index, true);
     	getListView().setSelection(index);
     }

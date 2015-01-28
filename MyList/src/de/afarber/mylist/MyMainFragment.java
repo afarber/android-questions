@@ -61,7 +61,10 @@ public class MyMainFragment extends Fragment implements MyConstants {
     	super.onResume();
 
     	int index = mListener.getIndex();
-    	mSelectedTextView.setText("Selected index: " + index);
+    	if (index < 0)
+    		return;
+    	
+   		mSelectedTextView.setText("Selected index: " + index);
     }
     
     public void setText(String str) {
