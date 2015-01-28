@@ -20,6 +20,7 @@ public class MyListFragment extends ListFragment implements MyConstants {
 
     public interface ListListener {
         public void itemSelected(int index);
+        public int getIndex();
     }
 
     private ListListener mListener;
@@ -57,14 +58,6 @@ public class MyListFragment extends ListFragment implements MyConstants {
             mListener = null;
     }
     
-    public static MyListFragment newInstance(int index) {
-    	MyListFragment fragment = new MyListFragment();
-        Bundle args = new Bundle();
-        args.putInt(INDEX, index);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     public void onViewCreated(View v, Bundle savedInstanceState) {
         super.onViewCreated(v, savedInstanceState);
 
@@ -101,8 +94,9 @@ public class MyListFragment extends ListFragment implements MyConstants {
     public void onResume() {
     	super.onResume();
 
-    	int index = getArguments().getInt(INDEX);
+    	int index = mListener.getIndex();
     	getListView().setItemChecked(index, true);
+    	getListView().setSelection(index);
     }
     
     @Override

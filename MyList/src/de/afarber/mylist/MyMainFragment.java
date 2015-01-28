@@ -36,6 +36,7 @@ public class MyMainFragment extends Fragment implements MyConstants {
 
     public interface MainListener {
     	public void selectedButtonClicked();
+    	public int getIndex();
     }
 
     @Override
@@ -55,19 +56,11 @@ public class MyMainFragment extends Fragment implements MyConstants {
     	mListener = null;
     }
     
-    public static MyMainFragment newInstance(int index) {
-    	MyMainFragment fragment = new MyMainFragment();
-        Bundle args = new Bundle();
-        args.putInt(INDEX, index);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onResume() {
     	super.onResume();
 
-    	int index = getArguments().getInt(INDEX);
+    	int index = mListener.getIndex();
     	mSelectedTextView.setText("Selected index: " + index);
     }
     
