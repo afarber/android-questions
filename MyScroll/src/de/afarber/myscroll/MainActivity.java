@@ -2,6 +2,7 @@ package de.afarber.myscroll;
 
 import java.util.ArrayList;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -10,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -21,6 +21,29 @@ public class MainActivity extends ActionBarActivity {
         public TextView text1;
     }
 
+    private class MyTask extends AsyncTask<Void, Void, Void> {
+    	private int i;
+
+		@Override
+		protected Void doInBackground(Void... params) {
+            for (i = 0; i < 1000000; i++) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    Thread.interrupted();
+                }
+                
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                    	mAdapter.add("Item " + i);
+                    }
+                });
+            }
+			return null;
+		}
+    }
+    
     private ListView mMyListView;
     private ArrayAdapter<String> mAdapter;
     private ArrayList<String> mItems = new ArrayList<String>();
@@ -58,6 +81,7 @@ public class MainActivity extends ActionBarActivity {
         mMyListView.setChoiceMode(ListView.CHOICE_MODE_NONE);
         mMyListView.setAdapter(mAdapter);
 
+        new MyTask().execute();
     }
 
     public void clearList(View v) {
