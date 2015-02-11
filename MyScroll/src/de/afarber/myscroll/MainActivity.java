@@ -5,15 +5,18 @@ import java.util.ArrayList;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-
 
 public class MainActivity extends ActionBarActivity {
     
@@ -23,16 +26,14 @@ public class MainActivity extends ActionBarActivity {
 
     private class MyTask extends AsyncTask<Void, Void, Void> {
     	private int i;
-
 		@Override
 		protected Void doInBackground(Void... params) {
             for (i = 0; i < 1000000; i++) {
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(300);
                 } catch (InterruptedException e) {
                     Thread.interrupted();
                 }
-                
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -43,10 +44,11 @@ public class MainActivity extends ActionBarActivity {
 			return null;
 		}
     }
-    
     private ListView mMyListView;
     private ArrayAdapter<String> mAdapter;
     private ArrayList<String> mItems = new ArrayList<String>();
+    
+    private GestureDetector mDetector;	
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +83,25 @@ public class MainActivity extends ActionBarActivity {
         mMyListView.setChoiceMode(ListView.CHOICE_MODE_NONE);
         mMyListView.setAdapter(mAdapter);
 
+        mDetector = new GestureDetector(this, new SimpleOnGestureListener() {
+			@Override
+			public boolean onDown(MotionEvent e) {
+				return true;
+			}
+			@Override
+			public boolean onDoubleTap(MotionEvent e) {
+                mAdapter.clear();
+				return true;
+			}
+		});
+		
+        mMyListView.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				return mDetector.onTouchEvent(event);
+			}
+		});
+        
         new MyTask().execute();
     }
 

@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">MyScroll</string>
-    <string name="clear_list">Clear the list!</string>
+    <string name="clear_list">Clear the list! (or double tap)</string>
     <string name="action_settings">Settings</string>
 
 </resources>

@@ -15,7 +15,7 @@
     <ListView 
         android:id="@+id/myListView"
 		android:stackFromBottom="true"
-		android:transcriptMode="alwaysScroll"        
+		android:transcriptMode="normal"        
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     
