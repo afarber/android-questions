@@ -24,6 +24,10 @@ proguard/
 
 # Eclipse
 .metadata/
+# Eclipse Java
+.settings/
+.classpath
+.project
 
 # Android Studio
 .idea
