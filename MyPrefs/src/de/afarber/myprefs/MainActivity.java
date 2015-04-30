@@ -51,6 +51,13 @@ public class MainActivity extends Activity implements OnBackStackChangedListener
         	showPrefs(null);
             return true;
         }
+        if (id == android.R.id.home) {
+        	if (!getFragmentManager().popBackStackImmediate()) {
+        		//finish();
+        	}
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
     
