@@ -3,13 +3,28 @@ package de.afarber.myprefs;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager.OnBackStackChangedListener;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
-public class MainActivity extends Activity implements OnBackStackChangedListener {
+public class MainActivity 
+    extends Activity 
+	implements OnBackStackChangedListener, 
+			   OnSharedPreferenceChangeListener {
+	
+	public static final String BOOL_1 = "BOOL_1";
+	public static final String STR_1 = "STR_1";
+	public static final String STR_2 = "STR_2";
+	
+	private SharedPreferences mPrefs;	
+	private Editor mEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,6 +32,11 @@ public class MainActivity extends Activity implements OnBackStackChangedListener
         requestWindowFeature(Window.FEATURE_ACTION_BAR);
 	    getFragmentManager().addOnBackStackChangedListener(this);
         setContentView(R.layout.activity_main);
+        
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		mPrefs.registerOnSharedPreferenceChangeListener(this);
+		mEditor = mPrefs.edit();
+		
 	    if (savedInstanceState == null) {
 	    	Fragment fragment = new MainFragment();
 	        getFragmentManager().beginTransaction()
@@ -63,5 +83,16 @@ public class MainActivity extends Activity implements OnBackStackChangedListener
 	@Override
 	public void onBackStackChanged() {
 		getActionBar().setDisplayHomeAsUpEnabled(getFragmentManager().getBackStackEntryCount() > 0);
+	}
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+			String key) {
+		Log.d("XXX", key);
+		
+		if (BOOL_1.equals(key)) {
+		} else if (STR_1.equals(key)) {
+		} else if (STR_2.equals(key)) {
+		} 		
 	}
 }

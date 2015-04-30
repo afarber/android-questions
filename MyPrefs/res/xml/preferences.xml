@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     
-
+    <PreferenceCategory 
+        android:title="Category 1"
+        android:key="category_1">
+        
+        <CheckBoxPreference
+            android:key="bool_1"
+            android:title="Boolean 1"
+            android:summary="XXX how to set this? XXX"
+            android:defaultValue="false" />
+        <EditTextPreference 
+            android:dependency="bool_1"
+            android:key="str_1"
+            android:title="String 1"
+            android:summary="XXX how to set this? XXX"
+            android:defaultValue="change me" />
+        <EditTextPreference 
+            android:dependency="bool_1"
+            android:key="str_2"
+            android:title="String 2"
+            android:summary="XXX how to set this? XXX"
+            android:defaultValue="change me too" />
+        </PreferenceCategory>
+    
 </PreferenceScreen>
