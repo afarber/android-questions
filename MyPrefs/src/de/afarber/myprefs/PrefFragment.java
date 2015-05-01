@@ -1,17 +1,12 @@
 package de.afarber.myprefs;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 public class PrefFragment extends PreferenceFragment 
     implements OnSharedPreferenceChangeListener {
@@ -39,6 +34,7 @@ public class PrefFragment extends PreferenceFragment
 	    super.onResume();
 	    
 	    SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+	    // load saved values to set the summaries
 	    onSharedPreferenceChanged(prefs, BOOL_1);
 	    onSharedPreferenceChanged(prefs, STR_1);
 	    onSharedPreferenceChanged(prefs, STR_2);
