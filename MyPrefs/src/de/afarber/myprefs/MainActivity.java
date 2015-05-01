@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager.OnBackStackChangedListener;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,8 @@ public class MainActivity extends Activity implements OnBackStackChangedListener
 	    getFragmentManager().addOnBackStackChangedListener(this);
         setContentView(R.layout.activity_main);
         
+   		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
 	    if (savedInstanceState == null) {
 	    	Fragment fragment = new MainFragment();
 	        getFragmentManager().beginTransaction()

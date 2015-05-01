@@ -2,7 +2,6 @@ package de.afarber.myprefs;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -10,6 +9,9 @@ import android.preference.EditTextPreference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 public class PrefFragment extends PreferenceFragment 
     implements OnSharedPreferenceChangeListener {
@@ -21,8 +23,6 @@ public class PrefFragment extends PreferenceFragment
 	private CheckBoxPreference mBool1;
 	private EditTextPreference mStr1;
 	private EditTextPreference mStr2;
-	private SharedPreferences mPrefs;	
-	private Editor mEditor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,17 +35,21 @@ public class PrefFragment extends PreferenceFragment
     }
     
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		mPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
-		mEditor = mPrefs.edit();
-		mPrefs.registerOnSharedPreferenceChangeListener(this);
+	public void onResume() {
+	    super.onResume();
+	    
+	    SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+	    onSharedPreferenceChanged(prefs, BOOL_1);
+	    onSharedPreferenceChanged(prefs, STR_1);
+	    onSharedPreferenceChanged(prefs, STR_2);
+	    prefs.registerOnSharedPreferenceChangeListener(this);
 	}
 
 	@Override
-	public void onDetach() {
-		super.onDetach();
-		mPrefs.unregisterOnSharedPreferenceChangeListener(this);
+	public void onPause() {
+		super.onPause();
+	    SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+		prefs.unregisterOnSharedPreferenceChangeListener(this);
 	}
 
 	@Override
