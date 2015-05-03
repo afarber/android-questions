@@ -11,9 +11,9 @@ import android.util.Log;
 public class PrefFragment extends PreferenceFragment 
     implements OnSharedPreferenceChangeListener {
 	
-	public static final String BOOL_1 = "bool_1";
-	public static final String STR_1 = "str_1";
-	public static final String STR_2 = "str_2";
+	public static String BOOL_1;
+	public static String STR_1;
+	public static String STR_2;
 	
 	private CheckBoxPreference mBool1;
 	private EditTextPreference mStr1;
@@ -22,8 +22,13 @@ public class PrefFragment extends PreferenceFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-		setHasOptionsMenu(false);
+		setHasOptionsMenu(false); 							// TODO does not work
    		addPreferencesFromResource(R.xml.preferences);
+   		
+   		BOOL_1 = getString(R.string.bool_1);
+   		STR_1  = getString(R.string.str_1);
+   		STR_2  = getString(R.string.str_2);
+
    		mBool1 = (CheckBoxPreference) findPreference(BOOL_1);
    		mStr1 = (EditTextPreference) findPreference(STR_1);
    		mStr2 = (EditTextPreference) findPreference(STR_2);
@@ -34,7 +39,7 @@ public class PrefFragment extends PreferenceFragment
 	    super.onResume();
 	    
 	    SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
-	    // load saved values to set the summaries
+	    // set the summaries from saved values
 	    onSharedPreferenceChanged(prefs, BOOL_1);
 	    onSharedPreferenceChanged(prefs, STR_1);
 	    onSharedPreferenceChanged(prefs, STR_2);

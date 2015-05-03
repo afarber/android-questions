@@ -2,7 +2,10 @@
 <resources>
 
     <string name="app_name">MyPrefs</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-
+    
+    <string name="bool_1">bool_1</string>
+    <string name="str_1">str_1</string>
+    <string name="str_2">str_2</string>
+    
 </resources>

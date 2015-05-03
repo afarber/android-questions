@@ -6,21 +6,18 @@
         android:key="category_1">
         
         <CheckBoxPreference
-            android:key="bool_1"
+            android:key="@string/bool_1"
             android:title="Boolean 1"
-            android:summary="XXX how to set this? XXX"
             android:defaultValue="false" />
         <EditTextPreference 
-            android:dependency="bool_1"
-            android:key="str_1"
+            android:dependency="@string/bool_1"
+            android:key="@string/str_1"
             android:title="String 1"
-            android:summary="XXX how to set this? XXX"
             android:defaultValue="change me" />
         <EditTextPreference 
-            android:dependency="bool_1"
-            android:key="str_2"
+            android:dependency="@string/bool_1"
+            android:key="@string/str_2"
             android:title="String 2"
-            android:summary="XXX how to set this? XXX"
             android:defaultValue="change me too" />
         </PreferenceCategory>
     
