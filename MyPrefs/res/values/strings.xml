@@ -7,5 +7,7 @@
     <string name="bool_1">bool_1</string>
     <string name="str_1">str_1</string>
     <string name="str_2">str_2</string>
+    <string name="seek_1">seek_1</string>
+    <string name="seek_2">seek_2</string>
     
 </resources>

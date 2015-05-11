@@ -19,6 +19,17 @@
             android:key="@string/str_2"
             android:title="String 2"
             android:defaultValue="change me too" />
-        </PreferenceCategory>
+        
+        <de.afarber.myprefs.SeekBarPreference
+            android:defaultValue="45"
+            android:dependency="@string/bool_1"
+            android:key="@string/seek_1" />
+        
+        <de.afarber.myprefs.SeekBarPreference
+            android:defaultValue="65"
+            android:dependency="@string/bool_1"
+            android:key="@string/seek_2" />
+        
+    </PreferenceCategory>
     
 </PreferenceScreen>

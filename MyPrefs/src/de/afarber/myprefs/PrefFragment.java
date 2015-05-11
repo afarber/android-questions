@@ -11,13 +11,20 @@ import android.util.Log;
 public class PrefFragment extends PreferenceFragment 
     implements OnSharedPreferenceChangeListener {
 	
+	public static final int DEFAULT_1 = 45;
+	public static final int DEFAULT_2 = 65;
+	
 	public static String BOOL_1;
 	public static String STR_1;
 	public static String STR_2;
+	public static String SEEK_1;
+	public static String SEEK_2;
 	
 	private CheckBoxPreference mBool1;
 	private EditTextPreference mStr1;
 	private EditTextPreference mStr2;
+	private SeekBarPreference mSeek1;
+	private SeekBarPreference mSeek2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,10 +35,14 @@ public class PrefFragment extends PreferenceFragment
    		BOOL_1 = getString(R.string.bool_1);
    		STR_1  = getString(R.string.str_1);
    		STR_2  = getString(R.string.str_2);
+   		SEEK_1  = getString(R.string.seek_1);
+   		SEEK_2  = getString(R.string.seek_2);
 
    		mBool1 = (CheckBoxPreference) findPreference(BOOL_1);
    		mStr1 = (EditTextPreference) findPreference(STR_1);
    		mStr2 = (EditTextPreference) findPreference(STR_2);
+   		mSeek1 = (SeekBarPreference) findPreference(SEEK_1);
+   		mSeek2 = (SeekBarPreference) findPreference(SEEK_2);
     }
     
 	@Override
@@ -43,6 +54,8 @@ public class PrefFragment extends PreferenceFragment
 	    onSharedPreferenceChanged(prefs, BOOL_1);
 	    onSharedPreferenceChanged(prefs, STR_1);
 	    onSharedPreferenceChanged(prefs, STR_2);
+	    onSharedPreferenceChanged(prefs, SEEK_1);
+	    onSharedPreferenceChanged(prefs, SEEK_2);
 	    prefs.registerOnSharedPreferenceChangeListener(this);
 	}
 
@@ -66,6 +79,12 @@ public class PrefFragment extends PreferenceFragment
 		} else if (STR_2.equals(key)) {
 			String str2 = prefs.getString(key, "");
 			mStr2.setSummary(str2);
+		} else if (SEEK_1.equals(key)) {
+			int i1 = prefs.getInt(key, DEFAULT_1);
+			mSeek1.setSummary("$ " + i1);
+		} else if (SEEK_2.equals(key)) {
+			int i2 = prefs.getInt(key, DEFAULT_2);
+			mSeek2.setSummary("$ " + i2);
 		} 		
 	}    
 }
