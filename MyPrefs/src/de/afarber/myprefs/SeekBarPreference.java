@@ -1,6 +1,7 @@
 package de.afarber.myprefs;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.preference.Preference;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -14,27 +15,26 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 	private int mProgress;
 
 	public SeekBarPreference(Context context) {
-		super(context);
+		this(context, null, 0);
 	}
 
 	public SeekBarPreference(Context context, AttributeSet attrs) {
-		super(context, attrs);
+		this(context, attrs, 0);
 	}
 
 	public SeekBarPreference(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+		setLayoutResource(R.layout.preference_seekbar);
 	}
 
 	@Override
-	protected View onCreateView(ViewGroup parent)	{
-		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View view = inflater.inflate(R.layout.preference_seekbar, parent, false);
+    protected void onBindView(View view) {
+		super.onBindView(view);
 		mSeekBar = (SeekBar) view.findViewById(R.id.seekbar);
 		mSeekBar.setProgress(mProgress);
 		mSeekBar.setOnSeekBarChangeListener(this);
-		return view;
 	}
-
+	
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		if (!fromUser)
@@ -67,6 +67,11 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 			mProgress = value;
 			notifyChanged();
 		}
+	}
+	
+	@Override
+	protected Object onGetDefaultValue(TypedArray a, int index) {
+	    return a.getInt(index, 0);
 	}
 }
 
