@@ -25,6 +25,7 @@ proguard/
 # Eclipse
 .metadata/
 # Eclipse Java
+.recommenders/
 .settings/
 .classpath
 .project

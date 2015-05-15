@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.LayoutInflater;
@@ -14,11 +14,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
     
     static class ViewHolder {
         public TextView text1;
@@ -30,7 +29,7 @@ public class MainActivity extends ActionBarActivity {
 		protected Void doInBackground(Void... params) {
             for (i = 0; i < 1000000; i++) {
                 try {
-                    Thread.sleep(300);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     Thread.interrupted();
                 }
