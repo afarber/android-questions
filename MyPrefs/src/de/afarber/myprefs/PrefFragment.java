@@ -13,6 +13,7 @@ public class PrefFragment extends PreferenceFragment
 	
 	public static final int DEFAULT_1 = 45;
 	public static final int DEFAULT_2 = 65;
+	public static final int DEFAULT_3 = 75;
 	
 	public static String BOOL_1;
 	public static String STR_1;
@@ -76,23 +77,23 @@ public class PrefFragment extends PreferenceFragment
 		Log.d("onSharedPreferenceChanged", key);
 		
 		if (BOOL_1.equals(key)) {
-			boolean bool1 = prefs.getBoolean(key, false);
-			mBool1.setSummary(bool1 ? "Enabled" : "Disabled");
+			boolean b = prefs.getBoolean(key, false);
+			mBool1.setSummary(b ? "Enabled" : "Disabled");
 		} else if (STR_1.equals(key)) {
-			String str1 = prefs.getString(key, "");
-			mStr1.setSummary(str1);
+			String str = prefs.getString(key, "");
+			mStr1.setSummary(str);
 		} else if (STR_2.equals(key)) {
-			String str2 = prefs.getString(key, "");
-			mStr2.setSummary(str2);
+			String str = prefs.getString(key, "");
+			mStr2.setSummary(str);
 		} else if (SEEK_1.equals(key)) {
-			int i1 = prefs.getInt(key, DEFAULT_1);
-			mSeek1.setSummary("$ " + i1);
+			int i = prefs.getInt(key, DEFAULT_1);
+			mSeek1.setSummary("$ " + i);
 		} else if (SEEK_2.equals(key)) {
-			int i2 = prefs.getInt(key, DEFAULT_2);
-			mSeek2.setSummary("$ " + i2);
+			int i = prefs.getInt(key, DEFAULT_2);
+			mSeek2.setSummary("$ " + i);
 		} else if (NUM_1.equals(key)) {
-			// TODO
-			mNum1.setSummary("FIXME");
+			int i = prefs.getInt(key, DEFAULT_3);
+			mNum1.setSummary("" + i);
 		} 		
 	}    
 }

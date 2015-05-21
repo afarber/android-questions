@@ -35,7 +35,8 @@
         <de.afarber.myprefs.NumberPickerPreference
             android:defaultValue="85"
             android:dependency="@string/bool_1"
-            android:key="@string/num_1" />
+            android:key="@string/num_1"
+            android:title="Numeric 1" />
         
     </PreferenceCategory>
     
