@@ -19,12 +19,14 @@ public class PrefFragment extends PreferenceFragment
 	public static String STR_2;
 	public static String SEEK_1;
 	public static String SEEK_2;
+	public static String NUM_1;
 	
 	private CheckBoxPreference mBool1;
 	private EditTextPreference mStr1;
 	private EditTextPreference mStr2;
 	private SeekBarPreference mSeek1;
 	private SeekBarPreference mSeek2;
+	private NumberPickerPreference mNum1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,14 +37,16 @@ public class PrefFragment extends PreferenceFragment
    		BOOL_1 = getString(R.string.bool_1);
    		STR_1  = getString(R.string.str_1);
    		STR_2  = getString(R.string.str_2);
-   		SEEK_1  = getString(R.string.seek_1);
-   		SEEK_2  = getString(R.string.seek_2);
+   		SEEK_1 = getString(R.string.seek_1);
+   		SEEK_2 = getString(R.string.seek_2);
+   		NUM_1  = getString(R.string.num_1);
 
    		mBool1 = (CheckBoxPreference) findPreference(BOOL_1);
    		mStr1 = (EditTextPreference) findPreference(STR_1);
    		mStr2 = (EditTextPreference) findPreference(STR_2);
    		mSeek1 = (SeekBarPreference) findPreference(SEEK_1);
    		mSeek2 = (SeekBarPreference) findPreference(SEEK_2);
+   		mNum1 = (NumberPickerPreference) findPreference(NUM_1);
     }
     
 	@Override
@@ -56,6 +60,7 @@ public class PrefFragment extends PreferenceFragment
 	    onSharedPreferenceChanged(prefs, STR_2);
 	    onSharedPreferenceChanged(prefs, SEEK_1);
 	    onSharedPreferenceChanged(prefs, SEEK_2);
+	    onSharedPreferenceChanged(prefs, NUM_1);
 	    prefs.registerOnSharedPreferenceChangeListener(this);
 	}
 
@@ -85,6 +90,9 @@ public class PrefFragment extends PreferenceFragment
 		} else if (SEEK_2.equals(key)) {
 			int i2 = prefs.getInt(key, DEFAULT_2);
 			mSeek2.setSummary("$ " + i2);
+		} else if (NUM_1.equals(key)) {
+			// TODO
+			mNum1.setSummary("FIXME");
 		} 		
 	}    
 }

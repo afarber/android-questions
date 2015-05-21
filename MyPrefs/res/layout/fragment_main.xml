@@ -9,6 +9,7 @@
         android:id="@+id/doorButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="24dp"
         android:onClick="showPrefs"
         android:text="Show preferences" />
 

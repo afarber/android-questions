@@ -9,11 +9,13 @@
             android:key="@string/bool_1"
             android:title="Boolean 1"
             android:defaultValue="false" />
+        
         <EditTextPreference 
             android:dependency="@string/bool_1"
             android:key="@string/str_1"
             android:title="String 1"
             android:defaultValue="change me" />
+        
         <EditTextPreference 
             android:dependency="@string/bool_1"
             android:key="@string/str_2"
@@ -29,6 +31,11 @@
             android:defaultValue="65"
             android:dependency="@string/bool_1"
             android:key="@string/seek_2" />
+        
+        <de.afarber.myprefs.NumberPickerPreference
+            android:defaultValue="85"
+            android:dependency="@string/bool_1"
+            android:key="@string/num_1" />
         
     </PreferenceCategory>
     
