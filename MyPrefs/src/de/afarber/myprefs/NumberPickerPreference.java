@@ -11,6 +11,7 @@ import android.widget.NumberPicker.OnValueChangeListener;
 public class NumberPickerPreference extends DialogPreference implements OnValueChangeListener {
 	private NumberPicker mPicker;
 	private Integer mNumber = 0;
+	private Integer mPickerValue = 0;
 	
 	public NumberPickerPreference(Context context) {
 		this(context, null, 0);
@@ -25,7 +26,6 @@ public class NumberPickerPreference extends DialogPreference implements OnValueC
 		setDialogLayoutResource(R.layout.preference_picker);
         setPositiveButtonText(android.R.string.ok);
         setNegativeButtonText(android.R.string.cancel);
-        setDialogIcon(null);
 	}
 	
 	@Override
@@ -40,14 +40,14 @@ public class NumberPickerPreference extends DialogPreference implements OnValueC
 
 	@Override
 	public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-		//final int STEP = 10;
-        //picker.setValue(newVal < oldVal ? oldVal - STEP : oldVal + STEP);
+		mPickerValue = newVal;
     }
 	
 	@Override
 	protected void onDialogClosed(boolean positiveResult) {
-	    if (positiveResult)
-	        setValue(mNumber);
+	    if (positiveResult) {
+	        setValue(mPickerValue);
+	    }
 	}	
 	
 	@Override
