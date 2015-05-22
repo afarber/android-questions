@@ -10,7 +10,6 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public class BoxDrawingView extends View {
-    private static final String TAG = "BoxDrawingView";
     private static final int NUM = 3;
 
     private ArrayList<Box> mBoxen = new ArrayList<Box>();

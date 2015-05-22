@@ -31,7 +31,7 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/GeoQuiz/screenshot.png)
 
 
-[HelloMoon](https://github.com/afarber/android-newbie/tree/master/HelloMoon):
+[HelloMoon](https://github.com/afarber/android-newbie/tree/master/HelloMoon) from the book [Android Programming: The Big Nerd Ranch Guide](https://www.bignerdranch.com/we-write/android-programming/):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/HelloMoon/screenshot.png)
 
@@ -81,7 +81,7 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/MyTiles/screenshot.png)
 
 
-[NFCStudentTracking](https://github.com/afarber/android-newbie/tree/master/NFCStudentTracking):
+[NFCStudentTracking](https://github.com/afarber/android-newbie/tree/master/NFCStudentTracking) from the book [Professional NFC Application Development for Android](http://www.wrox.com/WileyCDA/WroxTitle/Professional-NFC-Application-Development-for-Android.productCd-1118380096.html):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/NFCStudentTracking/screenshot.png)
 
