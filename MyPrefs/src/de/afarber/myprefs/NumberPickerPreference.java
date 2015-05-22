@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 
 public class NumberPickerPreference extends DialogPreference {
 	private NumberPicker mPicker;
@@ -27,8 +29,20 @@ public class NumberPickerPreference extends DialogPreference {
 	}
 	
 	@Override
+	protected void onBindView(View view) {
+		super.onBindView(view);
+
+		TextView title = (TextView) view.findViewById(android.R.id.title);
+		if (title != null) {
+			title.setSingleLine(false);
+			title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+		}		
+	}
+
+	@Override
 	protected void onBindDialogView(View view) {
 		super.onBindDialogView(view);
+
 		mPicker = (NumberPicker) view.findViewById(R.id.picker);
 		mPicker.setMinValue(1);
 		mPicker.setMaxValue(100);
