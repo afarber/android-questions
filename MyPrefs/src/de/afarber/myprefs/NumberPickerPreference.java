@@ -23,7 +23,6 @@ public class NumberPickerPreference extends DialogPreference {
 
 	public NumberPickerPreference(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		setDialogLayoutResource(R.layout.preference_picker);
         setPositiveButtonText(android.R.string.ok);
         setNegativeButtonText(android.R.string.cancel);
 	}
@@ -39,15 +38,14 @@ public class NumberPickerPreference extends DialogPreference {
 		}		
 	}
 
-	@Override
-	protected void onBindDialogView(View view) {
-		super.onBindDialogView(view);
-
-		mPicker = (NumberPicker) view.findViewById(R.id.picker);
+    @Override
+    protected View onCreateDialogView() {
+		mPicker = new NumberPicker(getContext());
 		mPicker.setMinValue(1);
 		mPicker.setMaxValue(100);
 		mPicker.setValue(mNumber);
-	}
+        return mPicker;
+    }
 
 	@Override
 	protected void onDialogClosed(boolean positiveResult) {
