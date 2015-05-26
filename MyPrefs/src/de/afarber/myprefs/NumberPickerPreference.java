@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 public class NumberPickerPreference extends DialogPreference {
 	private NumberPicker mPicker;
-	private Integer mNumber = 0;
+	private int mNumber = 0;
 	
 	public NumberPickerPreference(Context context) {
 		this(context, null, 0);
@@ -43,6 +43,7 @@ public class NumberPickerPreference extends DialogPreference {
 		mPicker = new NumberPicker(getContext());
 		mPicker.setMinValue(1);
 		mPicker.setMaxValue(100);
+		// should be after setMinValue and setMaxValue calls
 		mPicker.setValue(mNumber);
         return mPicker;
     }
