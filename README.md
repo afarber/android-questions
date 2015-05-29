@@ -91,6 +91,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/PingMe/screenshot.png)
 
 
+[QREncoder](https://github.com/afarber/android-newbie/tree/master/QREncoder):
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/QREncoder/screenshot.png)
+
+
 [SwipeBooks](https://github.com/afarber/android-newbie/tree/master/SwipeBooks):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/SwipeBooks/screenshot.png)

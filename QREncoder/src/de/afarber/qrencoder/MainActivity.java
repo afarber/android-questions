@@ -18,10 +18,10 @@ import com.google.zxing.common.BitMatrix;
 
 public class MainActivity extends AppCompatActivity {
 	
-	public final static int  WHITE = 0xFFFFFFFF;
-	public final static int  BLACK = 0xFF000000;
+	public final static int WHITE = 0xFFFFFFFF;
+	public final static int BLACK = 0xFF000000;
 	public final static int WIDTH = 500;
-	public final static String STR = "String to be encoded as QR code";
+	public final static String STR = "A string to be encoded as QR code";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +37,9 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	Bitmap encodeAsBitmap(String str) throws WriterException {
-		Map<EncodeHintType,Object> hints = new EnumMap<EncodeHintType,Object>(EncodeHintType.class);
-		hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
-		
 		BitMatrix result;
 		try {
-			result = new MultiFormatWriter().encode(str, BarcodeFormat.QR_CODE, WIDTH, WIDTH, hints);
+			result = new MultiFormatWriter().encode(str, BarcodeFormat.QR_CODE, WIDTH, WIDTH, null);
 		} catch (IllegalArgumentException iae) {
 			// Unsupported format
 			return null;
