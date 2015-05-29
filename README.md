@@ -96,6 +96,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/QREncoder/screenshot.png)
 
 
+[QRScanner](https://github.com/afarber/android-newbie/tree/master/QRScanner):
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/QRScanner/screenshot.png)
+
+
 [SwipeBooks](https://github.com/afarber/android-newbie/tree/master/SwipeBooks):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/SwipeBooks/screenshot.png)
