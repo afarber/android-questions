@@ -1,7 +1,10 @@
 package de.afarber.qrscanner;
 
 import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -14,16 +17,33 @@ public class MainActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-	    findViewById(R.id.scan_qr_code).setOnClickListener(scanQRCode);
 	}
 	
-	private final View.OnClickListener scanQRCode = new View.OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
-			integrator.initiateScan(IntentIntegrator.QR_CODE_TYPES);
+	public void scanQRCode(View v) {
+		IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
+		integrator.initiateScan(IntentIntegrator.QR_CODE_TYPES);
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+		if (result != null) {
+			String contents = result.getContents();
+			if (contents != null) {
+				showDialog(R.string.result_succeeded, result.toString());
+			} else {
+				showDialog(R.string.result_failed, getString(R.string.result_failed_why));
+			}
 		}
-	};
+	}
+
+	private void showDialog(int title, CharSequence message) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(title);
+		builder.setMessage(message);
+		builder.setPositiveButton(R.string.ok_button, null);
+		builder.show();
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

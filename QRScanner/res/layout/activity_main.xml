@@ -11,6 +11,7 @@
     <Button android:id="@+id/scan_qr_code"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:onClick="scanQRCode"
             android:text="@string/scan_qr_code"/>
 
 </RelativeLayout>
