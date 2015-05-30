@@ -1,9 +1,12 @@
 package de.afarber.qrscanner;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -11,7 +14,16 @@ public class MainActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+	    findViewById(R.id.scan_qr_code).setOnClickListener(scanQRCode);
 	}
+	
+	private final View.OnClickListener scanQRCode = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
+			integrator.initiateScan(IntentIntegrator.QR_CODE_TYPES);
+		}
+	};
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

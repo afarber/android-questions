@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">QRScanner</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="scan_qr_code">Scan QR Code</string>
     <string name="action_settings">Settings</string>
 
 </resources>
