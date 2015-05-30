@@ -131,6 +131,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/TestScroll3/screenshot.png)
 
 
+[ZXingTestActivity](https://github.com/afarber/android-newbie/tree/master/ZXingTestActivity) (by ZXing project, Apache License):
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/ZXingTestActivity/screenshot.png)
+
+
 
 ![StackOverflow](http://stackoverflow.com/users/flair/165071.png)
 
