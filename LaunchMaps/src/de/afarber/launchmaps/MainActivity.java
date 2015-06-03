@@ -16,19 +16,16 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 	}
 	
+	// http://developer.android.com/guide/components/intents-common.html
     public void launchMaps(View v) {
-    	double lat = 70.0;
-    	double lng = 50.0;
-    	String title = "Test";
-    	String uri = "http://maps.google.com/maps?q=loc:" + lat + "," + lng + " (" + title + ")";
-    	
-    	// TODO: http://developer.android.com/guide/components/intents-common.html
-    	
-    	Intent intent = new Intent(android.content.Intent.ACTION_VIEW, 
-	    	//Uri.parse("http://maps.google.com/maps?saddr=20.344,34.34&daddr=20.5666,45.345")
-	    	Uri.parse(uri)
-    	);
-    	startActivity(intent);    	
+    	String str = "geo:0,0?q=34.99,-106.61(Treasure)";
+    	Uri uri = Uri.parse(str);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(uri);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+	
     }
 
 	@Override

@@ -36,6 +36,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/HelloMoon/screenshot.png)
 
 
+[LaunchMaps](https://github.com/afarber/android-newbie/tree/master/LaunchMaps):
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/LaunchMaps/screenshot.png)
+
+
 [MyBars](https://github.com/afarber/android-newbie/tree/master/MyBars):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/MyBars/screenshot.png)
