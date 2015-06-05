@@ -100,7 +100,7 @@ public class SmallTile {
 		
 		canvas.save();
 		canvas.translate(left, top);
-		canvas.drawBitmap(mBitmap, 0, 0, mPaint);
+		//canvas.drawBitmap(mBitmap, 0, 0, mPaint);
 		Drawable d = sLetters.get(mLetter);
 		d.draw(canvas);
 		canvas.restore();

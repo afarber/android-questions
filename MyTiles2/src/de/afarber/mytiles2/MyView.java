@@ -14,6 +14,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.RadialGradient;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.widget.ScrollerCompat;
@@ -29,9 +30,7 @@ public class MyView extends View {
 	private static final boolean TOO_OLD = (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH);
 	
     private Drawable mGameBoard = getResources().getDrawable(R.drawable.game_board);
-    private Bitmap mMask;
-    private Canvas mMaskCanvas;
-    private Paint mMaskPaint;
+    private Paint mPaint;
     
     private ArrayList<SmallTile> mTiles = new ArrayList<SmallTile>();
     private SmallTile mSmallTile = null;
@@ -54,7 +53,6 @@ public class MyView extends View {
     private int mWidth;
     private int mHeight;
     private SmallTile[][] mGrid = new SmallTile[15][15];
-
 
     public MyView(Context context) {
         this(context, null);
@@ -127,15 +125,18 @@ public class MyView extends View {
         mHeight = mGameBoard.getIntrinsicHeight();
         mGameBoard.setBounds(0, 0, mWidth, mHeight);
         
-        // TODO use Bitmap.Config.ALPHA_8 for the mask bitmap
-        mMask = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
-        //mMask.setHasAlpha(true);
-        mMask.eraseColor(Color.TRANSPARENT);
-        mMaskCanvas = new Canvas(mMask);
-		mMaskPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		//mMaskPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));		
-		mMaskPaint.setColor(Color.argb(60, 250, 60, 60));		        		
-        
+		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		//mPaint.setColor(Color.argb(0xCC, 0xFF, 0xCC, 0));		        		
+		//mPaint.setShadowLayer(10, 3, 3, Color.GRAY);
+		RadialGradient gradient = new RadialGradient(
+				mWidth / 2, 
+				mHeight / 2, 
+				Math.max(mWidth, mHeight), 
+		        0xCCFFCC99, 
+				0xCCFFCC00,
+		        android.graphics.Shader.TileMode.CLAMP);
+		mPaint.setShader(gradient);
+		
         // there are 15 cells in a row and 1 padding at each side
         SmallTile.sCellWidth = Math.round(mWidth / 17.0f);
     }
@@ -215,9 +216,6 @@ public class MyView extends View {
 		            	alignToGrid(mSmallTile);
 		            	mBigTile.visible = false;
 		            	mSmallTile.visible = true;
-		            	
-		        		mMaskCanvas.drawRect(mSmallTile.left, mSmallTile.top, mSmallTile.width, mSmallTile.height, mMaskPaint);
-		        		
 		        		mSmallTile = null;
 		        		invalidate();
 		        		return true;
@@ -309,26 +307,17 @@ public class MyView extends View {
         
         
         for (SmallTile tile: mTiles) {
-            //tile.draw(canvas);
+        	if (!tile.visible)
+        		continue;
         	
-        	// XXX add radial gradient to the paint
-        	
-        	/*
-   RadialGradient gradient = new RadialGradient(200, 200, 200, 0xFFFFFFFF,
-            0xFF000000, android.graphics.Shader.TileMode.CLAMP);
-    Paint p = new Paint();
-    p.setDither(true);
-    p.setShader(gradient);
-
-    Bitmap bitmap = Bitmap.createBitmap(400, 400, Config.ARGB_8888);
-    Canvas c = new Canvas(bitmap);
-    c.drawCircle(200, 200, 200, p);
-            	 */
-        	
-            canvas.drawRect(tile.left, tile.top, tile.left + tile.width, tile.top + tile.height, mMaskPaint);
+            canvas.drawRect(
+            		tile.left, 
+            		tile.top, 
+            		tile.left + tile.width, 
+            		tile.top + tile.height, 
+            		mPaint);
+            tile.draw(canvas);
         }
-        
-        canvas.drawBitmap(mMask, 0, 0, mMaskPaint);
         
         mBigTile.draw(canvas);
     }
