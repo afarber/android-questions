@@ -2,12 +2,14 @@ package de.afarber.mytiles2;
 
 import java.util.ArrayList;
 import java.util.Random;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -27,6 +29,10 @@ public class MyView extends View {
 	private static final boolean TOO_OLD = (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH);
 	
     private Drawable mGameBoard = getResources().getDrawable(R.drawable.game_board);
+    private Bitmap mMask;
+    private Canvas mMaskCanvas;
+    private Paint mMaskPaint;
+    
     private ArrayList<SmallTile> mTiles = new ArrayList<SmallTile>();
     private SmallTile mSmallTile = null;
     private BigTile mBigTile;
@@ -120,6 +126,16 @@ public class MyView extends View {
         mWidth = mGameBoard.getIntrinsicWidth();
         mHeight = mGameBoard.getIntrinsicHeight();
         mGameBoard.setBounds(0, 0, mWidth, mHeight);
+        
+        // TODO use Bitmap.Config.ALPHA_8 for the mask bitmap
+        mMask = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
+        //mMask.setHasAlpha(true);
+        mMask.eraseColor(Color.TRANSPARENT);
+        mMaskCanvas = new Canvas(mMask);
+		mMaskPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		//mMaskPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));		
+		mMaskPaint.setColor(Color.argb(60, 250, 60, 60));		        		
+        
         // there are 15 cells in a row and 1 padding at each side
         SmallTile.sCellWidth = Math.round(mWidth / 17.0f);
     }
@@ -199,6 +215,9 @@ public class MyView extends View {
 		            	alignToGrid(mSmallTile);
 		            	mBigTile.visible = false;
 		            	mSmallTile.visible = true;
+		            	
+		        		mMaskCanvas.drawRect(mSmallTile.left, mSmallTile.top, mSmallTile.width, mSmallTile.height, mMaskPaint);
+		        		
 		        		mSmallTile = null;
 		        		invalidate();
 		        		return true;
@@ -286,9 +305,15 @@ public class MyView extends View {
         canvas.concat(mMatrix);
 
         mGameBoard.draw(canvas);
+        
+        /*
         for (SmallTile tile: mTiles) {
             tile.draw(canvas);
         }
+        */
+        
+        canvas.drawBitmap(mMask, 0, 0, mMaskPaint);
+        
         mBigTile.draw(canvas);
     }
 
