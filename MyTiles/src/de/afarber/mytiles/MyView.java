@@ -2,10 +2,16 @@ package de.afarber.mytiles;
 
 import java.util.ArrayList;
 import java.util.Random;
-
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.widget.ScrollerCompat;
@@ -451,5 +457,32 @@ public class MyView extends View {
     	tile.left = (col + 1) * SmallTile.sCellWidth;
     	tile.top = (row + 1) * SmallTile.sCellWidth;
     }
+    
+    // code by Pierre-Yves Ricau, http://piwai.info/transparent-jpegs-done-right/
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
+	public static Bitmap getMaskedBitmap(Resources res, int sourceResId, int maskResId) {
+    	BitmapFactory.Options options = new BitmapFactory.Options();
+    	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+    		options.inMutable = true;
+    	}
+    	options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+    	Bitmap source = BitmapFactory.decodeResource(res, sourceResId, options);
+    	Bitmap bitmap;
+    	if (source.isMutable()) {
+    		bitmap = source;
+    	} else {
+    		bitmap = source.copy(Bitmap.Config.ARGB_8888, true);
+    		source.recycle();
+    	}
+    	bitmap.setHasAlpha(true);
+    	Canvas canvas = new Canvas(bitmap);
+    	Bitmap mask = BitmapFactory.decodeResource(res, maskResId);
+    	Paint paint = new Paint();
+    	paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
+    	canvas.drawBitmap(mask, 0, 0, paint);
+    	mask.recycle();
+    	return bitmap;
+    }
+    
 }
 
