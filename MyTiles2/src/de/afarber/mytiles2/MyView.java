@@ -306,11 +306,27 @@ public class MyView extends View {
 
         mGameBoard.draw(canvas);
         
-        /*
+        
+        
         for (SmallTile tile: mTiles) {
-            tile.draw(canvas);
+            //tile.draw(canvas);
+        	
+        	// XXX add radial gradient to the paint
+        	
+        	/*
+   RadialGradient gradient = new RadialGradient(200, 200, 200, 0xFFFFFFFF,
+            0xFF000000, android.graphics.Shader.TileMode.CLAMP);
+    Paint p = new Paint();
+    p.setDither(true);
+    p.setShader(gradient);
+
+    Bitmap bitmap = Bitmap.createBitmap(400, 400, Config.ARGB_8888);
+    Canvas c = new Canvas(bitmap);
+    c.drawCircle(200, 200, 200, p);
+            	 */
+        	
+            canvas.drawRect(tile.left, tile.top, tile.left + tile.width, tile.top + tile.height, mMaskPaint);
         }
-        */
         
         canvas.drawBitmap(mMask, 0, 0, mMaskPaint);
         

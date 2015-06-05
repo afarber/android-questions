@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -44,7 +46,7 @@ public class MyView extends View {
 
         // there are 15 cells in a row and 1 padding at each side
         mCellWidth = Math.round(mWidth / 17.0f);
-		mMaskCanvas.drawRect(mCellWidth, mCellWidth, mCellWidth, mCellWidth, mMaskPaint);
+		mMaskCanvas.drawRect(mCellWidth, mCellWidth, mCellWidth+100, mCellWidth+100, mMaskPaint);
     }
 
     @Override
