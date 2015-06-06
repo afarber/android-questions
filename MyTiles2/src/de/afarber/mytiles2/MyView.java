@@ -8,13 +8,13 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.RadialGradient;
+import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.widget.ScrollerCompat;
@@ -128,6 +128,7 @@ public class MyView extends View {
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		//mPaint.setColor(Color.argb(0xCC, 0xFF, 0xCC, 0));		        		
 		//mPaint.setShadowLayer(10, 3, 3, Color.GRAY);
+		/*
 		RadialGradient gradient = new RadialGradient(
 				mWidth / 2, 
 				mHeight / 2, 
@@ -136,7 +137,14 @@ public class MyView extends View {
 				0xCCFFCC00,
 		        android.graphics.Shader.TileMode.CLAMP);
 		mPaint.setShader(gradient);
+		*/
 		
+        //Initialize the bitmap object by loading an image from the resources folder  
+        Bitmap fill = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile);  
+        //Initialize the BitmapShader with the Bitmap object and set the texture tile mode  
+        BitmapShader fillShader = new BitmapShader(fill, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);  
+        mPaint.setShader(fillShader);
+
         // there are 15 cells in a row and 1 padding at each side
         SmallTile.sCellWidth = Math.round(mWidth / 17.0f);
     }
