@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -126,8 +127,14 @@ public class MyView extends View {
         mGameBoard.setBounds(0, 0, mWidth, mHeight);
         
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		//mPaint.setColor(Color.argb(0xCC, 0xFF, 0xCC, 0));		        		
-		//mPaint.setShadowLayer(10, 3, 3, Color.GRAY);
+		mPaint.setColor(Color.argb(0xCC, 0xFF, 0xCC, 0));
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+		}
+		
+        mPaint.setShadowLayer(4f, 0f, 0f, Color.BLACK);
+
 		/*
 		RadialGradient gradient = new RadialGradient(
 				mWidth / 2, 
@@ -138,13 +145,13 @@ public class MyView extends View {
 		        android.graphics.Shader.TileMode.CLAMP);
 		mPaint.setShader(gradient);
 		*/
-		
+/*		
         //Initialize the bitmap object by loading an image from the resources folder  
         Bitmap fill = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile);  
         //Initialize the BitmapShader with the Bitmap object and set the texture tile mode  
         BitmapShader fillShader = new BitmapShader(fill, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);  
         mPaint.setShader(fillShader);
-
+*/
         // there are 15 cells in a row and 1 padding at each side
         SmallTile.sCellWidth = Math.round(mWidth / 17.0f);
     }
@@ -325,6 +332,8 @@ public class MyView extends View {
             		tile.top + tile.height, 
             		mPaint);
             tile.draw(canvas);
+            
+            //canvas.drawText("X", tile.left, tile.top, mPaint);
         }
         
         mBigTile.draw(canvas);
