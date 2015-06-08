@@ -31,7 +31,7 @@ public class MyView extends View {
     private Drawable mGameBoard = getResources().getDrawable(R.drawable.game_board);
     private Paint mPaintYellow;
     private Paint mPaintRed;
-    private Paint mPaintBlur;
+    private Paint mPaintEmboss;
     
     private Bitmap mAllBitmap;
     private Canvas mAllCanvas;
@@ -137,10 +137,6 @@ public class MyView extends View {
         mHeight = mGameBoard.getIntrinsicHeight();
         mGameBoard.setBounds(0, 0, mWidth, mHeight);
         
-        mAllBitmap = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
-        mAllCanvas = new Canvas(mAllBitmap);
-        
-		mPaintYellow = new Paint(Paint.ANTI_ALIAS_FLAG);
 	    mGradStart = new Point(3 * mWidth / 4, mHeight / 3);
 	    mGradEnd = new Point(mWidth / 4, 2 * mHeight / 3);
 		LinearGradient gradient = new LinearGradient(
@@ -151,18 +147,22 @@ public class MyView extends View {
 				new int[]{ 0xCCFFCC00, 0xCCFFCC99, 0xCCFFCC00 },
 		        null,
 		        TileMode.CLAMP);
+		
+        mAllBitmap = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
+        mAllCanvas = new Canvas(mAllBitmap);
+        
+		mPaintYellow = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mPaintYellow.setShader(gradient);
 		
 		mPaintRed = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mPaintRed.setColor(Color.RED);
 		mPaintRed.setStrokeWidth(16);
 
-		mPaintBlur = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
-		mPaintBlur.setColor(Color.BLACK);
+		mPaintEmboss = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+		mPaintEmboss.setShader(gradient);
 	    EmbossMaskFilter filter = new EmbossMaskFilter(new float[] { 0f, 1f, 0.5f }, 0.8f, 3f, 3f);
-	    mPaintBlur.setMaskFilter(filter);
-		mPaintBlur.setShader(gradient);
-	    mPaintBlur.setTextSize(200);
+	    mPaintEmboss.setMaskFilter(filter);
+	    mPaintEmboss.setTextSize(200);
 	    
         // there are 15 cells in a row and 1 padding at each side
         SmallTile.sCellWidth = Math.round(mWidth / 17.0f);
@@ -351,10 +351,10 @@ public class MyView extends View {
             		mPaintYellow);
             tile.draw(mAllCanvas);
         }
-        canvas.drawBitmap(mAllBitmap, 0, 0, mPaintBlur);
+        canvas.drawBitmap(mAllBitmap, 0, 0, mPaintEmboss);
         
-        canvas.drawText("TEXT WORKS OK", 400, 400, mPaintBlur);
-        canvas.drawRect(300, 600, 800, 1200, mPaintBlur);
+        canvas.drawText("TEXT WORKS OK", 400, 400, mPaintEmboss);
+        canvas.drawRect(300, 600, 800, 1200, mPaintEmboss);
         
         mBigTile.draw(canvas);
     }
