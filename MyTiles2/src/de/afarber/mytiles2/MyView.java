@@ -5,17 +5,15 @@ import java.util.Random;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.EmbossMaskFilter;
+import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Shader;
+import android.graphics.Point;
+import android.graphics.Shader.TileMode;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.widget.ScrollerCompat;
@@ -31,7 +29,15 @@ public class MyView extends View {
 	private static final boolean TOO_OLD = (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH);
 	
     private Drawable mGameBoard = getResources().getDrawable(R.drawable.game_board);
-    private Paint mPaint;
+    private Paint mPaintYellow;
+    private Paint mPaintRed;
+    private Paint mPaintBlur;
+    
+    private Bitmap mAllBitmap;
+    private Canvas mAllCanvas;
+    
+    private Point mGradStart;
+    private Point mGradEnd;
     
     private ArrayList<SmallTile> mTiles = new ArrayList<SmallTile>();
     private SmallTile mSmallTile = null;
@@ -59,7 +65,8 @@ public class MyView extends View {
         this(context, null);
     }
 
-    public MyView(Context context, AttributeSet attrs) {
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public MyView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         mScroller = ScrollerCompat.create(context);
@@ -122,36 +129,41 @@ public class MyView extends View {
         mGestureDetector = new GestureDetector(context, gestureListener);
         mScaleDetector = new ScaleGestureDetector(context, scaleListener);
 
-        mWidth = mGameBoard.getIntrinsicWidth();
-        mHeight = mGameBoard.getIntrinsicHeight();
-        mGameBoard.setBounds(0, 0, mWidth, mHeight);
-        
-		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		mPaint.setColor(Color.argb(0xCC, 0xFF, 0xCC, 0));
-		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 		}
 		
-        mPaint.setShadowLayer(4f, 0f, 0f, Color.BLACK);
+        mWidth = mGameBoard.getIntrinsicWidth();
+        mHeight = mGameBoard.getIntrinsicHeight();
+        mGameBoard.setBounds(0, 0, mWidth, mHeight);
+        
+        mAllBitmap = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
+        mAllCanvas = new Canvas(mAllBitmap);
+        
+		mPaintYellow = new Paint(Paint.ANTI_ALIAS_FLAG);
+	    mGradStart = new Point(3 * mWidth / 4, mHeight / 3);
+	    mGradEnd = new Point(mWidth / 4, 2 * mHeight / 3);
+		LinearGradient gradient = new LinearGradient(
+				mGradStart.x,
+				mGradStart.y,
+				mGradEnd.x,
+				mGradEnd.y,
+				new int[]{ 0xCCFFCC00, 0xCCFFCC99, 0xCCFFCC00 },
+		        null,
+		        TileMode.CLAMP);
+		mPaintYellow.setShader(gradient);
+		
+		mPaintRed = new Paint(Paint.ANTI_ALIAS_FLAG);
+		mPaintRed.setColor(Color.RED);
+		mPaintRed.setStrokeWidth(16);
 
-		/*
-		RadialGradient gradient = new RadialGradient(
-				mWidth / 2, 
-				mHeight / 2, 
-				Math.max(mWidth, mHeight), 
-		        0xCCFFCC99, 
-				0xCCFFCC00,
-		        android.graphics.Shader.TileMode.CLAMP);
-		mPaint.setShader(gradient);
-		*/
-/*		
-        //Initialize the bitmap object by loading an image from the resources folder  
-        Bitmap fill = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile);  
-        //Initialize the BitmapShader with the Bitmap object and set the texture tile mode  
-        BitmapShader fillShader = new BitmapShader(fill, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);  
-        mPaint.setShader(fillShader);
-*/
+		mPaintBlur = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+		mPaintBlur.setColor(Color.BLACK);
+	    EmbossMaskFilter filter = new EmbossMaskFilter(new float[] { 0f, 1f, 0.5f }, 0.8f, 3f, 3f);
+	    mPaintBlur.setMaskFilter(filter);
+		mPaintBlur.setShader(gradient);
+	    mPaintBlur.setTextSize(200);
+	    
         // there are 15 cells in a row and 1 padding at each side
         SmallTile.sCellWidth = Math.round(mWidth / 17.0f);
     }
@@ -203,7 +215,6 @@ public class MyView extends View {
 		            	int col = mSmallTile.getColumn();
 		            	int row = mSmallTile.getRow();
 		            	mGrid[col][row] = null;
-		            	updateNeighbors(col, row);
 		            	
 		            	mBigTile.copy(mSmallTile);
 		            	mBigTile.visible = true;
@@ -318,23 +329,32 @@ public class MyView extends View {
         canvas.concat(mMatrix);
 
         mGameBoard.draw(canvas);
+
+        // show the red line connecting gradient end points
+        canvas.drawLine(
+    		mGradStart.x,
+			mGradStart.y,
+			mGradEnd.x,
+			mGradEnd.y,
+			mPaintRed);
         
-        
-        
+        mAllBitmap.eraseColor(Color.TRANSPARENT);
         for (SmallTile tile: mTiles) {
         	if (!tile.visible)
         		continue;
         	
-            canvas.drawRect(
+            mAllCanvas.drawRect(
             		tile.left, 
             		tile.top, 
             		tile.left + tile.width, 
             		tile.top + tile.height, 
-            		mPaint);
-            tile.draw(canvas);
-            
-            //canvas.drawText("X", tile.left, tile.top, mPaint);
+            		mPaintYellow);
+            tile.draw(mAllCanvas);
         }
+        canvas.drawBitmap(mAllBitmap, 0, 0, mPaintBlur);
+        
+        canvas.drawText("TEXT WORKS OK", 400, 400, mPaintBlur);
+        canvas.drawRect(300, 600, 800, 1200, mPaintBlur);
         
         mBigTile.draw(canvas);
     }
@@ -436,56 +456,7 @@ public class MyView extends View {
         if (dX != 0.0 || dY != 0.0)
         	mMatrix.postTranslate(dX, dY);
     }
-    
-    private boolean[] buildCorners(int col, int row) {
-	    boolean[] corner = {
-		    // top left corner (true means: there is a neighbor tile)
-		    (
-		    	(col > 0 && mGrid[col - 1][row] != null) ||  
-		    	(row > 0 && mGrid[col][row - 1] != null)
-		    ),
-	
-		    // top right corner
-		    (
-		    	(col < 14 && mGrid[col + 1][row] != null) ||  
-		    	(row > 0 && mGrid[col][row - 1] != null)
-		    ),
-			
-		    // bottom left corner
-		    (
-		    	(col > 0 && mGrid[col - 1][row] != null) ||  
-		    	(row < 14 && mGrid[col][row + 1] != null)
-		    ),
-		    
-		    // bottom right corner
-		    (
-		    	(col < 14 && mGrid[col + 1][row] != null) ||  
-		    	(row < 14 && mGrid[col][row + 1] != null)
-		    )
-	    };
-		    
-	    return corner;
-    }
 
-    // check the tiles at 3 x 3 or 2 x 2 sub-grid
-    private void updateNeighbors(int col, int row) {
-    	
-    	int startCol = Math.max(0, col - 1);
-    	int endCol   = Math.min(14, col + 1);
-    	int startRow = Math.max(0, row - 1);
-    	int endRow   = Math.min(14, row + 1);
-    	
-    	for (int i = startCol; i <= endCol; i++) {
-        	for (int j = startRow; j <= endRow; j++) {
-        		SmallTile tile = mGrid[i][j]; 
-        		if (tile != null) {
-        	    	boolean[] corner = buildCorners(i, j);
-        		    tile.setCorners(corner);
-        		}
-        	}
-    	}
-    }
-    
     private void alignToGrid(SmallTile tile) {
     	int col = tile.getColumn();
     	int row = tile.getRow();
@@ -499,37 +470,9 @@ public class MyView extends View {
     	}
     	
     	mGrid[col][row] = tile;
-    	updateNeighbors(col, row);
     	
     	tile.left = (col + 1) * SmallTile.sCellWidth;
     	tile.top = (row + 1) * SmallTile.sCellWidth;
     }
-    
-    // code by Pierre-Yves Ricau, http://piwai.info/transparent-jpegs-done-right/
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
-	public static Bitmap getMaskedBitmap(Resources res, int sourceResId, int maskResId) {
-    	BitmapFactory.Options options = new BitmapFactory.Options();
-    	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-    		options.inMutable = true;
-    	}
-    	options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-    	Bitmap source = BitmapFactory.decodeResource(res, sourceResId, options);
-    	Bitmap bitmap;
-    	if (source.isMutable()) {
-    		bitmap = source;
-    	} else {
-    		bitmap = source.copy(Bitmap.Config.ARGB_8888, true);
-    		source.recycle();
-    	}
-    	bitmap.setHasAlpha(true);
-    	Canvas canvas = new Canvas(bitmap);
-    	Bitmap mask = BitmapFactory.decodeResource(res, maskResId);
-    	Paint paint = new Paint();
-    	paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
-    	canvas.drawBitmap(mask, 0, 0, paint);
-    	mask.recycle();
-    	return bitmap;
-    }
-    
 }
 

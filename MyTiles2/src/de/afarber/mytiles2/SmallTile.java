@@ -3,25 +3,17 @@ package de.afarber.mytiles2;
 import java.util.HashMap;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.content.res.Resources;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
+import android.util.DisplayMetrics;
 
 public class SmallTile {
 	private static final String PREFIX = "small_";
-	private static final String SQUARE = "square_";
-	private static final String ROUND = "round_";
-	private static final int TILE = R.drawable.round;
-	private static final int ALPHA = 200;
-	
 	private static final char[] LETTERS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 	private static final int[] VALUES =   { 1,   4,   4,   2,   1,   4,   3,   3,   1,  10,   5,   2,   4,   2,   1,   4,  12,   1,   1,   1,   2,   5,   4,   8,   3,  10 };
 	private static HashMap<Character, Drawable> sLetters = new HashMap<Character, Drawable>();
 	private static HashMap<Character, Integer> sValues = new HashMap<Character, Integer>();
-	private static Drawable[] sSquare = new Drawable[4];
-	private static Drawable[] sRound = new Drawable[4];
 	
 	public static int sCellWidth;
 	
@@ -33,9 +25,6 @@ public class SmallTile {
 	public int height;
 	public boolean visible = true;
 	
-	private Bitmap mBitmap;
-	private Paint mPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
-	
 	private char mLetter;
 	private int mValue;
 	
@@ -43,56 +32,21 @@ public class SmallTile {
 	    if (sLetters.size() == 0) {
 		    String packageName = context.getPackageName();
 		    
-		    for (int i = 0; i < 4; i++) {
-		    	int id = context.getResources().getIdentifier(SQUARE + i, "drawable", packageName);
-			    sSquare[i] = context.getResources().getDrawable(id);
-			    sSquare[i].setAlpha(ALPHA);
-		    	int w = sSquare[i].getIntrinsicWidth();
-		    	int h = sSquare[i].getIntrinsicHeight();
-		    	int x = (i % 2) * w;
-		    	int y = (i / 2) * h;
-		    	sSquare[i].setBounds(x, y, x + w, y + h);
-		    }
-		    
-		    for (int i = 0; i < 4; i++) {
-		    	int id = context.getResources().getIdentifier(ROUND + i, "drawable", packageName);
-			    sRound[i] = context.getResources().getDrawable(id);
-			    sRound[i].setAlpha(ALPHA);
-		    	int w = sRound[i].getIntrinsicWidth();
-		    	int h = sRound[i].getIntrinsicHeight();
-		    	int x = (i % 2) * w;
-		    	int y = (i / 2) * h;
-		    	sRound[i].setBounds(x, y, x + w, y + h);
-		    }
-		    
 		    for (int i = 0; i < LETTERS.length; i++) {
 		    	char c = LETTERS[i];
 		    	int v  = VALUES[i];
 		    	int id = context.getResources().getIdentifier(PREFIX + i, "drawable", packageName);
 		    	Drawable d = context.getResources().getDrawable(id);
-		    	d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+		    	int w = d.getIntrinsicWidth();
+		    	int h = d.getIntrinsicHeight();
+		    	d.setBounds(0, 0, w, h);
 		    	sLetters.put(c, d);
 		    	sValues.put(c, v);
 		    }
 	    }
 	    
-	    width = height = 2 * sSquare[0].getIntrinsicWidth();
-	    boolean[] corner = {false, false, false, false};
-	    setCorners(corner);
+	    width = height = convertDpToPixel(40, context);
 	}
-    
-    public void setCorners(boolean[] corner) {
-	    mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-	    Canvas canvas = new Canvas(mBitmap);
-	    
-	    // true means: there is a neighbor tile
-	    for (int i = 0; i < 4; i++) {
-	    	if (corner[i])
-	    		sSquare[i].draw(canvas);
-	    	else
-	    		sRound[i].draw(canvas);
-	    }
-    }
     
 	public void draw(Canvas canvas) {
 		if (!visible)
@@ -100,7 +54,6 @@ public class SmallTile {
 		
 		canvas.save();
 		canvas.translate(left, top);
-		//canvas.drawBitmap(mBitmap, 0, 0, mPaint);
 		Drawable d = sLetters.get(mLetter);
 		d.draw(canvas);
 		canvas.restore();
@@ -172,5 +125,11 @@ public class SmallTile {
 
     	return row;
 	}
+	
+	public static int convertDpToPixel(int dp, Context context) {
+	    Resources resources = context.getResources();
+	    DisplayMetrics metrics = resources.getDisplayMetrics();
+	    return (int) (dp * (metrics.densityDpi / 160f));
+	}	
 }
 

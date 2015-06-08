@@ -3,8 +3,10 @@ package de.afarber.mytiles2;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.util.DisplayMetrics;
 
 public class BigTile {
 	private static final String PREFIX = "big_";
@@ -32,8 +34,7 @@ public class BigTile {
     public BigTile(Context context) {
     	mBackground = context.getResources().getDrawable(TILE);
         mBackground.setAlpha(ALPHA);
-    	width = mBackground.getIntrinsicWidth();
-    	height = mBackground.getIntrinsicHeight();
+    	width = height = convertDpToPixel(74, context);
     	mBackground.setBounds(0, 0, width, height);
     	
 	    if (sLetters.size() > 0)
@@ -114,5 +115,11 @@ public class BigTile {
 		savedLeft = tile.savedLeft - dX;
 		savedTop = tile.savedTop - dY;
 		setLetter(tile.getLetter());
+	}
+	
+	public static int convertDpToPixel(int dp, Context context) {
+	    Resources resources = context.getResources();
+	    DisplayMetrics metrics = resources.getDisplayMetrics();
+	    return (int) (dp * (metrics.densityDpi / 160f));
 	}	
 }
