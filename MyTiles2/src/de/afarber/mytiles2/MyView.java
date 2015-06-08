@@ -10,11 +10,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.Shader;
+import android.graphics.Shader.TileMode;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.widget.ScrollerCompat;
@@ -58,7 +60,8 @@ public class MyView extends View {
         this(context, null);
     }
 
-    public MyView(Context context, AttributeSet attrs) {
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public MyView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         mScroller = ScrollerCompat.create(context);
@@ -66,6 +69,20 @@ public class MyView extends View {
         mBigTile = new BigTile(getContext());
         mBigTile.visible = false;
        
+	    for (char c: LETTERS) {
+        	SmallTile tile = new SmallTile(getContext());
+        	tile.setLetter(c);
+        	tile.visible = true;
+            mTiles.add(tile);
+        }
+
+	    for (char c: LETTERS) {
+        	SmallTile tile = new SmallTile(getContext());
+        	tile.setLetter(c);
+        	tile.visible = true;
+            mTiles.add(tile);
+        }
+
 	    for (char c: LETTERS) {
         	SmallTile tile = new SmallTile(getContext());
         	tile.setLetter(c);
@@ -126,8 +143,21 @@ public class MyView extends View {
         mGameBoard.setBounds(0, 0, mWidth, mHeight);
         
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		//mPaint.setColor(Color.argb(0xCC, 0xFF, 0xCC, 0));		        		
-		//mPaint.setShadowLayer(10, 3, 3, Color.GRAY);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+		}
+		mPaint.setShadowLayer(8f, 0f, 0f, Color.BLACK);
+		
+		LinearGradient gradient = new LinearGradient(
+				3*mWidth/4,
+				mHeight/3,
+				mWidth/4,
+				2*mHeight/3,
+				new int[]{0xCCFFCC00, 0xCCFFCC99, 0xCCFFCC00},
+		        null,
+		        TileMode.CLAMP);
+		mPaint.setShader(gradient);
+		
 		/*
 		RadialGradient gradient = new RadialGradient(
 				mWidth / 2, 
@@ -139,11 +169,13 @@ public class MyView extends View {
 		mPaint.setShader(gradient);
 		*/
 		
+		/*
         //Initialize the bitmap object by loading an image from the resources folder  
-        Bitmap fill = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile);  
+        Bitmap texture = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile);  
         //Initialize the BitmapShader with the Bitmap object and set the texture tile mode  
-        BitmapShader fillShader = new BitmapShader(fill, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);  
-        mPaint.setShader(fillShader);
+        BitmapShader shader = new BitmapShader(texture, TileMode.REPEAT, TileMode.REPEAT);  
+        mPaint.setShader(shader);
+        */
 
         // there are 15 cells in a row and 1 padding at each side
         SmallTile.sCellWidth = Math.round(mWidth / 17.0f);
@@ -311,7 +343,16 @@ public class MyView extends View {
         canvas.concat(mMatrix);
 
         mGameBoard.draw(canvas);
+
+		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		paint.setColor(Color.rgb(0xFF, 0, 0));
+		paint.setStrokeWidth(16);
         
+		
+        canvas.drawLine(3*mWidth/4,
+				mHeight/3,
+				mWidth/4,
+				2*mHeight/3, paint);
         
         
         for (SmallTile tile: mTiles) {
