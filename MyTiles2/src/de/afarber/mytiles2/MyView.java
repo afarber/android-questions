@@ -6,6 +6,8 @@ import java.util.Random;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BlurMaskFilter;
+import android.graphics.BlurMaskFilter.Blur;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.EmbossMaskFilter;
@@ -28,10 +30,12 @@ public class MyView extends View {
 	private static final char[] LETTERS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 	private static final boolean TOO_OLD = (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH);
 	
+    private final float mScale = getResources().getDisplayMetrics().density;
+
     private Drawable mGameBoard = getResources().getDrawable(R.drawable.game_board);
-    private Paint mPaintYellow;
     private Paint mPaintRed;
-    private Paint mPaintEmboss;
+    private Paint mPaintGrad;
+    private Paint mPaintBlur;
     
     private Bitmap mAllBitmap;
     private Canvas mAllCanvas;
@@ -151,18 +155,17 @@ public class MyView extends View {
         mAllBitmap = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
         mAllCanvas = new Canvas(mAllBitmap);
         
-		mPaintYellow = new Paint(Paint.ANTI_ALIAS_FLAG);
-		mPaintYellow.setShader(gradient);
-		
-		mPaintRed = new Paint(Paint.ANTI_ALIAS_FLAG);
+		mPaintRed = new Paint();
 		mPaintRed.setColor(Color.RED);
-		mPaintRed.setStrokeWidth(16);
+		mPaintRed.setStrokeWidth(8);
 
-		mPaintEmboss = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
-		mPaintEmboss.setShader(gradient);
-	    EmbossMaskFilter filter = new EmbossMaskFilter(new float[] { 0f, 1f, 0.5f }, 0.8f, 3f, 3f);
-	    mPaintEmboss.setMaskFilter(filter);
-	    mPaintEmboss.setTextSize(200);
+		mPaintGrad = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+		mPaintGrad.setShader(gradient);
+	    
+	    mPaintBlur = new Paint();
+	    mPaintBlur.setColor(Color.BLACK);
+	    BlurMaskFilter blurFilter = new BlurMaskFilter(mScale * 2, Blur.OUTER);
+	    mPaintBlur.setMaskFilter(blurFilter);
 	    
         // there are 15 cells in a row and 1 padding at each side
         SmallTile.sCellWidth = Math.round(mWidth / 17.0f);
@@ -329,7 +332,7 @@ public class MyView extends View {
         canvas.concat(mMatrix);
 
         mGameBoard.draw(canvas);
-
+/*
         // show the red line connecting gradient end points
         canvas.drawLine(
     		mGradStart.x,
@@ -337,7 +340,7 @@ public class MyView extends View {
 			mGradEnd.x,
 			mGradEnd.y,
 			mPaintRed);
-        
+*/        
         mAllBitmap.eraseColor(Color.TRANSPARENT);
         for (SmallTile tile: mTiles) {
         	if (!tile.visible)
@@ -348,14 +351,17 @@ public class MyView extends View {
             		tile.top, 
             		tile.left + tile.width, 
             		tile.top + tile.height, 
-            		mPaintYellow);
+            		mPaintGrad);
             tile.draw(mAllCanvas);
         }
-        canvas.drawBitmap(mAllBitmap, 0, 0, mPaintEmboss);
         
-        canvas.drawText("TEXT WORKS OK", 400, 400, mPaintEmboss);
-        canvas.drawRect(300, 600, 800, 1200, mPaintEmboss);
-        
+        int []offset = new int[2];
+        Bitmap alphaBitmap = mAllBitmap.extractAlpha(mPaintBlur, offset);
+        Log.d("onDraw", "mScale = " + mScale);
+        Log.d("onDraw", "offset = (" + offset[0] + ", " + offset[1] + ")");
+        canvas.drawBitmap(alphaBitmap, offset[0]+1*mScale, offset[1]+1*mScale, mPaintBlur);
+        canvas.drawBitmap(mAllBitmap, 0, 0, mPaintGrad);
+       
         mBigTile.draw(canvas);
     }
 
