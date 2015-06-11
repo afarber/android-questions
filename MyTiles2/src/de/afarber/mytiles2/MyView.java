@@ -37,8 +37,10 @@ public class MyView extends View {
     private Paint mPaintGrad;
     private Paint mPaintBlur;
     
-    private Bitmap mAllBitmap;
-    private Canvas mAllCanvas;
+    private Canvas mCanvas;
+    private Bitmap mBitmap;
+    private Bitmap mAlphaBitmap;
+    private int []mOffset = new int[2];
     
     private Point mGradStart;
     private Point mGradEnd;
@@ -152,8 +154,8 @@ public class MyView extends View {
 		        null,
 		        TileMode.CLAMP);
 		
-        mAllBitmap = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
-        mAllCanvas = new Canvas(mAllBitmap);
+        mBitmap = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
+        mCanvas = new Canvas(mBitmap);
         
 		mPaintRed = new Paint();
 		mPaintRed.setColor(Color.RED);
@@ -166,6 +168,8 @@ public class MyView extends View {
 	    mPaintBlur.setColor(Color.BLACK);
 	    BlurMaskFilter blurFilter = new BlurMaskFilter(mScale * 2, Blur.OUTER);
 	    mPaintBlur.setMaskFilter(blurFilter);
+	    
+	    prepareBitmaps();
 	    
         // there are 15 cells in a row and 1 padding at each side
         SmallTile.sCellWidth = Math.round(mWidth / 17.0f);
@@ -223,6 +227,7 @@ public class MyView extends View {
 		            	mBigTile.visible = true;
 		            	mSavedX = x;
 		            	mSavedY = y;
+		            	prepareBitmaps();
 		            	invalidate();
 		            	return true;
 		            }
@@ -246,6 +251,7 @@ public class MyView extends View {
 		            	mBigTile.visible = false;
 		            	mSmallTile.visible = true;
 		        		mSmallTile = null;
+		        		prepareBitmaps();
 		        		invalidate();
 		        		return true;
 		        	}
@@ -258,6 +264,26 @@ public class MyView extends View {
         return retVal || super.onTouchEvent(e);
     }
 
+    private void prepareBitmaps() {
+        mBitmap.eraseColor(Color.TRANSPARENT);
+        for (SmallTile tile: mTiles) {
+        	if (!tile.visible)
+        		continue;
+        	
+            mCanvas.drawRect(
+            		tile.left, 
+            		tile.top, 
+            		tile.left + tile.width, 
+            		tile.top + tile.height, 
+            		mPaintGrad);
+            tile.draw(mCanvas);
+        }
+        
+        mAlphaBitmap = mBitmap.extractAlpha(mPaintBlur, mOffset);
+        Log.d("prepareBitmaps", "mScale = " + mScale);
+        Log.d("prepareBitmaps", "offset = (" + mOffset[0] + ", " + mOffset[1] + ")");
+   }
+    
     @Override
     protected void onSizeChanged(int w, int h, int oldW, int oldH) {
         super.onSizeChanged(w, h, oldW, oldH);
@@ -341,26 +367,9 @@ public class MyView extends View {
 			mGradEnd.y,
 			mPaintRed);
 */        
-        mAllBitmap.eraseColor(Color.TRANSPARENT);
-        for (SmallTile tile: mTiles) {
-        	if (!tile.visible)
-        		continue;
-        	
-            mAllCanvas.drawRect(
-            		tile.left, 
-            		tile.top, 
-            		tile.left + tile.width, 
-            		tile.top + tile.height, 
-            		mPaintGrad);
-            tile.draw(mAllCanvas);
-        }
-        
-        int []offset = new int[2];
-        Bitmap alphaBitmap = mAllBitmap.extractAlpha(mPaintBlur, offset);
-        Log.d("onDraw", "mScale = " + mScale);
-        Log.d("onDraw", "offset = (" + offset[0] + ", " + offset[1] + ")");
-        canvas.drawBitmap(alphaBitmap, offset[0]+1*mScale, offset[1]+1*mScale, mPaintBlur);
-        canvas.drawBitmap(mAllBitmap, 0, 0, mPaintGrad);
+
+        canvas.drawBitmap(mAlphaBitmap, mOffset[0] + 1 * mScale, mOffset[1] + 1 * mScale, mPaintBlur);
+        canvas.drawBitmap(mBitmap, 0, 0, mPaintGrad);
        
         mBigTile.draw(canvas);
     }
