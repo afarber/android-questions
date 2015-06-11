@@ -166,10 +166,8 @@ public class MyView extends View {
 	    
 	    mPaintBlur = new Paint();
 	    mPaintBlur.setColor(Color.BLACK);
-	    BlurMaskFilter blurFilter = new BlurMaskFilter(mScale * 2, Blur.OUTER);
+	    BlurMaskFilter blurFilter = new BlurMaskFilter(mScale * 1, Blur.OUTER);
 	    mPaintBlur.setMaskFilter(blurFilter);
-	    
-	    prepareBitmaps();
 	    
         // there are 15 cells in a row and 1 padding at each side
         SmallTile.sCellWidth = Math.round(mWidth / 17.0f);
@@ -311,6 +309,8 @@ public class MyView extends View {
             alignToGrid(tile);
             Log.d("shuffleTiles", "tile=" + tile);
         }
+        
+	    prepareBitmaps();
     }
 
     private void adjustZoom() {
