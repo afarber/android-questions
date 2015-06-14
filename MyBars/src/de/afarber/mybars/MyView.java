@@ -4,9 +4,14 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.Shader.TileMode;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -26,7 +31,8 @@ public class MyView extends View {
     private SmallTile mSmallTile = null;
     private BigTile mBigTile;
 
-    private Random mRandom = new Random();
+    private final float mScale = getResources().getDisplayMetrics().density;
+    private final Random mRandom = new Random();
 
     private float mBoardX;
     private float mBoardY;
@@ -244,8 +250,9 @@ public class MyView extends View {
         mGameBoard.draw(canvas, mBoardTiles);
         
         mBar.draw(canvas);
-        for (SmallTile tile: mBarTiles)
+        for (SmallTile tile: mBarTiles) {
             tile.draw(canvas);
+        }
         
         mBigTile.draw(canvas);
     }

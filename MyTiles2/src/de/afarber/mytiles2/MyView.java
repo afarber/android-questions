@@ -166,7 +166,7 @@ public class MyView extends View {
 	    
 	    mPaintBlur = new Paint();
 	    mPaintBlur.setColor(Color.BLACK);
-	    BlurMaskFilter blurFilter = new BlurMaskFilter(mScale * 1, Blur.OUTER);
+	    BlurMaskFilter blurFilter = new BlurMaskFilter(mScale * 2, Blur.OUTER);
 	    mPaintBlur.setMaskFilter(blurFilter);
 	    
         // there are 15 cells in a row and 1 padding at each side

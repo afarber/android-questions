@@ -4,8 +4,12 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.LinearGradient;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.Shader.TileMode;
 import android.graphics.drawable.Drawable;
 import android.support.v4.widget.ScrollerCompat;
 import android.util.Log;
@@ -21,6 +25,8 @@ public class GameBoard {
     
     private float mMinZoom;
     private float mMaxZoom;
+    
+    private Paint mPaint;
 
 	private float x;
 	private float y;
@@ -43,6 +49,20 @@ public class GameBoard {
     	mBackground.setBounds(0, 0, width, height);
         // there are 15 cells in a row and 1 padding at each side
         cellWidth = width / (1 + 15 + 1);
+        
+	    Point start = new Point(3 * width / 4, height / 3);
+	    Point end = new Point(width / 4, 2 * height / 3);
+		LinearGradient gradient = new LinearGradient(
+				start.x,
+				start.y,
+				end.x,
+				end.y,
+				new int[]{ 0xCCFFCC00, 0xCCFFCC99, 0xCCFFCC00 },
+		        null,
+		        TileMode.CLAMP);
+
+		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+		mPaint.setShader(gradient);        
     }
     
 	public void setParentSize(float w, float h) {
@@ -63,7 +83,18 @@ public class GameBoard {
         canvas.save();
         canvas.concat(matrix);
         mBackground.draw(canvas);
+        
         for (SmallTile tile: tiles) {
+        	if (!tile.visible)
+        		continue;
+        	
+            canvas.drawRect(
+            		tile.left, 
+            		tile.top, 
+            		tile.left + tile.width, 
+            		tile.top + tile.height, 
+            		mPaint);
+            
             tile.draw(canvas);
         }
         canvas.restore();
