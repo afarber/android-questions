@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.EmbossMaskFilter;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 public class SmallTile {
 	private static final int ALPHA = 0xCC;
@@ -79,25 +80,27 @@ public class SmallTile {
 		    	int id = context.getResources().getIdentifier(PREFIX + i, "drawable", packageName);
 		    	Drawable d = context.getResources().getDrawable(id);
 		    	d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+		    	Log.d("SmallTile", "w=" + d.getIntrinsicWidth() + ", h=" + d.getIntrinsicHeight());
 		    	sLetters.put(c, d);
 		    	sValues.put(c, v);
 		    }
 	    }
 	    
 	    width = height = 2 * sSquare[0].getIntrinsicWidth();
+    	Log.d("SmallTile", "width=" + width + ", height=" + height);
 	    
         mScale = context.getResources().getDisplayMetrics().density;
 /*        
         EmbossMaskFilter filter = new EmbossMaskFilter(
         	    new float[] { 0f, 1f, 0.5f }, 0.8f, 3f, mScale * 3f);
 */        
-		mPaintLight = new Paint(Paint.ANTI_ALIAS_FLAG);
+		mPaintLight = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
 		mPaintLight.setStrokeWidth(2 * mScale);
 		mPaintLight.setColor(Color.WHITE);
 		mPaintLight.setAlpha(0x99);
 		//mPaintLight.setMaskFilter(filter);
 		
-		mPaintDark = new Paint(Paint.ANTI_ALIAS_FLAG);
+		mPaintDark = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
 		mPaintDark.setStrokeWidth(2 * mScale);
 		mPaintDark.setColor(Color.BLACK);
 		mPaintDark.setAlpha(0x99);

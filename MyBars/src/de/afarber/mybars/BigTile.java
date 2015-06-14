@@ -4,7 +4,11 @@ import java.util.HashMap;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.EmbossMaskFilter;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 public class BigTile {
 	private static final int ALPHA = 200;
@@ -26,6 +30,11 @@ public class BigTile {
 	
 	private Drawable mBackground;
 	
+    private float mScale;
+    private Paint mPaint;
+    private Paint mPaintLight;
+    private Paint mPaintDark;
+
 	private char mLetter;
 	private int mValue;
 	
@@ -34,6 +43,7 @@ public class BigTile {
         mBackground.setAlpha(ALPHA);
     	width = mBackground.getIntrinsicWidth();
     	height = mBackground.getIntrinsicHeight();
+    	Log.d("BigTile", "width=" + width + ", height=" + height);
     	mBackground.setBounds(0, 0, width, height);
     	
 	    if (sLetters.size() > 0)
@@ -45,9 +55,31 @@ public class BigTile {
 	    	int id = context.getResources().getIdentifier(PREFIX + i, "drawable", context.getPackageName());
 	    	Drawable d = context.getResources().getDrawable(id);
 	    	d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+	    	Log.d("BigTile", "w=" + d.getIntrinsicWidth() + ", h=" + d.getIntrinsicHeight());
 	    	sLetters.put(c, d);
 	    	sValues.put(c, v);
-	    }	    
+	    }
+	    
+		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+		mPaint.setColor(0xFFFFCC00);   
+		mPaint.setAlpha(0xCC);
+
+        mScale = context.getResources().getDisplayMetrics().density;
+ /*       
+        EmbossMaskFilter filter = new EmbossMaskFilter(
+        	    new float[] { 0f, 1f, 0.5f }, 0.8f, 3f, mScale * 3f);
+*/        
+		mPaintLight = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+		mPaintLight.setStrokeWidth(3 * mScale);
+		mPaintLight.setColor(Color.WHITE);
+		mPaintLight.setAlpha(0x66);
+		//mPaintLight.setMaskFilter(filter);
+		
+		mPaintDark = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+		mPaintDark.setStrokeWidth(3 * mScale);
+		mPaintDark.setColor(Color.BLACK);
+		mPaintDark.setAlpha(0x66);
+		//mPaintDark.setMaskFilter(filter);	    
 	}
     
 	public void draw(Canvas canvas) {
@@ -56,7 +88,14 @@ public class BigTile {
 		
 		canvas.save();
 		canvas.translate(left, top);
-		mBackground.draw(canvas);
+		
+        canvas.drawRect(0, 0, width, height, mPaint);
+		canvas.drawLine(0, 0, width, 0, mPaintLight);
+		canvas.drawLine(0, 0, 0, height, mPaintLight);
+		canvas.drawLine(0, height, width, height, mPaintDark);
+		canvas.drawLine(0 + width, 0, 0 + width, height, mPaintDark);
+		
+		//mBackground.draw(canvas);
 		Drawable d = sLetters.get(mLetter);
 		d.draw(canvas);
 		canvas.restore();
