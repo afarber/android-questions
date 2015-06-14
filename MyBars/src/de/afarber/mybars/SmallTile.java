@@ -3,19 +3,15 @@ package de.afarber.mybars;
 import java.util.HashMap;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.EmbossMaskFilter;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 public class SmallTile {
-	private static final int ALPHA = 0xCC;
+	private static final int ALPHA = 0x99;
 	private static final String PREFIX = "small_";
-	private static final String SQUARE = "square_";
-	private static final String ROUND = "round_";
 
 	private static final int NORTH = 0;
 	private static final int EAST = 1;
@@ -27,19 +23,14 @@ public class SmallTile {
 	private static final int[] VALUES =   { 1,   4,   4,   2,   1,   4,   3,   3,   1,  10,   5,   2,   4,   2,   1,   4,  12,   1,   1,   1,   2,   5,   4,   8,   3,  10 };
 	private static HashMap<Character, Drawable> sLetters = new HashMap<Character, Drawable>();
 	private static HashMap<Character, Integer> sValues = new HashMap<Character, Integer>();
-	private static Drawable[] sSquare = new Drawable[4];
-	private static Drawable[] sRound = new Drawable[4];
 
 	public int left;
 	public int top;
 	public int savedLeft;
 	public int savedTop;
-	public int width;
-	public int height;
+	public static int width = 0;
+	public static int height = 0;
 	public boolean visible = true;
-	
-	private Bitmap mBitmap;
-	private Paint mPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
 	
     private float mScale;
     private Paint mPaintLight;
@@ -52,42 +43,19 @@ public class SmallTile {
 	    if (sLetters.size() == 0) {
 		    String packageName = context.getPackageName();
 		    
-		    for (int i = 0; i < 4; i++) {
-		    	int id = context.getResources().getIdentifier(SQUARE + i, "drawable", packageName);
-			    sSquare[i] = context.getResources().getDrawable(id);
-			    sSquare[i].setAlpha(ALPHA);
-		    	int w = sSquare[i].getIntrinsicWidth();
-		    	int h = sSquare[i].getIntrinsicHeight();
-		    	int x = (i % 2) * w;
-		    	int y = (i / 2) * h;
-		    	sSquare[i].setBounds(x, y, x + w, y + h);
-		    }
-		    
-		    for (int i = 0; i < 4; i++) {
-		    	int id = context.getResources().getIdentifier(ROUND + i, "drawable", packageName);
-			    sRound[i] = context.getResources().getDrawable(id);
-			    sRound[i].setAlpha(ALPHA);
-		    	int w = sRound[i].getIntrinsicWidth();
-		    	int h = sRound[i].getIntrinsicHeight();
-		    	int x = (i % 2) * w;
-		    	int y = (i / 2) * h;
-		    	sRound[i].setBounds(x, y, x + w, y + h);
-		    }
-		    
 		    for (int i = 0; i < LETTERS.length; i++) {
 		    	char c = LETTERS[i];
 		    	int v  = VALUES[i];
 		    	int id = context.getResources().getIdentifier(PREFIX + i, "drawable", packageName);
 		    	Drawable d = context.getResources().getDrawable(id);
-		    	d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
-		    	Log.d("SmallTile", "w=" + d.getIntrinsicWidth() + ", h=" + d.getIntrinsicHeight());
+		    	width = d.getIntrinsicWidth();
+		    	height = d.getIntrinsicHeight();
+		    	d.setBounds(0, 0, width, height);
+		    	Log.d("SmallTile", "width=" + width + ", height=" + height);
 		    	sLetters.put(c, d);
 		    	sValues.put(c, v);
 		    }
 	    }
-	    
-	    width = height = 2 * sSquare[0].getIntrinsicWidth();
-    	Log.d("SmallTile", "width=" + width + ", height=" + height);
 	    
         mScale = context.getResources().getDisplayMetrics().density;
 /*        
@@ -97,13 +65,13 @@ public class SmallTile {
 		mPaintLight = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
 		mPaintLight.setStrokeWidth(2 * mScale);
 		mPaintLight.setColor(Color.WHITE);
-		mPaintLight.setAlpha(0x99);
+		mPaintLight.setAlpha(ALPHA);
 		//mPaintLight.setMaskFilter(filter);
 		
 		mPaintDark = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
 		mPaintDark.setStrokeWidth(2 * mScale);
 		mPaintDark.setColor(Color.BLACK);
-		mPaintDark.setAlpha(0x99);
+		mPaintDark.setAlpha(ALPHA);
 		//mPaintDark.setMaskFilter(filter);
 	}
 

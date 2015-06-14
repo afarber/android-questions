@@ -5,16 +5,14 @@ import java.util.HashMap;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.EmbossMaskFilter;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 public class BigTile {
-	private static final int ALPHA = 200;
+	private static final int ALPHA = 0xCC;
+	private static final int COLOR = 0xFFFFCC00;
 	private static final String PREFIX = "big_";
-	private static final int TILE = R.drawable.shadow;
-	
 	private static final char[] LETTERS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 	private static final int[] VALUES =   { 1,   4,   4,   2,   1,   4,   3,   3,   1,  10,   5,   2,   4,   2,   1,   4,  12,   1,   1,   1,   2,   5,   4,   8,   3,  10 };
 	private static HashMap<Character, Drawable> sLetters = new HashMap<Character, Drawable>();
@@ -24,11 +22,9 @@ public class BigTile {
 	public int top;
 	public int savedLeft;
 	public int savedTop;
-	public int width;
-	public int height;
+	public static int width = 0;
+	public static int height = 0;
 	public boolean visible = true;
-	
-	private Drawable mBackground;
 	
     private float mScale;
     private Paint mPaint;
@@ -39,13 +35,6 @@ public class BigTile {
 	private int mValue;
 	
     public BigTile(Context context) {
-    	mBackground = context.getResources().getDrawable(TILE);
-        mBackground.setAlpha(ALPHA);
-    	width = mBackground.getIntrinsicWidth();
-    	height = mBackground.getIntrinsicHeight();
-    	Log.d("BigTile", "width=" + width + ", height=" + height);
-    	mBackground.setBounds(0, 0, width, height);
-    	
 	    if (sLetters.size() > 0)
 	    	return;
 	    
@@ -54,15 +43,17 @@ public class BigTile {
 	    	int v = VALUES[i];
 	    	int id = context.getResources().getIdentifier(PREFIX + i, "drawable", context.getPackageName());
 	    	Drawable d = context.getResources().getDrawable(id);
-	    	d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
-	    	Log.d("BigTile", "w=" + d.getIntrinsicWidth() + ", h=" + d.getIntrinsicHeight());
+	    	width = d.getIntrinsicWidth();
+	    	height = d.getIntrinsicHeight();
+	    	d.setBounds(0, 0, width, height);
+	    	Log.d("BigTile", "w=" + width + ", h=" + height);
 	    	sLetters.put(c, d);
 	    	sValues.put(c, v);
 	    }
 	    
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
-		mPaint.setColor(0xFFFFCC00);   
-		mPaint.setAlpha(0xCC);
+		mPaint.setColor(COLOR);   
+		mPaint.setAlpha(ALPHA);
 
         mScale = context.getResources().getDisplayMetrics().density;
  /*       
@@ -95,7 +86,6 @@ public class BigTile {
 		canvas.drawLine(0, height, width, height, mPaintDark);
 		canvas.drawLine(0 + width, 0, 0 + width, height, mPaintDark);
 		
-		//mBackground.draw(canvas);
 		Drawable d = sLetters.get(mLetter);
 		d.draw(canvas);
 		canvas.restore();
