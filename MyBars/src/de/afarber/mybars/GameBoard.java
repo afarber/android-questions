@@ -85,19 +85,9 @@ public class GameBoard {
         canvas.concat(matrix);
         mBackground.draw(canvas);
         
-        for (SmallTile tile: tiles) {
-        	if (!tile.visible)
-        		continue;
-        	
-            canvas.drawRect(
-            		tile.left, 
-            		tile.top, 
-            		tile.left + tile.width, 
-            		tile.top + tile.height, 
-            		mPaint);
-            
-            tile.draw(canvas);
-        }
+        for (SmallTile tile: tiles)
+            tile.draw(canvas, mPaint);
+        
         canvas.restore();
 	}
 	

@@ -10,19 +10,23 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
 public class SmallTile {
-	private static final int ALPHA = 200;
+	private static final int ALPHA = 0xCC;
 	private static final String PREFIX = "small_";
 	private static final String SQUARE = "square_";
 	private static final String ROUND = "round_";
-	
+
+	private static final int NORTH = 0;
+	private static final int EAST = 1;
+	private static final int SOUTH = 2;
+	private static final int WEST = 3;
+    private boolean[] mDrawSides = new boolean[] { true, true, true, true };
+
 	private static final char[] LETTERS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 	private static final int[] VALUES =   { 1,   4,   4,   2,   1,   4,   3,   3,   1,  10,   5,   2,   4,   2,   1,   4,  12,   1,   1,   1,   2,   5,   4,   8,   3,  10 };
 	private static HashMap<Character, Drawable> sLetters = new HashMap<Character, Drawable>();
 	private static HashMap<Character, Integer> sValues = new HashMap<Character, Integer>();
 	private static Drawable[] sSquare = new Drawable[4];
 	private static Drawable[] sRound = new Drawable[4];
-	
-    private boolean[] mCorner;
 
 	public int left;
 	public int top;
@@ -80,9 +84,10 @@ public class SmallTile {
 	    }
 	    
 	    width = height = 2 * sSquare[0].getIntrinsicWidth();
-	    setCorners(new boolean[]{false, false, false, false});
 	    
         mScale = context.getResources().getDisplayMetrics().density;
+        
+        // TODO add BlurMaskFilter
         
 		mPaintLight = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mPaintLight.setStrokeWidth(2 * mScale);
@@ -94,38 +99,31 @@ public class SmallTile {
 		mPaintDark.setColor(Color.BLACK);
 		mPaintDark.setAlpha(0x99);
 	}
-    
-    public void setCorners(boolean[] corner) {
-    	mCorner = corner;
-    	
-    	/*
-	    mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-	    Canvas canvas = new Canvas(mBitmap);
-	    
-	    // true means: there is a neighbor tile
-	    for (int i = 0; i < 4; i++) {
-	    	if (corner[i])
-	    		sSquare[i].draw(canvas);
-	    	else
-	    		sRound[i].draw(canvas);
-	    }
-	    */
+
+    public void setDrawSides(boolean[] sides) {
+    	mDrawSides = sides;
     }
     
-	public void draw(Canvas canvas) {
+	public void draw(Canvas canvas, Paint paint) {
 		if (!visible)
 			return;
 		
 		canvas.save();
 		canvas.translate(left, top);
 
-		// TODO use corners to decide which lines to draw
+        canvas.drawRect(0, 0, width, height, paint);
 		
-        canvas.drawLine(0, 0, width, 0, mPaintLight);
-        canvas.drawLine(0, 0, 0, height, mPaintLight);
+		if (mDrawSides[NORTH])
+			canvas.drawLine(0, 0, width, 0, mPaintLight);
+		
+		if (mDrawSides[WEST])
+			canvas.drawLine(0, 0, 0, height, mPaintLight);
         
-        canvas.drawLine(0, height, width, height, mPaintDark);
-        canvas.drawLine(0 + width, 0, 0 + width, height, mPaintDark);
+		if (mDrawSides[SOUTH])
+			canvas.drawLine(0, height, width, height, mPaintDark);
+		
+		if (mDrawSides[EAST])
+			canvas.drawLine(0 + width, 0, 0 + width, height, mPaintDark);
 		
 		//canvas.drawBitmap(mBitmap, 0, 0, mPaint);
 		Drawable d = sLetters.get(mLetter);

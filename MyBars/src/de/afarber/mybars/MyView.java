@@ -6,7 +6,11 @@ import java.util.Random;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.Shader.TileMode;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -25,6 +29,7 @@ public class MyView extends View {
     private ArrayList<SmallTile> mBarTiles = new ArrayList<SmallTile>();
     private SmallTile mSmallTile = null;
     private BigTile mBigTile;
+    private Paint mPaint;
 
     private final Random mRandom = new Random();
 
@@ -117,6 +122,9 @@ public class MyView extends View {
         mScaleDetector = new ScaleGestureDetector(context, scaleListener);
 
         mBar.setAlpha(60);
+        
+		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+		mPaint.setAlpha(0xFF); // TODO change to 0xCC        
     }
 
     private SmallTile hitTest(float x, float y) {
@@ -208,6 +216,19 @@ public class MyView extends View {
         mGameBoard.toggleScale();
         mBar.setBounds(0, h - mBigTile.height, w, h);
         placeTiles();
+        
+	    Point start = new Point(3 * w / 4, h / 3);
+	    Point end = new Point(w / 4, 2 * h / 3);
+		LinearGradient gradient = new LinearGradient(
+				start.x,
+				start.y,
+				end.x,
+				end.y,
+				new int[]{ 0xFFFFCC00, 0xFFFFCC99, 0xFFFFCC00 },
+		        null,
+		        TileMode.CLAMP);
+		mPaint.setShader(gradient);   
+        
         invalidate();
     }
 
@@ -244,41 +265,27 @@ public class MyView extends View {
         mGameBoard.draw(canvas, mBoardTiles);
         
         mBar.draw(canvas);
-        for (SmallTile tile: mBarTiles) {
-            tile.draw(canvas);
-        }
+        
+        for (SmallTile tile: mBarTiles) 
+            tile.draw(canvas, mPaint);
         
         mBigTile.draw(canvas);
     }
 
-    private boolean[] buildCorners(int col, int row) {
-	    boolean[] corner = {
-		    // top left corner (true means: there is a neighbor tile)
-		    (
-		    	(col > 0 && mGrid[col - 1][row] != null) ||  
-		    	(row > 0 && mGrid[col][row - 1] != null)
-		    ),
+    private boolean[] buildSides(int col, int row) {
+	    return new boolean[] {
+		    // NORTH (true means: there is no neighbor tile)
+		    (row <= 0 || mGrid[col][row - 1] == null),
 	
-		    // top right corner
-		    (
-		    	(col < 14 && mGrid[col + 1][row] != null) ||  
-		    	(row > 0  && mGrid[col][row - 1] != null)
-		    ),
+		    // EAST
+		    (col >= 14 || mGrid[col + 1][row] == null),
 			
-		    // bottom left corner
-		    (
-		    	(col > 0  && mGrid[col - 1][row] != null) ||  
-		    	(row < 14 && mGrid[col][row + 1] != null)
-		    ),
+		    // SOUTH
+		    (row >= 14 || mGrid[col][row + 1] == null),
 		    
-		    // bottom right corner
-		    (
-		    	(col < 14 && mGrid[col + 1][row] != null) ||  
-		    	(row < 14 && mGrid[col][row + 1] != null)
-		    )
+		    // WEST
+		    (col <= 0 || mGrid[col - 1][row] == null)
 	    };
-		    
-	    return corner;
     }
 
     // check the tiles at 3 x 3 or 2 x 2 sub-grid
@@ -293,8 +300,8 @@ public class MyView extends View {
         	for (int j = startRow; j <= endRow; j++) {
         		SmallTile tile = mGrid[i][j]; 
         		if (tile != null) {
-        	    	boolean[] corner = buildCorners(i, j);
-        		    tile.setCorners(corner);
+        	    	boolean[] sides = buildSides(i, j);
+        		    tile.setDrawSides(sides);
         		}
         	}
     	}
