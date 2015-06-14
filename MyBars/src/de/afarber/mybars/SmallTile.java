@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.EmbossMaskFilter;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
@@ -86,18 +87,21 @@ public class SmallTile {
 	    width = height = 2 * sSquare[0].getIntrinsicWidth();
 	    
         mScale = context.getResources().getDisplayMetrics().density;
-        
-        // TODO add BlurMaskFilter
-        
+/*        
+        EmbossMaskFilter filter = new EmbossMaskFilter(
+        	    new float[] { 0f, 1f, 0.5f }, 0.8f, 3f, mScale * 3f);
+*/        
 		mPaintLight = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mPaintLight.setStrokeWidth(2 * mScale);
 		mPaintLight.setColor(Color.WHITE);
 		mPaintLight.setAlpha(0x99);
+		//mPaintLight.setMaskFilter(filter);
 		
 		mPaintDark = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mPaintDark.setStrokeWidth(2 * mScale);
 		mPaintDark.setColor(Color.BLACK);
 		mPaintDark.setAlpha(0x99);
+		//mPaintDark.setMaskFilter(filter);
 	}
 
     public void setDrawSides(boolean[] sides) {

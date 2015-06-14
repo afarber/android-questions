@@ -63,7 +63,7 @@ public class GameBoard {
 
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
 		mPaint.setShader(gradient);   
-		mPaint.setAlpha(0xFF); // TODO change to 0xCC
+		mPaint.setAlpha(0xCC);
     }
     
 	public void setParentSize(float w, float h) {

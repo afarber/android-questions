@@ -124,7 +124,7 @@ public class MyView extends View {
         mBar.setAlpha(60);
         
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
-		mPaint.setAlpha(0xFF); // TODO change to 0xCC        
+		mPaint.setAlpha(0xCC);        
     }
 
     private SmallTile hitTest(float x, float y) {
