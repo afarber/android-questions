@@ -5,6 +5,7 @@ import java.util.HashMap;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
@@ -21,6 +22,8 @@ public class SmallTile {
 	private static Drawable[] sSquare = new Drawable[4];
 	private static Drawable[] sRound = new Drawable[4];
 	
+    private boolean[] mCorner;
+
 	public int left;
 	public int top;
 	public int savedLeft;
@@ -32,6 +35,10 @@ public class SmallTile {
 	private Bitmap mBitmap;
 	private Paint mPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
 	
+    private float mScale;
+    private Paint mPaintLight;
+    private Paint mPaintDark;
+
 	private char mLetter;
 	private int mValue;
 	
@@ -73,11 +80,25 @@ public class SmallTile {
 	    }
 	    
 	    width = height = 2 * sSquare[0].getIntrinsicWidth();
-	    boolean[] corner = {false, false, false, false};
-	    setCorners(corner);
+	    setCorners(new boolean[]{false, false, false, false});
+	    
+        mScale = context.getResources().getDisplayMetrics().density;
+        
+		mPaintLight = new Paint(Paint.ANTI_ALIAS_FLAG);
+		mPaintLight.setStrokeWidth(2 * mScale);
+		mPaintLight.setColor(Color.WHITE);
+		mPaintLight.setAlpha(0x99);
+		
+		mPaintDark = new Paint(Paint.ANTI_ALIAS_FLAG);
+		mPaintDark.setStrokeWidth(2 * mScale);
+		mPaintDark.setColor(Color.BLACK);
+		mPaintDark.setAlpha(0x99);
 	}
     
     public void setCorners(boolean[] corner) {
+    	mCorner = corner;
+    	
+    	/*
 	    mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 	    Canvas canvas = new Canvas(mBitmap);
 	    
@@ -88,6 +109,7 @@ public class SmallTile {
 	    	else
 	    		sRound[i].draw(canvas);
 	    }
+	    */
     }
     
 	public void draw(Canvas canvas) {
@@ -96,8 +118,18 @@ public class SmallTile {
 		
 		canvas.save();
 		canvas.translate(left, top);
+
+		// TODO use corners to decide which lines to draw
+		
+        canvas.drawLine(0, 0, width, 0, mPaintLight);
+        canvas.drawLine(0, 0, 0, height, mPaintLight);
+        
+        canvas.drawLine(0, height, width, height, mPaintDark);
+        canvas.drawLine(0 + width, 0, 0 + width, height, mPaintDark);
+		
 		//canvas.drawBitmap(mBitmap, 0, 0, mPaint);
 		Drawable d = sLetters.get(mLetter);
+
 		d.draw(canvas);
 		canvas.restore();
 	}

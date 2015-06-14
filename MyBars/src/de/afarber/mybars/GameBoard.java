@@ -57,12 +57,13 @@ public class GameBoard {
 				start.y,
 				end.x,
 				end.y,
-				new int[]{ 0xCCFFCC00, 0xCCFFCC99, 0xCCFFCC00 },
+				new int[]{ 0xFFFFCC00, 0xFFFFCC99, 0xFFFFCC00 },
 		        null,
 		        TileMode.CLAMP);
 
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
-		mPaint.setShader(gradient);        
+		mPaint.setShader(gradient);   
+		mPaint.setAlpha(0xFF); // TODO change to 0xCC
     }
     
 	public void setParentSize(float w, float h) {
