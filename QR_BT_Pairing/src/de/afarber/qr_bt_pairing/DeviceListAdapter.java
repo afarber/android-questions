@@ -1,8 +1,5 @@
 package de.afarber.qr_bt_pairing;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.util.Log;
@@ -10,12 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class DeviceListAdapter extends ArrayAdapter<BluetoothDevice> {
     private static class ViewHolder {
-        ImageView signalImage;
         TextView deviceName;
         TextView deviceAddress;
     }
@@ -39,10 +34,10 @@ public class DeviceListAdapter extends ArrayAdapter<BluetoothDevice> {
         ViewHolder viewHolder;
         // General ListView optimization code.
         if (view == null) {
-            view = mInflator.inflate(R.layout.rowlayout, viewGroup, false);
+            view = mInflator.inflate(android.R.layout.simple_list_item_2, viewGroup, false);
             viewHolder = new ViewHolder();
-            viewHolder.deviceAddress = (TextView) view.findViewById(R.id.device_address);
-            viewHolder.deviceName = (TextView) view.findViewById(R.id.device_name);
+            viewHolder.deviceName = (TextView) view.findViewById(android.R.id.text1);
+            viewHolder.deviceAddress = (TextView) view.findViewById(android.R.id.text2);
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
