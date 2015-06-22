@@ -5,9 +5,6 @@ Small projects created on my way to Android nirvana
 
 The files are public domain - unless there is a different note (by their respective authors) on the top of some files.
 
-For example few projects use an CC BY-SA 3.0 licensed SVG-file by 
-[Denelson83, Wikimedia Commons](http://en.wikipedia.org/wiki/File:Blank_Scrabble_board_with_coordinates.svg)
-
 Screenshots
 ==========
 
@@ -41,7 +38,9 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/LaunchMaps/screenshot.png)
 
 
-[MyBars](https://github.com/afarber/android-newbie/tree/master/MyBars):
+[MyBars](https://github.com/afarber/android-newbie/tree/master/MyBars)
+uses CC BY-SA 3.0 licensed SVG-file by 
+[Denelson83, Wikimedia Commons](http://en.wikipedia.org/wiki/File:Blank_Scrabble_board_with_coordinates.svg)
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/MyBars/screenshot.png)
 
@@ -99,6 +98,11 @@ Screenshots
 [PingMe](https://github.com/afarber/android-newbie/tree/master/PingMe):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/PingMe/screenshot.png)
+
+
+[QR_BT_Pairing](https://github.com/afarber/android-newbie/tree/master/QR_BT_Pairing):
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/QR_BT_Pairing/screenshot.png)
 
 
 [QREncoder](https://github.com/afarber/android-newbie/tree/master/QREncoder):
