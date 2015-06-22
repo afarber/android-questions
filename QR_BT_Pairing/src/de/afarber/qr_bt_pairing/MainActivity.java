@@ -117,9 +117,12 @@ public class MainActivity extends Activity {
 	private void startBluetoothPairing(BluetoothDevice device) {
 		Intent pairingIntent = new Intent(BluetoothDevice.ACTION_PAIRING_REQUEST);
         pairingIntent.putExtra(BluetoothDevice.EXTRA_DEVICE, device);
-//        pairingIntent.putExtra(BluetoothDevice.EXTRA_PAIRING_VARIANT, BluetoothDevice.PAIRING_VARIANT_PASSKEY_CONFIRMATION);
+        //pairingIntent.putExtra(BluetoothDevice.EXTRA_PAIRING_VARIANT, BluetoothDevice.PAIRING_VARIANT_PASSKEY_CONFIRMATION);
         pairingIntent.putExtra(BluetoothDevice.EXTRA_PAIRING_VARIANT, BluetoothDevice.PAIRING_VARIANT_PIN);
         pairingIntent.putExtra(BluetoothDevice.EXTRA_PAIRING_KEY, 1234);
+        //device.setPin(new byte[]{1,2,3,4});
+        //device.setPairingConfirmation(false);
+        pairingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 	    startActivityForResult(pairingIntent, REQUEST_BT_SETTINGS);
 	}
 	
