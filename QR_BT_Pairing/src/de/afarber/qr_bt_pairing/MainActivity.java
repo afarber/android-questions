@@ -2,21 +2,23 @@ package de.afarber.qr_bt_pairing;
 
 import java.util.Set;
 
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 public class MainActivity extends Activity {
 	
@@ -33,10 +35,20 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		mListView = (ListView) findViewById(R.id.devices_list);
 
         mDeviceListAdapter = new DeviceListAdapter(this);
+		mListView = (ListView) findViewById(R.id.devices_list);
         mListView.setAdapter(mDeviceListAdapter);
+        mListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				BluetoothDevice device = (BluetoothDevice) parent.getItemAtPosition(position);
+				Log.d("XXX", "device=" + device);
+				MainActivity.this.startBluetoothPairing(device);
+			}
+		});
 		
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		if (mBluetoothAdapter == null) {
@@ -93,14 +105,7 @@ public class MainActivity extends Activity {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(title);
 		builder.setMessage(message);
-		builder.setPositiveButton(R.string.ok_button, new DialogInterface.OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				startBluetoothPairing();
-			}
-			
-		});
+		builder.setPositiveButton(R.string.ok_button, null);
 		builder.show();
 	}
 	
@@ -109,12 +114,9 @@ public class MainActivity extends Activity {
 	    startActivityForResult(settingsIntent, REQUEST_BT_SETTINGS);
 	}
 	
-	private void startBluetoothPairing() {
+	private void startBluetoothPairing(BluetoothDevice device) {
 		Intent pairingIntent = new Intent(BluetoothDevice.ACTION_PAIRING_REQUEST);
-		pairingIntent.putExtra(BluetoothDevice.EXTRA_PAIRING_VARIANT, BluetoothDevice.PAIRING_VARIANT_PIN);
-		startActivity(pairingIntent);
-		
-        pairingIntent.putExtra(BluetoothDevice.EXTRA_DEVICE, "XXX");
+        pairingIntent.putExtra(BluetoothDevice.EXTRA_DEVICE, device);
 //        pairingIntent.putExtra(BluetoothDevice.EXTRA_PAIRING_VARIANT, BluetoothDevice.PAIRING_VARIANT_PASSKEY_CONFIRMATION);
         pairingIntent.putExtra(BluetoothDevice.EXTRA_PAIRING_VARIANT, BluetoothDevice.PAIRING_VARIANT_PIN);
         pairingIntent.putExtra(BluetoothDevice.EXTRA_PAIRING_KEY, 1234);

@@ -18,7 +18,7 @@ public class DeviceListAdapter extends ArrayAdapter<BluetoothDevice> {
     private LayoutInflater mInflator;
 
     public DeviceListAdapter(Context context) {
-		super(context, R.layout.rowlayout);
+		super(context, android.R.layout.simple_list_item_2);
         mInflator = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -32,7 +32,6 @@ public class DeviceListAdapter extends ArrayAdapter<BluetoothDevice> {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         ViewHolder viewHolder;
-        // General ListView optimization code.
         if (view == null) {
             view = mInflator.inflate(android.R.layout.simple_list_item_2, viewGroup, false);
             viewHolder = new ViewHolder();
