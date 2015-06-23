@@ -1,12 +1,13 @@
 package de.afarber.qr_bt_pairing;
 
-import java.util.Set;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -30,6 +31,20 @@ public class MainActivity extends Activity {
 	
 	private BluetoothAdapter mBluetoothAdapter;
 	private DeviceListAdapter mDeviceListAdapter;
+	
+	// Create a BroadcastReceiver for ACTION_FOUND
+	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+	    public void onReceive(Context context, Intent intent) {
+	        String action = intent.getAction();
+	        // When discovery finds a device
+	        if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+	            // Get the BluetoothDevice object from the Intent
+	            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+	            // Add the name and address to an array adapter to show in a ListView
+		    	mDeviceListAdapter.add(device);
+	        }
+	    }
+	};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,13 +74,27 @@ public class MainActivity extends Activity {
 		    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 		    startActivityForResult(enableBtIntent, REQUEST_BT_ENABLE);
 		}
+
+		// Register the BroadcastReceiver
+		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+		registerReceiver(mReceiver, filter);
+		mBluetoothAdapter.startDiscovery();
 		
+		/*
 		Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
 		// If there are paired devices
 	    for (BluetoothDevice device : pairedDevices) {
 	        // Add the name and address to an array adapter to show in a ListView
 	    	mDeviceListAdapter.add(device);
 	    }
+	    */
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		unregisterReceiver(mReceiver);
 	}
 	
 	@Override
@@ -80,6 +109,14 @@ public class MainActivity extends Activity {
             return;
         }
 
+        if (requestCode == REQUEST_BT_PAIRING) { 
+        	if (resultCode == Activity.RESULT_OK) {
+                Log.d("XXX", "Let#s pair!!!!");
+        	}
+        	
+            return;
+        }
+        
 		IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
 		if (result != null) {
 			String contents = result.getContents();
@@ -92,13 +129,8 @@ public class MainActivity extends Activity {
 	}
 
 	public void scanQRCode(View v) {
-		openBluetoothSettings();
-		//startBluetoothPairing();
-		
-		/*
 		IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
 		integrator.initiateScan(IntentIntegrator.QR_CODE_TYPES);
-		*/
 	}
 
 	private void showDialog(int title, CharSequence message) {
@@ -117,13 +149,9 @@ public class MainActivity extends Activity {
 	private void startBluetoothPairing(BluetoothDevice device) {
 		Intent pairingIntent = new Intent(BluetoothDevice.ACTION_PAIRING_REQUEST);
         pairingIntent.putExtra(BluetoothDevice.EXTRA_DEVICE, device);
-        //pairingIntent.putExtra(BluetoothDevice.EXTRA_PAIRING_VARIANT, BluetoothDevice.PAIRING_VARIANT_PASSKEY_CONFIRMATION);
-        pairingIntent.putExtra(BluetoothDevice.EXTRA_PAIRING_VARIANT, BluetoothDevice.PAIRING_VARIANT_PIN);
-        pairingIntent.putExtra(BluetoothDevice.EXTRA_PAIRING_KEY, 1234);
-        //device.setPin(new byte[]{1,2,3,4});
-        //device.setPairingConfirmation(false);
+        pairingIntent.putExtra(BluetoothDevice.EXTRA_PAIRING_VARIANT, BluetoothDevice.PAIRING_VARIANT_PASSKEY_CONFIRMATION);
         pairingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-	    startActivityForResult(pairingIntent, REQUEST_BT_SETTINGS);
+	    startActivityForResult(pairingIntent, REQUEST_BT_PAIRING);
 	}
 	
 	@Override
