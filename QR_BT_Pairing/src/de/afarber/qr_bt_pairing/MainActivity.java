@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -22,6 +23,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 public class MainActivity extends Activity {
+	private final static String TAG = "qr_bt_pairing";
 	
 	private final static int REQUEST_BT_ENABLE   = 1;
 	private final static int REQUEST_BT_SETTINGS = 2;
@@ -32,15 +34,27 @@ public class MainActivity extends Activity {
 	private BluetoothAdapter mBluetoothAdapter;
 	private DeviceListAdapter mDeviceListAdapter;
 	
-	// Create a BroadcastReceiver for ACTION_FOUND
 	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
 	    public void onReceive(Context context, Intent intent) {
 	        String action = intent.getAction();
-	        // When discovery finds a device
-	        if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-	            // Get the BluetoothDevice object from the Intent
+        	Log.d(TAG, "action=" + action);
+
+	        if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
+	    		runOnUiThread(new Runnable() {
+	    			@Override
+	    			public void run() {
+	    	    		setProgressBarIndeterminateVisibility(true);
+	    			}
+	    		});			        	
+	        } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+	    		runOnUiThread(new Runnable() {
+	    			@Override
+	    			public void run() {
+	    	    		setProgressBarIndeterminateVisibility(false);
+	    			}
+	    		});			        	
+	        } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
 	            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-	            // Add the name and address to an array adapter to show in a ListView
 		    	mDeviceListAdapter.add(device);
 	        }
 	    }
@@ -49,6 +63,8 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_ACTION_BAR);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);  
 		setContentView(R.layout.activity_main);
 
         mDeviceListAdapter = new DeviceListAdapter(this);
@@ -60,8 +76,10 @@ public class MainActivity extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				BluetoothDevice device = (BluetoothDevice) parent.getItemAtPosition(position);
-				Log.d("XXX", "device=" + device);
-				MainActivity.this.startBluetoothPairing(device);
+				Log.d(TAG, "device=" + device);
+				//MainActivity.this.startBluetoothPairing(device);
+				MainActivity.this.mBluetoothAdapter.cancelDiscovery();
+				device.createBond();
 			}
 		});
 		
@@ -76,18 +94,12 @@ public class MainActivity extends Activity {
 		}
 
 		// Register the BroadcastReceiver
-		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+		filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+		filter.addAction(BluetoothDevice.ACTION_FOUND);
 		registerReceiver(mReceiver, filter);
 		mBluetoothAdapter.startDiscovery();
-		
-		/*
-		Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-		// If there are paired devices
-	    for (BluetoothDevice device : pairedDevices) {
-	        // Add the name and address to an array adapter to show in a ListView
-	    	mDeviceListAdapter.add(device);
-	    }
-	    */
 	}
 	
 	@Override
@@ -111,7 +123,7 @@ public class MainActivity extends Activity {
 
         if (requestCode == REQUEST_BT_PAIRING) { 
         	if (resultCode == Activity.RESULT_OK) {
-                Log.d("XXX", "Let#s pair!!!!");
+                Log.d(TAG, "Let's pair!");
         	}
         	
             return;
