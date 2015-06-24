@@ -78,7 +78,8 @@ public class MainActivity extends Activity {
 				BluetoothDevice device = (BluetoothDevice) parent.getItemAtPosition(position);
 				Log.d(TAG, "device=" + device);
 				//MainActivity.this.startBluetoothPairing(device);
-				MainActivity.this.mBluetoothAdapter.cancelDiscovery();
+				if (mBluetoothAdapter.isDiscovering())
+					MainActivity.this.mBluetoothAdapter.cancelDiscovery();
 				device.createBond();
 			}
 		});
@@ -93,7 +94,6 @@ public class MainActivity extends Activity {
 		    startActivityForResult(enableBtIntent, REQUEST_BT_ENABLE);
 		}
 
-		// Register the BroadcastReceiver
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
 		filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
@@ -179,7 +179,11 @@ public class MainActivity extends Activity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.action_scan) {
+			if (!mBluetoothAdapter.isDiscovering())
+				mBluetoothAdapter.startDiscovery();
+			return true;
+		} else if (id == R.id.action_settings) {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

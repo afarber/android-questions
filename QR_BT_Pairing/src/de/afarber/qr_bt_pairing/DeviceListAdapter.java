@@ -22,10 +22,10 @@ public class DeviceListAdapter extends ArrayAdapter<BluetoothDevice> {
         mInflator = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void addDevice(BluetoothDevice device, int rssi) {
+    public void add(BluetoothDevice device) {
         if (getPosition(device) == -1) {
         	Log.d("DeviceListAdapter", "Adding: " + device.getAddress());
-            add(device);
+            super.add(device);
         }
     }
 

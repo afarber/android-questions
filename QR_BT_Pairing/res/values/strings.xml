@@ -9,6 +9,7 @@
     <string name="result_succeeded">Found barcode</string>
     <string name="bluetooth_not_supported">Bluetooth is not supported at this device</string>
     <string name="unknown_device">Unknown</string>
+    <string name="action_scan">Scan</string>
     <string name="action_settings">Settings</string>
 
 </resources>
