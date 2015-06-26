@@ -13,6 +13,7 @@ import android.util.Log;
 public class SmallTile {
 	private static final int ALPHA = 0x99;
 	private static final String PREFIX = "small_";
+	private static final int CORNER = 8;
 
 	private static final int NORTH = 0;
 	private static final int EAST = 1;
@@ -34,6 +35,8 @@ public class SmallTile {
 	public boolean visible = true;
 	
     private float mScale;
+    private int mCorner;
+    
     private Paint mPaintLight;
     private Paint mPaintDark;
 
@@ -63,7 +66,8 @@ public class SmallTile {
 	    }
 	    
         mScale = context.getResources().getDisplayMetrics().density;
-        
+		mCorner = Math.max(width, height) / CORNER;
+      
 		mPaintLight = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
 		mPaintLight.setStyle(Paint.Style.STROKE);
 		mPaintLight.setStrokeWidth(2 * mScale);
@@ -111,11 +115,9 @@ public class SmallTile {
 		if (mDrawSides[NORTH] && mDrawSides[EAST]) {
 	        canvas.drawPath(mFillPath, paint);
 	        
-			int corner = Math.max(width, height) / 6;
-			
-			canvas.drawLine(0, 0, width - corner, 0, mPaintLight);
-			canvas.drawLine(width - corner, 0, width, corner, mPaintLight);
-			canvas.drawLine(width, corner, width, height, mPaintDark);
+			canvas.drawLine(0, 0, width - mCorner, 0, mPaintLight);
+			canvas.drawLine(width - mCorner, 0, width, mCorner, mPaintLight);
+			canvas.drawLine(width, mCorner, width, height, mPaintDark);
 		} else {
 			canvas.drawRect(0, 0, width, height, paint);
 			

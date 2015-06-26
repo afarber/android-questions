@@ -7,13 +7,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Path.Direction;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 public class BigTile {
 	private static final int ALPHA = 0xCC;
 	private static final int COLOR = 0xFFFFCC00;
+	private static final int CORNER = 8;
 	private static final String PREFIX = "big_";
 	private static final char[] LETTERS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 	private static final int[] VALUES =   { 1,   4,   4,   2,   1,   4,   3,   3,   1,  10,   5,   2,   4,   2,   1,   4,  12,   1,   1,   1,   2,   5,   4,   8,   3,  10 };
@@ -29,6 +29,8 @@ public class BigTile {
 	public boolean visible = true;
 	
     private float mScale;
+    private int mCorner;
+    
     private Paint mPaint;
     private Paint mPaintLight;
     private Paint mPaintDark;
@@ -76,11 +78,11 @@ public class BigTile {
 		mPaintDark.setColor(Color.BLACK);
 		mPaintDark.setAlpha(0x66);
 		
-		final int corner = Math.max(width, height) / 6;
+		mCorner = Math.max(width, height) / CORNER;
 				
 		mFillPath = new Path();
-		mFillPath.lineTo(width - corner, 0);
-		mFillPath.lineTo(width, corner);
+		mFillPath.lineTo(width - mCorner, 0);
+		mFillPath.lineTo(width, mCorner);
 		mFillPath.lineTo(width, height);
 		mFillPath.lineTo(0, height);
 		mFillPath.close();
@@ -88,13 +90,13 @@ public class BigTile {
 		mLightPath = new Path();
 		mLightPath.moveTo(0, height);
 		mLightPath.lineTo(0, 0);
-		mLightPath.lineTo(width - corner, 0);
-		mLightPath.lineTo(width, corner);
+		mLightPath.lineTo(width - mCorner, 0);
+		mLightPath.lineTo(width, mCorner);
 		
 		mDarkPath = new Path();
 		mDarkPath.moveTo(0, height);
 		mDarkPath.lineTo(width, height);
-		mDarkPath.lineTo(width, corner);
+		mDarkPath.lineTo(width, mCorner);
 	}
     
 	public void draw(Canvas canvas) {
