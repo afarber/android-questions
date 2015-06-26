@@ -62,6 +62,7 @@ public class GameBoard {
 		        TileMode.CLAMP);
 
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+		mPaint.setStyle(Paint.Style.FILL);
 		mPaint.setShader(gradient);   
 		mPaint.setAlpha(0xCC);
     }

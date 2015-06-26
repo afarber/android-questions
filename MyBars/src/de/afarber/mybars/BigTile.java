@@ -76,18 +76,25 @@ public class BigTile {
 		mPaintDark.setColor(Color.BLACK);
 		mPaintDark.setAlpha(0x66);
 		
+		final int corner = Math.max(width, height) / 6;
+				
 		mFillPath = new Path();
-		mFillPath.addRect(0, 0, width, height, Direction.CW);
+		mFillPath.lineTo(width - corner, 0);
+		mFillPath.lineTo(width, corner);
+		mFillPath.lineTo(width, height);
+		mFillPath.lineTo(0, height);
+		mFillPath.close();
 		
 		mLightPath = new Path();
 		mLightPath.moveTo(0, height);
 		mLightPath.lineTo(0, 0);
-		mLightPath.lineTo(width, 0);
+		mLightPath.lineTo(width - corner, 0);
+		mLightPath.lineTo(width, corner);
 		
 		mDarkPath = new Path();
 		mDarkPath.moveTo(0, height);
 		mDarkPath.lineTo(width, height);
-		mDarkPath.lineTo(width, 0);
+		mDarkPath.lineTo(width, corner);
 	}
     
 	public void draw(Canvas canvas) {
