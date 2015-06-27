@@ -6,14 +6,12 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 public class SmallTile {
 	private static final int ALPHA = 0x99;
 	private static final String PREFIX = "small_";
-	private static final int CORNER = 8;
 
 	private static final int NORTH = 0;
 	private static final int EAST = 1;
@@ -35,14 +33,14 @@ public class SmallTile {
 	public boolean visible = true;
 	
     private float mScale;
-    private int mCorner;
     
     private Paint mPaintLight;
     private Paint mPaintDark;
 
-    private Path mFillPath;
-    private Path mLightPath;
-    private Path mDarkPath;
+    private float[] mNorthLine;
+    private float[] mEastLine;
+    private float[] mSouthLine;
+    private float[] mWestLine;
 
 	private char mLetter;
 	private int mValue;
@@ -66,7 +64,6 @@ public class SmallTile {
 	    }
 	    
         mScale = context.getResources().getDisplayMetrics().density;
-		mCorner = Math.max(width, height) / CORNER;
       
 		mPaintLight = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
 		mPaintLight.setStyle(Paint.Style.STROKE);
@@ -80,25 +77,25 @@ public class SmallTile {
 		mPaintDark.setColor(Color.BLACK);
 		mPaintDark.setAlpha(ALPHA);
 		
-		final int corner = Math.max(width, height) / 6;
+		mNorthLine = new float[]{
+				0, 0, 
+				width, 0
+		};
 		
-		mFillPath = new Path();
-		mFillPath.lineTo(width - corner, 0);
-		mFillPath.lineTo(width, corner);
-		mFillPath.lineTo(width, height);
-		mFillPath.lineTo(0, height);
-		mFillPath.close();
+		mEastLine = new float[]{
+				width, 0,
+				width, height
+		};
 		
-		mLightPath = new Path();
-		mLightPath.moveTo(0, height);
-		mLightPath.lineTo(0, 0);
-		mLightPath.lineTo(width - corner, 0);
-		mLightPath.lineTo(width, corner);
+		mSouthLine = new float[]{
+				0, height, 
+				width, height 
+		};
 		
-		mDarkPath = new Path();
-		mDarkPath.moveTo(0, height);
-		mDarkPath.lineTo(width, height);
-		mDarkPath.lineTo(width, corner);
+		mWestLine = new float[]{
+				0, 0, 
+				0, height 
+		};
 	}
 
     public void setDrawSides(boolean[] sides) {
@@ -111,28 +108,20 @@ public class SmallTile {
 		
 		canvas.save();
 		canvas.translate(left, top);
-        
-		if (mDrawSides[NORTH] && mDrawSides[EAST]) {
-	        canvas.drawPath(mFillPath, paint);
-	        
-			canvas.drawLine(0, 0, width - mCorner, 0, mPaintLight);
-			canvas.drawLine(width - mCorner, 0, width, mCorner, mPaintLight);
-			canvas.drawLine(width, mCorner, width, height, mPaintDark);
-		} else {
-			canvas.drawRect(0, 0, width, height, paint);
-			
-			if (mDrawSides[NORTH])
-				canvas.drawLine(0, 0, width, 0, mPaintLight);
-			
-			if (mDrawSides[EAST])
-				canvas.drawLine(width, 0, width, height, mPaintDark);
-		}
+
+        canvas.drawRect(0, 0, width, height, paint);
+
+		if (mDrawSides[NORTH])
+			canvas.drawLines(mNorthLine, mPaintLight);
+		
+		if (mDrawSides[EAST])
+			canvas.drawLines(mEastLine, mPaintDark);
 		
 		if (mDrawSides[WEST])
-			canvas.drawLine(0, 0, 0, height, mPaintLight);
+			canvas.drawLines(mWestLine, mPaintLight);
         
 		if (mDrawSides[SOUTH])
-			canvas.drawLine(0, height, width, height, mPaintDark);
+			canvas.drawLines(mSouthLine, mPaintDark);
 		
 		Drawable d = sLetters.get(mLetter);
 
