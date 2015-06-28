@@ -1,5 +1,19 @@
 package de.afarber.mybars;
 
+/* 
+res/drawable-mdpi:
+big_english.png 1872 × 72 pixels
+small_english.png 1040 × 40 pixels
+convert big_english.png -crop 72x72 big_%d.png
+convert small_english.png -crop 40x40 small_%d.png
+
+res/drawable-xxhdpi:
+big_english.png 5200 × 200 pixels
+small_english.png 3120 × 120 pixels
+convert big_english.png -crop 200x200 big_%d.png
+convert small_english.png -crop 120x120 small_%d.png
+*/
+
 import java.util.HashMap;
 
 import android.content.Context;
