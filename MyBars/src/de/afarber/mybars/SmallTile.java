@@ -10,7 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 public class SmallTile {
-	private static final int ALPHA = 0x99;
+	private static final int SHADOW_ALPHA = 0x99;
 	private static final String PREFIX = "small_";
 
 	private static final int NORTH = 0;
@@ -69,13 +69,13 @@ public class SmallTile {
 		mPaintLight.setStyle(Paint.Style.STROKE);
 		mPaintLight.setStrokeWidth(2 * mScale);
 		mPaintLight.setColor(Color.WHITE);
-		mPaintLight.setAlpha(ALPHA);
+		mPaintLight.setAlpha(SHADOW_ALPHA);
 		
 		mPaintDark = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
 		mPaintDark.setStyle(Paint.Style.STROKE);
 		mPaintDark.setStrokeWidth(2 * mScale);
 		mPaintDark.setColor(Color.BLACK);
-		mPaintDark.setAlpha(ALPHA);
+		mPaintDark.setAlpha(SHADOW_ALPHA);
 		
 		mNorthLine = new float[]{
 				0, 0, 

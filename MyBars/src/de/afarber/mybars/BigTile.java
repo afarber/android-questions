@@ -1,5 +1,19 @@
 package de.afarber.mybars;
 
+/* 
+res/drawable-mdpi:
+big_english.png 1872 × 72 pixels
+small_english.png 1040 × 40 pixels
+convert big_english.png -crop 72x72 big_%d.png
+convert small_english.png -crop 40x40 small_%d.png
+
+res/drawable-xxhdpi:
+big_english.png 5200 × 200 pixels
+small_english.png 3120 × 120 pixels
+convert big_english.png -crop 200x200 big_%d.png
+convert small_english.png -crop 120x120 small_%d.png
+*/
+
 import java.util.HashMap;
 
 import android.content.Context;
@@ -11,6 +25,7 @@ import android.util.Log;
 
 public class BigTile {
 	private static final int ALPHA = 0xCC;
+	private static final int SHADOW_ALPHA = 0x66;
 	private static final int COLOR = 0xFFFFCC00;
 	private static final String PREFIX = "big_";
 	private static final char[] LETTERS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
@@ -64,15 +79,15 @@ public class BigTile {
 		
  		mPaintLight = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
 		mPaintLight.setStyle(Paint.Style.STROKE);
-		mPaintLight.setStrokeWidth(3 * mScale);
+		mPaintLight.setStrokeWidth(2 * mScale);
 		mPaintLight.setColor(Color.WHITE);
-		mPaintLight.setAlpha(0x66);
+		mPaintLight.setAlpha(SHADOW_ALPHA);
 		
 		mPaintDark = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
 		mPaintDark.setStyle(Paint.Style.STROKE);
 		mPaintDark.setStrokeWidth(3 * mScale);
 		mPaintDark.setColor(Color.BLACK);
-		mPaintDark.setAlpha(0x66);
+		mPaintDark.setAlpha(SHADOW_ALPHA);
 		
 		mLightLines = new float[]{
 				0, height, 
