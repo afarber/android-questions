@@ -1,6 +1,8 @@
 package de.afarber.mybars;
 
 /* 
+brown color: #663300
+
 res/drawable-mdpi:
 big_english.png 1872 × 72 pixels
 small_english.png 1040 × 40 pixels
