@@ -1,18 +1,31 @@
 package de.afarber.mybars;
 
+/* 
+res/drawable-mdpi:
+big_english.png 1872 × 72 pixels
+small_english.png 1040 × 40 pixels
+convert big_english.png -crop 72x72 big_%d.png
+convert small_english.png -crop 40x40 small_%d.png
+
+res/drawable-xxhdpi:
+big_english.png 5200 × 200 pixels
+small_english.png 3120 × 120 pixels
+convert big_english.png -crop 200x200 big_%d.png
+convert small_english.png -crop 120x120 small_%d.png
+*/
+
 import java.util.HashMap;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Path.Direction;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 public class BigTile {
 	private static final int ALPHA = 0xCC;
+	private static final int SHADOW_ALPHA = 0x66;
 	private static final int COLOR = 0xFFFFCC00;
 	private static final String PREFIX = "big_";
 	private static final char[] LETTERS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
@@ -29,13 +42,13 @@ public class BigTile {
 	public boolean visible = true;
 	
     private float mScale;
+    
     private Paint mPaint;
     private Paint mPaintLight;
     private Paint mPaintDark;
     
-    private Path mFillPath;
-    private Path mLightPath;
-    private Path mDarkPath;
+    private float[] mLightLines;
+    private float[] mDarkLines;
 
 	private char mLetter;
 	private int mValue;
@@ -66,35 +79,31 @@ public class BigTile {
 		
  		mPaintLight = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
 		mPaintLight.setStyle(Paint.Style.STROKE);
-		mPaintLight.setStrokeWidth(3 * mScale);
+		mPaintLight.setStrokeWidth(2 * mScale);
 		mPaintLight.setColor(Color.WHITE);
-		mPaintLight.setAlpha(0x66);
+		mPaintLight.setAlpha(SHADOW_ALPHA);
 		
 		mPaintDark = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
 		mPaintDark.setStyle(Paint.Style.STROKE);
 		mPaintDark.setStrokeWidth(3 * mScale);
 		mPaintDark.setColor(Color.BLACK);
-		mPaintDark.setAlpha(0x66);
+		mPaintDark.setAlpha(SHADOW_ALPHA);
 		
-		final int corner = Math.max(width, height) / 6;
+		mLightLines = new float[]{
+				0, height, 
+				0, 0, 
 				
-		mFillPath = new Path();
-		mFillPath.lineTo(width - corner, 0);
-		mFillPath.lineTo(width, corner);
-		mFillPath.lineTo(width, height);
-		mFillPath.lineTo(0, height);
-		mFillPath.close();
+				0, 0, 
+				width, 0
+		};
 		
-		mLightPath = new Path();
-		mLightPath.moveTo(0, height);
-		mLightPath.lineTo(0, 0);
-		mLightPath.lineTo(width - corner, 0);
-		mLightPath.lineTo(width, corner);
-		
-		mDarkPath = new Path();
-		mDarkPath.moveTo(0, height);
-		mDarkPath.lineTo(width, height);
-		mDarkPath.lineTo(width, corner);
+		mDarkLines = new float[]{
+				mPaintDark.getStrokeWidth(), height, 
+				width, height, 
+				
+				width, height, 
+				width, mPaintDark.getStrokeWidth()
+		};
 	}
     
 	public void draw(Canvas canvas) {
@@ -104,9 +113,9 @@ public class BigTile {
 		canvas.save();
 		canvas.translate(left, top);
 		
-        canvas.drawPath(mFillPath, mPaint);
-        canvas.drawPath(mLightPath, mPaintLight);
-        canvas.drawPath(mDarkPath, mPaintDark);
+        canvas.drawRect(0, 0, width, height, mPaint);
+        canvas.drawLines(mLightLines, mPaintLight);
+        canvas.drawLines(mDarkLines, mPaintDark);
 
 		Drawable d = sLetters.get(mLetter);
 		d.draw(canvas);

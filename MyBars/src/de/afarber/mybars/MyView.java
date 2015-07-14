@@ -64,7 +64,21 @@ public class MyView extends View {
         	tile.visible = true;
             mBoardTiles.add(tile);
         }
+/*
+	    for (char c: LETTERS) {
+        	SmallTile tile = new SmallTile(getContext());
+        	tile.setLetter(c);
+        	tile.visible = true;
+            mBoardTiles.add(tile);
+        }
 
+	    for (char c: LETTERS) {
+        	SmallTile tile = new SmallTile(getContext());
+        	tile.setLetter(c);
+        	tile.visible = true;
+            mBoardTiles.add(tile);
+        }
+*/
 	    for (int i = 0; i < 7; i++) {
         	SmallTile tile = new SmallTile(getContext());
         	char c = LETTERS[i];

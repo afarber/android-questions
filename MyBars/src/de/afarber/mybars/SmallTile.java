@@ -1,17 +1,30 @@
 package de.afarber.mybars;
 
+/* 
+res/drawable-mdpi:
+big_english.png 1872 × 72 pixels
+small_english.png 1040 × 40 pixels
+convert big_english.png -crop 72x72 big_%d.png
+convert small_english.png -crop 40x40 small_%d.png
+
+res/drawable-xxhdpi:
+big_english.png 5200 × 200 pixels
+small_english.png 3120 × 120 pixels
+convert big_english.png -crop 200x200 big_%d.png
+convert small_english.png -crop 120x120 small_%d.png
+*/
+
 import java.util.HashMap;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 public class SmallTile {
-	private static final int ALPHA = 0x99;
+	private static final int SHADOW_ALPHA = 0x99;
 	private static final String PREFIX = "small_";
 
 	private static final int NORTH = 0;
@@ -34,12 +47,14 @@ public class SmallTile {
 	public boolean visible = true;
 	
     private float mScale;
+    
     private Paint mPaintLight;
     private Paint mPaintDark;
 
-    private Path mFillPath;
-    private Path mLightPath;
-    private Path mDarkPath;
+    private float[] mNorthLine;
+    private float[] mEastLine;
+    private float[] mSouthLine;
+    private float[] mWestLine;
 
 	private char mLetter;
 	private int mValue;
@@ -63,38 +78,38 @@ public class SmallTile {
 	    }
 	    
         mScale = context.getResources().getDisplayMetrics().density;
-        
+      
 		mPaintLight = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
 		mPaintLight.setStyle(Paint.Style.STROKE);
 		mPaintLight.setStrokeWidth(2 * mScale);
 		mPaintLight.setColor(Color.WHITE);
-		mPaintLight.setAlpha(ALPHA);
+		mPaintLight.setAlpha(SHADOW_ALPHA);
 		
 		mPaintDark = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
 		mPaintDark.setStyle(Paint.Style.STROKE);
 		mPaintDark.setStrokeWidth(2 * mScale);
 		mPaintDark.setColor(Color.BLACK);
-		mPaintDark.setAlpha(ALPHA);
+		mPaintDark.setAlpha(SHADOW_ALPHA);
 		
-		final int corner = Math.max(width, height) / 6;
+		mNorthLine = new float[]{
+				0, 0, 
+				width, 0
+		};
 		
-		mFillPath = new Path();
-		mFillPath.lineTo(width - corner, 0);
-		mFillPath.lineTo(width, corner);
-		mFillPath.lineTo(width, height);
-		mFillPath.lineTo(0, height);
-		mFillPath.close();
+		mEastLine = new float[]{
+				width, 0,
+				width, height
+		};
 		
-		mLightPath = new Path();
-		mLightPath.moveTo(0, height);
-		mLightPath.lineTo(0, 0);
-		mLightPath.lineTo(width - corner, 0);
-		mLightPath.lineTo(width, corner);
+		mSouthLine = new float[]{
+				0, height, 
+				width, height 
+		};
 		
-		mDarkPath = new Path();
-		mDarkPath.moveTo(0, height);
-		mDarkPath.lineTo(width, height);
-		mDarkPath.lineTo(width, corner);
+		mWestLine = new float[]{
+				0, 0, 
+				0, height 
+		};
 	}
 
     public void setDrawSides(boolean[] sides) {
@@ -107,30 +122,20 @@ public class SmallTile {
 		
 		canvas.save();
 		canvas.translate(left, top);
-        
-		if (mDrawSides[NORTH] && mDrawSides[EAST]) {
-	        canvas.drawPath(mFillPath, paint);
-	        
-			int corner = Math.max(width, height) / 6;
-			
-			canvas.drawLine(0, 0, width - corner, 0, mPaintLight);
-			canvas.drawLine(width - corner, 0, width, corner, mPaintLight);
-			canvas.drawLine(width, corner, width, height, mPaintDark);
-		} else {
-			canvas.drawRect(0, 0, width, height, paint);
-			
-			if (mDrawSides[NORTH])
-				canvas.drawLine(0, 0, width, 0, mPaintLight);
-			
-			if (mDrawSides[EAST])
-				canvas.drawLine(width, 0, width, height, mPaintDark);
-		}
+
+        canvas.drawRect(0, 0, width, height, paint);
+
+		if (mDrawSides[NORTH])
+			canvas.drawLines(mNorthLine, mPaintLight);
+		
+		if (mDrawSides[EAST])
+			canvas.drawLines(mEastLine, mPaintDark);
 		
 		if (mDrawSides[WEST])
-			canvas.drawLine(0, 0, 0, height, mPaintLight);
+			canvas.drawLines(mWestLine, mPaintLight);
         
 		if (mDrawSides[SOUTH])
-			canvas.drawLine(0, height, width, height, mPaintDark);
+			canvas.drawLines(mSouthLine, mPaintDark);
 		
 		Drawable d = sLetters.get(mLetter);
 
