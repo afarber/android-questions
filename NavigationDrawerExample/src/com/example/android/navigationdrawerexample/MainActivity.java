@@ -69,11 +69,13 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
+    private ListView mActionList;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private String[] mPlanetTitles;
+    private String[] mActions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,13 +84,18 @@ public class MainActivity extends AppCompatActivity {
 
         mTitle = mDrawerTitle = getTitle();
         mPlanetTitles = getResources().getStringArray(R.array.planets_array);
+        mActions = getResources().getStringArray(R.array.actions_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mActionList = (ListView) findViewById(R.id.right_drawer);
 
         // set up the drawer's list view with items and click listener
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.drawer_list_item, mPlanetTitles));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+        mActionList.setAdapter(new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, mActions));
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

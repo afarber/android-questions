@@ -26,6 +26,14 @@
         <item>Uranus</item>
         <item>Neptune</item>
     </string-array>
+    <string-array name="actions_array">
+        <item>Conquer</item>
+        <item>Destroy</item>
+        <item>Eliminate</item>
+        <item>Nuke</item>
+        <item>Enslave</item>
+        <item>Assimilate</item>
+    </string-array>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="action_websearch">Web search</string>
