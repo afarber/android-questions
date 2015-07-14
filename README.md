@@ -90,6 +90,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/MyTiles2/screenshot.png)
 
 
+[NavigationDrawerExample](https://github.com/afarber/android-newbie/tree/master/NavigationDrawerExample):
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/NavigationDrawerExample/screenshot.png)
+
+
 [NFCStudentTracking](https://github.com/afarber/android-newbie/tree/master/NFCStudentTracking) from the book [Professional NFC Application Development for Android](http://www.wrox.com/WileyCDA/WroxTitle/Professional-NFC-Application-Development-for-Android.productCd-1118380096.html):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/NFCStudentTracking/screenshot.png)
