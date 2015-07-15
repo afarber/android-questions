@@ -15,7 +15,8 @@
   -->
 
 <resources>
-    <string name="app_name">Navigation Drawer Example</string>
+    <string name="app_name">How to display mini drawer with icons?</string>
+    
     <string-array name="planets_array">
         <item>Mercury</item>
         <item>Venus</item>
@@ -26,16 +27,23 @@
         <item>Uranus</item>
         <item>Neptune</item>
     </string-array>
-    <string-array name="actions_array">
-        <item>Conquer</item>
-        <item>Destroy</item>
-        <item>Eliminate</item>
-        <item>Nuke</item>
-        <item>Enslave</item>
-        <item>Assimilate</item>
+    
+    <string-array name="music_actions">
+        <item>Play</item>
+        <item>Pause</item>
+        <item>Stop</item>
+        <item>Shuffle</item>
     </string-array>
+    
+    <array name="music_icons">
+        <item>@drawable/ic_play_arrow_black_24dp</item>
+        <item>@drawable/ic_pause_black_24dp</item>
+        <item>@drawable/ic_stop_black_24dp</item>
+        <item>@drawable/ic_shuffle_black_24dp</item>
+    </array>
+        
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="action_websearch">Web search</string>
-    <string name="app_not_available">Sorry, there\'s no web browser available</string>
+    <string name="app_not_available">Sorry, there is no web browser available</string>
 </resources>

@@ -23,6 +23,7 @@ import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -37,6 +38,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -76,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     private CharSequence mTitle;
     private String[] mPlanetTitles;
     private String[] mActions;
+    private TypedArray mIcons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,19 +86,37 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mTitle = mDrawerTitle = getTitle();
+        
         mPlanetTitles = getResources().getStringArray(R.array.planets_array);
-        mActions = getResources().getStringArray(R.array.actions_array);
+        mActions = getResources().getStringArray(R.array.music_actions);
+        mIcons = getResources().obtainTypedArray(R.array.music_icons);
+        
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mActionList = (ListView) findViewById(R.id.right_drawer);
 
-        // set up the drawer's list view with items and click listener
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, mPlanetTitles));
+        // set up the left drawer's list view with items and click listener
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mPlanetTitles) {
+        	@Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+	    		TextView view = (TextView) super.getView(position, convertView, parent);
+	    		view.setCompoundDrawablePadding(16);
+	    		view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_stars_white_24dp, 0, 0, 0);
+	    		return view;
+        	}
+        });
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        mActionList.setAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, mActions));
+        mActionList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mActions) {
+        	@Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+        		TextView view = (TextView) super.getView(position, convertView, parent);
+	    		view.setCompoundDrawablePadding(16);
+	    		int res = mIcons.getResourceId(position, R.drawable.ic_menu_black_24dp);
+        		view.setCompoundDrawablesWithIntrinsicBounds(res, 0, 0, 0);
+        		return view;
+            }
+        });
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
