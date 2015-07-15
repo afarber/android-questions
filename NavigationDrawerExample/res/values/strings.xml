@@ -35,12 +35,12 @@
         <item>Shuffle</item>
     </string-array>
     
-    <array name="music_icons">
+    <integer-array name="music_icons">
         <item>@drawable/ic_play_arrow_black_24dp</item>
         <item>@drawable/ic_pause_black_24dp</item>
         <item>@drawable/ic_stop_black_24dp</item>
         <item>@drawable/ic_shuffle_black_24dp</item>
-    </array>
+    </integer-array>
         
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
