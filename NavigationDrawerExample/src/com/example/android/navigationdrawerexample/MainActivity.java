@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
     private CharSequence mTitle;
     private String[] mPlanetTitles;
     private String[] mActions;
-    private TypedArray mIcons;
+    private int[] mIcons;;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +91,12 @@ public class MainActivity extends AppCompatActivity {
         
         mPlanetTitles = getResources().getStringArray(R.array.planets_array);
         mActions = getResources().getStringArray(R.array.music_actions);
-        mIcons = getResources().obtainTypedArray(R.array.music_icons);
+        
+        TypedArray ta = getResources().obtainTypedArray(R.array.music_icons);
+        mIcons = new int[ta.length()];
+        for (int i = 0; i < mIcons.length; i++)
+        	mIcons[i] = ta.getResourceId(i, R.drawable.ic_menu_black_24dp);
+        ta.recycle();
         
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -105,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         	@Override
             public View getView(int position, View convertView, ViewGroup parent) {
 	    		TextView view = (TextView) super.getView(position, convertView, parent);
-	    		view.setCompoundDrawablePadding(16);
+	    		view.setCompoundDrawablePadding(24);
 	    		view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_stars_white_24dp, 0, 0, 0);
 	    		return view;
         	}
@@ -116,16 +121,11 @@ public class MainActivity extends AppCompatActivity {
         	@Override
             public View getView(int position, View convertView, ViewGroup parent) {
         		TextView view = (TextView) super.getView(position, convertView, parent);
-	    		view.setCompoundDrawablePadding(16);
-	    		int res = mIcons.getResourceId(position, R.drawable.ic_menu_black_24dp);
-        		view.setCompoundDrawablesWithIntrinsicBounds(res, 0, 0, 0);
+	    		view.setCompoundDrawablePadding(24);
+        		view.setCompoundDrawablesWithIntrinsicBounds(mIcons[position], 0, 0, 0);
         		return view;
             }
         });
-
-        // enable ActionBar app icon to behave as action to toggle nav drawer
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
 
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
