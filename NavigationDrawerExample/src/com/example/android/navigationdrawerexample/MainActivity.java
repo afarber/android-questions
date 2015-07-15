@@ -147,10 +147,18 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-
+        
         if (savedInstanceState == null) {
             selectItem(0);
         }
+    }
+
+    public void openActions(View v) {
+        boolean actionsOpen = mDrawerLayout.isDrawerOpen(mActionList);
+        if (actionsOpen)
+        	mDrawerLayout.closeDrawer(mActionList);
+        else
+        	mDrawerLayout.openDrawer(mActionList);
     }
 
     @Override
@@ -164,8 +172,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+        //boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        //menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+    	
+	    menu.findItem(R.id.action_websearch).setVisible(false);
         return super.onPrepareOptionsMenu(menu);
     }
 
