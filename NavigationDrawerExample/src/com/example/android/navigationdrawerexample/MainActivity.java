@@ -18,13 +18,13 @@ package com.example.android.navigationdrawerexample;
 
 import java.util.Locale;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +36,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -72,8 +73,8 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 	private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-    private ListView mActionList;
+    private ListView mLeftDrawer;
+    private ListView mRightDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private CharSequence mDrawerTitle;
@@ -102,22 +103,28 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        mActionList = (ListView) findViewById(R.id.right_drawer);
+        mLeftDrawer = (ListView) findViewById(R.id.left_drawer);
+        mRightDrawer = (ListView) findViewById(R.id.right_drawer);
 
         // set up the left drawer's list view with items and click listener
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mPlanetTitles) {
+        mLeftDrawer.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mPlanetTitles) {
         	@Override
             public View getView(int position, View convertView, ViewGroup parent) {
 	    		TextView view = (TextView) super.getView(position, convertView, parent);
 	    		view.setCompoundDrawablePadding(24);
-	    		view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_stars_white_24dp, 0, 0, 0);
+	    		view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_stars_black_24dp, 0, 0, 0);
 	    		return view;
         	}
         });
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        mLeftDrawer.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	            selectLeftItem(position);
+	            mDrawerLayout.closeDrawer(mLeftDrawer);
+			}
+		});
 
-        mActionList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mActions) {
+        mRightDrawer.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mActions) {
         	@Override
             public View getView(int position, View convertView, ViewGroup parent) {
         		TextView view = (TextView) super.getView(position, convertView, parent);
@@ -126,7 +133,13 @@ public class MainActivity extends AppCompatActivity {
         		return view;
             }
         });
-
+        mRightDrawer.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		        mDrawerLayout.closeDrawer(mRightDrawer);
+			}
+		});
+        
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -138,27 +151,27 @@ public class MainActivity extends AppCompatActivity {
                 ) {
             public void onDrawerClosed(View view) {
                 mToolbar.setTitle(mTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             public void onDrawerOpened(View drawerView) {
                 mToolbar.setTitle(mDrawerTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         
         if (savedInstanceState == null) {
-            selectItem(0);
+            selectLeftItem(0);
         }
     }
 
     public void openActions(View v) {
-        boolean actionsOpen = mDrawerLayout.isDrawerOpen(mActionList);
+        boolean actionsOpen = mDrawerLayout.isDrawerOpen(mRightDrawer);
         if (actionsOpen)
-        	mDrawerLayout.closeDrawer(mActionList);
+        	mDrawerLayout.closeDrawer(mRightDrawer);
         else
-        	mDrawerLayout.openDrawer(mActionList);
+        	mDrawerLayout.openDrawer(mRightDrawer);
     }
 
     @Override
@@ -204,28 +217,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /* The click listner for ListView in the navigation drawer */
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
-        }
-    }
-
-    private void selectItem(int position) {
+    private void selectLeftItem(int position) {
         // update the main content by replacing fragments
         Fragment fragment = new PlanetFragment();
         Bundle args = new Bundle();
         args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
         fragment.setArguments(args);
 
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
         // update selected item and title, then close the drawer
-        mDrawerList.setItemChecked(position, true);
+        mLeftDrawer.setItemChecked(position, true);
         setTitle(mPlanetTitles[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
     }
 
     @Override
