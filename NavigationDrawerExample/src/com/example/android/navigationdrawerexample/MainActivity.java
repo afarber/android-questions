@@ -213,8 +213,6 @@ public class MainActivity extends AppCompatActivity {
         // Handle action buttons
         switch(item.getItemId()) {
         
-        //case android.R.id.home:
-        
         case R.id.action_websearch:
             // create intent to perform web search for this planet
             Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
