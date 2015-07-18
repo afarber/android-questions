@@ -173,6 +173,17 @@ public class MainActivity extends AppCompatActivity {
         else
         	mDrawerLayout.openDrawer(mRightDrawer);
     }
+  
+    @Override
+    public void onBackPressed() {
+    	if (mDrawerLayout.isDrawerOpen(mLeftDrawer)) {
+    		mDrawerLayout.closeDrawer(mLeftDrawer);
+    	} else if (mDrawerLayout.isDrawerOpen(mRightDrawer)) {
+    		mDrawerLayout.closeDrawer(mRightDrawer);
+    	} else {
+            super.onBackPressed();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -185,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
-        //boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        //boolean drawerOpen = mDrawerLayout.isDrawerOpen(mLeftDrawer);
         //menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
     	
 	    menu.findItem(R.id.action_websearch).setVisible(false);
@@ -201,6 +212,9 @@ public class MainActivity extends AppCompatActivity {
         }
         // Handle action buttons
         switch(item.getItemId()) {
+        
+        //case android.R.id.home:
+        
         case R.id.action_websearch:
             // create intent to perform web search for this planet
             Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
