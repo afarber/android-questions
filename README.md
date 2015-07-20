@@ -45,6 +45,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/MyBars/screenshot.png)
 
 
+[MyCoordinator](https://github.com/afarber/android-newbie/tree/master/MyCoordinator):
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/MyCoordinator/screenshot.png)
+
+
 [MyDecoder](https://github.com/afarber/android-newbie/tree/master/MyDecoder):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/MyDecoder/screenshot.png)
