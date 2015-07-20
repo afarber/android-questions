@@ -28,14 +28,21 @@
         <item>Neptune</item>
     </string-array>
     
-    <string-array name="music_actions">
+    <string-array name="actions_array">
+        <item>com.example.android.navigationdrawerexample.play</item>
+        <item>com.example.android.navigationdrawerexample.pause</item>
+        <item>com.example.android.navigationdrawerexample.stop</item>
+        <item>com.example.android.navigationdrawerexample.shuffle</item>
+    </string-array>
+    
+    <string-array name="labels_array">
         <item>Play</item>
         <item>Pause</item>
         <item>Stop</item>
         <item>Shuffle</item>
     </string-array>
     
-    <integer-array name="music_icons">
+    <integer-array name="icons_array">
         <item>@drawable/ic_play_arrow_black_24dp</item>
         <item>@drawable/ic_pause_black_24dp</item>
         <item>@drawable/ic_stop_black_24dp</item>
