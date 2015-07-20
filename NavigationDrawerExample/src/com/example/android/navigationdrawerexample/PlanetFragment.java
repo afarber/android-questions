@@ -27,13 +27,13 @@ public class PlanetFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 if (ACTION_PLAY.equals(action))
-                    Toast.makeText(getActivity(), ACTION_PLAY, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Play music", Toast.LENGTH_LONG).show();
                 else if (ACTION_PAUSE.equals(action))
-                    Toast.makeText(getActivity(), ACTION_PAUSE, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Pause music", Toast.LENGTH_LONG).show();
                 else if (ACTION_STOP.equals(action))
-                    Toast.makeText(getActivity(), ACTION_STOP, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Stop music", Toast.LENGTH_LONG).show();
                 else if (ACTION_SHUFFLE.equals(action))
-                    Toast.makeText(getActivity(), ACTION_SHUFFLE, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Shuffle music", Toast.LENGTH_LONG).show();
         }
     };
   
