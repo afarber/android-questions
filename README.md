@@ -105,6 +105,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/NFCStudentTracking/screenshot.png)
 
 
+[Planets](https://github.com/afarber/android-newbie/tree/master/Planets):
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/Planets/screenshot.png)
+
+
 [PingMe](https://github.com/afarber/android-newbie/tree/master/PingMe):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/PingMe/screenshot.png)
