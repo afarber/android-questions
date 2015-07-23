@@ -2,6 +2,7 @@ package de.afarber.mycoordinator;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    public static final boolean TOO_OLD = (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP);
+
     CollapsingToolbarLayout collapsingToolbar;
     RecyclerView recyclerView;
     int mutedColor = R.attr.colorPrimary;
@@ -34,12 +37,10 @@ public class MainActivity extends AppCompatActivity {
 
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle("Flexible space");
+        collapsingToolbar.setParall
 
         ImageView header = (ImageView) findViewById(R.id.header);
-
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-                R.drawable.header);
-
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.header);
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(Palette palette) {
@@ -78,6 +79,12 @@ public class MainActivity extends AppCompatActivity {
 
         simpleRecyclerAdapter = new SimpleRecyclerAdapter(listData);
         recyclerView.setAdapter(simpleRecyclerAdapter);
+
+        /*
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        if (!TOO_OLD)
+            fab.setElevation(4f);
+        */
     }
 
     @Override
