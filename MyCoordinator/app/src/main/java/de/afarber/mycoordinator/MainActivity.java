@@ -49,12 +49,10 @@ public class MainActivity extends AppCompatActivity {
     private class MyViewHolder
             extends RecyclerView.ViewHolder
             implements View.OnClickListener {
-        protected TextView text1;
 
-        public MyViewHolder(View itemView) {
-            super(itemView);
-            itemView.setOnClickListener(this);
-            text1 = (TextView) itemView.findViewById(android.R.id.text1);
+        public MyViewHolder(View v) {
+            super(v);
+            v.setOnClickListener(this);
         }
 
         @Override
@@ -95,16 +93,18 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                View v = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1,
+                View v = LayoutInflater.from(parent.getContext()).inflate(
+                        android.R.layout.simple_list_item_1,
                         parent,
                         false);
-                MyViewHolder viewHolder = new MyViewHolder(v);
-                return viewHolder;
+                MyViewHolder vh = new MyViewHolder(v);
+                return vh;
             }
 
             @Override
-            public void onBindViewHolder(MyViewHolder holder, int position) {
-                holder.text1.setText(sItems[position]);
+            public void onBindViewHolder(MyViewHolder vh, int position) {
+                TextView tv = (TextView) vh.itemView;
+                tv.setText(sItems[position]);
             }
 
             @Override
