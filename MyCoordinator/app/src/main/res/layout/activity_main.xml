@@ -55,6 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         android:clickable="true"
+        android:onClick="showToast"
         android:src="@drawable/ic_action_add"
         app:layout_anchor="@+id/app_bar_layout"
         app:layout_anchorGravity="bottom|right|end" />

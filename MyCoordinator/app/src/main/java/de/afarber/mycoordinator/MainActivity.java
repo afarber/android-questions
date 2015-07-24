@@ -113,5 +113,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void showToast(View v) {
+        Toast.makeText(getApplicationContext(),
+                "FAB clicked",
+                Toast.LENGTH_LONG).show();
+    }
 }
 
