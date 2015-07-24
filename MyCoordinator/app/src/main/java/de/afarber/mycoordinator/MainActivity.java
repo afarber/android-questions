@@ -10,85 +10,108 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-    public static final boolean TOO_OLD = (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP);
+    private static final boolean TOO_OLD = (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP);
+    private static final String[] sItems = new String[] {
+            "Item 001",
+            "Item 002",
+            "Item 003",
+            "Item 004",
+            "Item 005",
+            "Item 006",
+            "Item 007",
+            "Item 008",
+            "Item 009",
+            "Item 010",
+            "Item 011",
+            "Item 012",
+            "Item 013",
+            "Item 014",
+            "Item 015",
+            "Item 016",
+            "Item 017",
+            "Item 018",
+            "Item 019",
+            "Item 020"
+    };
 
-    CollapsingToolbarLayout collapsingToolbar;
-    RecyclerView recyclerView;
-    int mutedColor = R.attr.colorPrimary;
-    SimpleRecyclerAdapter simpleRecyclerAdapter;
+    private CollapsingToolbarLayout mCollapsingToolbar;
+    private RecyclerView mRecyclerView;
+    private int mMutedColor = R.attr.colorPrimary;
+
+    private class MyViewHolder
+            extends RecyclerView.ViewHolder
+            implements View.OnClickListener {
+        protected TextView text1;
+
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(this);
+            text1 = (TextView) itemView.findViewById(android.R.id.text1);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Toast.makeText(getApplicationContext(),
+                    "You have clicked " + ((TextView) v).getText(),
+                    Toast.LENGTH_LONG).show();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.anim_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
 
-        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle("Flexible space");
-        collapsingToolbar.setParall
+        mCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout);
+        mCollapsingToolbar.setTitle("Flexible space");
 
-        ImageView header = (ImageView) findViewById(R.id.header);
+        ImageView header = (ImageView) findViewById(R.id.header_image_view);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.header);
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(Palette palette) {
-
-                mutedColor = palette.getMutedColor(R.attr.colorPrimary);
-                collapsingToolbar.setContentScrimColor(mutedColor);
+                mMutedColor = palette.getMutedColor(R.attr.colorPrimary);
+                mCollapsingToolbar.setContentScrimColor(mMutedColor);
             }
         });
 
-        recyclerView = (RecyclerView) findViewById(R.id.scrollableview);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(new RecyclerView.Adapter<MyViewHolder>() {
 
-        List<String> listData = new ArrayList<String>(Arrays.asList(
-                "Item 001",
-                "Item 002",
-                "Item 003",
-                "Item 004",
-                "Item 005",
-                "Item 006",
-                "Item 007",
-                "Item 008",
-                "Item 009",
-                "Item 010",
-                "Item 011",
-                "Item 012",
-                "Item 013",
-                "Item 014",
-                "Item 015",
-                "Item 016",
-                "Item 017",
-                "Item 018",
-                "Item 019",
-                "Item 020"
-        ));
+            @Override
+            public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                View v = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1,
+                        parent,
+                        false);
+                MyViewHolder viewHolder = new MyViewHolder(v);
+                return viewHolder;
+            }
 
-        simpleRecyclerAdapter = new SimpleRecyclerAdapter(listData);
-        recyclerView.setAdapter(simpleRecyclerAdapter);
+            @Override
+            public void onBindViewHolder(MyViewHolder holder, int position) {
+                holder.text1.setText(sItems[position]);
+            }
 
-        /*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        if (!TOO_OLD)
-            fab.setElevation(4f);
-        */
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return false;
+            @Override
+            public int getItemCount() {
+                return sItems.length;
+            }
+        });
     }
 }
+
