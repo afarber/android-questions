@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
     public void run() {
         Log.d("MyCoordinator", "Toggle animation");
 
-        mFab.setAnimation(mFab.isShown() ? mOutAnimation : mInAnimation);
+        mFab.startAnimation(mFab.isShown() ? mOutAnimation : mInAnimation);
 
         mHandler.postDelayed(this, 5000);
 
