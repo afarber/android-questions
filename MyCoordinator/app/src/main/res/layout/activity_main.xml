@@ -25,7 +25,7 @@
             <ImageView
                 android:id="@+id/header_image_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/header"
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax" />
