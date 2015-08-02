@@ -9,7 +9,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="192dp"
+        android:layout_height="200dp"
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -17,7 +17,6 @@
             android:id="@+id/collapsing_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
@@ -28,14 +27,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/header"
-                android:fitsSystemWindows="true"
-                android:scaleType="fitCenter"
+                android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="24dp"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
@@ -53,11 +51,15 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        android:clickable="true"
+        android:layout_margin="8dp"
+        app:layout_anchor="@id/app_bar_layout"
+        app:layout_anchorGravity="bottom|right|end"
         android:onClick="showToast"
         android:src="@drawable/ic_action_add"
-        app:layout_anchor="@+id/app_bar_layout"
-        app:layout_anchorGravity="bottom|right|end" />
+        android:elevation="8dp"
+        app:borderWidth="0dp"
+        />
+
+    <!-- borderWidth="0dp" is bug workaround to display shadow -->
 
 </android.support.design.widget.CoordinatorLayout>

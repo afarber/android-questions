@@ -2,23 +2,26 @@ package de.afarber.mycoordinator;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
-    private static final boolean TOO_OLD = (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP);
+public class MainActivity extends AppCompatActivity implements Runnable {
     private static final String[] sItems = new String[] {
             "Item 001",
             "Item 002",
@@ -42,9 +45,13 @@ public class MainActivity extends AppCompatActivity {
             "Item 020"
     };
 
+    private int mMutedColor = R.attr.colorPrimary;
+    private Handler mHandler = new Handler();
     private CollapsingToolbarLayout mCollapsingToolbar;
     private RecyclerView mRecyclerView;
-    private int mMutedColor = R.attr.colorPrimary;
+    private FloatingActionButton mFab;
+    private Animation mInAnimation;
+    private Animation mOutAnimation;
 
     private class MyViewHolder
             extends RecyclerView.ViewHolder
@@ -112,6 +119,52 @@ public class MainActivity extends AppCompatActivity {
                 return sItems.length;
             }
         });
+
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+
+        mInAnimation = AnimationUtils.makeInAnimation(this, false);
+        mInAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationEnd(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                mFab.setVisibility(View.VISIBLE);
+            }
+        });
+
+        mOutAnimation = AnimationUtils.makeOutAnimation(this, true);
+        mOutAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mFab.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+        });
+
+        run();
+    }
+
+    @Override
+    public void run() {
+        Log.d("MyCoordinator", "Toggle animation");
+
+        mFab.setAnimation(mFab.isShown() ? mOutAnimation : mInAnimation);
+
+        mHandler.postDelayed(this, 5000);
+
     }
 
     public void showToast(View v) {
