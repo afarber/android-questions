@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
 
         mFab.startAnimation(mFab.isShown() ? mOutAnimation : mInAnimation);
 
-        mHandler.postDelayed(this, 5000);
+        mHandler.postDelayed(this, 10000);
 
     }
 
