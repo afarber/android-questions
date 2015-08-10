@@ -36,7 +36,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -80,10 +79,28 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (mDrawerLayout != null) {
+            mDrawerToggle = new ActionBarDrawerToggle(
+                    this,
+                    mDrawerLayout,
+                    mToolbar,
+                    R.string.drawer_open,
+                    R.string.drawer_close
+                    ) {
+                public void onDrawerClosed(View view) {
+                    mToolbar.setTitle(mTitle);
+                }
+
+                public void onDrawerOpened(View drawerView) {
+                    mToolbar.setTitle(mDrawerTitle);
+                }
+            };
+            mDrawerLayout.setDrawerListener(mDrawerToggle);
+        }
+        
         mLeftDrawer = (ListView) findViewById(R.id.left_drawer);
         mRightDrawer = (ListView) findViewById(R.id.right_drawer);
 
-        // set up the left drawer's list view with items and click listener
         mLeftDrawer.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mPlanetTitles) {
         	@Override
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -97,7 +114,8 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 	            selectLeftItem(position);
-	            mDrawerLayout.closeDrawer(mLeftDrawer);
+	            if (mDrawerLayout != null)
+	            	mDrawerLayout.closeDrawer(mLeftDrawer);
 			}
 		});
 
@@ -117,30 +135,10 @@ public class MainActivity extends AppCompatActivity {
 				Intent intent = new Intent(action);
 				//intent.putExtra("message", "data");
 				sendBroadcast(intent);
-		        mDrawerLayout.closeDrawer(mRightDrawer);
+				if (mDrawerLayout != null)
+					mDrawerLayout.closeDrawer(mRightDrawer);
 			}
 		});
-        
-        // ActionBarDrawerToggle ties together the the proper interactions
-        // between the sliding drawer and the action bar app icon
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this,                  /* host Activity */
-                mDrawerLayout,         /* DrawerLayout object */
-                mToolbar,
-                R.string.drawer_open,  /* "open drawer" description for accessibility */
-                R.string.drawer_close  /* "close drawer" description for accessibility */
-                ) {
-            public void onDrawerClosed(View view) {
-                mToolbar.setTitle(mTitle);
-                supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                mToolbar.setTitle(mDrawerTitle);
-                supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
         
         if (savedInstanceState == null) {
             selectLeftItem(0);
@@ -164,11 +162,6 @@ public class MainActivity extends AppCompatActivity {
     	} else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return false;
     }
 
     private void selectLeftItem(int position) {
@@ -201,13 +194,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
+        if (mDrawerToggle != null)
+        	mDrawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggle
-        mDrawerToggle.onConfigurationChanged(newConfig);
+        if (mDrawerToggle != null)
+        	mDrawerToggle.onConfigurationChanged(newConfig);
     }
 }
