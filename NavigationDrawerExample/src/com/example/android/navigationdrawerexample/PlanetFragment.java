@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,9 @@ public class PlanetFragment extends Fragment {
     public final static String ACTION_PAUSE   ="com.example.android.navigationdrawerexample.pause";
     public final static String ACTION_STOP    ="com.example.android.navigationdrawerexample.stop";
     public final static String ACTION_SHUFFLE ="com.example.android.navigationdrawerexample.shuffle";
+    
+    private LocalBroadcastManager mManager;
+    private IntentFilter mFilter;
     
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
@@ -38,16 +42,11 @@ public class PlanetFragment extends Fragment {
     };
   
     private void register() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_PLAY);
-        filter.addAction(ACTION_PAUSE);
-        filter.addAction(ACTION_STOP);
-        filter.addAction(ACTION_SHUFFLE);
-        getActivity().registerReceiver(mMessageReceiver, filter);
+       mManager.registerReceiver(mMessageReceiver, mFilter);
     }
   
     private void unregister() {
-        getActivity().unregisterReceiver(mMessageReceiver);
+        mManager.unregisterReceiver(mMessageReceiver);
     }
   
     @Override
@@ -76,7 +75,15 @@ public class PlanetFragment extends Fragment {
         int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()),
                         "drawable", getActivity().getPackageName());
         ((ImageView) rootView.findViewById(R.id.image)).setImageResource(imageId);
-        getActivity().setTitle(planet);
+        
+        mManager = LocalBroadcastManager.getInstance(getActivity());
+        
+        mFilter = new IntentFilter();
+        mFilter.addAction(ACTION_PLAY);
+        mFilter.addAction(ACTION_PAUSE);
+        mFilter.addAction(ACTION_STOP);
+        mFilter.addAction(ACTION_SHUFFLE);
+
         return rootView;
     }
 }

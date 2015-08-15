@@ -32,6 +32,7 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -76,7 +77,8 @@ public class MainActivity extends AppCompatActivity {
         ta.recycle();
         
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        if (mToolbar != null)
+        	setSupportActionBar(mToolbar);
         
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (mDrawerLayout != null) {
@@ -114,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 	            selectLeftItem(position);
-	            if (mDrawerLayout != null)
+	            if (mLeftDrawer.getParent() == mDrawerLayout)
 	            	mDrawerLayout.closeDrawer(mLeftDrawer);
 			}
 		});
@@ -134,8 +136,8 @@ public class MainActivity extends AppCompatActivity {
 				String action = mActions[position];
 				Intent intent = new Intent(action);
 				//intent.putExtra("message", "data");
-				sendBroadcast(intent);
-				if (mDrawerLayout != null)
+				LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+	            if (mRightDrawer.getParent() == mDrawerLayout)
 					mDrawerLayout.closeDrawer(mRightDrawer);
 			}
 		});
