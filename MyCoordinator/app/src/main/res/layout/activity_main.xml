@@ -56,9 +56,6 @@
         android:onClick="showToast"
         android:src="@drawable/ic_action_add"
         android:elevation="8dp"
-        app:borderWidth="0dp"
         />
-
-    <!-- borderWidth="0dp" is bug workaround to display shadow -->
 
 </android.support.design.widget.CoordinatorLayout>
