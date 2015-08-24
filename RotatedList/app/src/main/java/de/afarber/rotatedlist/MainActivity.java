@@ -41,23 +41,12 @@ public class MainActivity extends AppCompatActivity {
             MainFragment fragment = new MainFragment();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.root, fragment, MainFragment.TAG)
-                    .commit();        }
+                    .commit();
+        }
     }
 
     public void showAccounts(View v) {
         final AccountFragment fragment = new AccountFragment();
-        fragment.setListAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1,
-                ACCOUNT_LABELS) {
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                TextView view = (TextView) super.getView(position, convertView, parent);
-                view.setCompoundDrawablePadding(24);
-                view.setCompoundDrawablesWithIntrinsicBounds(ACCOUNT_ICONS[position], 0, 0, 0);
-                return view;
-            }
-        });
-
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
