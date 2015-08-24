@@ -29,7 +29,7 @@ public class AccountFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Toast.makeText(getContext(), "You have clicked " + MainActivity.ACCOUNT_LABELS[position], Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "You have clicked " + getListAdapter().getItem(position), Toast.LENGTH_SHORT).show();
     }
 
     @Override

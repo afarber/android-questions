@@ -130,6 +130,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/QRScanner/screenshot.png)
 
 
+[RotatedList](https://github.com/afarber/android-newbie/tree/master/RotatedList):
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/RotatedList/screenshot.png)
+
+
 [SwipeBooks](https://github.com/afarber/android-newbie/tree/master/SwipeBooks):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/SwipeBooks/screenshot.png)
