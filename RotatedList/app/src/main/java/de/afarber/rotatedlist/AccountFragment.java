@@ -24,12 +24,20 @@ public class AccountFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
+
         return inflater.inflate(R.layout.fragment_account, container, false);
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+    }
+
+    @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Toast.makeText(getContext(), "You have clicked " + getListAdapter().getItem(position), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "You have clicked " +
+                getListAdapter().getItem(position), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -38,7 +46,8 @@ public class AccountFragment extends ListFragment {
         Log.d(TAG, "onAttach");
 
         setListAdapter(new ArrayAdapter<String>(context,
-                android.R.layout.simple_list_item_1,
+//                android.R.layout.simple_list_item_single_choice,
+                android.R.layout.simple_list_item_checked,
                 MainActivity.ACCOUNT_LABELS) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
