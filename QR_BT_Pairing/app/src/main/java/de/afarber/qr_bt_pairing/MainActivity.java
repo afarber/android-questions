@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "VwConnect";
     private final static int REQUEST_BT_ENABLE = 1;
 
-    private int mMutedColor = R.attr.colorPrimary;
     private CollapsingToolbarLayout mCollapsingToolbar;
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
@@ -126,8 +126,8 @@ public class MainActivity extends AppCompatActivity {
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(Palette palette) {
-                mMutedColor = palette.getMutedColor(R.attr.colorPrimary);
-                mCollapsingToolbar.setContentScrimColor(mMutedColor);
+                int mutedColor = palette.getMutedColor(Color.GRAY);
+                mCollapsingToolbar.setContentScrimColor(mutedColor);
             }
         });
 
