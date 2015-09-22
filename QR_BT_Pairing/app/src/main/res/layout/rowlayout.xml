@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    
+	<ImageView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_margin="8dp"
+        android:contentDescription="@string/button.ok"
+        android:src="@drawable/ic_bluetooth_grey600_48dp" />
+	
+    <LinearLayout android:orientation="vertical"
+	              android:layout_width="match_parent"
+	              android:layout_height="wrap_content">
+	              
+	    <TextView android:id="@+id/text1"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:text="@string/unknown_device"
+	            android:textSize="24sp"/>
+	    
+	    <TextView android:id="@+id/text2"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:text="@string/unknown_address"
+	            android:textSize="12sp"/>
+	</LinearLayout>
+
+</LinearLayout>
