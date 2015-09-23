@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">NaviFab</string>
+    <string name="drawer.open">Open menu</string>
+    <string name="drawer.close">Close menu</string>
+</resources>

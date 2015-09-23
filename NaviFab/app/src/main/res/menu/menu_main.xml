@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:id="@+id/my_move" android:checkableBehavior="single">
+        <item
+            android:id="@+id/game1"
+            android:icon="@drawable/ic_stars_black_24dp"
+            android:title="Game #1" />
+        <item
+            android:id="@+id/game2"
+            android:icon="@drawable/ic_stars_black_24dp"
+            android:title="Game #2" />
+        <item
+            android:id="@+id/game3"
+            android:icon="@drawable/ic_stars_black_24dp"
+            android:title="Game #3" />
+        <item
+            android:id="@+id/game4"
+            android:icon="@drawable/ic_stars_black_24dp"
+            android:title="Game #4" />
+    </group>
+
+    <group android:id="@+id/his_move" android:checkableBehavior="single">
+        <item
+            android:id="@+id/game5"
+            android:icon="@drawable/ic_stars_black_24dp"
+            android:title="Game #5" />
+        <item
+            android:id="@+id/game6"
+            android:icon="@drawable/ic_stars_black_24dp"
+            android:title="Game #6" />
+        <item
+            android:id="@+id/game7"
+            android:icon="@drawable/ic_stars_black_24dp"
+            android:title="Game #7" />
+    </group>
+
+    <group android:id="@+id/extras" android:checkableBehavior="single">
+        <item
+            android:id="@+id/history"
+            android:icon="@drawable/ic_stars_black_24dp"
+            android:title="Game history" />
+        <item
+            android:id="@+id/settings"
+            android:icon="@drawable/ic_stars_black_24dp"
+            android:title="Settings" />
+        <item
+            android:id="@+id/help"
+            android:icon="@drawable/ic_stars_black_24dp"
+            android:title="Help" />
+    </group>
+
+</menu>
