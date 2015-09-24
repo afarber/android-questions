@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     private CollapsingToolbarLayout mCollapsingToolbar;
     private ProgressBar mProgressBar;
+    private SwipeRefreshLayout mRefresh;
     private RecyclerView mRecyclerView;
 
     private BluetoothAdapter mBluetoothAdapter;
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         mProgressBar.setVisibility(View.VISIBLE);
+                        mRefresh.setEnabled(false);
                     }
                 });
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
@@ -62,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         mProgressBar.setVisibility(View.INVISIBLE);
+                        mRefresh.setEnabled(true);
                     }
                 });
             } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
@@ -121,13 +125,24 @@ public class MainActivity extends AppCompatActivity {
 
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
-        ImageView header = (ImageView) findViewById(R.id.header_image_view);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.header);
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(Palette palette) {
                 int mutedColor = palette.getMutedColor(Color.GRAY);
                 mCollapsingToolbar.setContentScrimColor(mutedColor);
+            }
+        });
+
+        mRefresh = (SwipeRefreshLayout) findViewById(R.id.refresh);
+        mRefresh.setEnabled(false);
+        mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mRefresh.setRefreshing(false);
+
+                if (!mBluetoothAdapter.isDiscovering())
+                    mBluetoothAdapter.startDiscovery();
             }
         });
 
@@ -155,7 +170,8 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
 
         unregisterReceiver(mReceiver);
-        mBluetoothAdapter.cancelDiscovery();
+        if (mBluetoothAdapter.isDiscovering())
+            mBluetoothAdapter.cancelDiscovery();
     }
 
     @Override
@@ -163,7 +179,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == REQUEST_BT_ENABLE) {
             if (resultCode == Activity.RESULT_OK) {
-                mBluetoothAdapter.startDiscovery();
+                if (!mBluetoothAdapter.isDiscovering())
+                    mBluetoothAdapter.startDiscovery();
             } else {
                 Toast.makeText(this, R.string.bluetooth_not_enabled, Toast.LENGTH_LONG).show();
                 finish();
