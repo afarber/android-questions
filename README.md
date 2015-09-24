@@ -95,6 +95,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/MyTiles2/screenshot.png)
 
 
+[NaviFab](https://github.com/afarber/android-newbie/tree/master/NaviFab):
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/NaviFab/screenshot.png)
+
+
 [NavigationDrawerExample](https://github.com/afarber/android-newbie/tree/master/NavigationDrawerExample):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/NavigationDrawerExample/screenshot.png)
