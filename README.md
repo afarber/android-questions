@@ -65,6 +65,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/MyList/screenshot.png)
 
 
+[MyLogin](https://github.com/afarber/android-newbie/tree/master/MyLogin):
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/MyLogin/screenshot.png)
+
+
 [MyNotification](https://github.com/afarber/android-newbie/tree/master/MyNotification):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/MyNotification/screenshot.png)

@@ -6,10 +6,9 @@ import android.os.Looper;
 import android.widget.Toast;
 
 public class Utils {
-    public static final int UNKNOWN       = -1;
-    public static final int GOOGLE        = 0;
-    public static final int FACEBOOK      = 4;
-    public static final int TWITTER       = 5;
+    public static final int GOOGLE   = 0;
+    public static final int FACEBOOK = 1;
+    public static final int TWITTER  = 2;
 
     public static final String[] SOCIAL_LABELS = {
             "Google",
