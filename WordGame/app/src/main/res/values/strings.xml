@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">WordGame</string>
+    <string name="choose_letter">Choose a letter</string>
+    <string name="swap_tiles">Swap tiles</string>
+</resources>

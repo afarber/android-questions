@@ -1,9 +1,12 @@
 package de.afarber.mylogin;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.facebook.FacebookSdk;
 
 public class FacebookFragment extends LoginFragment {
 
@@ -11,6 +14,13 @@ public class FacebookFragment extends LoginFragment {
 
     public FacebookFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        FacebookSdk.sdkInitialize(context);
     }
 
     @Override
