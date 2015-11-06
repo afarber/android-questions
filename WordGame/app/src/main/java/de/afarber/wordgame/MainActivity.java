@@ -2,12 +2,15 @@ package de.afarber.wordgame;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
-    implements ChooseLetterDialogFragment.MyListener,
-        SwapTilesDialogFragment.MyListener {
+    implements ChooseLetterDialogFragment.ChooseLetterListener,
+        SwapTilesDialogFragment.SwapTilesListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,17 +30,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void doPositiveClick() {
+    public void swapTiles(List<Character> selected) {
         Toast.makeText(this,
-                "doPositiveClick",
+                "swapTiles: " + TextUtils.join(", ", selected),
                 Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void doNegativeClick() {
+    public void chooseLetter() {
         Toast.makeText(this,
-                "doNegativeClick",
+                "chooseLetter",
                 Toast.LENGTH_SHORT).show();
     }
 }
+
 

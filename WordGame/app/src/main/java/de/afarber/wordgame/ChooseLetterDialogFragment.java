@@ -24,22 +24,21 @@ public class ChooseLetterDialogFragment extends DialogFragment {
             "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
     };
 
-    public interface MyListener {
-        public void doPositiveClick();
-        public void doNegativeClick();
+    public interface ChooseLetterListener {
+        public void chooseLetter();
     }
 
-    private MyListener mListener;
+    private ChooseLetterListener mListener;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof MyListener) {
-            mListener = (MyListener) context;
+        if (context instanceof ChooseLetterListener) {
+            mListener = (ChooseLetterListener) context;
         } else {
             throw new ClassCastException(context.toString() +
-                    " must implement " + TAG + ".MyListener");
+                    " must implement " + TAG + ".SwapTilesListener");
         }
     }
 
@@ -109,14 +108,13 @@ public class ChooseLetterDialogFragment extends DialogFragment {
                 .setPositiveButton(R.string.choose_letter_ok,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                mListener.doPositiveClick();
+                                mListener.chooseLetter();
                             }
                         }
                 )
                 .setNegativeButton(R.string.choose_letter_cancel,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                mListener.doNegativeClick();
                             }
                         }
                 )
