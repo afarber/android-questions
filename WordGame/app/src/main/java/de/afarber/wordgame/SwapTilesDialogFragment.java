@@ -133,12 +133,7 @@ public class SwapTilesDialogFragment extends DialogFragment {
                             }
                         }
                 )
-                .setNegativeButton(R.string.swap_tiles_cancel,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                            }
-                        }
-                )
+                .setNegativeButton(R.string.swap_tiles_cancel, null)
                 .create();
     }
 }

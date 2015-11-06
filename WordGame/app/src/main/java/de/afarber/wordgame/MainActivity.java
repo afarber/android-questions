@@ -37,9 +37,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void chooseLetter() {
+    public void chooseLetter(char c) {
         Toast.makeText(this,
-                "chooseLetter",
+                "chooseLetter: " + c,
                 Toast.LENGTH_SHORT).show();
     }
 }

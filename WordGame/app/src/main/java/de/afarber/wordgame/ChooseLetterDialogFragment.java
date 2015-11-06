@@ -18,14 +18,14 @@ public class ChooseLetterDialogFragment extends DialogFragment {
 
     public final static String TAG = "ChooseLetterDialogFragment";
 
-    private final static String[] LETTERS = new String[]{
-            "*", "A", "B", "C", "D", "E", "F", "G", "H",
-            "I", "J", "K", "L", "M", "N", "O", "P", "Q",
-            "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+    private final static Character[] LETTERS = new Character[]{
+            '*', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+            'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
+            'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
     };
 
     public interface ChooseLetterListener {
-        public void chooseLetter();
+        public void chooseLetter(char c);
     }
 
     private ChooseLetterListener mListener;
@@ -60,9 +60,15 @@ public class ChooseLetterDialogFragment extends DialogFragment {
 
         @Override
         public void onClick(View v) {
+            /*
             Toast.makeText(getContext(),
                     "You have clicked " + ((TextView) v).getText(),
                     Toast.LENGTH_SHORT).show();
+            */
+
+            Character c = LETTERS[getAdapterPosition()];
+            mListener.chooseLetter(c);
+            dismiss();
         }
     }
 
@@ -92,7 +98,7 @@ public class ChooseLetterDialogFragment extends DialogFragment {
             @Override
             public void onBindViewHolder(MyViewHolder vh, int position) {
                 TextView tv = (TextView) vh.itemView;
-                tv.setText(LETTERS[position]);
+                tv.setText(String.valueOf(LETTERS[position]));
             }
 
             @Override
@@ -105,19 +111,7 @@ public class ChooseLetterDialogFragment extends DialogFragment {
                 .setIcon(R.mipmap.ic_launcher)
                 .setTitle(R.string.choose_letter_title)
                 .setView(mRecyclerView)
-                .setPositiveButton(R.string.choose_letter_ok,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                mListener.chooseLetter();
-                            }
-                        }
-                )
-                .setNegativeButton(R.string.choose_letter_cancel,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                            }
-                        }
-                )
+                .setNegativeButton(R.string.choose_letter_cancel, null)
                 .create();
     }
 }
