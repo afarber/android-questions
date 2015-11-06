@@ -15,12 +15,12 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="chooseLetter"
-        android:text="@string/choose_letter"/>
+        android:text="@string/choose.letter.title"/>
 
     <Button android:id="@+id/swapTiles"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="swapTiles"
-        android:text="@string/swap_tiles"/>
+        android:text="@string/swap.tiles.title"/>
 
 </LinearLayout>
