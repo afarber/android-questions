@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckedTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,16 +53,21 @@ public class SwapTilesDialogFragment extends DialogFragment {
             extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
+        private CheckedTextView mCheckedText;
+
         public MyViewHolder(View v) {
             super(v);
+            mCheckedText = (CheckedTextView)v;
             v.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             Toast.makeText(getContext(),
-                    "You have clicked " + ((TextView) v).getText(),
+                    "You have clicked " + mCheckedText.getText(),
                     Toast.LENGTH_SHORT).show();
+
+            mCheckedText.setChecked(!mCheckedText.isChecked());
         }
     }
 
