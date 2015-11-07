@@ -20,7 +20,7 @@ import java.util.List;
 
 public class SwapTilesDialogFragment extends DialogFragment {
 
-    public final static String TAG = "SwapTilesDialogFragment";
+    public final static String TAG = SwapTilesDialogFragment.class.getName();
 
     private final static String ARG = "ARG";
 

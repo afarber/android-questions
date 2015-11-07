@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 public class ChooseLetterDialogFragment extends DialogFragment {
 
-    public final static String TAG = "ChooseLetterDialogFragment";
+    public final static String TAG = ChooseLetterDialogFragment.class.getName();
 
     private final static Character[] LETTERS = new Character[]{
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
