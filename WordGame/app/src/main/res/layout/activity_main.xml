@@ -14,13 +14,13 @@
     <Button android:id="@+id/chooseLetter"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="chooseLetter"
+        android:onClick="showChooseLetterDialog"
         android:text="@string/choose.letter.title"/>
 
     <Button android:id="@+id/swapTiles"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="swapTiles"
+        android:onClick="showSwapTilesDialog"
         android:text="@string/swap.tiles.title"/>
 
 </LinearLayout>

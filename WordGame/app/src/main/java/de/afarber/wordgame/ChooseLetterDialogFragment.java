@@ -2,44 +2,41 @@ package de.afarber.wordgame;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ChooseLetterDialogFragment extends DialogFragment {
 
-    public final static String TAG = "ChooseLetterDialogFragment";
+    public final static String TAG = ChooseLetterDialogFragment.class.getName();
 
-    private final static String[] LETTERS = new String[]{
-            "*", "A", "B", "C", "D", "E", "F", "G", "H",
-            "I", "J", "K", "L", "M", "N", "O", "P", "Q",
-            "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+    private final static Character[] LETTERS = new Character[]{
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+            'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
+            'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
     };
 
-    public interface MyListener {
-        public void doPositiveClick();
-        public void doNegativeClick();
+    public interface ChooseLetterListener {
+        public void chooseLetter(char c);
     }
 
-    private MyListener mListener;
+    private ChooseLetterListener mListener;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof MyListener) {
-            mListener = (MyListener) context;
+        if (context instanceof ChooseLetterListener) {
+            mListener = (ChooseLetterListener) context;
         } else {
             throw new ClassCastException(context.toString() +
-                    " must implement " + TAG + ".MyListener");
+                    " must implement " + TAG + ".SwapTilesListener");
         }
     }
 
@@ -61,9 +58,9 @@ public class ChooseLetterDialogFragment extends DialogFragment {
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(getContext(),
-                    "You have clicked " + ((TextView) v).getText(),
-                    Toast.LENGTH_SHORT).show();
+            Character c = LETTERS[getAdapterPosition()];
+            mListener.chooseLetter(c);
+            dismiss();
         }
     }
 
@@ -77,7 +74,7 @@ public class ChooseLetterDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         mRecyclerView = new RecyclerView(getContext());
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
         mRecyclerView.setAdapter(new RecyclerView.Adapter<MyViewHolder>() {
 
             @Override
@@ -86,14 +83,14 @@ public class ChooseLetterDialogFragment extends DialogFragment {
                         android.R.layout.simple_list_item_1,
                         parent,
                         false);
-                MyViewHolder vh = new MyViewHolder(v);
-                return vh;
+
+                return new MyViewHolder(v);
             }
 
             @Override
             public void onBindViewHolder(MyViewHolder vh, int position) {
                 TextView tv = (TextView) vh.itemView;
-                tv.setText(LETTERS[position]);
+                tv.setText(String.valueOf(LETTERS[position]));
             }
 
             @Override
@@ -106,20 +103,7 @@ public class ChooseLetterDialogFragment extends DialogFragment {
                 .setIcon(R.mipmap.ic_launcher)
                 .setTitle(R.string.choose_letter_title)
                 .setView(mRecyclerView)
-                .setPositiveButton(R.string.choose_letter_ok,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                mListener.doPositiveClick();
-                            }
-                        }
-                )
-                .setNegativeButton(R.string.choose_letter_cancel,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                mListener.doNegativeClick();
-                            }
-                        }
-                )
+                .setNegativeButton(R.string.choose_letter_cancel, null)
                 .create();
     }
 }

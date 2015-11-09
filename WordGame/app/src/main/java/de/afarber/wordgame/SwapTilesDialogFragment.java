@@ -15,17 +15,17 @@ import android.widget.CheckedTextView;
 
 public class SwapTilesDialogFragment extends DialogFragment {
 
-    public final static String TAG = "SwapTilesDialogFragment";
+    public final static String TAG = SwapTilesDialogFragment.class.getName();
 
     private final static String ARG1 = "ARG1";
     private final static String ARG2 = "ARG2";
 
-    private MyListener mListener;
+    private SwapTilesListener mListener;
     private RecyclerView mRecyclerView;
     private String mLetters;
     private boolean[] mChecked;
 
-    public interface MyListener {
+    public interface SwapTilesListener {
         public void swapTiles(String letters);
     }
 
@@ -33,11 +33,11 @@ public class SwapTilesDialogFragment extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof MyListener) {
-            mListener = (MyListener) context;
+        if (context instanceof SwapTilesListener) {
+            mListener = (SwapTilesListener) context;
         } else {
             throw new ClassCastException(context.toString() +
-                    " must implement " + TAG + ".MyListener");
+                    " must implement " + TAG + ".SwapTilesListener");
         }
     }
 
