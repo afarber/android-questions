@@ -64,8 +64,6 @@ public class ChooseLetterDialogFragment extends DialogFragment {
         }
     }
 
-    private RecyclerView mRecyclerView;
-
     public static ChooseLetterDialogFragment newInstance() {
         return new ChooseLetterDialogFragment();
     }
@@ -73,9 +71,9 @@ public class ChooseLetterDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        mRecyclerView = new RecyclerView(getContext());
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
-        mRecyclerView.setAdapter(new RecyclerView.Adapter<MyViewHolder>() {
+        RecyclerView rv = new RecyclerView(getContext());
+        rv.setLayoutManager(new GridLayoutManager(getContext(), 4));
+        rv.setAdapter(new RecyclerView.Adapter<MyViewHolder>() {
 
             @Override
             public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -102,7 +100,7 @@ public class ChooseLetterDialogFragment extends DialogFragment {
         return new AlertDialog.Builder(getActivity())
                 .setIcon(R.mipmap.ic_launcher)
                 .setTitle(R.string.choose_letter_title)
-                .setView(mRecyclerView)
+                .setView(rv)
                 .setNegativeButton(R.string.choose_letter_cancel, null)
                 .create();
     }

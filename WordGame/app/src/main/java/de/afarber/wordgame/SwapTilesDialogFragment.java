@@ -21,7 +21,6 @@ public class SwapTilesDialogFragment extends DialogFragment {
     private final static String ARG2 = "ARG2";
 
     private SwapTilesListener mListener;
-    private RecyclerView mRecyclerView;
     private String mLetters;
     private boolean[] mChecked;
 
@@ -102,9 +101,9 @@ public class SwapTilesDialogFragment extends DialogFragment {
             }
         }
 
-        mRecyclerView = new RecyclerView(getContext());
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setAdapter(new RecyclerView.Adapter<MyViewHolder>() {
+        RecyclerView rv = new RecyclerView(getContext());
+        rv.setLayoutManager(new LinearLayoutManager(getContext()));
+        rv.setAdapter(new RecyclerView.Adapter<MyViewHolder>() {
 
             @Override
             public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -133,7 +132,7 @@ public class SwapTilesDialogFragment extends DialogFragment {
         return new AlertDialog.Builder(getActivity())
                 .setIcon(R.mipmap.ic_launcher)
                 .setTitle(R.string.swap_tiles_title)
-                .setView(mRecyclerView)
+                .setView(rv)
                 .setPositiveButton(R.string.swap_tiles_ok,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
