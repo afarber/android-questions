@@ -21,8 +21,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void swapTiles(View v) {
-        final char[] letters = new char[]{'A', 'B', 'C', 'D', 'X', 'Y', 'Z'};
-        SwapTilesDialogFragment f = SwapTilesDialogFragment.newInstance(letters);
+        SwapTilesDialogFragment f = SwapTilesDialogFragment.newInstance("ABC*XYZ");
         f.show(getSupportFragmentManager(), SwapTilesDialogFragment.TAG);
     }
 
@@ -38,6 +37,13 @@ public class MainActivity extends AppCompatActivity
         Toast.makeText(this,
                 "doNegativeClick",
                 Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void swapTiles(String letters) {
+        Toast.makeText(this,
+                "swapTiles: " + letters,
+                Toast.LENGTH_LONG).show();
     }
 }
 

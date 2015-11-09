@@ -12,23 +12,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckedTextView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.List;
 
 public class SwapTilesDialogFragment extends DialogFragment {
 
     public final static String TAG = "SwapTilesDialogFragment";
 
-    private final static String ARG = "ARG";
-
-    public interface MyListener {
-        public void doPositiveClick();
-        public void doNegativeClick();
-    }
+    private final static String ARG1 = "ARG1";
+    private final static String ARG2 = "ARG2";
 
     private MyListener mListener;
+    private RecyclerView mRecyclerView;
+    private String mLetters;
+    private boolean[] mChecked;
+
+    public interface MyListener {
+        public void swapTiles(String letters);
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -53,40 +52,55 @@ public class SwapTilesDialogFragment extends DialogFragment {
             extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
-        private CheckedTextView mCheckedText;
-
         public MyViewHolder(View v) {
             super(v);
-            mCheckedText = (CheckedTextView)v;
             v.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(getContext(),
-                    "You have clicked " + mCheckedText.getText(),
-                    Toast.LENGTH_SHORT).show();
-
-            mCheckedText.setChecked(!mCheckedText.isChecked());
+            CheckedTextView checkedText = (CheckedTextView) v;
+            int i = getAdapterPosition();
+            mChecked[i] = !mChecked[i];
+            checkedText.setChecked(mChecked[i]);
         }
     }
 
-    private RecyclerView mRecyclerView;
-    private char[] mLetters;
-
-    public static SwapTilesDialogFragment newInstance(char[] letters) {
+    public static SwapTilesDialogFragment newInstance(String letters) {
         SwapTilesDialogFragment f = new SwapTilesDialogFragment();
 
         Bundle args = new Bundle();
-        args.putCharArray(ARG, letters);
+        args.putString(ARG1, letters);
         f.setArguments(args);
 
         return f;
     }
 
     @Override
+    public void onSaveInstanceState (Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // save mChecked array, when device is rotated
+        outState.putBooleanArray(ARG2, mChecked);
+    }
+
+    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        mLetters = getArguments().getCharArray(ARG);
+        mLetters = getArguments().getString(ARG1);
+
+        if (savedInstanceState != null) {
+            // try to restore mChecked array, saved during rotation
+            mChecked = savedInstanceState.getBooleanArray(ARG2);
+        }
+
+        // restoring mChecked has failed or device was not rotated
+        if (mChecked == null || mChecked.length != mLetters.length()) {
+            mChecked = new boolean[mLetters.length()];
+            for (int i = 0; i < mLetters.length(); i++) {
+                char letter = mLetters.charAt(i);
+                mChecked[i] = (letter != '*');
+            }
+        }
 
         mRecyclerView = new RecyclerView(getContext());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -98,19 +112,21 @@ public class SwapTilesDialogFragment extends DialogFragment {
                         android.R.layout.simple_list_item_multiple_choice,
                         parent,
                         false);
-                MyViewHolder vh = new MyViewHolder(v);
-                return vh;
+
+                return new MyViewHolder(v);
             }
 
             @Override
             public void onBindViewHolder(MyViewHolder vh, int position) {
-                TextView tv = (TextView) vh.itemView;
-                tv.setText(String.valueOf(mLetters[position]));
+                CheckedTextView v = (CheckedTextView) vh.itemView;
+                char letter = mLetters.charAt(position);
+                v.setText(String.valueOf(letter));
+                v.setChecked(mChecked[position]);
             }
 
             @Override
             public int getItemCount() {
-                return mLetters.length;
+                return mLetters.length();
             }
         });
 
@@ -121,17 +137,17 @@ public class SwapTilesDialogFragment extends DialogFragment {
                 .setPositiveButton(R.string.swap_tiles_ok,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                mListener.doPositiveClick();
+                                StringBuilder sb = new StringBuilder();
+                                for (int i = 0; i < mLetters.length(); i++)
+                                    if (mChecked[i])
+                                        sb.append(mLetters.charAt(i));
+
+                                if (sb.length() > 0)
+                                    mListener.swapTiles(sb.toString());
                             }
                         }
                 )
-                .setNegativeButton(R.string.swap_tiles_cancel,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                mListener.doNegativeClick();
-                            }
-                        }
-                )
+                .setNegativeButton(R.string.swap_tiles_cancel, null)
                 .create();
     }
 }
