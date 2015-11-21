@@ -1,12 +1,16 @@
 <resources>
-    <string name="app_name">WordGame</string>
+    <string name="app_name">Word Game</string>
 
-    <string name="choose.letter.title">Choose a letter</string>
+    <string name="choose.letter.title">Choose letter</string>
     <string name="choose.letter.ok">OK</string>
     <string name="choose.letter.cancel">Cancel</string>
 
     <string name="swap.tiles.title">Swap tiles</string>
-    <string name="swap.tiles.ok">OK</string>
+    <string name="swap.tiles.ok">Swap</string>
     <string name="swap.tiles.cancel">Cancel</string>
+
+    <string name="find.word.title">Find word</string>
+    <string name="find.word.ok">Find</string>
+    <string name="find.word.cancel">Cancel</string>
 
 </resources>

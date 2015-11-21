@@ -2,15 +2,13 @@ package de.afarber.wordgame;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity
     implements ChooseLetterDialogFragment.ChooseLetterListener,
-        SwapTilesDialogFragment.SwapTilesListener {
+        SwapTilesDialogFragment.SwapTilesListener,
+        FindWordDialogFragment.FindWordListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +26,11 @@ public class MainActivity extends AppCompatActivity
         f.show(getSupportFragmentManager(), SwapTilesDialogFragment.TAG);
     }
 
+    public void showFindWordDialog(View v) {
+        FindWordDialogFragment f = FindWordDialogFragment.newInstance();
+        f.show(getSupportFragmentManager(), FindWordDialogFragment.TAG);
+    }
+
     @Override
     public void chooseLetter(char c) {
         Toast.makeText(this,
@@ -40,6 +43,13 @@ public class MainActivity extends AppCompatActivity
         Toast.makeText(this,
                 "swapTiles: " + letters,
                 Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void findWord(String word) {
+        Toast.makeText(this,
+                "findWord: " + word,
+                Toast.LENGTH_SHORT).show();
     }
 }
 

@@ -23,4 +23,11 @@
         android:onClick="showSwapTilesDialog"
         android:text="@string/swap.tiles.title"/>
 
+
+    <Button android:id="@+id/findWord"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="showFindWordDialog"
+        android:text="@string/find.word.title"/>
+
 </LinearLayout>
