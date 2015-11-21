@@ -1,6 +1,7 @@
 package de.afarber.wordgame;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -20,6 +21,25 @@ public class FindWordDialogFragment extends DialogFragment {
     }
 
     private FindWordListener mListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof FindWordListener) {
+            mListener = (FindWordListener) context;
+        } else {
+            throw new ClassCastException(context.toString() +
+                    " must implement " + TAG + ".FindWordListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mListener = null;
+    }
 
     public static FindWordDialogFragment newInstance() {
         return new FindWordDialogFragment();
