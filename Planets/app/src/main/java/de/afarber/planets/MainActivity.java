@@ -25,19 +25,11 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private class PlanetViewHolder
-            extends RecyclerView.ViewHolder
-            implements View.OnClickListener {
+            extends RecyclerView.ViewHolder {
 
         public PlanetViewHolder(View v) {
             super(v);
             v.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            Toast.makeText(getApplicationContext(),
-                    "You have clicked " + ((TextView) v).getText(),
-                    Toast.LENGTH_LONG).show();
         }
     }
 
@@ -66,6 +58,16 @@ public class MainActivity extends AppCompatActivity {
                 tv.setText(mPlanets[position]);
                 tv.setCompoundDrawablePadding(24);
                 tv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_stars_black_24dp, 0, 0, 0);
+                vh.itemView.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                   public void onClick(View view) {
+                         Toast.makeText(getApplicationContext(),
+                          "You have clicked " + mPlanets[position],
+                          Toast.LENGTH_LONG).show();
+                    }
+                });
+                    
+                   
             }
 
             @Override
