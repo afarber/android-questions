@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:defaultValue="http://127.0.0.1:8080"
+        android:key="address"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Address" />
+    <EditTextPreference
+        android:defaultValue="user1"
+        android:key="username"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Username" />
+    <EditTextPreference
+        android:defaultValue="pass1"
+        android:key="password"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Password" />
+</PreferenceScreen>

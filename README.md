@@ -175,6 +175,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/TestScroll3/screenshot.png)
 
 
+[ValidatePrefs](https://github.com/afarber/android-newbie/tree/master/ValidatePrefs):
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/ValidatePrefs/screenshot.png)
+
+
 [WordGame](https://github.com/afarber/android-newbie/tree/master/WordGame):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/WordGame/screenshot.png)
