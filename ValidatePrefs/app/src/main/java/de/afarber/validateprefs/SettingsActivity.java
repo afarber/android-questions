@@ -21,6 +21,14 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         super.onCreate(savedInstanceBundle);
 
         addPreferencesFromResource(R.xml.settings);
+
+        EditTextPreference address = (EditTextPreference) findPreference(ADDRESS);
+        EditTextPreference username = (EditTextPreference) findPreference(USERNAME);
+        EditTextPreference password = (EditTextPreference) findPreference(PASSWORD);
+
+        address.setOnPreferenceChangeListener(this);
+        username.setOnPreferenceChangeListener(this);
+        password.setOnPreferenceChangeListener(this);
     }
 
     @Override
