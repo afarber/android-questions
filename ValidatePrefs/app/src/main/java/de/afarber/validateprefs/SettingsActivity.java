@@ -32,27 +32,28 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     }
 
     @Override
-    public boolean onPreferenceChange(Preference preference, Object value) {
-        Log.d(TAG, "onPreferenceChange preference=" + preference + ", value=" + value);
+    public boolean onPreferenceChange(Preference preference, Object obj) {
+        Log.d(TAG, "onPreferenceChange preference=" + preference + ", obj=" + obj);
 
-        if (! (preference instanceof EditTextPreference)) {
+        if (!(preference instanceof EditTextPreference && obj instanceof String)) {
             return false;
         }
 
         EditTextPreference editTextPreference = (EditTextPreference)preference;
         String key = editTextPreference.getKey();
-        String text = editTextPreference.getText();
+        String oldValue = editTextPreference.getText();
+        String newValue = String.valueOf(obj);
 
-        Log.d(TAG, String.format("key %s, text %s", key, text));
+        Log.d(TAG, String.format("key %s, value %s -> %s", key, oldValue, newValue));
 
-        if (key == null || key.isEmpty() || text == null || text.isEmpty()) {
+        if (key == null || key.isEmpty() || newValue == null || newValue.isEmpty()) {
             return false;
         }
 
         switch (key) {
             case ADDRESS: {
                 try {
-                    new URI(text);
+                    new URI(newValue);
                 } catch (URISyntaxException ex) {
                     ex.printStackTrace();
                     return false;
@@ -61,11 +62,11 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
             }
 
             case USERNAME: {
-                return text.length() > 0;
+                return newValue.length() > 4;
             }
 
             case PASSWORD: {
-                return text.length() > 0;
+                return newValue.length() > 4;
             }
         }
 
