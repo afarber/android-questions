@@ -28,6 +28,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/GeoQuiz/screenshot.png)
 
 
+[GoogleAuth](https://github.com/afarber/android-newbie/tree/master/GoogleAuth):
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/GoogleAuth/screenshot.png)
+
+
 [HelloMoon](https://github.com/afarber/android-newbie/tree/master/HelloMoon) from the book [Android Programming: The Big Nerd Ranch Guide](https://www.bignerdranch.com/we-write/android-programming/):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/HelloMoon/screenshot.png)
