@@ -36,3 +36,6 @@ proguard/
 
 .DS_Store
 
+# Android
+google-services.json
+
