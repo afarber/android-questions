@@ -17,7 +17,7 @@
         enabled for your project, you have a properly configured google-services.json file
         and that your device has an internet connection.
     </string>
-    <string name="loading">Loading…</string>
+    <string name="loading">Загрузка…</string>
     <string name="auth_code_fmt">Auth Code: %s</string>
     <string name="id_token_fmt">ID Token: %s</string>
 
@@ -58,6 +58,6 @@
          from https://console.developers.google.com/ -->
     <string name="facebook_app_id">376218039240910</string>
     <integer name="com_vk_sdk_AppId">5442212</integer>
-    <string name="server_client_id">AIzaSyAljEZJ96LSxxCjGTDSSWXM-ExBKJx2Zqg</string>
+    <string name="server_client_id">342959591981-a1sc6mmo0t3mh4qj6dpjg6267mkar4u7.apps.googleusercontent.com</string>
 
 </resources>
