@@ -8,18 +8,18 @@ import android.database.sqlite.SQLiteDatabase;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 public class DatabaseHelper extends SQLiteAssetHelper {
-    private static final int DATABASE_VERSION    = 1;
-    private static final String DATABASE_NAME    = "social.db";
-    private static final String TABLE_SOCIAL     = "social";
+    private static final int DATABASE_VERSION   = 2;
+    private static final String DATABASE_NAME   = "social.db";
+    private static final String TABLE_SOCIAL    = "social";
 
-    public  static final String COLUMN_SID       = "sid";
-    public  static final String COLUMN_NET       = "net";
-    public  static final String COLUMN_GIVEN     = "given";
-    public  static final String COLUMN_FAMILY    = "family";
-    public  static final String COLUMN_PHOTO     = "photo";
-    public  static final String COLUMN_LAT       = "lat";
-    public  static final String COLUMN_LNG       = "lng";
-    public  static final String COLUMN_STAMP     = "stamp";
+    public static final String COLUMN_SID       = "sid";
+    public static final String COLUMN_NET       = "net";
+    public static final String COLUMN_GIVEN     = "given";
+    public static final String COLUMN_FAMILY    = "family";
+    public static final String COLUMN_PHOTO     = "photo";
+    public static final String COLUMN_LAT       = "lat";
+    public static final String COLUMN_LNG       = "lng";
+    public static final String COLUMN_STAMP     = "stamp";
 
     public static final int UNKNOWN       = 0;
     public static final int GOOGLE        = 1;
@@ -42,6 +42,7 @@ public class DatabaseHelper extends SQLiteAssetHelper {
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        setForcedUpgrade();
     }
 
     @Override
@@ -71,10 +72,8 @@ public class DatabaseHelper extends SQLiteAssetHelper {
         return findUser(GOOGLE);
     }
 
-/*
     public User findNewestUser() {
+        // TODO fetch user data
         return null;
     }
-*/
-
 }

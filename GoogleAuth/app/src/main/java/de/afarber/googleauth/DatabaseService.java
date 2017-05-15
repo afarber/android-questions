@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
+import static de.afarber.googleauth.DatabaseHelper.COLUMN_GIVEN;
+import static de.afarber.googleauth.DatabaseHelper.COLUMN_PHOTO;
+
 public class DatabaseService extends IntentService {
     public static final String TAG = DatabaseService.class.getName();
 
@@ -64,9 +67,9 @@ public class DatabaseService extends IntentService {
     private void handleFindNewestUser() {
         Intent i = new Intent();
         i.setAction(ACTION_NEWEST_USER_DATA);
-//        User user = mDatabaseHelper.findNewestUser();
-//        i.putExtra(DatabaseHelper.COLUMN_GIVEN, user.given);
-//        i.putExtra(DatabaseHelper.COLUMN_PHOTO, user.photo);
+        User user = mDatabaseHelper.findNewestUser();
+        i.putExtra(COLUMN_GIVEN, user.given);
+        i.putExtra(COLUMN_PHOTO, user.photo);
         mBroadcastManager.sendBroadcast(i);
     }
 }

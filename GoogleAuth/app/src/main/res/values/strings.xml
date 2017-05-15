@@ -17,7 +17,7 @@
         enabled for your project, you have a properly configured google-services.json file
         and that your device has an internet connection.
     </string>
-    <string name="loading">Загрузка…</string>
+    <string name="loading">Loading…</string>
     <string name="auth_code_fmt">Auth Code: %s</string>
     <string name="id_token_fmt">ID Token: %s</string>
 

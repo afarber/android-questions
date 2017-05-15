@@ -1,11 +1,15 @@
 package de.afarber.googleauth;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -27,6 +31,9 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import static de.afarber.googleauth.DatabaseService.ACTION_GOOGLE_USER_MISSING;
+import static de.afarber.googleauth.DatabaseService.ACTION_NEWEST_USER_DATA;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         GoogleApiClient.OnConnectionFailedListener,
@@ -34,12 +41,35 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int RC_SIGN_IN = 1972;
+    private LocalBroadcastManager mBroadcastManager;
+    private IntentFilter mFilter;
     private GoogleApiClient mGoogleApiClient;
     private ProgressDialog mProgressDialog;
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent i) {
+            if (i == null)
+                return;
+
+            final String action = i.getAction();
+            if (ACTION_GOOGLE_USER_MISSING.equals(action)) {
+
+            } else if (ACTION_NEWEST_USER_DATA.equals(action)) {
+
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mBroadcastManager = LocalBroadcastManager.getInstance(this);
+
+        mFilter = new IntentFilter();
+        mFilter.addAction(ACTION_GOOGLE_USER_MISSING);
+        mFilter.addAction(ACTION_NEWEST_USER_DATA);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -99,7 +129,19 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    // [START onActivityResult]
+    @Override
+    public void onResume() {
+        super.onResume();
+        mBroadcastManager.registerReceiver(mMessageReceiver, mFilter);
+        DatabaseService.findGoogleUser(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mBroadcastManager.unregisterReceiver(mMessageReceiver);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
