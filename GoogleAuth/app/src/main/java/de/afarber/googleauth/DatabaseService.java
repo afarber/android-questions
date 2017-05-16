@@ -5,9 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
-import static de.afarber.googleauth.DatabaseHelper.COLUMN_GIVEN;
-import static de.afarber.googleauth.DatabaseHelper.COLUMN_PHOTO;
-
 public class DatabaseService extends IntentService {
     public static final String TAG = DatabaseService.class.getName();
 
@@ -17,6 +14,9 @@ public class DatabaseService extends IntentService {
 
     public static final String ACTION_FIND_NEWEST_USER = "de.afarber.action.find.newest.user";
     public static final String ACTION_NEWEST_USER_DATA = "de.afarber.action.newest.user.data";
+
+    public static final String ACTION_UPDATE_USER = "de.afarber.action.update.user";
+    public static final String EXTRA_USER = "de.afarber.extra.user";
 
     private LocalBroadcastManager mBroadcastManager;
     private DatabaseHelper mDatabaseHelper;
@@ -30,6 +30,13 @@ public class DatabaseService extends IntentService {
     public static void findNewestUser(Context context) {
         Intent i = new Intent(context, DatabaseService.class);
         i.setAction(ACTION_FIND_NEWEST_USER);
+        context.startService(i);
+    }
+
+    public static void updateUser(Context context, User user) {
+        Intent i = new Intent(context, DatabaseService.class);
+        i.setAction(ACTION_UPDATE_USER);
+        i.putExtra(EXTRA_USER, user);
         context.startService(i);
     }
 
@@ -50,6 +57,9 @@ public class DatabaseService extends IntentService {
             handleFindGoogleUser();
         } else if (ACTION_FIND_NEWEST_USER.equals(action)) {
             handleFindNewestUser();
+        } else if (ACTION_UPDATE_USER.equals(action)) {
+            User user = i.getParcelableExtra(EXTRA_USER);
+            handleUpdateUser(user);
         }
     }
 
@@ -65,11 +75,14 @@ public class DatabaseService extends IntentService {
     }
 
     private void handleFindNewestUser() {
+        User user = mDatabaseHelper.findNewestUser();
         Intent i = new Intent();
         i.setAction(ACTION_NEWEST_USER_DATA);
-        User user = mDatabaseHelper.findNewestUser();
-        i.putExtra(COLUMN_GIVEN, user.given);
-        i.putExtra(COLUMN_PHOTO, user.photo);
+        i.putExtra(EXTRA_USER, user);
         mBroadcastManager.sendBroadcast(i);
+    }
+
+    private void handleUpdateUser(User user) {
+        mDatabaseHelper.updateUser(user);
     }
 }

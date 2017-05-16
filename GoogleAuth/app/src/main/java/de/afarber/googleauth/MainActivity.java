@@ -1,12 +1,11 @@
 package de.afarber.googleauth;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
@@ -27,9 +26,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.OptionalPendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 
 import static de.afarber.googleauth.DatabaseService.ACTION_GOOGLE_USER_MISSING;
 import static de.afarber.googleauth.DatabaseService.ACTION_NEWEST_USER_DATA;
@@ -40,11 +36,10 @@ public class MainActivity extends AppCompatActivity
         View.OnClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final int RC_SIGN_IN = 1972;
+    private static final int GOOGLE_SIGNIN = 1972;
     private LocalBroadcastManager mBroadcastManager;
     private IntentFilter mFilter;
     private GoogleApiClient mGoogleApiClient;
-    private ProgressDialog mProgressDialog;
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
@@ -54,7 +49,8 @@ public class MainActivity extends AppCompatActivity
 
             final String action = i.getAction();
             if (ACTION_GOOGLE_USER_MISSING.equals(action)) {
-
+                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                startActivityForResult(signInIntent, GOOGLE_SIGNIN);
             } else if (ACTION_NEWEST_USER_DATA.equals(action)) {
 
             }
@@ -104,32 +100,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if (opr.isDone()) {
-            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
-            // and the GoogleSignInResult will be available instantly.
-            Log.d(TAG, "Got cached sign-in");
-            GoogleSignInResult result = opr.get();
-            handleSignInResult(result);
-        } else {
-            // If the user has not previously signed in on this device or the sign-in has expired,
-            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
-            // single sign-on will occur in this branch.
-            showProgressDialog();
-            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                @Override
-                public void onResult(GoogleSignInResult googleSignInResult) {
-                    hideProgressDialog();
-                    handleSignInResult(googleSignInResult);
-                }
-            });
-        }
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         mBroadcastManager.registerReceiver(mMessageReceiver, mFilter);
@@ -146,10 +116,20 @@ public class MainActivity extends AppCompatActivity
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == GOOGLE_SIGNIN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
+            if (result.isSuccess()) {
+                GoogleSignInAccount acct = result.getSignInAccount();
+                User user = new User();
+                user.sid = acct.getId();
+                user.given = acct.getGivenName();
+                user.family = acct.getFamilyName();
+                Uri photoUrl = acct.getPhotoUrl();
+                user.photo = (photoUrl != null ? photoUrl.toString() : null);
+                DatabaseService.updateUser(this, user);
+            } else {
+                finish();
+            }
         }
     }
 
@@ -215,23 +195,10 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void handleSignInResult(GoogleSignInResult result) {
-        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
-        if (result.isSuccess()) {
-            // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
-            String str = getString(R.string.signed_in_fmt, acct.getDisplayName());
-            Log.d(TAG, "handleSignInResult:" + str);
-            updateUI(true);
-        } else {
-            // Signed out, show unauthenticated UI.
-            updateUI(false);
-        }
-    }
-
+/*
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        startActivityForResult(signInIntent, GOOGLE_SIGNIN);
     }
 
     private void signOut() {
@@ -253,31 +220,12 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
     }
+*/
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
-    }
-
-    private void showProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(R.string.loading));
-            mProgressDialog.setIndeterminate(true);
-        }
-
-        mProgressDialog.show();
-    }
-
-    private void hideProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.hide();
-        }
-    }
-
-    private void updateUI(boolean signedIn) {
-        Log.d(TAG, "signedId=" + signedIn);
     }
 }

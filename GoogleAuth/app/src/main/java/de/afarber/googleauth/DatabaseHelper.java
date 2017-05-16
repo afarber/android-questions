@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 public class DatabaseHelper extends SQLiteAssetHelper {
-    private static final int DATABASE_VERSION   = 2;
+    private static final int DATABASE_VERSION   = 3;
     private static final String DATABASE_NAME   = "social.db";
     private static final String TABLE_SOCIAL    = "social";
 
@@ -75,5 +75,20 @@ public class DatabaseHelper extends SQLiteAssetHelper {
     public User findNewestUser() {
         // TODO fetch user data
         return null;
+    }
+
+    public void updateUser(User user) {
+        getWritableDatabase().delete(TABLE_SOCIAL, "net=?", new String[]{String.valueOf(user.net)});
+
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_SID, user.sid);
+        cv.put(COLUMN_NET, user.net);
+        cv.put(COLUMN_GIVEN, user.given);
+        cv.put(COLUMN_FAMILY, user.family);
+        cv.put(COLUMN_PHOTO, user.photo);
+        cv.put(COLUMN_LAT, user.lat);
+        cv.put(COLUMN_LNG, user.lng);
+        //cv.put(COLUMN_STAMP, (int) (System.currentTimeMillis() / 1000));
+        getWritableDatabase().insert(TABLE_SOCIAL, null, cv);
     }
 }
