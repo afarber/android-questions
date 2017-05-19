@@ -4,6 +4,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class User implements Parcelable {
+    public static final int UNKNOWN       = 0;
+    public static final int GOOGLE        = 1;
+    public static final int APPLE         = 2;
+    public static final int ODNOKLASSNIKI = 4;
+    public static final int MAILRU        = 8;
+    public static final int VKONTAKTE     = 16;
+    public static final int FACEBOOK      = 32;
+
     public String sid;
     public int net;
     public String given;
@@ -14,7 +22,6 @@ public class User implements Parcelable {
     public int stamp;
 
     public User() {
-
     }
 
     protected User(Parcel in) {

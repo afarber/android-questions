@@ -29,6 +29,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import static de.afarber.googleauth.DatabaseService.ACTION_GOOGLE_USER_MISSING;
 import static de.afarber.googleauth.DatabaseService.ACTION_NEWEST_USER_DATA;
+import static de.afarber.googleauth.User.GOOGLE;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -122,6 +123,7 @@ public class MainActivity extends AppCompatActivity
                 GoogleSignInAccount acct = result.getSignInAccount();
                 User user = new User();
                 user.sid = acct.getId();
+                user.net = GOOGLE;
                 user.given = acct.getGivenName();
                 user.family = acct.getFamilyName();
                 Uri photoUrl = acct.getPhotoUrl();

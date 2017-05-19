@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
+import static de.afarber.googleauth.User.GOOGLE;
+
 public class DatabaseHelper extends SQLiteAssetHelper {
     private static final int DATABASE_VERSION   = 3;
     private static final String DATABASE_NAME   = "social.db";
@@ -20,14 +22,6 @@ public class DatabaseHelper extends SQLiteAssetHelper {
     public static final String COLUMN_LAT       = "lat";
     public static final String COLUMN_LNG       = "lng";
     public static final String COLUMN_STAMP     = "stamp";
-
-    public static final int UNKNOWN       = 0;
-    public static final int GOOGLE        = 1;
-    public static final int APPLE         = 2;
-    public static final int ODNOKLASSNIKI = 4;
-    public static final int MAILRU        = 8;
-    public static final int VKONTAKTE     = 16;
-    public static final int FACEBOOK      = 32;
 
     private static final String[] COLUMNS_SOCIAL = new String[] {
             COLUMN_SID,
