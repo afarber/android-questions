@@ -1,7 +1,10 @@
 package de.afarber.googleauth;
 
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
+import android.webkit.URLUtil;
 
 public class User implements Parcelable {
     public static final int UNKNOWN       = 0;
@@ -21,18 +24,46 @@ public class User implements Parcelable {
     public float lng;
     public int stamp;
 
+
+    public boolean isValid() {
+        return (!TextUtils.isEmpty(given) &&
+                !TextUtils.isEmpty(sid) &&
+                net > UNKNOWN &&
+                net <= FACEBOOK &&
+                (TextUtils.isEmpty(photo) || URLUtil.isNetworkUrl(photo)));
+    }
+
+
+
     public User() {
     }
 
+    public User(Cursor cursor) {
+        sid    = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SID));
+        net    = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_NET));
+        given  = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_GIVEN));
+        family = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_FAMILY));
+        photo  = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PHOTO));
+        lat    = cursor.getFloat(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_LAT));
+        lng    = cursor.getFloat(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_LNG));
+        stamp  = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_STAMP));
+
+        if (!isValid())
+            throw new IllegalArgumentException();
+    }
+
     protected User(Parcel in) {
-        sid = in.readString();
-        net = in.readInt();
-        given = in.readString();
+        sid    = in.readString();
+        net    = in.readInt();
+        given  = in.readString();
         family = in.readString();
-        photo = in.readString();
-        lat = in.readFloat();
-        lng = in.readFloat();
-        stamp = in.readInt();
+        photo  = in.readString();
+        lat    = in.readFloat();
+        lng    = in.readFloat();
+        stamp  = in.readInt();
+
+        if (!isValid())
+            throw new IllegalArgumentException();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -62,5 +93,10 @@ public class User implements Parcelable {
         dest.writeFloat(lat);
         dest.writeFloat(lng);
         dest.writeInt(stamp);
+    }
+
+    @Override
+    public String toString() {
+        return User.class.getSimpleName() + ": " + sid + " " + given + " " + family;
     }
 }

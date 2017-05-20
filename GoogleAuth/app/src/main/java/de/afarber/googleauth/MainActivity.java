@@ -19,7 +19,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.URLUtil;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -27,11 +31,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-
 import static de.afarber.googleauth.DatabaseService.ACTION_GOOGLE_USER_MISSING;
 import static de.afarber.googleauth.DatabaseService.ACTION_NEWEST_USER_DATA;
+import static de.afarber.googleauth.DatabaseService.EXTRA_USER;
 import static de.afarber.googleauth.User.GOOGLE;
 
 public class MainActivity extends AppCompatActivity
@@ -46,10 +48,12 @@ public class MainActivity extends AppCompatActivity
     private LocalBroadcastManager mBroadcastManager;
     private GoogleApiClient mGoogleApiClient;
 
-    protected @Bind(R.id.fab) FloatingActionButton mFab;
-    protected @Bind(R.id.drawer_layout) DrawerLayout mDrawer;
-    protected @Bind(R.id.nav_view) NavigationView mNavigationView;
-    protected @Bind(R.id.toolbar) Toolbar mToolbar;
+    private FloatingActionButton mFab;
+    private DrawerLayout mDrawer;
+    private NavigationView mNavigationView;
+    private Toolbar mToolbar;
+    private ImageView mPhotoView;
+    private TextView mGivenView;
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
@@ -62,7 +66,15 @@ public class MainActivity extends AppCompatActivity
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                 startActivityForResult(signInIntent, GOOGLE_SIGNIN);
             } else if (ACTION_NEWEST_USER_DATA.equals(action)) {
-
+                User user = i.getParcelableExtra(EXTRA_USER);
+                Log.d(TAG, user.toString());
+                mGivenView.setText(user.given);
+                if (URLUtil.isNetworkUrl(user.photo)) {
+                    Glide.with(MainActivity.this)
+                        .load(user.photo)
+                        .centerCrop()
+                        .into(mPhotoView);
+                }
             }
         }
     };
@@ -87,7 +99,14 @@ public class MainActivity extends AppCompatActivity
                 .build();
 
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        View headerLayout = mNavigationView.inflateHeaderView(R.layout.nav_header_main);
+        mPhotoView = (ImageView) headerLayout.findViewById(R.id.photoView);
+        mGivenView = (TextView) headerLayout.findViewById(R.id.givenView);
 
         setSupportActionBar(mToolbar);
 
@@ -112,6 +131,7 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         mBroadcastManager.registerReceiver(mMessageReceiver, mFilter);
         DatabaseService.findGoogleUser(this);
+        DatabaseService.findNewestUser(this);
     }
 
     @Override

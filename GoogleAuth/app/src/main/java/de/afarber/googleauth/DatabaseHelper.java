@@ -66,8 +66,38 @@ public class DatabaseHelper extends SQLiteAssetHelper {
         return findUser(GOOGLE);
     }
 
+    /*
+
+        public Cursor query(String table,
+        String[] columns,
+
+        String selection,
+            String[] selectionArgs,
+            String groupBy,
+
+            String having,
+
+            String orderBy, String limit) {
+
+     */
+
     public User findNewestUser() {
-        // TODO fetch user data
+        try (
+            Cursor cursor = getReadableDatabase().query(TABLE_SOCIAL,
+                    COLUMNS_SOCIAL,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "stamp desc",
+                    "1")) {
+
+            while (cursor.moveToNext()) {
+                User user = new User(cursor);
+                return user;
+            }
+        }
+
         return null;
     }
 
