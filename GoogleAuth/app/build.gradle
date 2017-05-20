@@ -27,6 +27,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.0.0'
     compile 'com.android.support:design:25.0.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:2.0.1'
     compile 'ru.ok:odnoklassniki-android-sdk:2.0.2'
     compile 'com.neovisionaries:nv-websocket-client:1.31'

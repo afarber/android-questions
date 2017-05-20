@@ -27,6 +27,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 import static de.afarber.googleauth.DatabaseService.ACTION_GOOGLE_USER_MISSING;
 import static de.afarber.googleauth.DatabaseService.ACTION_NEWEST_USER_DATA;
 import static de.afarber.googleauth.User.GOOGLE;
@@ -38,9 +41,15 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int GOOGLE_SIGNIN = 1972;
-    private LocalBroadcastManager mBroadcastManager;
+
     private IntentFilter mFilter;
+    private LocalBroadcastManager mBroadcastManager;
     private GoogleApiClient mGoogleApiClient;
+
+    protected @Bind(R.id.fab) FloatingActionButton mFab;
+    protected @Bind(R.id.drawer_layout) DrawerLayout mDrawer;
+    protected @Bind(R.id.nav_view) NavigationView mNavigationView;
+    protected @Bind(R.id.toolbar) Toolbar mToolbar;
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
@@ -78,11 +87,11 @@ public class MainActivity extends AppCompatActivity
                 .build();
 
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        ButterKnife.bind(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        setSupportActionBar(mToolbar);
+
+        mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -90,14 +99,12 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+                this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        mNavigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
