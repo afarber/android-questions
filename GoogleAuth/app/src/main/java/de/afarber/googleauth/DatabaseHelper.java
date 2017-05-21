@@ -51,18 +51,22 @@ public class DatabaseHelper extends SQLiteAssetHelper {
     }
 
     private boolean findUser(int net) {
-        try (
-            Cursor cursor = getReadableDatabase().query(TABLE_SOCIAL,
-                    COLUMNS_SOCIAL,
-                    // OR: "net=" + net,
-                    "net=?",
-                    new String[]{String.valueOf(net)},
-                    null,
-                    null,
-                    null)) {
+        SQLiteDatabase db = getReadableDatabase();
+        int rows = 0;
+        Cursor cursor = db.query(TABLE_SOCIAL,
+            COLUMNS_SOCIAL,
+            // OR: "net=" + net,
+            "net=?",
+            new String[]{String.valueOf(net)},
+            null,
+            null,
+            null
+        );
 
-            return (cursor.getCount() > 0);
-        }
+        rows = cursor.getCount();
+        cursor.close();
+        db.close();
+        return rows > 0;
     }
 
     public boolean findGoogleUser() {
@@ -70,27 +74,29 @@ public class DatabaseHelper extends SQLiteAssetHelper {
     }
 
     public User findNewestUser() {
-        try (
-            Cursor cursor = getReadableDatabase().query(TABLE_SOCIAL,
-                    COLUMNS_SOCIAL,
-                    null,
-                    null,
-                    null,
-                    null,
-                    "stamp desc",
-                    "1")) {
+        SQLiteDatabase db = getReadableDatabase();
+        User user = null;
+        Cursor cursor = db.query(TABLE_SOCIAL,
+            COLUMNS_SOCIAL,
+            null,
+            null,
+            null,
+            null,
+            "stamp desc",
+            "1");
 
-            while (cursor.moveToNext()) {
-                User user = new User(cursor);
-                return user;
-            }
+        if (cursor.moveToNext()) {
+            user = new User(cursor);
         }
 
-        return null;
+        cursor.close();
+        db.close();
+        return user;
     }
 
     public void updateUser(User user) {
-        getWritableDatabase().delete(TABLE_SOCIAL, "net=?", new String[]{String.valueOf(user.net)});
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TABLE_SOCIAL, "net=?", new String[]{ String.valueOf(user.net) });
 
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_SID, user.sid);
@@ -101,11 +107,14 @@ public class DatabaseHelper extends SQLiteAssetHelper {
         cv.put(COLUMN_LAT, user.lat);
         cv.put(COLUMN_LNG, user.lng);
         //cv.put(COLUMN_STAMP, (int) (System.currentTimeMillis() / 1000));
-        getWritableDatabase().insert(TABLE_SOCIAL, null, cv);
+        db.insert(TABLE_SOCIAL, null, cv);
+        db.close();
     }
 
     public void deleteAll() {
-        int count = getWritableDatabase().delete(TABLE_SOCIAL, "1", null);
-        Log.d(TAG, "deleted rows: " + count);
+        SQLiteDatabase db = getWritableDatabase();
+        int rows = db.delete(TABLE_SOCIAL, "1", null);
+        Log.d(TAG, "deleted rows: " + rows);
+        db.close();
     }
 }
