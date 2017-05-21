@@ -4,12 +4,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import static de.afarber.googleauth.User.GOOGLE;
 
 public class DatabaseHelper extends SQLiteAssetHelper {
+    private static final String TAG = DatabaseHelper.class.getSimpleName();
+
     private static final int DATABASE_VERSION   = 3;
     private static final String DATABASE_NAME   = "social.db";
     private static final String TABLE_SOCIAL    = "social";
@@ -66,21 +69,6 @@ public class DatabaseHelper extends SQLiteAssetHelper {
         return findUser(GOOGLE);
     }
 
-    /*
-
-        public Cursor query(String table,
-        String[] columns,
-
-        String selection,
-            String[] selectionArgs,
-            String groupBy,
-
-            String having,
-
-            String orderBy, String limit) {
-
-     */
-
     public User findNewestUser() {
         try (
             Cursor cursor = getReadableDatabase().query(TABLE_SOCIAL,
@@ -114,5 +102,10 @@ public class DatabaseHelper extends SQLiteAssetHelper {
         cv.put(COLUMN_LNG, user.lng);
         //cv.put(COLUMN_STAMP, (int) (System.currentTimeMillis() / 1000));
         getWritableDatabase().insert(TABLE_SOCIAL, null, cv);
+    }
+
+    public void deleteAll() {
+        int count = getWritableDatabase().delete(TABLE_SOCIAL, "1", null);
+        Log.d(TAG, "deleted rows: " + count);
     }
 }

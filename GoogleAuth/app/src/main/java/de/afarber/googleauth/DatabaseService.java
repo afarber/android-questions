@@ -15,6 +15,8 @@ public class DatabaseService extends IntentService {
     public static final String ACTION_FIND_NEWEST_USER = "de.afarber.action.find.newest.user";
     public static final String ACTION_NEWEST_USER_DATA = "de.afarber.action.newest.user.data";
 
+    public static final String ACTION_DELETE_ALL = "de.afarber.delete.all";
+
     public static final String ACTION_UPDATE_USER = "de.afarber.action.update.user";
     public static final String EXTRA_USER = "de.afarber.extra.user";
 
@@ -40,6 +42,12 @@ public class DatabaseService extends IntentService {
         context.startService(i);
     }
 
+    public static void deleteAll(Context context) {
+        Intent i = new Intent(context, DatabaseService.class);
+        i.setAction(ACTION_DELETE_ALL);
+        context.startService(i);
+    }
+
     public DatabaseService() {
         super(TAG);
     }
@@ -60,6 +68,8 @@ public class DatabaseService extends IntentService {
         } else if (ACTION_UPDATE_USER.equals(action)) {
             User user = i.getParcelableExtra(EXTRA_USER);
             handleUpdateUser(user);
+        } else if (ACTION_DELETE_ALL.equals(action)) {
+            handleDeleteAll();
         }
     }
 
@@ -84,5 +94,9 @@ public class DatabaseService extends IntentService {
 
     private void handleUpdateUser(User user) {
         mDatabaseHelper.updateUser(user);
+    }
+
+    private void handleDeleteAll() {
+        mDatabaseHelper.deleteAll();
     }
 }

@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -31,6 +32,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import static de.afarber.googleauth.DatabaseService.ACTION_GOOGLE_USER_EXISTS;
 import static de.afarber.googleauth.DatabaseService.ACTION_GOOGLE_USER_MISSING;
 import static de.afarber.googleauth.DatabaseService.ACTION_NEWEST_USER_DATA;
 import static de.afarber.googleauth.DatabaseService.EXTRA_USER;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int GOOGLE_SIGNIN = 1972;
 
+    private RequestOptions mGlideOptions;
     private IntentFilter mFilter;
     private LocalBroadcastManager mBroadcastManager;
     private GoogleApiClient mGoogleApiClient;
@@ -65,6 +68,8 @@ public class MainActivity extends AppCompatActivity
             if (ACTION_GOOGLE_USER_MISSING.equals(action)) {
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                 startActivityForResult(signInIntent, GOOGLE_SIGNIN);
+            } else if (ACTION_GOOGLE_USER_EXISTS.equals(action)) {
+                DatabaseService.findNewestUser(MainActivity.this);
             } else if (ACTION_NEWEST_USER_DATA.equals(action)) {
                 User user = i.getParcelableExtra(EXTRA_USER);
                 Log.d(TAG, user.toString());
@@ -72,7 +77,7 @@ public class MainActivity extends AppCompatActivity
                 if (URLUtil.isNetworkUrl(user.photo)) {
                     Glide.with(MainActivity.this)
                         .load(user.photo)
-                        .centerCrop()
+                        .apply(mGlideOptions)
                         .into(mPhotoView);
                 }
             }
@@ -83,20 +88,24 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mGlideOptions = new RequestOptions();
+        mGlideOptions.circleCrop();
+
         mBroadcastManager = LocalBroadcastManager.getInstance(this);
 
         mFilter = new IntentFilter();
         mFilter.addAction(ACTION_GOOGLE_USER_MISSING);
+        mFilter.addAction(ACTION_GOOGLE_USER_EXISTS);
         mFilter.addAction(ACTION_NEWEST_USER_DATA);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
+            .requestEmail()
+            .build();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
+            .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+            .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+            .build();
 
         setContentView(R.layout.activity_main);
         mFab = (FloatingActionButton) findViewById(R.id.fab);
@@ -113,13 +122,21 @@ public class MainActivity extends AppCompatActivity
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Delete all database records",
+                        Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+                DatabaseService.deleteAll(MainActivity.this);
             }
         });
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            this,
+            mDrawer,
+            mToolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        );
         mDrawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -131,7 +148,6 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         mBroadcastManager.registerReceiver(mMessageReceiver, mFilter);
         DatabaseService.findGoogleUser(this);
-        DatabaseService.findNewestUser(this);
     }
 
     @Override
@@ -225,11 +241,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 /*
-    private void signIn() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, GOOGLE_SIGNIN);
-    }
-
     private void signOut() {
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
@@ -253,8 +264,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        // An unresolvable error has occurred and Google APIs (including Sign-In) will not
-        // be available.
+        // An unresolvable error has occurred and Google Sign-In will not be available.
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
     }
 }
