@@ -26,6 +26,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.Profile;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -37,6 +44,7 @@ import static de.afarber.googleauth.DatabaseService.ACTION_GOOGLE_USER_EXISTS;
 import static de.afarber.googleauth.DatabaseService.ACTION_GOOGLE_USER_MISSING;
 import static de.afarber.googleauth.DatabaseService.ACTION_NEWEST_USER_DATA;
 import static de.afarber.googleauth.DatabaseService.EXTRA_USER;
+import static de.afarber.googleauth.User.FACEBOOK;
 import static de.afarber.googleauth.User.GOOGLE;
 
 public class MainActivity extends AppCompatActivity
@@ -51,6 +59,7 @@ public class MainActivity extends AppCompatActivity
     private IntentFilter mFilter;
     private LocalBroadcastManager mBroadcastManager;
     private GoogleApiClient mGoogleApiClient;
+    private CallbackManager mCallbackManager;
 
     private FloatingActionButton mFab;
     private DrawerLayout mDrawer;
@@ -107,6 +116,33 @@ public class MainActivity extends AppCompatActivity
             .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
             .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
             .build();
+
+        mCallbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(mCallbackManager,
+            new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    Log.d(TAG, "Facebook onSuccess: " + loginResult);
+                    Profile profile = Profile.getCurrentProfile();
+                    User user = new User(FACEBOOK);
+                    user.sid = profile.getId();
+                    user.given = profile.getFirstName();
+                    user.family = profile.getLastName();
+                    Uri photoUrl = profile.getProfilePictureUri(300, 300);
+                    user.photo = (photoUrl != null ? photoUrl.toString() : null);
+                    DatabaseService.updateUser(MainActivity.this, user);
+                }
+
+                @Override
+                public void onCancel() {
+                    Log.d(TAG, "Facebook onCancel");
+                }
+
+                @Override
+                public void onError(FacebookException exception) {
+                    Log.d(TAG, "Facebook onError");
+                }
+            });
 
         setContentView(R.layout.activity_main);
         mFab = (FloatingActionButton) findViewById(R.id.fab);
@@ -167,9 +203,8 @@ public class MainActivity extends AppCompatActivity
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
                 GoogleSignInAccount acct = result.getSignInAccount();
-                User user = new User();
+                User user = new User(GOOGLE);
                 user.sid = acct.getId();
-                user.net = GOOGLE;
                 user.given = acct.getGivenName();
                 user.family = acct.getFamilyName();
                 Uri photoUrl = acct.getPhotoUrl();
@@ -178,6 +213,9 @@ public class MainActivity extends AppCompatActivity
             } else {
                 finish();
             }
+            // Facebook requestCode is between 64206 and 64206 + 100
+        } else if (FacebookSdk.isFacebookRequestCode(requestCode)) {
+            mCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
 

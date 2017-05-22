@@ -8,6 +8,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
+
+import java.util.Arrays;
+
 public class AddDialog extends DialogFragment {
     @NonNull
     @Override
@@ -19,9 +23,13 @@ public class AddDialog extends DialogFragment {
         builder.setTitle("Add social network")
                 .setItems(networks, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        String network = networks[which];
                         Toast.makeText(getActivity(),
-                                "Selected: " + networks[which],
+                                "Selected: " + network,
                                 Toast.LENGTH_SHORT).show();
+                        if ("Facebook".equals(network)) {
+                            LoginManager.getInstance().logInWithReadPermissions(getActivity(), Arrays.asList("public_profile"));
+                        }
                     }
                 });
 

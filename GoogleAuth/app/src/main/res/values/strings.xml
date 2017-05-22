@@ -56,8 +56,10 @@
     <!-- TODO(user): replace with your real server client ID -->
     <!-- Server Client ID.  This should be a valid Web OAuth 2.0 Client ID obtained
          from https://console.developers.google.com/ -->
-    <string name="facebook_app_id">376218039240910</string>
+    <string name="facebook_app_id">1740558979292720</string>
     <integer name="com_vk_sdk_AppId">5442212</integer>
     <string name="server_client_id">342959591981-a1sc6mmo0t3mh4qj6dpjg6267mkar4u7.apps.googleusercontent.com</string>
+
+    <string name="fb_login_protocol_scheme">fb1740558979292720</string>
 
 </resources>

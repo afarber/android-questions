@@ -35,7 +35,11 @@ public class User implements Parcelable {
 
 
 
-    public User() {
+    public User(int net) {
+        if (net <= UNKNOWN || net > FACEBOOK)
+            throw new IllegalArgumentException();
+
+        this.net = net;
     }
 
     public User(Cursor cursor) {
