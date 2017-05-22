@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        View headerLayout = mNavigationView.inflateHeaderView(R.layout.nav_header_main);
+        View headerLayout = mNavigationView.getHeaderView(0);
         mPhotoView = (ImageView) headerLayout.findViewById(R.id.photoView);
         mGivenView = (TextView) headerLayout.findViewById(R.id.givenView);
 
@@ -127,6 +127,8 @@ public class MainActivity extends AppCompatActivity
                         Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
+                mGivenView.setText("");
+                mPhotoView.setImageResource(0);
                 DatabaseService.deleteAll(MainActivity.this);
             }
         });
@@ -238,9 +240,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
-        FragmentManager manager = getFragmentManager();
-        AddDialog dialog = new AddDialog();
-        dialog.show(manager, "dialog");
+        int id = v.getId();
+
+        if (id == R.id.addView) {
+            FragmentManager manager = getFragmentManager();
+            AddDialog dialog = new AddDialog();
+            dialog.show(manager, "dialog");
+        }
     }
 
 /*
