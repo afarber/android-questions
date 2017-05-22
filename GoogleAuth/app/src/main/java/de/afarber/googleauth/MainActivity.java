@@ -1,5 +1,6 @@
 package de.afarber.googleauth;
 
+import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -237,7 +238,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
-
+        FragmentManager manager = getFragmentManager();
+        AddDialog dialog = new AddDialog();
+        dialog.show(manager, "dialog");
     }
 
 /*
