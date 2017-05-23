@@ -9,6 +9,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -28,6 +29,7 @@ import android.view.MenuItem;
 import android.webkit.URLUtil;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -60,6 +62,8 @@ import com.vk.sdk.util.VKUtil;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+
+import ru.ok.android.sdk.Odnoklassniki;
 
 import static de.afarber.googleauth.DatabaseService.ACTION_GOOGLE_USER_EXISTS;
 import static de.afarber.googleauth.DatabaseService.ACTION_GOOGLE_USER_MISSING;
@@ -175,6 +179,25 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onError(VKError error) {
             Log.d(TAG, "Vkontakte onError: " + error);
+        }
+    };
+
+    protected final class GetCurrentUserTask extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(final Void... params) {
+            try {
+                return Odnoklassniki.getInstance().request("users.getCurrentUser", null, "get");
+            } catch (Exception exc) {
+                Log.e("Odnoklassniki", "Failed to get current user info", exc);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(final String result) {
+            if (result != null) {
+                Toast.makeText(MainActivity.this, "Get current user result: " + result, Toast.LENGTH_SHORT).show();
+            }
         }
     };
 

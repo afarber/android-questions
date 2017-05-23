@@ -9,13 +9,16 @@ import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
-import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 
 import java.util.Arrays;
 
+import ru.ok.android.sdk.Odnoklassniki;
+import ru.ok.android.sdk.util.OkAuthType;
+import ru.ok.android.sdk.util.OkScope;
+
 public class AddDialog extends DialogFragment {
-    private final static String[] NETWORKS = {"Odnoklassniki", "Mail.ru", "Vkontakte", "Facebook"};
+    private final static String[] NETWORKS = { "Odnoklassniki", "Vkontakte", "Facebook" };
 
     @NonNull
     @Override
@@ -30,18 +33,20 @@ public class AddDialog extends DialogFragment {
                             "Selected: " + network,
                             Toast.LENGTH_SHORT).show();
                     switch (selectedIndex) {
-                        // Odnoklassniki
                         case 0:
+                            /*
+                            Odnoklassniki.getInstance().requestAuthorization(this,
+                                    OK_REDIRECT_URI,
+                                    OkAuthType.ANY,
+                                    OkScope.VALUABLE_ACCESS,
+                                    OkScope.LONG_ACCESS_TOKEN
+                            );
+                            */
                             break;
-                        // Mail.ru
                         case 1:
-                            break;
-                        // Vkontakte
-                        case 2:
                             VKSdk.login(getActivity());
                             break;
-                        //Facebook
-                        case 3:
+                        case 2:
                             LoginManager.getInstance().logInWithReadPermissions(getActivity(), Arrays.asList("public_profile"));
                             break;
                     }
