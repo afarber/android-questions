@@ -40,6 +40,7 @@ public class User implements Parcelable {
             throw new IllegalArgumentException();
 
         this.net = net;
+        this.stamp = (int) (System.currentTimeMillis() / 1000);
     }
 
     public User(Cursor cursor) {
