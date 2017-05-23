@@ -20,6 +20,10 @@ import ru.ok.android.sdk.util.OkScope;
 public class AddDialog extends DialogFragment {
     private final static String[] NETWORKS = { "Odnoklassniki", "Vkontakte", "Facebook" };
 
+    private final static String OK_APP_ID = "1251216640";
+    private final static String OK_APP_KEY = "CBAOAFJLEBABABABA";
+    private final static String OK_REDIRECT_URI = "okauth://ok1251216640";
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -34,15 +38,14 @@ public class AddDialog extends DialogFragment {
                             Toast.LENGTH_SHORT).show();
                     switch (selectedIndex) {
                         case 0:
-                            /*
-                            Odnoklassniki.getInstance().requestAuthorization(this,
+                            Odnoklassniki.createInstance(getActivity(), OK_APP_ID, OK_APP_KEY);
+                            Odnoklassniki.getInstance().requestAuthorization(getActivity(),
                                     OK_REDIRECT_URI,
                                     OkAuthType.ANY,
                                     OkScope.VALUABLE_ACCESS,
                                     OkScope.LONG_ACCESS_TOKEN
                             );
-                            */
-                            break;
+                           break;
                         case 1:
                             VKSdk.login(getActivity());
                             break;

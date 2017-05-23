@@ -13,19 +13,19 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Base64;
-import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.URLUtil;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -59,11 +59,15 @@ import com.vk.sdk.api.model.VKApiUserFull;
 import com.vk.sdk.api.model.VKList;
 import com.vk.sdk.util.VKUtil;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import ru.ok.android.sdk.Odnoklassniki;
+import ru.ok.android.sdk.OkListener;
 
 import static de.afarber.googleauth.DatabaseService.ACTION_GOOGLE_USER_EXISTS;
 import static de.afarber.googleauth.DatabaseService.ACTION_GOOGLE_USER_MISSING;
@@ -181,6 +185,24 @@ public class MainActivity extends AppCompatActivity
             Log.d(TAG, "Vkontakte onError: " + error);
         }
     };
+
+     private OkListener mOdnoklassnikiCallback = new OkListener() {
+        @Override
+        public void onSuccess(final JSONObject json) {
+            try {
+                Toast.makeText(MainActivity.this,
+                        String.format("access_token: %s", json.getString("access_token")),
+                        Toast.LENGTH_SHORT).show();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+         @Override
+         public void onError(String error) {
+             Log.d(TAG, "Odnoklassniki onError: " + error);
+         }
+     };
 
     protected final class GetCurrentUserTask extends AsyncTask<Void, Void, String> {
         @Override
@@ -300,6 +322,8 @@ public class MainActivity extends AppCompatActivity
         } else if (FacebookSdk.isFacebookRequestCode(requestCode)&&
                 mCallbackManager.onActivityResult(requestCode, resultCode, data)) {
             // do nothing
+        } else if (Odnoklassniki.getInstance().onAuthActivityResult(requestCode, resultCode, data, mOdnoklassnikiCallback)) {
+            // do nothing
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -332,7 +356,7 @@ public class MainActivity extends AppCompatActivity
                     PackageManager.GET_SIGNATURES
             );
             for (Signature sig: info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
+                MessageDigest md = MessageDigest.getInstance("SHA-1");
                 md.update(sig.toByteArray());
                 Log.d(TAG, "Facebook signature: " + Base64.encodeToString(md.digest(), Base64.DEFAULT));
             }
