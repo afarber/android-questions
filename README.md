@@ -28,7 +28,7 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/GeoQuiz/screenshot.png)
 
 
-[GoogleAuth](https://github.com/afarber/android-newbie/tree/master/GoogleAuth):
+[GoogleAuth](https://github.com/afarber/android-newbie/tree/master/GoogleAuth) requires [app/google-services.json](https://console.developers.google.com) file:
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/GoogleAuth/screenshot.png)
 

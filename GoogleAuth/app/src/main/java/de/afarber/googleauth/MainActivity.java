@@ -5,11 +5,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -39,6 +44,22 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.vk.sdk.VKAccessToken;
+import com.vk.sdk.VKCallback;
+import com.vk.sdk.VKSdk;
+import com.vk.sdk.api.VKApi;
+import com.vk.sdk.api.VKApiConst;
+import com.vk.sdk.api.VKError;
+import com.vk.sdk.api.VKParameters;
+import com.vk.sdk.api.VKRequest;
+import com.vk.sdk.api.VKResponse;
+import com.vk.sdk.api.model.VKApiUserFull;
+import com.vk.sdk.api.model.VKList;
+import com.vk.sdk.util.VKUtil;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import static de.afarber.googleauth.DatabaseService.ACTION_GOOGLE_USER_EXISTS;
 import static de.afarber.googleauth.DatabaseService.ACTION_GOOGLE_USER_MISSING;
@@ -46,14 +67,22 @@ import static de.afarber.googleauth.DatabaseService.ACTION_NEWEST_USER_DATA;
 import static de.afarber.googleauth.DatabaseService.EXTRA_USER;
 import static de.afarber.googleauth.User.FACEBOOK;
 import static de.afarber.googleauth.User.GOOGLE;
+import static de.afarber.googleauth.User.VKONTAKTE;
+
+// keytool -exportcert -alias androiddebugkey -keystore ~/.android/debug.keystore -list -v
+
+// keytool -exportcert -alias androiddebugkey -keystore %HOMEPATH%\.android\debug.keystore -list -v
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        GoogleApiClient.OnConnectionFailedListener,
-        View.OnClickListener {
+        View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int GOOGLE_SIGNIN = 1972;
+    private static final int PHOTO_WIDTH = 200;
+    //private static final String VKONTAKTE_FIELDS = "photo_200,lat,long";
+    private static final String VKONTAKTE_FIELDS = "photo_200";
+    private final static String FACEBOOK_PHOTO  = "https://graph.facebook.com/%s/picture?type=large";
 
     private RequestOptions mGlideOptions;
     private IntentFilter mFilter;
@@ -82,7 +111,6 @@ public class MainActivity extends AppCompatActivity
                 DatabaseService.findNewestUser(MainActivity.this);
             } else if (ACTION_NEWEST_USER_DATA.equals(action)) {
                 User user = i.getParcelableExtra(EXTRA_USER);
-                Log.d(TAG, user.toString());
                 mGivenView.setText(user.given);
                 if (URLUtil.isNetworkUrl(user.photo)) {
                     Glide.with(MainActivity.this)
@@ -91,6 +119,62 @@ public class MainActivity extends AppCompatActivity
                         .into(mPhotoView);
                 }
             }
+        }
+    };
+
+    private FacebookCallback mFacebookCallback = new FacebookCallback<LoginResult>() {
+        @Override
+        public void onSuccess(LoginResult loginResult) {
+            Log.d(TAG, "Facebook onSuccess: " + loginResult);
+            Profile profile = Profile.getCurrentProfile();
+            User user = new User(FACEBOOK);
+            user.sid = profile.getId();
+            user.given = profile.getFirstName();
+            user.family = profile.getLastName();
+            Uri photoUrl = profile.getProfilePictureUri(PHOTO_WIDTH, PHOTO_WIDTH);
+            user.photo = (photoUrl != null ? photoUrl.toString() : null);
+            DatabaseService.updateUser(MainActivity.this, user);
+        }
+
+        @Override
+        public void onCancel() {
+            Log.d(TAG, "Facebook onCancel");
+        }
+
+        @Override
+        public void onError(FacebookException ex) {
+            Log.d(TAG, "Facebook onError", ex);
+        }
+    };
+
+    private VKRequest.VKRequestListener mVkontakteListener = new VKRequest.VKRequestListener() {
+        @Override
+        public void onComplete(VKResponse response) {
+            try {
+                VKList<VKApiUserFull> list = (VKList<VKApiUserFull>) response.parsedModel;
+                VKApiUserFull vkUser = list.get(0);
+                User user = new User(VKONTAKTE);
+                user.sid = String.valueOf(vkUser.id);
+                user.given = vkUser.first_name;
+                user.family = vkUser.last_name;
+                user.photo = vkUser.photo_200;
+                DatabaseService.updateUser(MainActivity.this, user);
+            } catch (Exception ex) {
+                Log.d(TAG, "onComplete exception: " + ex);
+            }
+        }
+    };
+
+    private VKCallback<VKAccessToken> mVkontakteCallback = new VKCallback<VKAccessToken>() {
+        @Override
+        public void onResult(VKAccessToken res) {
+            Log.d(TAG, "Vkontakte onResult: " + res);
+            VKRequest request = VKApi.users().get(VKParameters.from(VKApiConst.FIELDS,  VKONTAKTE_FIELDS));
+            request.executeWithListener(mVkontakteListener);
+        }
+        @Override
+        public void onError(VKError error) {
+            Log.d(TAG, "Vkontakte onError: " + error);
         }
     };
 
@@ -118,31 +202,7 @@ public class MainActivity extends AppCompatActivity
             .build();
 
         mCallbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().registerCallback(mCallbackManager,
-            new FacebookCallback<LoginResult>() {
-                @Override
-                public void onSuccess(LoginResult loginResult) {
-                    Log.d(TAG, "Facebook onSuccess: " + loginResult);
-                    Profile profile = Profile.getCurrentProfile();
-                    User user = new User(FACEBOOK);
-                    user.sid = profile.getId();
-                    user.given = profile.getFirstName();
-                    user.family = profile.getLastName();
-                    Uri photoUrl = profile.getProfilePictureUri(300, 300);
-                    user.photo = (photoUrl != null ? photoUrl.toString() : null);
-                    DatabaseService.updateUser(MainActivity.this, user);
-                }
-
-                @Override
-                public void onCancel() {
-                    Log.d(TAG, "Facebook onCancel");
-                }
-
-                @Override
-                public void onError(FacebookException exception) {
-                    Log.d(TAG, "Facebook onError");
-                }
-            });
+        LoginManager.getInstance().registerCallback(mCallbackManager, mFacebookCallback);
 
         setContentView(R.layout.activity_main);
         mFab = (FloatingActionButton) findViewById(R.id.fab);
@@ -197,8 +257,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == GOOGLE_SIGNIN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
@@ -211,11 +269,16 @@ public class MainActivity extends AppCompatActivity
                 user.photo = (photoUrl != null ? photoUrl.toString() : null);
                 DatabaseService.updateUser(this, user);
             } else {
+                // Google sign-in is mandatory
                 finish();
             }
-            // Facebook requestCode is between 64206 and 64206 + 100
-        } else if (FacebookSdk.isFacebookRequestCode(requestCode)) {
-            mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        } else if (VKSdk.onActivityResult(requestCode, resultCode, data, mVkontakteCallback)) {
+            // do nothing
+        } else if (FacebookSdk.isFacebookRequestCode(requestCode)&&
+                mCallbackManager.onActivityResult(requestCode, resultCode, data)) {
+            // do nothing
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -236,6 +299,25 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    private void printSignatures() {
+        String[] signatures = VKUtil.getCertificateFingerprint(this, getPackageName());
+        Log.d(TAG, "Vkontakte signatures: " + Arrays.toString(signatures));
+
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    getPackageName(),
+                    PackageManager.GET_SIGNATURES
+            );
+            for (Signature sig: info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(sig.toByteArray());
+                Log.d(TAG, "Facebook signature: " + Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -243,8 +325,9 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            printSignatures();
+            DatabaseService.printAll(this);
             return true;
         }
 
@@ -287,31 +370,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-/*
-    private void signOut() {
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        updateUI(false);
-                    }
-                });
-    }
-
-    private void revokeAccess() {
-        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        updateUI(false);
-                    }
-                });
-    }
-*/
-
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        // An unresolvable error has occurred and Google Sign-In will not be available.
-        Log.d(TAG, "onConnectionFailed:" + connectionResult);
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.d(TAG, "onConnectionFailed: " + connectionResult);
     }
 }
+

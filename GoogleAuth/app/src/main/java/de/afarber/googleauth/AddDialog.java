@@ -9,6 +9,8 @@ import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
+import com.vk.sdk.VKScope;
+import com.vk.sdk.VKSdk;
 
 import java.util.Arrays;
 
@@ -36,6 +38,7 @@ public class AddDialog extends DialogFragment {
                             break;
                         // Vkontakte
                         case 2:
+                            VKSdk.login(getActivity());
                             break;
                         //Facebook
                         case 3:

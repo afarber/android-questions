@@ -117,4 +117,25 @@ public class DatabaseHelper extends SQLiteAssetHelper {
         Log.d(TAG, "deleted rows: " + rows);
         db.close();
     }
+
+    public void printAll() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(TABLE_SOCIAL,
+                COLUMNS_SOCIAL,
+                null,
+                null,
+                null,
+                null,
+                "stamp desc",
+                null);
+
+        while (cursor.moveToNext()) {
+            User user = new User(cursor);
+            Log.d(TAG, user.toString());
+        }
+
+        cursor.close();
+        db.close();
+    }
+
 }

@@ -102,6 +102,6 @@ public class User implements Parcelable {
 
     @Override
     public String toString() {
-        return User.class.getSimpleName() + ": " + sid + " " + given + " " + family;
+        return User.class.getSimpleName() + ": " + net + " " + sid + " " + given + " " + family + " " + photo;
     }
 }
