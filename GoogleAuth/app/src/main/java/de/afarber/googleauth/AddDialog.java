@@ -20,9 +20,14 @@ import ru.ok.android.sdk.util.OkScope;
 public class AddDialog extends DialogFragment {
     private final static String[] NETWORKS = { "Odnoklassniki", "Vkontakte", "Facebook" };
 
-    private final static String OK_APP_ID = "1251216640";
-    private final static String OK_APP_KEY = "CBAOAFJLEBABABABA";
-    private final static String OK_REDIRECT_URI = "okauth://ok1251216640";
+    // Example from: https://github.com/odnoklassniki/ok-android-sdk/tree/master/odnoklassniki-android-sdk-example
+    private final static String OK_APP_ID = "125497344";
+    private final static String OK_APP_KEY = "CBABPLHIABABABABA";
+    private final static String OK_REDIRECT_URI = "okauth://ok125497344";
+
+    //private final static String OK_APP_ID = "1251216640";
+    //private final static String OK_APP_KEY = "CBAOAFJLEBABABABA";
+    //private final static String OK_REDIRECT_URI = "okauth://ok1251216640";
 
     @NonNull
     @Override

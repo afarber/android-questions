@@ -9,7 +9,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -29,7 +28,6 @@ import android.view.View;
 import android.webkit.URLUtil;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -59,7 +57,6 @@ import com.vk.sdk.api.model.VKApiUserFull;
 import com.vk.sdk.api.model.VKList;
 import com.vk.sdk.util.VKUtil;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.security.MessageDigest;
@@ -186,40 +183,15 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
-     private OkListener mOdnoklassnikiCallback = new OkListener() {
+    private OkListener mOdnoklassnikiCallback = new OkListener() {
         @Override
         public void onSuccess(final JSONObject json) {
-            try {
-                Toast.makeText(MainActivity.this,
-                        String.format("access_token: %s", json.getString("access_token")),
-                        Toast.LENGTH_SHORT).show();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-         @Override
-         public void onError(String error) {
-             Log.d(TAG, "Odnoklassniki onError: " + error);
-         }
-     };
-
-    protected final class GetCurrentUserTask extends AsyncTask<Void, Void, String> {
-        @Override
-        protected String doInBackground(final Void... params) {
-            try {
-                return Odnoklassniki.getInstance().request("users.getCurrentUser", null, "get");
-            } catch (Exception exc) {
-                Log.e("Odnoklassniki", "Failed to get current user info", exc);
-            }
-            return null;
+            DatabaseService.fetchOdnoklassnikiUser(MainActivity.this);
         }
 
         @Override
-        protected void onPostExecute(final String result) {
-            if (result != null) {
-                Toast.makeText(MainActivity.this, "Get current user result: " + result, Toast.LENGTH_SHORT).show();
-            }
+        public void onError(String error) {
+            Log.d(TAG, "Odnoklassniki onError: " + error);
         }
     };
 
@@ -317,10 +289,10 @@ public class MainActivity extends AppCompatActivity
                 // Google sign-in is mandatory
                 finish();
             }
-        } else if (VKSdk.onActivityResult(requestCode, resultCode, data, mVkontakteCallback)) {
-            // do nothing
         } else if (FacebookSdk.isFacebookRequestCode(requestCode)&&
                 mCallbackManager.onActivityResult(requestCode, resultCode, data)) {
+            // do nothing
+        } else if (VKSdk.onActivityResult(requestCode, resultCode, data, mVkontakteCallback)) {
             // do nothing
         } else if (Odnoklassniki.getInstance().onAuthActivityResult(requestCode, resultCode, data, mOdnoklassnikiCallback)) {
             // do nothing
@@ -361,7 +333,7 @@ public class MainActivity extends AppCompatActivity
                 Log.d(TAG, "Facebook signature: " + Base64.encodeToString(md.digest(), Base64.DEFAULT));
             }
         } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException ex) {
-            ex.printStackTrace();
+            Log.w(TAG, "printSignatures", ex);
         }
     }
 
@@ -419,7 +391,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(TAG, "onConnectionFailed: " + connectionResult);
+        Log.w(TAG, "onConnectionFailed: " + connectionResult);
     }
 }
 
