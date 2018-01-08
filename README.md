@@ -150,6 +150,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/RotatedList/screenshot.png)
 
 
+[SampleLoginWithAmazonAppForAndroid](https://github.com/afarber/android-newbie/tree/master/SampleLoginWithAmazonAppForAndroid) from LWA doc:
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/SampleLoginWithAmazonAppForAndroid/screenshot.png)
+
+
 [SwipeBooks](https://github.com/afarber/android-newbie/tree/master/SwipeBooks):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/SwipeBooks/screenshot.png)

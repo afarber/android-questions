@@ -1,0 +1,3 @@
+SampleLWAAppAndroid
+
+Copyright 2012-2015 Amazon.com, Inc. or its affiliates. All rights reserved.

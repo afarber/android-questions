@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- This is ok, we want to ensure compatability accross as many devices as possible -->
+    <issue id="UsesMinSdkAttributes" severity="ignore"/>
+    <!-- This ensures we do not force a lot of updates to developers Android SDK Manager -->
+    <issue id="OldTargetApi" severity="ignore"/>
+    
+    <!-- These are used via setContentView in SampleLoginWithAmazonActivity -->
+    <issue id="UnusedResources">
+        <ignore path="res/menu/activity_main.xml" />
+        <ignore path="res/values/strings.xml" />
+        <ignore path="res/values/color.xml" />
+        <ignore path="res/drawable-mdpi/btn_sqr_color_grey.png" />
+    </issue>
+    
+    <!-- Ignore all icon lint errors -->
+    <issue id="IconDipSize" severity="ignore"/>
+    <issue id="IconLauncherShape" severity="ignore"/>
+    <issue id="IconLocation" severity="ignore"/>
+    <issue id="IconDuplicates" severity="ignore"/>
+    <issue id="IconDuplicatesConfig" severity="ignore"/>
+    <issue id="IconDensities" severity="ignore"/>
+</lint>
