@@ -3,7 +3,6 @@ package de.afarber.myviewpager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,7 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
-        implements PagerFragment.PagerListener, NavigationView.OnNavigationItemSelectedListener {
+        implements PagerFragment.PagerListener,
+        NavigationView.OnNavigationItemSelectedListener {
 
     public final static String GID = "gid";
 

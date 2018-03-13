@@ -51,10 +51,8 @@ public class PagerFragment extends Fragment  {
 	@Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-
         int gid = getArguments().getInt(GID);
         getActivity().setTitle(getString(R.string.app_name) + " " + gid);
-
         mAdapter = new CustomPagerAdapter(getActivity().getSupportFragmentManager(), gid);
         mPager = view.findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
@@ -70,7 +68,6 @@ public class PagerFragment extends Fragment  {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         if (id == R.id.item_chat) {
             if (mPager.getCurrentItem() == 1) {
                 mPager.setCurrentItem(2);
