@@ -105,6 +105,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/MyTiles2/screenshot.png)
 
 
+[MyViewPager](https://github.com/afarber/android-newbie/tree/master/MyViewPager):
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/MyViewPager/screenshot.png)
+
+
 [NaviFab](https://github.com/afarber/android-newbie/tree/master/NaviFab):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/NaviFab/screenshot.png)

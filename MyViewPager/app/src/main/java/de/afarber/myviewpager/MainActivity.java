@@ -15,7 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements PagerFragment.PagerListener, NavigationView.OnNavigationItemSelectedListener {
 
     public final static String GID = "gid";
 
@@ -94,12 +94,13 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.game1) {
+            showGame(1);
         } else if (id == R.id.game2) {
-
+            showGame(2);
         } else if (id == R.id.game3) {
-
+            showGame(3);
         } else if (id == R.id.game4) {
-
+            showGame(4);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {

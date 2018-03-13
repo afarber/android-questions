@@ -68,17 +68,6 @@ public class PagerFragment extends Fragment  {
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        int gid = getArguments().getInt(GID);
-        Game game = Games.getInstance().findGame(gid);
-        menu.findItem(R.id.item_chat)
-            .setIcon(game != null && game.chat1 > 0 ? R.drawable.message_alert_white : R.drawable.message_white)
-            // only display the chat button if there are 2 players in the game
-            .setVisible(game != null && game.player2 > 0);
-        super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
