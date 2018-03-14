@@ -1,9 +1,10 @@
 package de.afarber.myviewpager;
 
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+//import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
-public class CustomPagerAdapter extends FragmentPagerAdapter {
+public class CustomPagerAdapter extends FragmentStatePagerAdapter {
     private int mGid;
 
     public CustomPagerAdapter(FragmentManager fm, int gid) {

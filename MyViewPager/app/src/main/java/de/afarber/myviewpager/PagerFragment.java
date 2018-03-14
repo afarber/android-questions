@@ -53,7 +53,7 @@ public class PagerFragment extends Fragment  {
         setHasOptionsMenu(true);
         int gid = getArguments().getInt(GID);
         getActivity().setTitle(getString(R.string.app_name) + " " + gid);
-        mAdapter = new CustomPagerAdapter(getActivity().getSupportFragmentManager(), gid);
+        mAdapter = new CustomPagerAdapter(getChildFragmentManager(), gid);
         mPager = view.findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
         mPager.setCurrentItem(1);
