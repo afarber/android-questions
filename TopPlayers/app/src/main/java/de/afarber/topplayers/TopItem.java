@@ -68,7 +68,7 @@ public class TopItem extends AbstractItem<TopItem, TopItem.ViewHolder> {
         @Override
         public void bindView(@NonNull TopItem item, @NonNull List<Object> payloads) {
             Resources res = mElo.getResources();
-
+            
             mGiven.setText(item.given);
             mElo.setText(String.valueOf(item.elo));
             mAvgScore.setText(res.getString(R.string.avg_score, item.avg_score));

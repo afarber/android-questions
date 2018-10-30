@@ -21,6 +21,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
+        if (sClient == null && sPicasso == null) {
+            init();
+        }
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, TopFragment.newInstance())
+                    .commitNow();
+        }
+    }
+
+    private void init() {
         sClient = new OkHttpClient.Builder()
                 .cache(new Cache(getCacheDir(), CACHE_SIZE))
                 .build();
@@ -32,12 +44,6 @@ public class MainActivity extends AppCompatActivity {
         sPicasso.setIndicatorsEnabled(true);
         sPicasso.setLoggingEnabled(true);
         Picasso.setSingletonInstance(sPicasso);
-
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, TopFragment.newInstance())
-                    .commitNow();
-        }
     }
 
     public static void fetch(Request request, Callback responseCallback) {
