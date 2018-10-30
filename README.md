@@ -190,6 +190,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/TestScroll3/screenshot.png)
 
 
+[TopPlayers](https://github.com/afarber/android-newbie/tree/master/TopPlayers):
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/TopPlayers/screenshot.png)
+
+
 [ValidatePrefs](https://github.com/afarber/android-newbie/tree/master/ValidatePrefs):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/ValidatePrefs/screenshot.png)
