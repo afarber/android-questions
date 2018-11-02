@@ -1,10 +1,10 @@
 package de.afarber.topplayers;
 
-import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
+import com.mikepenz.fastadapter.commons.utils.FastAdapterDiffUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +23,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.Call;
@@ -65,7 +67,9 @@ public class TopFragment extends Fragment {
                         TopEntity top = new TopEntity(jsonObj);
                         tops.add(top);
                     }
-                    TopDatabase.getInstance(getActivity()).topDao().insertTops(tops);
+                    if (!tops.isEmpty()) {
+                        TopDatabase.getInstance(getActivity()).topDao().insertTops(tops);
+                    }
                 } catch (JSONException | NullPointerException ex) {
                     Log.w(TAG, "parsing top failed", ex);
                 }
@@ -84,11 +88,24 @@ public class TopFragment extends Fragment {
 
         mViewModel = ViewModelProviders.of(this).get(TopViewModel.class);
         mViewModel.getTops().observe(this, tops -> {
-            mItemAdapter.clear();
+            List<TopItem> oldList = mItemAdapter.getAdapterItems();
+            List<TopItem> newList = new ArrayList<>();
             for (TopEntity top: tops) {
                 TopItem item = new TopItem(top);
-                mItemAdapter.add(item);
+                newList.add(item);
             }
+
+            // (1) THIS STRAIGHTFORWARD WAY WORKS, BUT FLICKERS
+            // mItemAdapter.clear().add(newList);
+
+            // (2) THIS RESULTS IN EMPTY RECYCLERVIEW
+            // DiffCallback diffCallback = new DiffCallback(oldList, newList);
+            // DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+            // diffResult.dispatchUpdatesTo(mFastAdapter);
+
+            // (3) FINALLY, THIS WORKS, BUT FLICKERS TOO
+            DiffUtil.DiffResult diffResult = FastAdapterDiffUtil.calculateDiff(mItemAdapter, newList);
+            FastAdapterDiffUtil.set(mItemAdapter, diffResult);
         });
 
         View v = inflater.inflate(R.layout.top_fragment, container, false);
@@ -131,8 +148,8 @@ public class TopFragment extends Fragment {
     }
 
     // {"data":[
-    // {"uid":4264,"elo":2467,"avg_time":"01:08","avg_score":16.7,"given":"Андрей","photo":"https://avt-1.foto.mail.ru/mail/andrej.kudinov.97/_avatarbig?1363079237"},
-    // {"uid":6042,"elo":2444,"avg_time":"00:40","avg_score":20.0,"given":"ЁЖ","photo":"https://avt-26.foto.mail.ru/mail/ez19311931/_avatarbig?1526102608"},
-    // {"uid":5176,"elo":2414,"avg_time":"00:32","avg_score":16.6,"given":"Сергей","photo":"https://avt-11.foto.mail.ru/mail/stangrit57/_avatarbig?1529002082"}
+    // {"uid":4264,"elo":2467,"avg_time":"01:08","avg_score":16.7,"given":"Andrej","photo":"https://avt-1.foto.mail.ru/mail/andrej.kudinov.97/_avatarbig?1363079237"},
+    // {"uid":6042,"elo":2444,"avg_time":"00:40","avg_score":20.0,"given":"Josh","photo":"https://avt-26.foto.mail.ru/mail/ez19311931/_avatarbig?1526102608"},
+    // {"uid":5176,"elo":2414,"avg_time":"00:32","avg_score":16.6,"given":"Sergej","photo":"https://avt-11.foto.mail.ru/mail/stangrit57/_avatarbig?1529002082"}
     // ]}
 }

@@ -14,7 +14,7 @@ import java.util.List;
 
 public class TopItem extends AbstractItem<TopItem, TopItem.ViewHolder> {
 
-    // {"uid":4264,"elo":2467,"avg_time":"01:08","avg_score":16.7,"given":"Андрей",
+    // {"uid":4264,"elo":2467,"avg_time":"01:08","avg_score":16.7,"given":"Andrej",
     // "photo":"https://avt-1.foto.mail.ru/mail/andrej.kudinov.97/_avatarbig?1363079237"},
 
     public int uid;
@@ -31,6 +31,20 @@ public class TopItem extends AbstractItem<TopItem, TopItem.ViewHolder> {
         this.photo = top.photo;
         this.avg_time = top.avg_time;
         this.avg_score = top.avg_score;
+    }
+
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof TopItem) {
+            return this.uid == ((TopItem) other).uid;
+        }
+
+        return false;
+    }
+
+    public int hashCode() {
+        return uid;
     }
 
     @Override
