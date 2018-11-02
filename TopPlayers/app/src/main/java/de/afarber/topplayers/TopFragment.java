@@ -95,15 +95,15 @@ public class TopFragment extends Fragment {
                 newList.add(item);
             }
 
-            // (1) THIS STRAIGHTFORWARD WAY WORKS, BUT FLICKERS
+            // (1) THIS STRAIGHTFORWARD WAY WORKS, BUT FLICKERS ONCE
             // mItemAdapter.clear().add(newList);
 
-            // (2) THIS RESULTS IN EMPTY RECYCLERVIEW
+            // (2) THIS RESULTS IN EMPTY RECYCLERVIEW FOR SOME REASON
             // DiffCallback diffCallback = new DiffCallback(oldList, newList);
             // DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
             // diffResult.dispatchUpdatesTo(mFastAdapter);
 
-            // (3) FINALLY, THIS WORKS, BUT FLICKERS TOO
+            // (3) THIS WORKS AND DOES NOT FLICKER, BUT I WONDER HOW TO USE DiffUtil INSTEAD
             DiffUtil.DiffResult diffResult = FastAdapterDiffUtil.calculateDiff(mItemAdapter, newList);
             FastAdapterDiffUtil.set(mItemAdapter, diffResult);
         });
