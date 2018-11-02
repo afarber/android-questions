@@ -33,17 +33,8 @@ public class TopItem extends AbstractItem<TopItem, TopItem.ViewHolder> {
         this.avg_score = top.avg_score;
     }
 
-
     @Override
-    public boolean equals(Object other) {
-        if (other instanceof TopItem) {
-            return this.uid == ((TopItem) other).uid;
-        }
-
-        return false;
-    }
-
-    public int hashCode() {
+    public long getIdentifier() {
         return uid;
     }
 
