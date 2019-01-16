@@ -10,4 +10,9 @@
     <string name="photo2">photo 2</string>
     <string name="details">details</string>
     <string name="board">gaming board</string>
+    <string name="filter_games_result">Found games: %d</string>
+    <string name="insert_player">Player name</string>
+    <string name="filter_players">Filter players</string>
+    <string name="sort_asc_title">Up</string>
+    <string name="sort_desc_title">Down</string>
 </resources>

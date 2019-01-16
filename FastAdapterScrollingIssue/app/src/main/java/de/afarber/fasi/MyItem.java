@@ -16,8 +16,8 @@ import java.util.List;
 import androidx.annotation.NonNull;
 
 public class MyItem extends AbstractItem<MyItem, MyItem.ViewHolder> {
-    private final static String WON = "won";
-    private final static String LOST = "lost";
+    public final static String WON = "won";
+    public final static String LOST = "lost";
 
     public boolean details;
     public long stamp;
@@ -145,6 +145,7 @@ public class MyItem extends AbstractItem<MyItem, MyItem.ViewHolder> {
             mElo2.setText(String.valueOf(item.elo2));
             mPhoto1.setImageResource(R.drawable.account_gray);
             mPhoto2.setImageResource(R.drawable.account_gray);
+            mBoard.setImageResource(R.drawable.checkerboard_gray);
         }
 
         @Override

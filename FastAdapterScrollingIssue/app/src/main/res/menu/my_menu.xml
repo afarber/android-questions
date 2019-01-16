@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/magnify_white"
+        android:title="@string/filter_players"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="collapseActionView|ifRoom" />
+
+    <item
+        android:id="@+id/item_sort_asc"
+        android:icon="@drawable/sort_ascending_white"
+        android:title="@string/sort_asc_title"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/item_sort_desc"
+        android:icon="@drawable/sort_descending_white"
+        android:title="@string/sort_desc_title"
+        app:showAsAction="always" />
+</menu>
