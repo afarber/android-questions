@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="navi_drawer_new_game" />
+    <item type="id" name="navi_drawer_your_move" />
+    <item type="id" name="navi_drawer_opponent_move" />
+    <item type="id" name="navi_drawer_wins" />
+    <item type="id" name="navi_drawer_draws" />
+    <item type="id" name="navi_drawer_losses" />
+    <item type="id" name="navi_drawer_stats" />
+    <item type="id" name="navi_top" />
+    <item type="id" name="navi_drawer_finished" />
+    <item type="id" name="navi_drawer_daily" />
+    <item type="id" name="navi_drawer_help" />
+    <item type="id" name="navi_drawer_privacy" />
+    <item type="id" name="navi_drawer_tos" />
+    <item type="id" name="navi_drawer_find_word" />
+    <item type="id" name="navi_drawer_letters_2" />
+    <item type="id" name="navi_drawer_letters_3" />
+    <item type="id" name="navi_drawer_letter_hard" />
+    <item type="id" name="navi_drawer_letter_eh" />
+
+    <item type="id" name="my_item_id" />
+
+</resources>

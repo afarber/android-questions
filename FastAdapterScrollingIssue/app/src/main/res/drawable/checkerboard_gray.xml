@@ -1,0 +1,8 @@
+<!-- drawable/checkerboard.xml -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:height="24dp"
+    android:width="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path android:fillColor="#999" android:pathData="M3,3H21V21H3V3M5,5V12H12V19H19V12H12V5H5Z" />
+</vector>

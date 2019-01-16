@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Scrolling Issue</string>
+    <string name="won">Won %s</string>
+    <string name="lost">Lost %s</string>
+    <string name="draw">Draw %s</string>
+    <string name="str_game">Game %d</string>
+    <string name="str_score">Score: %d</string>
+    <string name="photo">photo</string>
+    <string name="photo1">photo 1</string>
+    <string name="photo2">photo 2</string>
+    <string name="details">details</string>
+    <string name="board">gaming board</string>
+</resources>

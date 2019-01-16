@@ -23,6 +23,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/DragAndDraw/screenshot.png)
 
 
+[FastAdapterScrollingIssue](https://github.com/afarber/android-newbie/tree/master/FastAdapterScrollingIssue):
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/FastAdapterScrollingIssue/screenshot.png)
+
+
 [GeoQuiz](https://github.com/afarber/android-newbie/tree/master/GeoQuiz):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/GeoQuiz/screenshot.png)
