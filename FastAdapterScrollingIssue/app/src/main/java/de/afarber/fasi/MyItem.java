@@ -94,12 +94,12 @@ public class MyItem extends AbstractItem<MyItem, MyItem.ViewHolder> {
             mGid = view.findViewById(R.id.gid);
             mInfo = view.findViewById(R.id.info);
             mScore1 = view.findViewById(R.id.score1);
-            mScore2 = view.findViewById(R.id.score);
+            mScore2 = view.findViewById(R.id.score2);
             mGiven1 = view.findViewById(R.id.given1);
-            mGiven2 = view.findViewById(R.id.given);
+            mGiven2 = view.findViewById(R.id.given2);
             mElo1 = view.findViewById(R.id.elo1);
             mElo2 = view.findViewById(R.id.elo2);
-            mPhoto1 = view.findViewById(R.id.photo);
+            mPhoto1 = view.findViewById(R.id.photo1);
             mPhoto2 = view.findViewById(R.id.photo2);
             mBoard = view.findViewById(R.id.board);
         }
