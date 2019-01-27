@@ -82,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
             item.score1 = (int) (Math.random() * 50);
             item.score2 = (int) (Math.random() * 50);
             item.finished = new Date().toString().substring(0, 10);
+            item.elo1 = 1500;
+            item.elo2 = 1500;
             newList.add(item);
         }
 
