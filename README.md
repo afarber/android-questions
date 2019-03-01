@@ -42,6 +42,9 @@ Screenshots
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/HelloMoon/screenshot.png)
 
+[InteractiveChart](https://github.com/afarber/android-newbie/tree/master/InteractiveChart) the custom view with overscroller and edge effects the Google guide [Animate a scroll gesture](https://developer.android.com/training/gestures/scroll):
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/InteractiveChart/screenshot.png)
 
 [LaunchMaps](https://github.com/afarber/android-newbie/tree/master/LaunchMaps):
 
