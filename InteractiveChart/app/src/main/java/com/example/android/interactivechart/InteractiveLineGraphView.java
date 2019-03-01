@@ -19,11 +19,13 @@ package com.example.android.interactivechart;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -31,6 +33,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.EdgeEffect;
 import android.widget.OverScroller;
 
 import androidx.core.os.ParcelableCompat;
@@ -55,7 +58,7 @@ import androidx.core.widget.EdgeEffectCompat;
  * The view also demonstrates the correct use of
  * <a href="http://developer.android.com/design/style/touch-feedback.html">touch feedback</a> to
  * indicate to users that they've reached the content edges after a pan or fling gesture. This
- * is done using the {@link EdgeEffectCompat} class.
+ * is done using the {@link EdgeEffect} class.
  * <p>
  * Finally, this class demonstrates the basics of creating a custom view, including support for
  * custom attributes (see the constructors), a simple implementation for
@@ -69,8 +72,6 @@ import androidx.core.widget.EdgeEffectCompat;
  * view's content for vision-impaired users.
  */
 public class InteractiveLineGraphView extends View {
-    private static final String TAG = "InteractiveLineGraphView";
-
     /**
      * The number of individual points (samples) in the chart series to draw onscreen.
      */
@@ -148,10 +149,10 @@ public class InteractiveLineGraphView extends View {
     private RectF mScrollerStartViewport = new RectF(); // Used only for zooms and flings.
 
     // Edge effect / overscroll tracking objects.
-    private EdgeEffectCompat mEdgeEffectTop;
-    private EdgeEffectCompat mEdgeEffectBottom;
-    private EdgeEffectCompat mEdgeEffectLeft;
-    private EdgeEffectCompat mEdgeEffectRight;
+    private EdgeEffect mEdgeEffectTop;
+    private EdgeEffect mEdgeEffectBottom;
+    private EdgeEffect mEdgeEffectLeft;
+    private EdgeEffect mEdgeEffectRight;
 
     private boolean mEdgeEffectTopActive;
     private boolean mEdgeEffectBottomActive;
@@ -231,10 +232,17 @@ public class InteractiveLineGraphView extends View {
         mZoomer = new Zoomer(context);
 
         // Sets up edge effects
-        mEdgeEffectLeft = new EdgeEffectCompat(context);
-        mEdgeEffectTop = new EdgeEffectCompat(context);
-        mEdgeEffectRight = new EdgeEffectCompat(context);
-        mEdgeEffectBottom = new EdgeEffectCompat(context);
+        mEdgeEffectLeft = new EdgeEffect(context);
+        mEdgeEffectTop = new EdgeEffect(context);
+        mEdgeEffectRight = new EdgeEffect(context);
+        mEdgeEffectBottom = new EdgeEffect(context);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mEdgeEffectLeft.setColor(Color.BLUE);
+            mEdgeEffectTop.setColor(Color.BLUE);
+            mEdgeEffectRight.setColor(Color.BLUE);
+            mEdgeEffectBottom.setColor(Color.BLUE);
+        }
     }
 
     /**

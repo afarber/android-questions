@@ -16,7 +16,7 @@
 
 <com.example.android.interactivechart.InteractiveLineGraphView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/com.example.android.interactivechart"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/chart"
     android:padding="@dimen/chart_padding"
     android:layout_width="match_parent"

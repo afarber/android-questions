@@ -27,7 +27,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mGraphView = (InteractiveLineGraphView) findViewById(R.id.chart);
+        mGraphView = findViewById(R.id.chart);
     }
 
     @Override
