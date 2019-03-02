@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends Activity {
+    public final static String TAG = "InteractiveChart";
     private InteractiveLineGraphView mGraphView;
 
     protected void onCreate(Bundle savedInstanceState) {

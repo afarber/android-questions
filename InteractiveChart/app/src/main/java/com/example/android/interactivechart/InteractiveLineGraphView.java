@@ -29,6 +29,7 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -36,10 +37,11 @@ import android.view.View;
 import android.widget.EdgeEffect;
 import android.widget.OverScroller;
 
-import androidx.core.os.ParcelableCompat;
-import androidx.core.os.ParcelableCompatCreatorCallbacks;
+import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
 import androidx.core.widget.EdgeEffectCompat;
+
+import static com.example.android.interactivechart.MainActivity.TAG;
 
 /**
  * A view representing a simple yet interactive line chart for the function <code>x^3 - x/4</code>.
@@ -1119,6 +1121,7 @@ public class InteractiveLineGraphView extends View {
         Parcelable superState = super.onSaveInstanceState();
         SavedState ss = new SavedState(superState);
         ss.viewport = mCurrentViewport;
+        Log.d(TAG, "onSaveInstanceState: " + ss);
         return ss;
     }
 
@@ -1131,6 +1134,7 @@ public class InteractiveLineGraphView extends View {
 
         SavedState ss = (SavedState) state;
         super.onRestoreInstanceState(ss.getSuperState());
+        Log.d(TAG, "onRestoreInstanceState: " + ss);
 
         mCurrentViewport = ss.viewport;
     }
@@ -1141,7 +1145,7 @@ public class InteractiveLineGraphView extends View {
     public static class SavedState extends BaseSavedState {
         private RectF viewport;
 
-        public SavedState(Parcelable superState) {
+        protected SavedState(Parcelable superState) {
             super(superState);
         }
 
@@ -1154,6 +1158,7 @@ public class InteractiveLineGraphView extends View {
             out.writeFloat(viewport.bottom);
         }
 
+        @NonNull
         @Override
         public String toString() {
             return "InteractiveLineGraphView.SavedState{"
@@ -1161,18 +1166,24 @@ public class InteractiveLineGraphView extends View {
                     + " viewport=" + viewport.toString() + "}";
         }
 
-        public static final Parcelable.Creator<SavedState> CREATOR
-                = ParcelableCompat.newCreator(new ParcelableCompatCreatorCallbacks<SavedState>() {
+        public static final Parcelable.ClassLoaderCreator<SavedState> CREATOR
+                = new Parcelable.ClassLoaderCreator<SavedState>() {
+
             @Override
-            public SavedState createFromParcel(Parcel in, ClassLoader loader) {
-                return new SavedState(in);
+            public SavedState createFromParcel(Parcel source, ClassLoader loader) {
+                return new SavedState(source);
+            }
+
+            @Override
+            public SavedState createFromParcel(Parcel source) {
+                return new SavedState(source);
             }
 
             @Override
             public SavedState[] newArray(int size) {
                 return new SavedState[size];
             }
-        });
+        };
 
         SavedState(Parcel in) {
             super(in);
