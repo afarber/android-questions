@@ -3,6 +3,7 @@ package de.afarber.pinchzoom;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -12,6 +13,8 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+
+import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
@@ -23,14 +26,11 @@ public class MyView extends View {
     private final ScaleGestureDetector mScaleDetector;
     private final GestureDetector mGestureDetector;
 
-    private final Drawable mBoard;
+    private final Drawable mBoardDrawable;
     private final float mBoardWidth;
     private final float mBoardHeight;
-
-    private float mBoardScale = 2f;
-    // 0f/0f values are max and indicate that the left/top of the scaled board is displayed
-    private float mBoardScrollX = 0f;
-    private float mBoardScrollY = 0f;
+    private Matrix mBoardMatrix;
+    //private float[] mBoardValues = new float[9];
 
     public MyView(Context context) {
         this(context, null, 0);
@@ -43,74 +43,57 @@ public class MyView extends View {
     public MyView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
-        mBoard = ResourcesCompat.getDrawable(context.getResources(), R.drawable.board, null);
-        mBoardWidth = mBoard.getIntrinsicWidth();
-        mBoardHeight = mBoard.getIntrinsicHeight();
-        mBoard.setBounds(0, 0, (int) mBoardWidth, (int) mBoardHeight);
+        mBoardDrawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.board, null);
+        mBoardWidth = mBoardDrawable.getIntrinsicWidth();
+        mBoardHeight = mBoardDrawable.getIntrinsicHeight();
+        mBoardDrawable.setBounds(0, 0, (int) mBoardWidth, (int) mBoardHeight);
 
-        mScaleDetector = new ScaleGestureDetector(context,
-                new ScaleGestureDetector.SimpleOnScaleGestureListener() {
-            @Override
-            public boolean onScale(ScaleGestureDetector scaleDetector) {
-                float focusX = getWidth() / 2f; //scaleDetector.getFocusX();
-                float focusY = getHeight() / 2f; //scaleDetector.getFocusY();
-                float factor = scaleDetector.getScaleFactor();
+        mBoardMatrix = new Matrix();
 
-                mBoardScrollX = mBoardScrollX + focusX * (1 - factor) * mBoardScale;
-                mBoardScrollY = mBoardScrollY + focusY * (1 - factor) * mBoardScale;
-                mBoardScale *= factor;
-
-                Log.d(TAG, "mBoardScale=" + mBoardScale + ", mBoardScrollX=" + mBoardScrollX + ", mBoardScrollY=" + mBoardScrollY);
-
-                ViewCompat.postInvalidateOnAnimation(MyView.this);
-                return true;
-            }
-        });
-
-        mGestureDetector = new GestureDetector(context,
-                new GestureDetector.SimpleOnGestureListener() {
-            @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float dX, float dY) {
-                mBoardScrollX -= dX;
-                mBoardScrollY -= dY;
-                ViewCompat.postInvalidateOnAnimation(MyView.this);
-                return true;
-            }
-        });
+        mScaleDetector = new ScaleGestureDetector(context, scaleListener);
+        mGestureDetector = new GestureDetector(context, listener);
     }
+
+    ScaleGestureDetector.OnScaleGestureListener scaleListener = new ScaleGestureDetector.SimpleOnScaleGestureListener() {
+        @Override
+        public boolean onScale(ScaleGestureDetector scaleDetector) {
+            float factor = scaleDetector.getScaleFactor();
+            mBoardMatrix.postScale(factor, factor, scaleDetector.getFocusX(), scaleDetector.getFocusY());
+            ViewCompat.postInvalidateOnAnimation(MyView.this);
+            return true;
+        }
+    };
+
+    GestureDetector.OnGestureListener listener = new GestureDetector.SimpleOnGestureListener() {
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float dX, float dY) {
+            mBoardMatrix.postTranslate(-dX, -dY);
+            ViewCompat.postInvalidateOnAnimation(MyView.this);
+            return true;
+        }
+    };
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-
-        //mBoardScale = Math.min(w / mBoardWidth, h / mBoardHeight);
-        mBoardScale = Math.max(w / mBoardWidth, h / mBoardHeight);
-
-        float minScrollX = w - mBoardScale * mBoardWidth;
-        float minScrollY = h - mBoardScale * mBoardHeight;
-
-        // center-align the board
-        mBoardScrollX = minScrollX / 2;
-        mBoardScrollY = minScrollY / 2;
+        float scale = Math.max(w / mBoardWidth, h / mBoardHeight);
+        mBoardMatrix.setScale(scale, scale);
+        mBoardMatrix.postTranslate((w - scale * mBoardWidth) / 2f, (h - scale * mBoardHeight) / 2f);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
         canvas.save();
-        canvas.scale(mBoardScale, mBoardScale);
-        canvas.translate(mBoardScrollX / mBoardScale, mBoardScrollY / mBoardScale);
-        mBoard.draw(canvas);
+        canvas.concat(mBoardMatrix);
+        mBoardDrawable.draw(canvas);
         canvas.restore();
     }
 
     @Override
     @SuppressLint("ClickableViewAccessibility")
     public boolean onTouchEvent(MotionEvent e) {
-        return mGestureDetector.onTouchEvent(e) ||
-                mScaleDetector.onTouchEvent(e) ||
-                super.onTouchEvent(e);
+        mGestureDetector.onTouchEvent(e);
+        mScaleDetector.onTouchEvent(e);
+        return true;
     }
 
 
@@ -122,14 +105,11 @@ public class MyView extends View {
 
 
     // the code below is used for screen rotation
-
     @Override
     public Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
         SavedState ss = new SavedState(superState);
-        ss.mBoardScale = mBoardScale;
-        ss.mBoardScrollX = mBoardScrollX;
-        ss.mBoardScrollY = mBoardScrollY;
+        mBoardMatrix.getValues(ss.mBoardValues);
         Log.d(TAG, "onSaveInstanceState: " + ss);
         return ss;
     }
@@ -145,15 +125,11 @@ public class MyView extends View {
         super.onRestoreInstanceState(ss.getSuperState());
         Log.d(TAG, "onRestoreInstanceState: " + ss);
 
-        mBoardScale = ss.mBoardScale;
-        mBoardScrollX = ss.mBoardScrollX;
-        mBoardScrollY = ss.mBoardScrollY;
+        mBoardMatrix.setValues(ss.mBoardValues);
     }
 
     public static class SavedState extends BaseSavedState {
-        private float mBoardScale;
-        private float mBoardScrollX;
-        private float mBoardScrollY;
+        private float[] mBoardValues = new float[9];
 
         protected SavedState(Parcelable superState) {
             super(superState);
@@ -162,9 +138,7 @@ public class MyView extends View {
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
-            out.writeFloat(mBoardScale);
-            out.writeFloat(mBoardScrollX);
-            out.writeFloat(mBoardScrollY);
+            out.writeFloatArray(mBoardValues);
         }
 
         @NonNull
@@ -172,9 +146,7 @@ public class MyView extends View {
         public String toString() {
             return "MyView.SavedState{" +
                     Integer.toHexString(System.identityHashCode(this)) +
-                    " mBoardScale=" + mBoardScale +
-                    " mBoardScrollX=" + mBoardScrollX +
-                    " mBoardScrollY=" + mBoardScrollY +
+                    " mBoardValues=" + Arrays.toString(mBoardValues) +
                     "}";
         }
 
@@ -199,9 +171,7 @@ public class MyView extends View {
 
         SavedState(Parcel in) {
             super(in);
-            mBoardScale = in.readFloat();
-            mBoardScrollX = in.readFloat();
-            mBoardScrollY = in.readFloat();
+            in.readFloatArray(mBoardValues);
         }
     }
 }
