@@ -31,7 +31,6 @@ public class MyView extends View {
     private final float mBoardWidth;
     private final float mBoardHeight;
     private final Matrix mBoardMatrix = new Matrix();
-    private float[] mBoardValues = new float[9];
 
     public MyView(Context context) {
         this(context, null, 0);
