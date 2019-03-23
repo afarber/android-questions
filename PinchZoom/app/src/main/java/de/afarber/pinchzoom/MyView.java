@@ -1,5 +1,6 @@
 package de.afarber.pinchzoom;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -29,8 +30,8 @@ public class MyView extends View {
     private final Drawable mBoardDrawable;
     private final float mBoardWidth;
     private final float mBoardHeight;
-    private Matrix mBoardMatrix;
-    //private float[] mBoardValues = new float[9];
+    private final Matrix mBoardMatrix = new Matrix();
+    private float[] mBoardValues = new float[9];
 
     public MyView(Context context) {
         this(context, null, 0);
@@ -48,30 +49,55 @@ public class MyView extends View {
         mBoardHeight = mBoardDrawable.getIntrinsicHeight();
         mBoardDrawable.setBounds(0, 0, (int) mBoardWidth, (int) mBoardHeight);
 
-        mBoardMatrix = new Matrix();
+        ScaleGestureDetector.OnScaleGestureListener scaleListener =
+                new ScaleGestureDetector.SimpleOnScaleGestureListener() {
+            @Override
+            public boolean onScale(ScaleGestureDetector scaleDetector) {
+                float factor = scaleDetector.getScaleFactor();
+                mBoardMatrix.postScale(factor, factor, scaleDetector.getFocusX(), scaleDetector.getFocusY());
+                ViewCompat.postInvalidateOnAnimation(MyView.this);
+                return true;
+            }
+        };
+
+        GestureDetector.OnGestureListener listener =
+                new GestureDetector.SimpleOnGestureListener() {
+            private ValueAnimator mZoomAnimator;
+
+            public boolean onDown(MotionEvent e) {
+                // TODO cancel zoom animator and overscroller
+                return true;
+            }
+
+            public boolean onDoubleTap(final MotionEvent e) {
+                mBoardMatrix.getValues(mBoardValues);
+                float scale = mBoardValues[Matrix.MSCALE_X];
+                mZoomAnimator = ValueAnimator.ofFloat(scale, 2f * scale);
+                mZoomAnimator.setDuration(3000);
+                mZoomAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animator){
+                        float scale = (float) animator.getAnimatedValue();
+                        mBoardMatrix.setScale(scale, scale, e.getX(), e.getY());
+                        ViewCompat.postInvalidateOnAnimation(MyView.this);
+                        Log.d(TAG, "XXX scale = " + scale);
+                    }
+                });
+                mZoomAnimator.start();
+                return true;
+            }
+
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float dX, float dY) {
+                mBoardMatrix.postTranslate(-dX, -dY);
+                ViewCompat.postInvalidateOnAnimation(MyView.this);
+                return true;
+            }
+        };
 
         mScaleDetector = new ScaleGestureDetector(context, scaleListener);
         mGestureDetector = new GestureDetector(context, listener);
     }
-
-    ScaleGestureDetector.OnScaleGestureListener scaleListener = new ScaleGestureDetector.SimpleOnScaleGestureListener() {
-        @Override
-        public boolean onScale(ScaleGestureDetector scaleDetector) {
-            float factor = scaleDetector.getScaleFactor();
-            mBoardMatrix.postScale(factor, factor, scaleDetector.getFocusX(), scaleDetector.getFocusY());
-            ViewCompat.postInvalidateOnAnimation(MyView.this);
-            return true;
-        }
-    };
-
-    GestureDetector.OnGestureListener listener = new GestureDetector.SimpleOnGestureListener() {
-        @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float dX, float dY) {
-            mBoardMatrix.postTranslate(-dX, -dY);
-            ViewCompat.postInvalidateOnAnimation(MyView.this);
-            return true;
-        }
-    };
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
