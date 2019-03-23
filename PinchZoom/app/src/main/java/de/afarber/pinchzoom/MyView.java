@@ -62,28 +62,14 @@ public class MyView extends View {
 
         GestureDetector.OnGestureListener listener =
                 new GestureDetector.SimpleOnGestureListener() {
-            private ValueAnimator mZoomAnimator;
-
-            public boolean onDown(MotionEvent e) {
-                // TODO cancel zoom animator and overscroller
-                return true;
-            }
-
             public boolean onDoubleTap(final MotionEvent e) {
-                mBoardMatrix.getValues(mBoardValues);
-                float scale = mBoardValues[Matrix.MSCALE_X];
-                mZoomAnimator = ValueAnimator.ofFloat(scale, 2f * scale);
-                mZoomAnimator.setDuration(3000);
-                mZoomAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animator){
-                        float scale = (float) animator.getAnimatedValue();
-                        mBoardMatrix.setScale(scale, scale, e.getX(), e.getY());
-                        ViewCompat.postInvalidateOnAnimation(MyView.this);
-                        Log.d(TAG, "XXX scale = " + scale);
-                    }
+                ValueAnimator zoomAnimator = ValueAnimator.ofFloat(0f, 1000f).setDuration(1000);
+                zoomAnimator.addUpdateListener(animator -> {
+                    Log.d(TAG, "onAnimationUpdate: " + (float) animator.getAnimatedValue());
+                    mBoardMatrix.postScale(1.005f, 1.005f, e.getX(), e.getY());
+                    ViewCompat.postInvalidateOnAnimation(MyView.this);
                 });
-                mZoomAnimator.start();
+                zoomAnimator.start();
                 return true;
             }
 
