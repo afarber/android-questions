@@ -30,7 +30,9 @@ public class MyView extends View {
     private final Drawable mBoardDrawable;
     private final float mBoardWidth;
     private final float mBoardHeight;
+
     private final Matrix mBoardMatrix = new Matrix();
+    private final float[] mBoardValues = new float[9];
 
     public MyView(Context context) {
         this(context, null, 0);
@@ -61,11 +63,19 @@ public class MyView extends View {
 
         GestureDetector.OnGestureListener listener =
                 new GestureDetector.SimpleOnGestureListener() {
+            @Override
             public boolean onDoubleTap(final MotionEvent e) {
-                ValueAnimator zoomAnimator = ValueAnimator.ofFloat(0f, 1000f).setDuration(1000);
+                mBoardMatrix.getValues(mBoardValues);
+                float startScale = mBoardValues[Matrix.MSCALE_X];
+                float endScale = 2 * startScale;
+                ValueAnimator zoomAnimator = ValueAnimator.ofFloat(startScale, endScale).setDuration(1000);
                 zoomAnimator.addUpdateListener(animator -> {
-                    Log.d(TAG, "onAnimationUpdate: " + (float) animator.getAnimatedValue());
-                    mBoardMatrix.postScale(1.005f, 1.005f, e.getX(), e.getY());
+                    float nextScale = (float) animator.getAnimatedValue();
+                    mBoardMatrix.getValues(mBoardValues);
+                    float currScale = mBoardValues[Matrix.MSCALE_X];
+                    float factor = nextScale / currScale;
+                    Log.d(TAG, "onAnimationUpdate: " + currScale + " -> " + nextScale);
+                    mBoardMatrix.postScale(factor, factor, e.getX(), e.getY());
                     ViewCompat.postInvalidateOnAnimation(MyView.this);
                 });
                 zoomAnimator.start();
