@@ -138,7 +138,7 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/Planets/screenshot.png)
 
 
-[PinchZoom](https://github.com/afarber/android-newbie/tree/master/PinchZoom):
+[PinchZoom](https://github.com/afarber/android-newbie/tree/master/PinchZoom) the final code provided by [pskink](https://stackoverflow.com/users/2252830/pskink):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/PinchZoom/screenshot.png)
 

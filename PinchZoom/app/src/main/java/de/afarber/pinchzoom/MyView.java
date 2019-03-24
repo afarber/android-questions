@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -34,6 +35,8 @@ public class MyView extends View {
     private final Matrix mBoardMatrix = new Matrix();
     private final float[] mBoardValues = new float[9];
 
+    private Boxer mBoxer;
+
     public MyView(Context context) {
         this(context, null, 0);
     }
@@ -56,6 +59,7 @@ public class MyView extends View {
             public boolean onScale(ScaleGestureDetector scaleDetector) {
                 float factor = scaleDetector.getScaleFactor();
                 mBoardMatrix.postScale(factor, factor, scaleDetector.getFocusX(), scaleDetector.getFocusY());
+                mBoxer.clamp(mBoardMatrix);
                 ViewCompat.postInvalidateOnAnimation(MyView.this);
                 return true;
             }
@@ -74,8 +78,9 @@ public class MyView extends View {
                     mBoardMatrix.getValues(mBoardValues);
                     float currScale = mBoardValues[Matrix.MSCALE_X];
                     float factor = nextScale / currScale;
-                    Log.d(TAG, "onAnimationUpdate: " + currScale + " -> " + nextScale);
+                    //Log.d(TAG, "onAnimationUpdate: " + currScale + " -> " + nextScale);
                     mBoardMatrix.postScale(factor, factor, e.getX(), e.getY());
+                    mBoxer.clamp(mBoardMatrix);
                     ViewCompat.postInvalidateOnAnimation(MyView.this);
                 });
                 zoomAnimator.start();
@@ -85,6 +90,7 @@ public class MyView extends View {
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float dX, float dY) {
                 mBoardMatrix.postTranslate(-dX, -dY);
+                mBoxer.clamp(mBoardMatrix);
                 ViewCompat.postInvalidateOnAnimation(MyView.this);
                 return true;
             }
@@ -99,6 +105,11 @@ public class MyView extends View {
         float scale = Math.max(w / mBoardWidth, h / mBoardHeight);
         mBoardMatrix.setScale(scale, scale);
         mBoardMatrix.postTranslate((w - scale * mBoardWidth) / 2f, (h - scale * mBoardHeight) / 2f);
+
+        RectF bounds = new RectF();
+        RectF src = new RectF(0, 0, 2 * mBoardWidth, 2 * mBoardHeight);
+        mBoardMatrix.mapRect(bounds, src);
+        mBoxer = new Boxer(bounds, src);
     }
 
     @Override
