@@ -35,6 +35,15 @@ public class MyView extends View {
     private final Matrix mBoardMatrix = new Matrix();
     private final float[] mBoardValues = new float[9];
 
+    private float mMinScale;
+    private float mMaxScale;
+
+    private float mMinScrollX;
+    private float mMinScrollY;
+
+    private final float mMaxScrollX = 0f;
+    private final float mMaxScrollY = 0f;
+
     private Boxer mBoxer;
 
     public MyView(Context context) {
@@ -57,7 +66,15 @@ public class MyView extends View {
                 new ScaleGestureDetector.SimpleOnScaleGestureListener() {
             @Override
             public boolean onScale(ScaleGestureDetector scaleDetector) {
+                float currScale = getBoardScale();
+                float minFactor = mMinScale / currScale;
+                float maxFactor = mMaxScale / currScale;
                 float factor = scaleDetector.getScaleFactor();
+                if (factor < minFactor) {
+                    factor = minFactor;
+                } else if (factor > maxFactor) {
+                    factor = maxFactor;
+                }
                 mBoardMatrix.postScale(factor, factor, scaleDetector.getFocusX(), scaleDetector.getFocusY());
                 mBoxer.clamp(mBoardMatrix);
                 ViewCompat.postInvalidateOnAnimation(MyView.this);
@@ -70,15 +87,12 @@ public class MyView extends View {
             @Override
             public boolean onDoubleTap(final MotionEvent e) {
                 mBoardMatrix.getValues(mBoardValues);
-                float startScale = mBoardValues[Matrix.MSCALE_X];
-                float endScale = 2 * startScale;
+                float startScale = getBoardScale();
+                float endScale = (startScale < mMaxScale ? mMaxScale : mMinScale);
                 ValueAnimator zoomAnimator = ValueAnimator.ofFloat(startScale, endScale).setDuration(1000);
                 zoomAnimator.addUpdateListener(animator -> {
                     float nextScale = (float) animator.getAnimatedValue();
-                    mBoardMatrix.getValues(mBoardValues);
-                    float currScale = mBoardValues[Matrix.MSCALE_X];
-                    float factor = nextScale / currScale;
-                    //Log.d(TAG, "onAnimationUpdate: " + currScale + " -> " + nextScale);
+                    float factor = nextScale / getBoardScale();
                     mBoardMatrix.postScale(factor, factor, e.getX(), e.getY());
                     mBoxer.clamp(mBoardMatrix);
                     ViewCompat.postInvalidateOnAnimation(MyView.this);
@@ -100,11 +114,22 @@ public class MyView extends View {
         mGestureDetector = new GestureDetector(context, listener);
     }
 
+    private float getBoardScale() {
+        mBoardMatrix.getValues(mBoardValues);
+        return mBoardValues[Matrix.MSCALE_X];
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        mMinScale = Math.max(w / mBoardWidth, h / mBoardHeight);
         float scale = Math.max(w / mBoardWidth, h / mBoardHeight);
+        mMaxScale = 2 * Math.max(w / mBoardWidth, h / mBoardHeight);
+
+        mMinScrollX = w - scale * mBoardWidth;
+        mMinScrollY = h - scale * mBoardHeight;
+
         mBoardMatrix.setScale(scale, scale);
-        mBoardMatrix.postTranslate((w - scale * mBoardWidth) / 2f, (h - scale * mBoardHeight) / 2f);
+        mBoardMatrix.postTranslate(mMinScrollX / 2f, mMinScrollY / 2f);
 
         RectF bounds = new RectF();
         RectF src = new RectF(0, 0, 2 * mBoardWidth, 2 * mBoardHeight);
