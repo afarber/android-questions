@@ -4,7 +4,9 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
@@ -35,16 +37,18 @@ public class MyView extends View {
     private final Matrix mBoardMatrix = new Matrix();
     private final float[] mBoardValues = new float[9];
 
+    private final RectF mBoardSrc = new RectF();
+    private final RectF mBoardDst = new RectF();
+    private final RectF mMaxBounds = new RectF();
+    private final RectF mMinBounds = new RectF();
+
     private float mMinScale;
     private float mMaxScale;
 
-    private float mMinScrollX;
-    private float mMinScrollY;
-
-    private final float mMaxScrollX = 0f;
-    private final float mMaxScrollY = 0f;
-
     private Boxer mBoxer;
+
+    private final Paint mRedPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+    private final Paint mBluePaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
 
     public MyView(Context context) {
         this(context, null, 0);
@@ -57,10 +61,17 @@ public class MyView extends View {
     public MyView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
+        mRedPaint.setStyle(Paint.Style.FILL);
+        mRedPaint.setARGB(50, 250, 0, 0);
+
+        mBluePaint.setStyle(Paint.Style.FILL);
+        mBluePaint.setARGB(40, 0, 0, 250);
+
         mBoardDrawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.board, null);
         mBoardWidth = mBoardDrawable.getIntrinsicWidth();
         mBoardHeight = mBoardDrawable.getIntrinsicHeight();
         mBoardDrawable.setBounds(0, 0, (int) mBoardWidth, (int) mBoardHeight);
+        mBoardSrc.set(0f, 0f, mBoardWidth, mBoardHeight);
 
         ScaleGestureDetector.OnScaleGestureListener scaleListener =
                 new ScaleGestureDetector.SimpleOnScaleGestureListener() {
@@ -76,7 +87,10 @@ public class MyView extends View {
                     factor = maxFactor;
                 }
                 mBoardMatrix.postScale(factor, factor, scaleDetector.getFocusX(), scaleDetector.getFocusY());
+
                 mBoxer.clamp(mBoardMatrix);
+                constraint();
+
                 ViewCompat.postInvalidateOnAnimation(MyView.this);
                 return true;
             }
@@ -94,7 +108,10 @@ public class MyView extends View {
                     float nextScale = (float) animator.getAnimatedValue();
                     float factor = nextScale / getBoardScale();
                     mBoardMatrix.postScale(factor, factor, e.getX(), e.getY());
+
                     mBoxer.clamp(mBoardMatrix);
+                    constraint();
+
                     ViewCompat.postInvalidateOnAnimation(MyView.this);
                 });
                 zoomAnimator.start();
@@ -104,7 +121,10 @@ public class MyView extends View {
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float dX, float dY) {
                 mBoardMatrix.postTranslate(-dX, -dY);
+
                 mBoxer.clamp(mBoardMatrix);
+                constraint();
+
                 ViewCompat.postInvalidateOnAnimation(MyView.this);
                 return true;
             }
@@ -121,20 +141,41 @@ public class MyView extends View {
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        mMinScale = Math.max(w / mBoardWidth, h / mBoardHeight);
-        float scale = Math.max(w / mBoardWidth, h / mBoardHeight);
+        mMinScale = Math.min(w / mBoardWidth, h / mBoardHeight);
         mMaxScale = 2 * Math.max(w / mBoardWidth, h / mBoardHeight);
 
-        mMinScrollX = w - scale * mBoardWidth;
-        mMinScrollY = h - scale * mBoardHeight;
+        float min = Math.min(w, h);
+        float padX = (w - min) / 2f;
+        mMinBounds.set(padX, 0, padX + min, min);
+        mMaxBounds.set(w - mBoardWidth, h - mBoardHeight, mBoardWidth - w, mBoardHeight - h);
 
+        float scale = mMaxScale / 2f;
         mBoardMatrix.setScale(scale, scale);
-        mBoardMatrix.postTranslate(mMinScrollX / 2f, mMinScrollY / 2f);
+        mBoardMatrix.postTranslate((w - scale * mBoardWidth) / 2f, (h - scale * mBoardHeight) / 2f);
 
         RectF bounds = new RectF();
         RectF src = new RectF(0, 0, 2 * mBoardWidth, 2 * mBoardHeight);
         mBoardMatrix.mapRect(bounds, src);
         mBoxer = new Boxer(bounds, src);
+    }
+
+    private void constraint() {
+        mBoardMatrix.mapRect(mBoardDst, mBoardSrc);
+
+        Log.d(TAG,"XXX mBoardDst = " + mBoardDst);
+        Log.d(TAG,"XXX mMaxBounds = " + mMaxBounds);
+        Log.d(TAG,"XXX mMinBounds = " + mMinBounds);
+
+
+        if (mMaxBounds.contains(mBoardDst)) {
+            Log.d(TAG,"XXX mMaxBounds ok");
+        }
+
+        if (mBoardDst.contains(mMinBounds)) {
+            Log.d(TAG,"XXX mMinBounds ok");
+        }
+
+        Log.d(TAG,"XXX XXX XXX XXX XXX");
     }
 
     @Override
@@ -143,6 +184,9 @@ public class MyView extends View {
         canvas.concat(mBoardMatrix);
         mBoardDrawable.draw(canvas);
         canvas.restore();
+
+        canvas.drawRect(mMaxBounds, mBluePaint);
+        canvas.drawRect(mMinBounds, mRedPaint);
     }
 
     @Override
