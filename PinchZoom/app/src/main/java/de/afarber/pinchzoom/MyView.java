@@ -74,9 +74,9 @@ public class MyView extends View {
                 }
                 mBoardMatrix.postScale(factor, factor, scaleDetector.getFocusX(), scaleDetector.getFocusY());
 
-                //updateLimits(mMaxScale / 2f);
+                updateLimits(factor * currScale);
 
-                constraint();
+                limitScroll();
 
                 ViewCompat.postInvalidateOnAnimation(MyView.this);
                 return true;
@@ -96,9 +96,9 @@ public class MyView extends View {
                     float factor = nextScale / getBoardScale();
                     mBoardMatrix.postScale(factor, factor, e.getX(), e.getY());
 
-                    //updateLimits(mMaxScale / 2f);
+                    updateLimits(nextScale);
 
-                    constraint();
+                    limitScroll();
 
                     ViewCompat.postInvalidateOnAnimation(MyView.this);
                 });
@@ -110,7 +110,7 @@ public class MyView extends View {
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float dX, float dY) {
                 mBoardMatrix.postTranslate(-dX, -dY);
 
-                constraint();
+                limitScroll();
 
                 ViewCompat.postInvalidateOnAnimation(MyView.this);
                 return true;
@@ -128,37 +128,52 @@ public class MyView extends View {
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        mMinScale = Math.min(w / mBoardWidth, h / mBoardHeight);
-        mMaxScale = 2 * Math.max(w / mBoardWidth, h / mBoardHeight);
+        //mMinScale = Math.min(w / mBoardWidth, h / mBoardHeight);
 
-        updateLimits(mMaxScale / 2f);
-    }
+        mMinScale = Math.max(w / mBoardWidth, h / mBoardHeight);
+        mMaxScale = 4 * Math.max(w / mBoardWidth, h / mBoardHeight);
 
-    private void updateLimits(float scale) {
+        float scale = mMinScale;
 
-        mMinScrollX = getWidth() - scale * mBoardWidth;
-        mMinScrollY = getHeight() - scale * mBoardHeight;
+        updateLimits(scale);
 
         mBoardMatrix.setScale(scale, scale);
         mBoardMatrix.postTranslate(mMinScrollX / 2f, mMinScrollY / 2f);
     }
 
-    private void constraint() {
+    private void updateLimits(float scale) {
+        mMinScrollX = getWidth() - scale * mBoardWidth;
+        mMinScrollY = getHeight() - scale * mBoardHeight;
+    }
+
+    private void limitScroll() {
         mBoardMatrix.getValues(mBoardValues);
         float x = mBoardValues[Matrix.MTRANS_X];
         float y = mBoardValues[Matrix.MTRANS_Y];
 
-        if (x < mMinScrollX) {
-            mBoardMatrix.postTranslate(mMinScrollX - x, 0f);
+        float newX = Float.NaN;
+        float newY = Float.NaN;
+
+        /*if (mMinScrollX >= 0) {
+            newX = mMinScrollX / 2f;
+        } else*/ if (x < mMinScrollX) {
+            newX = mMinScrollX;
         } else if (x > mMaxScrollX) {
-            mBoardMatrix.postTranslate(-x, 0f);
+            newX = mMaxScrollX;
         }
 
-        if (y < mMinScrollY) {
-            mBoardMatrix.postTranslate(0f, mMinScrollY - y);
+        /*if (mMinScrollY >= 0) {
+            newY = mMinScrollY / 2f;
+        } else*/ if (y < mMinScrollY) {
+            newY = mMinScrollY;
         } else if (y > mMaxScrollY) {
-            mBoardMatrix.postTranslate(0f, -y);
+            newY = mMaxScrollY;
         }
+
+        float dx = Float.isNaN(newX) ? 0 : newX - x;
+        float dy = Float.isNaN(newY) ? 0 : newY - y;
+
+        mBoardMatrix.postTranslate(dx, dy);
     }
 
     @Override
