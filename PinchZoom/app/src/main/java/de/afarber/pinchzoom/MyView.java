@@ -1,5 +1,7 @@
 package de.afarber.pinchzoom;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -90,17 +92,23 @@ public class MyView extends View {
                 mBoardMatrix.getValues(mBoardValues);
                 float startScale = getBoardScale();
                 float endScale = (startScale < mMaxScale ? mMaxScale : mMinScale);
-                ValueAnimator zoomAnimator = ValueAnimator.ofFloat(startScale, endScale).setDuration(1000);
+                ValueAnimator zoomAnimator = ValueAnimator.ofFloat(startScale, endScale).setDuration(5000);
                 zoomAnimator.addUpdateListener(animator -> {
                     float nextScale = (float) animator.getAnimatedValue();
                     float factor = nextScale / getBoardScale();
                     mBoardMatrix.postScale(factor, factor, e.getX(), e.getY());
-
                     updateLimits(nextScale);
-
-                    limitScroll();
-
+                    //limitScroll();
                     ViewCompat.postInvalidateOnAnimation(MyView.this);
+                });
+                zoomAnimator.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animator) {
+                        float nextScale = (float) zoomAnimator.getAnimatedValue();
+                        updateLimits(nextScale);
+                        limitScroll();
+                        ViewCompat.postInvalidateOnAnimation(MyView.this);
+                    }
                 });
                 zoomAnimator.start();
                 return true;
@@ -128,9 +136,8 @@ public class MyView extends View {
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        //mMinScale = Math.min(w / mBoardWidth, h / mBoardHeight);
-
-        mMinScale = Math.max(w / mBoardWidth, h / mBoardHeight);
+        mMinScale = Math.min(w / mBoardWidth, h / mBoardHeight);
+        //mMinScale = Math.max(w / mBoardWidth, h / mBoardHeight);
         mMaxScale = 4 * Math.max(w / mBoardWidth, h / mBoardHeight);
 
         float scale = mMinScale;
@@ -138,7 +145,7 @@ public class MyView extends View {
         updateLimits(scale);
 
         mBoardMatrix.setScale(scale, scale);
-        mBoardMatrix.postTranslate(mMinScrollX / 2f, mMinScrollY / 2f);
+        mBoardMatrix.postTranslate(mMinScrollX / 2f, 0f);
     }
 
     private void updateLimits(float scale) {
@@ -154,17 +161,17 @@ public class MyView extends View {
         float newX = Float.NaN;
         float newY = Float.NaN;
 
-        /*if (mMinScrollX >= 0) {
+        if (mMinScrollX >= 0f) {
             newX = mMinScrollX / 2f;
-        } else*/ if (x < mMinScrollX) {
+        } else if (x < mMinScrollX) {
             newX = mMinScrollX;
         } else if (x > mMaxScrollX) {
             newX = mMaxScrollX;
         }
 
-        /*if (mMinScrollY >= 0) {
-            newY = mMinScrollY / 2f;
-        } else*/ if (y < mMinScrollY) {
+        if (mMinScrollY >= 0f) {
+            newY = 0f;
+        } else if (y < mMinScrollY) {
             newY = mMinScrollY;
         } else if (y > mMaxScrollY) {
             newY = mMaxScrollY;
