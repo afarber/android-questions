@@ -15,6 +15,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.OverScroller;
 
 import java.util.Arrays;
 
@@ -27,6 +28,7 @@ import static de.afarber.pinchzoom.MainActivity.TAG;
 public class MyView extends View {
     private final ScaleGestureDetector mScaleDetector;
     private final GestureDetector mGestureDetector;
+    private final OverScroller mScroller;
 
     private final Drawable mBoardDrawable;
     private final float mBoardWidth;
@@ -109,15 +111,44 @@ public class MyView extends View {
             }
 
             @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float dX, float dY) {
-                mBoardMatrix.postTranslate(-dX, -dY);
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float dx, float dy) {
+                mBoardMatrix.postTranslate(-dx, -dy);
                 fixTranslationAndRedraw();
+                return true;
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float vx, float vy) {
+                mScroller.forceFinished(true);
+
+                mBoardMatrix.getValues(mBoardValues);
+                float scale = mBoardValues[Matrix.MSCALE_X];
+                float x = mBoardValues[Matrix.MTRANS_X];
+                float y = mBoardValues[Matrix.MTRANS_Y];
+
+                // for flinging the scaled drawable must be smaller than the view
+                boolean canFlingX = (mMinTransX < 0f);
+                boolean canFlingY = (mMinTransY < 0f);
+
+                mScroller.fling(
+                        (int) x,
+                        (int) y,
+                        (int) (canFlingX ? vx : 0f),
+                        (int) (canFlingY ? vy : 0f),
+                        (int) (canFlingX ? mMinTransX : 0f), (int) mMaxTransX,
+                        (int) (canFlingY ? mMinTransY : 0f), (int) mMaxTransY,
+                        (int) (canFlingX ? scale * mBoardWidth / 16f : 0f),
+                        (int) (canFlingY ? scale * mBoardHeight / 16f : 0f)
+                );
+
+                ViewCompat.postInvalidateOnAnimation(MyView.this);
                 return true;
             }
         };
 
         mScaleDetector = new ScaleGestureDetector(context, scaleListener);
         mGestureDetector = new GestureDetector(context, listener);
+        mScroller = new OverScroller(context);
     }
 
     @Override
@@ -126,6 +157,27 @@ public class MyView extends View {
         mGestureDetector.onTouchEvent(e);
         mScaleDetector.onTouchEvent(e);
         return true;
+    }
+
+    @Override
+    public void computeScroll() {
+        super.computeScroll();
+
+        // if the scroller is not finished yet
+        if (mScroller.computeScrollOffset()) {
+            mBoardMatrix.getValues(mBoardValues);
+            float x = mBoardValues[Matrix.MTRANS_X];
+            float y = mBoardValues[Matrix.MTRANS_Y];
+
+            float newX = mScroller.getCurrX();
+            float newY = mScroller.getCurrY();
+
+            float dx = newX - x;
+            float dy = newY - y;
+
+            mBoardMatrix.postTranslate(dx, dy);
+            ViewCompat.postInvalidateOnAnimation(this);
+        }
     }
 
     private float getBoardScale() {
