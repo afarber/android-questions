@@ -1,12 +1,11 @@
 package de.afarber.pinchzoom;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -36,14 +35,16 @@ public class MyView extends View {
     private final Matrix mBoardMatrix = new Matrix();
     private final float[] mBoardValues = new float[9];
 
+    private final PointF mZoomFocus = new PointF();
+
     private float mMinScale;
     private float mMaxScale;
 
-    private float mMinScrollX;
-    private float mMinScrollY;
+    private float mMinTransX;
+    private float mMinTransY;
 
-    private final float mMaxScrollX = 0f;
-    private final float mMaxScrollY = 0f;
+    private final float mMaxTransX = 0f;
+    private final float mMaxTransY = 0f;
 
     public MyView(Context context) {
         this(context, null, 0);
@@ -64,23 +65,23 @@ public class MyView extends View {
         ScaleGestureDetector.OnScaleGestureListener scaleListener =
                 new ScaleGestureDetector.SimpleOnScaleGestureListener() {
             @Override
-            public boolean onScale(ScaleGestureDetector scaleDetector) {
+            public boolean onScale(ScaleGestureDetector detector) {
+                mZoomFocus.set(detector.getFocusX(), detector.getFocusY());
+                // ensure that the zoom stays between mMinScale and mMaxScale
                 float currScale = getBoardScale();
                 float minFactor = mMinScale / currScale;
                 float maxFactor = mMaxScale / currScale;
-                float factor = scaleDetector.getScaleFactor();
+                float factor = detector.getScaleFactor();
                 if (factor < minFactor) {
                     factor = minFactor;
                 } else if (factor > maxFactor) {
                     factor = maxFactor;
                 }
-                mBoardMatrix.postScale(factor, factor, scaleDetector.getFocusX(), scaleDetector.getFocusY());
+                float nextScale = factor * currScale;
 
-                updateLimits(factor * currScale);
-
-                limitScroll();
-
-                ViewCompat.postInvalidateOnAnimation(MyView.this);
+                mBoardMatrix.postScale(factor, factor, mZoomFocus.x, mZoomFocus.y);
+                updateTranslationLimits(nextScale);
+                fixTranslationAndRedraw();
                 return true;
             }
         };
@@ -88,27 +89,20 @@ public class MyView extends View {
         GestureDetector.OnGestureListener listener =
                 new GestureDetector.SimpleOnGestureListener() {
             @Override
-            public boolean onDoubleTap(final MotionEvent e) {
+            public boolean onDoubleTap(MotionEvent e) {
+                mZoomFocus.set(e.getX(), e.getY());
+
                 mBoardMatrix.getValues(mBoardValues);
                 float startScale = getBoardScale();
                 float endScale = (startScale < mMaxScale ? mMaxScale : mMinScale);
-                ValueAnimator zoomAnimator = ValueAnimator.ofFloat(startScale, endScale).setDuration(5000);
+
+                ValueAnimator zoomAnimator = ValueAnimator.ofFloat(startScale, endScale).setDuration(4000);
                 zoomAnimator.addUpdateListener(animator -> {
                     float nextScale = (float) animator.getAnimatedValue();
                     float factor = nextScale / getBoardScale();
-                    mBoardMatrix.postScale(factor, factor, e.getX(), e.getY());
-                    updateLimits(nextScale);
-                    //limitScroll();
-                    ViewCompat.postInvalidateOnAnimation(MyView.this);
-                });
-                zoomAnimator.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animator) {
-                        float nextScale = (float) zoomAnimator.getAnimatedValue();
-                        updateLimits(nextScale);
-                        limitScroll();
-                        ViewCompat.postInvalidateOnAnimation(MyView.this);
-                    }
+                    mBoardMatrix.postScale(factor, factor, mZoomFocus.x, mZoomFocus.y);
+                    updateTranslationLimits(nextScale);
+                    fixTranslationAndRedraw();
                 });
                 zoomAnimator.start();
                 return true;
@@ -117,16 +111,21 @@ public class MyView extends View {
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float dX, float dY) {
                 mBoardMatrix.postTranslate(-dX, -dY);
-
-                limitScroll();
-
-                ViewCompat.postInvalidateOnAnimation(MyView.this);
+                fixTranslationAndRedraw();
                 return true;
             }
         };
 
         mScaleDetector = new ScaleGestureDetector(context, scaleListener);
         mGestureDetector = new GestureDetector(context, listener);
+    }
+
+    @Override
+    @SuppressLint("ClickableViewAccessibility")
+    public boolean onTouchEvent(MotionEvent e) {
+        mGestureDetector.onTouchEvent(e);
+        mScaleDetector.onTouchEvent(e);
+        return true;
     }
 
     private float getBoardScale() {
@@ -137,23 +136,22 @@ public class MyView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         mMinScale = Math.min(w / mBoardWidth, h / mBoardHeight);
-        //mMinScale = Math.max(w / mBoardWidth, h / mBoardHeight);
-        mMaxScale = 4 * Math.max(w / mBoardWidth, h / mBoardHeight);
+        mMaxScale = 2 * Math.max(w / mBoardWidth, h / mBoardHeight);
 
-        float scale = mMinScale;
-
-        updateLimits(scale);
-
+        float scale = mMaxScale / 2f;
+        updateTranslationLimits(scale);
         mBoardMatrix.setScale(scale, scale);
-        mBoardMatrix.postTranslate(mMinScrollX / 2f, 0f);
+        mBoardMatrix.postTranslate(mMinTransX / 2f, 0f);
     }
 
-    private void updateLimits(float scale) {
-        mMinScrollX = getWidth() - scale * mBoardWidth;
-        mMinScrollY = getHeight() - scale * mBoardHeight;
+    // update scroll limits when the view dimensions or the zoom change
+    private void updateTranslationLimits(float scale) {
+        mMinTransX = getWidth() - scale * mBoardWidth;
+        mMinTransY = getHeight() - scale * mBoardHeight;
     }
 
-    private void limitScroll() {
+    private void fixTranslationAndRedraw() {
+        // get the current translation x and y, which could be off limits
         mBoardMatrix.getValues(mBoardValues);
         float x = mBoardValues[Matrix.MTRANS_X];
         float y = mBoardValues[Matrix.MTRANS_Y];
@@ -161,26 +159,37 @@ public class MyView extends View {
         float newX = Float.NaN;
         float newY = Float.NaN;
 
-        if (mMinScrollX >= 0f) {
-            newX = mMinScrollX / 2f;
-        } else if (x < mMinScrollX) {
-            newX = mMinScrollX;
-        } else if (x > mMaxScrollX) {
-            newX = mMaxScrollX;
+        if (mMinTransX >= 0f) {
+            // the width of the scaled drawable is less than the view width -
+            // so put the drawable in the horizontal middle of the view
+            newX = mMinTransX / 2f;
+        } else if (x < mMinTransX) {
+            // the drawable is too much to the left (shows white background on the right)
+            newX = mMinTransX;
+        } else if (x > mMaxTransX) {
+            // the drawable is too much to the right (shows white background on the left)
+            newX = mMaxTransX;
         }
 
-        if (mMinScrollY >= 0f) {
+        if (mMinTransY >= 0f) {
+            // the height of the scaled drawable is less than the view height -
+            // so put the drawable at the top of the parent view
             newY = 0f;
-        } else if (y < mMinScrollY) {
-            newY = mMinScrollY;
-        } else if (y > mMaxScrollY) {
-            newY = mMaxScrollY;
+        } else if (y < mMinTransY) {
+            // the drawable is placed too high (shows white background on the bottom)
+            newY = mMinTransY;
+        } else if (y > mMaxTransY) {
+            // the drawable is placed too low (shows white background on the top)
+            newY = mMaxTransY;
         }
 
+        // NaN means that no translation adjustment is needed
         float dx = Float.isNaN(newX) ? 0 : newX - x;
         float dy = Float.isNaN(newY) ? 0 : newY - y;
 
+        mZoomFocus.offset(dx, dy);
         mBoardMatrix.postTranslate(dx, dy);
+        ViewCompat.postInvalidateOnAnimation(this);
     }
 
     @Override
@@ -189,14 +198,6 @@ public class MyView extends View {
         canvas.concat(mBoardMatrix);
         mBoardDrawable.draw(canvas);
         canvas.restore();
-    }
-
-    @Override
-    @SuppressLint("ClickableViewAccessibility")
-    public boolean onTouchEvent(MotionEvent e) {
-        mGestureDetector.onTouchEvent(e);
-        mScaleDetector.onTouchEvent(e);
-        return true;
     }
 
 
