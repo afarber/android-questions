@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -19,7 +18,6 @@ import android.widget.OverScroller;
 import java.util.Arrays;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.ViewCompat;
 
 import static de.afarber.pinchzoom.MainActivity.TAG;
@@ -29,14 +27,10 @@ public class MyView extends View {
     private final GestureDetector mGestureDetector;
     private final OverScroller mScroller;
 
-    private final Drawable mBoardDrawable;
-    private final float mBoardWidth;
-    private final float mBoardHeight;
-
     private final Matrix mBoardMatrix = new Matrix();
     private final float[] mBoardValues = new float[9];
 
-    private final BoardLimits mBoardLimits;
+    private final Board mBoard;
 
     private float mMinScale;
     private float mMaxScale;
@@ -52,16 +46,11 @@ public class MyView extends View {
     public MyView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
-        mBoardDrawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.board, null);
-        mBoardWidth = mBoardDrawable.getIntrinsicWidth();
-        mBoardHeight = mBoardDrawable.getIntrinsicHeight();
-        mBoardDrawable.setBounds(0, 0, (int) mBoardWidth, (int) mBoardHeight);
-
         ScaleGestureDetector.OnScaleGestureListener scaleListener =
                 new ScaleGestureDetector.SimpleOnScaleGestureListener() {
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
-                mBoardLimits.setZoomFocus(detector.getFocusX(), detector.getFocusY());
+                mBoard.setZoomFocus(detector.getFocusX(), detector.getFocusY());
                 // ensure that the zoom stays between mMinScale and mMaxScale
                 float currScale = getBoardScale();
                 float minFactor = mMinScale / currScale;
@@ -74,9 +63,9 @@ public class MyView extends View {
                 }
                 float nextScale = factor * currScale;
 
-                mBoardMatrix.postScale(factor, factor, mBoardLimits.getZoomFocusX(), mBoardLimits.getZoomFocusY());
-                mBoardLimits.updateTranslationLimits(nextScale);
-                mBoardLimits.fixTranslationAndRedraw();
+                mBoardMatrix.postScale(factor, factor, mBoard.getZoomFocusX(), mBoard.getZoomFocusY());
+                mBoard.updateTranslationLimits(nextScale);
+                mBoard.fixTranslationAndRedraw();
                 return true;
             }
         };
@@ -85,7 +74,7 @@ public class MyView extends View {
                 new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onDoubleTap(MotionEvent e) {
-                mBoardLimits.setZoomFocus(e.getX(), e.getY());
+                mBoard.setZoomFocus(e.getX(), e.getY());
 
                 mBoardMatrix.getValues(mBoardValues);
                 float startScale = getBoardScale();
@@ -95,9 +84,9 @@ public class MyView extends View {
                 zoomAnimator.addUpdateListener(animator -> {
                     float nextScale = (float) animator.getAnimatedValue();
                     float factor = nextScale / getBoardScale();
-                    mBoardMatrix.postScale(factor, factor, mBoardLimits.getZoomFocusX(), mBoardLimits.getZoomFocusY());
-                    mBoardLimits.updateTranslationLimits(nextScale);
-                    mBoardLimits.fixTranslationAndRedraw();
+                    mBoardMatrix.postScale(factor, factor, mBoard.getZoomFocusX(), mBoard.getZoomFocusY());
+                    mBoard.updateTranslationLimits(nextScale);
+                    mBoard.fixTranslationAndRedraw();
                 });
                 zoomAnimator.start();
                 return true;
@@ -106,7 +95,7 @@ public class MyView extends View {
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float dx, float dy) {
                 mBoardMatrix.postTranslate(-dx, -dy);
-                mBoardLimits.fixTranslationAndRedraw();
+                mBoard.fixTranslationAndRedraw();
                 return true;
             }
 
@@ -122,12 +111,12 @@ public class MyView extends View {
                 mScroller.fling(
                         (int) x,
                         (int) y,
-                        (int) (mBoardLimits.canFlingX() ? vx : 0f),
-                        (int) (mBoardLimits.canFlingY() ? vy : 0f),
-                        (int) mBoardLimits.getMaxFlingX(), 0,
-                        (int) mBoardLimits.getMaxFlingY(), 0,
-                        (int) (mBoardLimits.canFlingX() ? scale * mBoardWidth / 16f : 0f),
-                        (int) (mBoardLimits.canFlingY() ? scale * mBoardHeight / 16f : 0f)
+                        (int) (mBoard.canFlingX() ? vx : 0f),
+                        (int) (mBoard.canFlingY() ? vy : 0f),
+                        (int) mBoard.getMaxFlingX(), 0,
+                        (int) mBoard.getMaxFlingY(), 0,
+                        (int) (mBoard.canFlingX() ? scale * mBoard.getBoardWidth() / 16f : 0f),
+                        (int) (mBoard.canFlingY() ? scale * mBoard.getBoardHeight() / 16f : 0f)
                 );
 
                 ViewCompat.postInvalidateOnAnimation(MyView.this);
@@ -135,7 +124,7 @@ public class MyView extends View {
             }
         };
 
-        mBoardLimits = new BoardLimits(this, mBoardMatrix, mBoardWidth, mBoardHeight);
+        mBoard = new Board(this, mBoardMatrix);
 
         mScaleDetector = new ScaleGestureDetector(context, scaleListener);
         mGestureDetector = new GestureDetector(context, listener);
@@ -178,21 +167,20 @@ public class MyView extends View {
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        mMinScale = Math.min(w / mBoardWidth, h / mBoardHeight);
-        mMaxScale = 2 * Math.max(w / mBoardWidth, h / mBoardHeight);
+        mMinScale = Math.min(w / mBoard.getBoardWidth(), h / mBoard.getBoardHeight());
+        mMaxScale = 2 * Math.max(w / mBoard.getBoardWidth(), h / mBoard.getBoardHeight());
 
         float scale = mMaxScale / 2f;
-        mBoardLimits.updateTranslationLimits(scale);
+        mBoard.updateTranslationLimits(scale);
         mBoardMatrix.setScale(scale, scale);
-        mBoardMatrix.postTranslate((getWidth() - scale * mBoardWidth) / 2f, 0f);
+        mBoardMatrix.postTranslate((getWidth() - scale * mBoard.getBoardWidth()) / 2f, 0f);
+
+        mBoard.onSizeChanged(w, h);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.save();
-        canvas.concat(mBoardMatrix);
-        mBoardDrawable.draw(canvas);
-        canvas.restore();
+        mBoard.draw(canvas);
     }
 
     // the code below is used for screen rotation

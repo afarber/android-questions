@@ -1,18 +1,22 @@
 package de.afarber.pinchzoom;
 
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PointF;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.ViewCompat;
 
-public class BoardLimits {
+public class Board {
     private final View mParentView;
     private final Matrix mBoardMatrix;
 
     private final float[] mBoardValues = new float[9];
     private final PointF mZoomFocus = new PointF();
 
+    private final Drawable mBoardDrawable;
     private final float mBoardWidth;
     private final float mBoardHeight;
 
@@ -22,11 +26,23 @@ public class BoardLimits {
     private final float mMaxTransX = 0f;
     private final float mMaxTransY = 0f;
 
-    protected BoardLimits(View v, Matrix m, float w, float h) {
+    protected Board(View v, Matrix m) {
+
+        mBoardDrawable = ResourcesCompat.getDrawable(v.getContext().getResources(), R.drawable.board, null);
+        mBoardWidth = mBoardDrawable.getIntrinsicWidth();
+        mBoardHeight = mBoardDrawable.getIntrinsicHeight();
+        mBoardDrawable.setBounds(0, 0, (int) mBoardWidth, (int) mBoardHeight);
+
         mParentView = v;
         mBoardMatrix = m;
-        mBoardWidth = w;
-        mBoardHeight = h;
+    }
+
+    protected float getBoardWidth() {
+        return mBoardWidth;
+    }
+
+    protected float getBoardHeight() {
+        return mBoardHeight;
     }
 
     protected void setZoomFocus(float x, float y) {
@@ -104,5 +120,15 @@ public class BoardLimits {
         mZoomFocus.offset(dx, dy);
         mBoardMatrix.postTranslate(dx, dy);
         ViewCompat.postInvalidateOnAnimation(mParentView);
+    }
+
+    protected void onSizeChanged(int w, int h) {
+    }
+
+    protected void draw(Canvas canvas) {
+        canvas.save();
+        canvas.concat(mBoardMatrix);
+        mBoardDrawable.draw(canvas);
+        canvas.restore();
     }
 }
