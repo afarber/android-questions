@@ -213,6 +213,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/ValidatePrefs/screenshot.png)
 
 
+[Vehicles](https://github.com/afarber/android-newbie/tree/master/Vehicles):
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/Vehicles/screenshot.png)
+
+
 [WordGame](https://github.com/afarber/android-newbie/tree/master/WordGame):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/WordGame/screenshot.png)
