@@ -28,6 +28,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/FastAdapterScrollingIssue/screenshot.png)
 
 
+[flutter_app](https://github.com/afarber/android-newbie/tree/master/flutter_app) can be launched with *flutter run*:
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/flutter_app/screenshot.png)
+
+
 [GeoQuiz](https://github.com/afarber/android-newbie/tree/master/GeoQuiz):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/GeoQuiz/screenshot.png)
@@ -213,7 +218,7 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/ValidatePrefs/screenshot.png)
 
 
-[Vehicles](https://github.com/afarber/android-newbie/tree/master/Vehicles):
+[Vehicles](https://github.com/afarber/android-newbie/tree/master/Vehicles) for [Droidcon 2019 challenge](https://echorebel.github.io/vehicles-maps-challenge/):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/Vehicles/screenshot.png)
 
