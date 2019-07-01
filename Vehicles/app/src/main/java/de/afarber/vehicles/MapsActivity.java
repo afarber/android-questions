@@ -1,11 +1,15 @@
 package de.afarber.vehicles;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -13,6 +17,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,8 +47,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public final static float SW_LAT = 52.48417497476959f;
     public final static float SW_LNG = 13.251724876463415f;
 
-    private GoogleMap mMap;
     private OkHttpClient mClient;
+    private MapsViewModel mViewModel;
+    private Drawable mCar;
+    private Drawable mTaxi;
 
     private final Callback mCallback = new Callback() {
         @Override
@@ -67,6 +75,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mClient = new OkHttpClient.Builder().build();
 
+        mCar = new IconicsDrawable(this)
+                .icon(FontAwesome.Icon.faw_car)
+                .color(Color.BLACK)
+                .sizeDp(24);
+
+        mTaxi = new IconicsDrawable(this)
+                .icon(FontAwesome.Icon.faw_taxi)
+                .color(Color.RED)
+                .sizeDp(24);
+
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment =
@@ -88,11 +106,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
         LatLng cityCube = new LatLng(52.5002212, 13.2685643);
-        mMap.addMarker(new MarkerOptions().position(cityCube).title("You are here"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cityCube, 14f));
+        googleMap.addMarker(new MarkerOptions().position(cityCube).title("You are here"));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cityCube, 14f));
+
+        mViewModel = ViewModelProviders.of(this).get(MapsViewModel.class);
+        mViewModel.getVehicles().observe(this, new Observer<List<Poi>>() {
+            @Override
+            public void onChanged(List<Poi> pois) {
+                if (pois != null) {
+                    for (Poi poi: pois) {
+                        Log.d(TAG, poi.toString());
+                    }
+                }
+            }
+        });
 
         fetch(NE_LAT, NE_LNG, SW_LAT, SW_LNG, mCallback);
     }
@@ -124,7 +152,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 poi.fleetType = jsonObj.getString("fleetType");
                 poi.heading = jsonObj.getDouble("heading");
 
-                Log.d(TAG, "i = " + i + ", poi = " + poi);
+                //Log.d(TAG, "i = " + i + ", poi = " + poi);
+                pois.add(poi);
             }
 
         } catch (JSONException ex) {

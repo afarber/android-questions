@@ -15,7 +15,7 @@ public abstract class PoiDao {
     public abstract LiveData<List<Poi>> getVehicles();
 
     @Query("SELECT COUNT(*) FROM table_poi")
-    public abstract int countPoi();
+    public abstract int countVehicles();
 
     @Query("DELETE FROM table_poi")
     abstract void deleteAll();
@@ -28,5 +28,4 @@ public abstract class PoiDao {
         deleteAll();
         insertVehicles(pois);
     }
-
 }
