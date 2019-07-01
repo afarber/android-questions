@@ -20,7 +20,10 @@ public abstract class PoiDatabase extends RoomDatabase {
     public abstract PoiDao poiDao();
 
     @NonNull
-    public static PoiDao getDao() {
+    public static PoiDao getDao(@NonNull Context ctx) {
+        if (sInstance == null) {
+            init(ctx);
+        }
         return sInstance.poiDao();
     }
 

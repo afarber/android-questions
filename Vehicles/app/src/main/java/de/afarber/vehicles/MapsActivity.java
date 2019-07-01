@@ -19,6 +19,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -29,6 +31,8 @@ import okhttp3.Response;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     public final static String TAG = "Vehicles";
+
+    // https://fake-poi-api.mytaxi.com/?p1Lat={Latitude1}&p1Lon={Longitude1}&p2Lat={Latitude2}&p2Lon={Longitude2}
 
     public final static String URL = "https://fake-poi-api.mytaxi.com/?p1Lat=%f&p1Lon=%f&p2Lat=%f&p2Lon=%f";
 
@@ -50,8 +54,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
             if (response.isSuccessful() && response.body() != null) {
                 String jsonStr = response.body().string();
-                Log.d(TAG, "mCallback onResponse jsonStr=" + jsonStr);
-                parseJson(jsonStr);
+                //Log.d(TAG, "mCallback onResponse jsonStr=" + jsonStr);
+                List<Poi> pois = parseJson(jsonStr);
+                PoiDatabase.getDao(getApplicationContext()).insertVehicles(pois);
             }
         }
     };
@@ -89,8 +94,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(cityCube).title("You are here"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cityCube, 14f));
 
-        // https://fake-poi-api.mytaxi.com/?p1Lat={Latitude1}&p1Lon={Longitude1}&p2Lat={Latitude2}&p2Lon={Longitude2}
-
         fetch(NE_LAT, NE_LNG, SW_LAT, SW_LNG, mCallback);
     }
 
@@ -103,7 +106,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mClient.newCall(request).enqueue(callback);
     }
 
-    private void parseJson(@NonNull String jsonStr) {
+    @NonNull
+    private List<Poi> parseJson(@NonNull String jsonStr) {
+        List<Poi> pois = new ArrayList<>();
+
         try {
             JSONObject rootObj = new JSONObject(jsonStr);
             JSONArray jsonArray = rootObj.getJSONArray("poiList");
@@ -124,5 +130,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } catch (JSONException ex) {
             Log.w(TAG, "parsing JSON failed", ex);
         }
+
+        return pois;
     }
 }

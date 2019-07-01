@@ -29,6 +29,9 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
 
+    implementation "androidx.lifecycle:lifecycle-extensions:$archVersion"
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$archVersion"
+
     implementation 'com.squareup.okhttp3:okhttp:3.12.2'
 
     implementation 'com.mikepenz:fastadapter:3.3.1'
