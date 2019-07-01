@@ -2,7 +2,6 @@ package de.afarber.vehicles;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -14,6 +13,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -47,12 +47,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public final static float SW_LAT = 52.48417497476959f;
     public final static float SW_LNG = 13.251724876463415f;
 
-    private final LatLng CITYCUBE = new LatLng(52.5002212, 13.2685643);
-
     private OkHttpClient mClient;
     private MapsViewModel mViewModel;
-    private Drawable mCar;
-    private Drawable mTaxi;
 
     private final Callback mCallback = new Callback() {
         @Override
@@ -77,16 +73,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mClient = new OkHttpClient.Builder().build();
 
-        mCar = new IconicsDrawable(this)
-                .icon(FontAwesome.Icon.faw_car)
-                .color(Color.BLACK)
-                .sizeDp(24);
-
-        mTaxi = new IconicsDrawable(this)
-                .icon(FontAwesome.Icon.faw_taxi)
-                .color(Color.RED)
-                .sizeDp(24);
-
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment =
@@ -108,20 +94,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(final GoogleMap googleMap) {
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(CITYCUBE, 14f));
+        final BitmapDescriptor carIcon = BitmapDescriptorFactory.fromBitmap(
+                new IconicsDrawable(this)
+                        .icon(FontAwesome.Icon.faw_car)
+                        .color(Color.BLACK)
+                        .sizeDp(24)
+                        .toBitmap()
+        );
+
+        final BitmapDescriptor taxiIcon = BitmapDescriptorFactory.fromBitmap(
+                new IconicsDrawable(this)
+                        .icon(FontAwesome.Icon.faw_taxi)
+                        .color(Color.BLUE)
+                        .sizeDp(24)
+                        .toBitmap()
+        );
+
+        final LatLng citycube = new LatLng(52.5002212, 13.2685643);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(citycube, 14f));
 
         mViewModel = ViewModelProviders.of(this).get(MapsViewModel.class);
         mViewModel.getVehicles().observe(this, pois -> {
             googleMap.clear();
-            googleMap.addMarker(new MarkerOptions().position(CITYCUBE).title("You are here"));
+            googleMap.addMarker(new MarkerOptions().position(citycube).title("You are here"));
 
             if (pois != null) {
                 for (Poi poi: pois) {
                     Log.d(TAG, poi.toString());
                     MarkerOptions markerOptions = new MarkerOptions()
                             .position(new LatLng(poi.latitude, poi.longitude))
-                            .rotation((float)poi.heading);
-                            //.icon("TAXI".equalsIgnoreCase(poi.fleetType) ? mTaxi : mCar);
+                            .rotation((float)poi.heading)
+                            .icon("TAXI".equalsIgnoreCase(poi.fleetType) ? taxiIcon : carIcon);
                     googleMap.addMarker(markerOptions);
                 }
             }
