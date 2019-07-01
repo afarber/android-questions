@@ -8,13 +8,13 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
@@ -46,6 +46,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public final static float NE_LNG = 13.287037834525108f;
     public final static float SW_LAT = 52.48417497476959f;
     public final static float SW_LNG = 13.251724876463415f;
+
+    private final LatLng CITYCUBE = new LatLng(52.5002212, 13.2685643);
 
     private OkHttpClient mClient;
     private MapsViewModel mViewModel;
@@ -105,19 +107,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        LatLng cityCube = new LatLng(52.5002212, 13.2685643);
-        googleMap.addMarker(new MarkerOptions().position(cityCube).title("You are here"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cityCube, 14f));
+    public void onMapReady(final GoogleMap googleMap) {
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(CITYCUBE, 14f));
 
         mViewModel = ViewModelProviders.of(this).get(MapsViewModel.class);
-        mViewModel.getVehicles().observe(this, new Observer<List<Poi>>() {
-            @Override
-            public void onChanged(List<Poi> pois) {
-                if (pois != null) {
-                    for (Poi poi: pois) {
-                        Log.d(TAG, poi.toString());
-                    }
+        mViewModel.getVehicles().observe(this, pois -> {
+            googleMap.clear();
+            googleMap.addMarker(new MarkerOptions().position(CITYCUBE).title("You are here"));
+
+            if (pois != null) {
+                for (Poi poi: pois) {
+                    Log.d(TAG, poi.toString());
+                    MarkerOptions markerOptions = new MarkerOptions()
+                            .position(new LatLng(poi.latitude, poi.longitude))
+                            .rotation((float)poi.heading);
+                            //.icon("TAXI".equalsIgnoreCase(poi.fleetType) ? mTaxi : mCar);
+                    googleMap.addMarker(markerOptions);
                 }
             }
         });
@@ -125,7 +130,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         fetch(NE_LAT, NE_LNG, SW_LAT, SW_LNG, mCallback);
     }
 
-    public void fetch(float lat1, float lng1, float lat2, float lng2, Callback callback) {
+    private void fetch(float lat1, float lng1, float lat2, float lng2, Callback callback) {
         @SuppressLint("DefaultLocale")
         Request request = new Request.Builder()
                 .url(String.format(URL, lat1, lng1, lat2, lng2))
@@ -151,11 +156,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 poi.longitude = coordObj.getDouble("longitude");
                 poi.fleetType = jsonObj.getString("fleetType");
                 poi.heading = jsonObj.getDouble("heading");
-
                 //Log.d(TAG, "i = " + i + ", poi = " + poi);
                 pois.add(poi);
             }
-
         } catch (JSONException ex) {
             Log.w(TAG, "parsing JSON failed", ex);
         }
