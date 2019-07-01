@@ -19,10 +19,10 @@ public class Poi {
     @NonNull
     @PrimaryKey
     public int id;
-    public float latitude;
-    public float longitude;
+    public double latitude;
+    public double longitude;
     public String fleetType;
-    public float heading;
+    public double heading;
 
     public Poi() {}
 

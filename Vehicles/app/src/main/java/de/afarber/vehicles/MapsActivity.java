@@ -1,10 +1,11 @@
 package de.afarber.vehicles;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
-
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -13,11 +14,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -47,9 +51,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (response.isSuccessful() && response.body() != null) {
                 String jsonStr = response.body().string();
                 Log.d(TAG, "mCallback onResponse jsonStr=" + jsonStr);
+                parseJson(jsonStr);
             }
         }
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,13 +95,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void fetch(float lat1, float lng1, float lat2, float lng2, Callback callback) {
-        //FormBody.Builder builder = new FormBody.Builder().add(KEY_UID, String.valueOf(uid));
-
+        @SuppressLint("DefaultLocale")
         Request request = new Request.Builder()
                 .url(String.format(URL, lat1, lng1, lat2, lng2))
-                //.post(builder.build())
                 .build();
 
         mClient.newCall(request).enqueue(callback);
+    }
+
+    private void parseJson(@NonNull String jsonStr) {
+        try {
+            JSONObject rootObj = new JSONObject(jsonStr);
+            JSONArray jsonArray = rootObj.getJSONArray("poiList");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObj = jsonArray.getJSONObject(i);
+                JSONObject coordObj = jsonObj.getJSONObject("coordinate");
+
+                Poi poi = new Poi();
+                poi.id = jsonObj.getInt("id");
+                poi.latitude = coordObj.getDouble("latitude");
+                poi.longitude = coordObj.getDouble("longitude");
+                poi.fleetType = jsonObj.getString("fleetType");
+                poi.heading = jsonObj.getDouble("heading");
+
+                Log.d(TAG, "i = " + i + ", poi = " + poi);
+            }
+
+        } catch (JSONException ex) {
+            Log.w(TAG, "parsing JSON failed", ex);
+        }
     }
 }

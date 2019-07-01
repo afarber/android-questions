@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 
 @Database(entities = {
         Poi.class
-}, version = 1)
+}, version = 2)
 public abstract class PoiDatabase extends RoomDatabase {
     private final static String DB_FILENAME = "poi.db";
 
