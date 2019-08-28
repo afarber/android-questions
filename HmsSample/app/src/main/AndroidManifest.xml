@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.huawei.hmssample">
+
+    <!-- 获取设备识别码 Get IMEI -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 获取网络状态 Get network status -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 获取wifi状态 Get WiFi status -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 允许使用网络 Allow network use-->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- OTA下载升级包的时候存放SD卡需要的权限 Store the upgrade package download by OTA need SD card permissions -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.huawei.hms.client.appid"
+            android:value="appid=xxxx" />
+
+        <!-- CPID-->
+       <meta-data
+           android:name="com.huawei.hms.client.cpid"
+           android:value="cpid=xxxx"/>
+
+
+       <activity android:name=".MainActivity">
+           <intent-filter>
+               <action android:name="android.intent.action.MAIN" />
+
+               <category android:name="android.intent.category.LAUNCHER" />
+           </intent-filter>
+       </activity>
+
+       <activity
+           android:name=".HuaweiIdActivity"
+           android:configChanges="orientation|screenSize">
+       </activity>
+
+       <activity
+           android:name=".HuaweiPayActivity"
+           android:configChanges="orientation|screenSize">
+       </activity>
+
+       <activity
+           android:name=".HuaweiSnsActivity"
+           android:configChanges="orientation|screenSize">
+       </activity>
+
+       <activity
+           android:name=".HuaweiPushActivity"
+           android:configChanges="orientation|screenSize">
+       </activity>
+       <activity
+           android:name=".HuaweiGameActivity"
+           android:configChanges="orientation|screenSize">
+       </activity>
+
+        <activity
+            android:name="com.huawei.hms.activity.BridgeActivity"
+            android:configChanges="orientation|locale|screenSize|layoutDirection|fontScale"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:theme="@android:style/Theme.Translucent" >
+            <meta-data
+                android:name="hwc-theme"
+                android:value="androidhwext:style/Theme.Emui.Translucent" />
+        </activity>
+
+        <provider
+            android:name="com.huawei.hms.update.provider.UpdateProvider"
+            android:authorities="com.huawei.hmssample.hms.update.provider"
+            android:exported="false"
+            android:grantUriPermissions="true" >
+        </provider>
+
+        <activity
+            android:name="com.huawei.updatesdk.service.otaupdate.AppUpdateActivity"
+            android:configChanges="orientation|screenSize"
+            android:exported="false"
+            android:theme="@style/upsdkDlDialog" >
+
+            <meta-data
+                android:name="hwc-theme"
+                android:value="androidhwext:style/Theme.Emui.Translucent.NoTitleBar" />
+        </activity>
+
+        <activity
+            android:name="com.huawei.updatesdk.support.pm.PackageInstallerActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:taskAffinity="com.huawei.updatesdk.installer"
+            android:theme="@style/upsdkDlDialog" >
+            <meta-data
+                android:name="hwc-theme"
+                android:value="androidhwext:style/Theme.Emui.Translucent" />
+        </activity>
+
+        <!-- 应用下载服务 -->
+        <service android:name="com.huawei.updatesdk.service.deamon.download.DownloadService"
+            android:exported="false"/>
+
+        <provider
+            android:name="com.huawei.updatesdk.fileprovider.UpdateSdkFileProvider"
+            android:authorities="com.huawei.hmssample.updateSdk.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+        </provider>
+
+
+        <!-- 第三方相关 :接收Push消息（注册、Push消息、Push连接状态）广播 -->
+        <receiver android:name=".HuaweiPushRevicer" >
+            <intent-filter>
+                <!-- 必须,用于接收token  Must be used to receive token -->
+                <action android:name="com.huawei.android.push.intent.REGISTRATION" />
+                <!-- 必须，用于接收消息 Must be used to receive messages -->
+                <action android:name="com.huawei.android.push.intent.RECEIVE" />
+                <!-- 可选，用于点击通知栏或通知栏上的按钮后触发onEvent回调 Optional, click the button on the notification bar or the notification bar to trigger the onevent callback -->
+                <action android:name="com.huawei.android.push.intent.CLICK" />
+                <!-- 可选，查看push通道是否连接，不查看则不需要 Optional, see if the push channel is connected or not.-->
+                <action android:name="com.huawei.intent.action.PUSH_STATE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.huawei.hms.support.api.push.PushEventReceiver" >
+            <intent-filter>
+                <!-- 接收通道发来的通知栏消息，兼容老版本Push Receive channel send notification bar message, compatible with old version push  -->
+                <action android:name="com.huawei.intent.action.PUSH" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

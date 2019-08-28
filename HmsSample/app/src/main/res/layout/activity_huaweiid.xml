@@ -1,0 +1,72 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.huawei.hmssample.HuaweiIdActivity" >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sample_hwid_description"/>
+        
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#123456"/>
+        
+    <Button
+        android:id="@+id/hwid_sign_in"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/hwid_sign_in" />
+    
+   <LinearLayout
+        android:id="@+id/user_acount_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <TextView
+	        android:id="@+id/hwid_nickname"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"/>
+        
+	    <TextView
+	        android:id="@+id/hwid_photo"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"/>
+	        
+	    <TextView
+	        android:id="@+id/hwid_openid"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"/>
+	    
+	    <TextView
+	        android:id="@+id/hwid_at"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/hwid_sign_out"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/hwid_sign_out" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#123456"/>
+
+    <FrameLayout 
+        android:id="@+id/framelog"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        ></FrameLayout>
+</LinearLayout>

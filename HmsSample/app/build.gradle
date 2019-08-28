@@ -1,0 +1,26 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.huawei.hmssample"
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
+}
+
+dependencies {
+    //compile fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "com.huawei.android.hms:base:$hmsVersion"
+    implementation "com.huawei.android.hms:sns:$hmsVersion"
+    implementation "com.huawei.android.hms:hwid:$hmsVersion"
+    implementation "com.huawei.android.hms:push:$hmsVersion"
+    implementation "com.huawei.android.hms:iap:$hmsVersion"
+    implementation "com.huawei.android.hms:game:$hmsVersion"
+}
+
+repositories { flatDir { dirs '../aars' } }
