@@ -48,9 +48,9 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/HelloMoon/screenshot.png)
 
 
-[HMSSample](https://github.com/afarber/android-newbie/tree/master/HMSSample) HUAWEI Mobile Services sample:
+[HmsSample](https://github.com/afarber/android-newbie/tree/master/HmsSample) HUAWEI Mobile Services sample:
 
-![screenshot](https://raw.github.com/afarber/android-newbie/master/HMSSample/screenshot.png)
+![screenshot](https://raw.github.com/afarber/android-newbie/master/HmsSample/screenshot.png)
 
 
 [InteractiveChart](https://github.com/afarber/android-newbie/tree/master/InteractiveChart) the custom view with overscroller and edge effects from the Google guide [Animate a scroll gesture](https://developer.android.com/training/gestures/scroll):
