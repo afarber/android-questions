@@ -10,11 +10,14 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-    sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    //compile fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.huawei.android.hms:base:$hmsVersion"
     implementation "com.huawei.android.hms:sns:$hmsVersion"
     implementation "com.huawei.android.hms:hwid:$hmsVersion"
@@ -22,5 +25,3 @@ dependencies {
     implementation "com.huawei.android.hms:iap:$hmsVersion"
     implementation "com.huawei.android.hms:game:$hmsVersion"
 }
-
-repositories { flatDir { dirs '../aars' } }
