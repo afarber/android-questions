@@ -48,7 +48,7 @@ public class Utils {
     static boolean doCheck(String content, String sign) {
         try {
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            byte[] encodedKey = Base64.decode(PayContasts.publicKey, Base64.DEFAULT);
+            byte[] encodedKey = Base64.decode(PayConstants.publicKey, Base64.DEFAULT);
             PublicKey pubKey = keyFactory.generatePublic(new X509EncodedKeySpec(encodedKey));
 
             java.security.Signature signature = java.security.Signature.getInstance(SIGN_ALGORITHMS);
@@ -89,7 +89,7 @@ public class Utils {
         }
 
         try {
-            PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(Base64.decode(PayContasts.privateKey, Base64.DEFAULT));
+            PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(Base64.decode(PayConstants.privateKey, Base64.DEFAULT));
             KeyFactory keyf = KeyFactory.getInstance("RSA");
             PrivateKey priKey = keyf.generatePrivate(priPKCS8);
             java.security.Signature signature = java.security.Signature.getInstance(SIGN_ALGORITHMS);

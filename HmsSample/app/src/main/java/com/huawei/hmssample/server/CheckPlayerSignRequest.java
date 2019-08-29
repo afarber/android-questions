@@ -1,6 +1,6 @@
 package com.huawei.hmssample.server;
 
-import com.huawei.hmssample.GameContasts;
+import com.huawei.hmssample.GameConstants;
 
 import java.io.IOException;
 import java.net.URL;
@@ -65,7 +65,7 @@ public class CheckPlayerSignRequest extends AbstractHttpRequest {
 
         String noSign = getSignData(params);
 
-        String sign = RSAUtil.sign(noSign, GameContasts.GAME_PRIVATE_RSA);
+        String sign = RSAUtil.sign(noSign, GameConstants.GAME_PRIVATE_RSA);
 
         return sign;
     }

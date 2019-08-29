@@ -1,11 +1,11 @@
 package com.huawei.logger;
 
+import android.app.Activity;
+
 import com.huawei.hmssample.LogFragment;
 import com.huawei.hmssample.R;
 
-import android.app.Activity;
-
-public class LoggerActivity extends Activity{
+public class LoggerActivity extends Activity {
 	
     @Override
     protected void onStart() {

@@ -146,10 +146,10 @@ public class PMSFragment extends Fragment implements View.OnClickListener, OnFra
         ProductDetailRequest detailReq = new ProductDetailRequest();
         // 商户ID
         // Merchant ID
-        detailReq.merchantId = PayContasts.cpId;
+        detailReq.merchantId = PayConstants.cpId;
         // 应用ID
         // Application ID
-        detailReq.applicationID = PayContasts.appId;
+        detailReq.applicationID = PayConstants.appId;
         // 请求流水号
         // request flow number.
         DateFormat format = new java.text.SimpleDateFormat("yyyyMMddhhmmssSSS");
@@ -305,8 +305,8 @@ public class PMSFragment extends Fragment implements View.OnClickListener, OnFra
         } else {
             params = new HashMap<String, Object>();
         }
-        params.put(HwPayConstant.KEY_MERCHANTID, PayContasts.cpId);
-        params.put(HwPayConstant.KEY_APPLICATIONID, PayContasts.appId);
+        params.put(HwPayConstant.KEY_MERCHANTID, PayConstants.cpId);
+        params.put(HwPayConstant.KEY_APPLICATIONID, PayConstants.appId);
         params.put(HwPayConstant.KEY_PRODUCT_NO, ((EditText)view.findViewById(R.id.product_no_edit)).getText().toString());
 
         DateFormat format = new java.text.SimpleDateFormat("yyyyMMddhhmmssSSS");

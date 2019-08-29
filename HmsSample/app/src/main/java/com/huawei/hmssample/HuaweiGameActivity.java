@@ -286,7 +286,7 @@ public class HuaweiGameActivity extends BaseActivity implements View.OnClickList
      * @param gameUserData
      */
     private void checkPlayerSign(final GameUserData gameUserData) {
-        CheckPlayerSignRequest req = new CheckPlayerSignRequest(GameContasts.appId, GameContasts.cpId, gameUserData.getPlayerId(),
+        CheckPlayerSignRequest req = new CheckPlayerSignRequest(GameConstants.appId, GameConstants.cpId, gameUserData.getPlayerId(),
                 String.valueOf(gameUserData.getPlayerLevel()), gameUserData.getGameAuthSign(), gameUserData.getTs());
         GameServerAgent.asyncAckServer(req, new RespCallback(){
 
@@ -299,7 +299,7 @@ public class HuaweiGameActivity extends BaseActivity implements View.OnClickList
                     {
                         Log.i(TAG, "CheckPlayerSign success!");
                         String nosign = "rtnCode=" + RSAUtil.urlEncode(checkPlayerSignResponse.getRtnCode()) + "&ts=" + RSAUtil.urlEncode(checkPlayerSignResponse.getTs());
-                        boolean s = RSAUtil.doCheck(nosign, checkPlayerSignResponse.getRtnSign(), GameContasts.GAME_PUBLIC_RSA);
+                        boolean s = RSAUtil.doCheck(nosign, checkPlayerSignResponse.getRtnSign(), GameConstants.GAME_PUBLIC_RSA);
                         if(s)
                         {
                             Log.i(TAG, "check rtnSign success.");

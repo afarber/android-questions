@@ -6,7 +6,7 @@ package com.huawei.hmssample;
  * @author #user
  * @version #time
  */
-public class PayContasts {
+public class PayConstants {
 
     //Merchant ID /Payment ID
     public final static String cpId = "xxx";

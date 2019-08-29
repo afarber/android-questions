@@ -237,8 +237,8 @@ public class PayFragment extends Fragment implements View.OnClickListener, OnFra
         } else {
             params = new HashMap<>();
         }
-        params.put(HwPayConstant.KEY_MERCHANTID, PayContasts.cpId);
-        params.put(HwPayConstant.KEY_APPLICATIONID, PayContasts.appId);
+        params.put(HwPayConstant.KEY_MERCHANTID, PayConstants.cpId);
+        params.put(HwPayConstant.KEY_APPLICATIONID, PayConstants.appId);
 
         //以下数据以实际商品信息为准
         //The following data is subject to actual commodity information
@@ -446,7 +446,7 @@ public class PayFragment extends Fragment implements View.OnClickListener, OnFra
      */
     private OrderRequest createGetOrderDetailReq(String requestId) {
         Map<String, Object> paramcheck = new HashMap<>();
-        paramcheck.put("merchantId", PayContasts.cpId);
+        paramcheck.put("merchantId", PayConstants.cpId);
         paramcheck.put("requestId", requestId);
         paramcheck.put("keyType", "1");
         paramcheck.put("time", String.valueOf(System.currentTimeMillis()));

@@ -16,7 +16,7 @@ import com.huawei.logger.LoggerActivity;
  * @author #user
  * @version #time
  */
-public class BaseActivity extends LoggerActivity implements HuaweiApiClient.ConnectionCallbacks, HuaweiApiClient.OnConnectionFailedListener{
+public class BaseActivity extends LoggerActivity implements HuaweiApiClient.ConnectionCallbacks, HuaweiApiClient.OnConnectionFailedListener {
 
     public static final String TAG = "BaseActivity";
 

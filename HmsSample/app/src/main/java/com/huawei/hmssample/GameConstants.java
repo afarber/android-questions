@@ -6,7 +6,7 @@ package com.huawei.hmssample;
  * @author #user
  * @version #time
  */
-public class GameContasts {
+public class GameConstants {
 
     //cpid
     public final static String cpId = "xxx";
