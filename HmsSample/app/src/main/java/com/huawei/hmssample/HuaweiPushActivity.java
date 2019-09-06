@@ -102,7 +102,7 @@ public class HuaweiPushActivity extends BaseActivity implements OnClickListener{
 	 * results are sent to the application by broadcast, not through the standard interface Pendingresul return
 	 * Synchronous acquisition of token and asynchronous access to token method, developers as long as they need to choose a way to
 	 */
-	private void getTokenAsyn() {
+	private void getTokenAsync() {
     	if(!client.isConnected()) {
     		Log.i(TAG, "Failed to get token reason: Huaweiapiclient not connected!");
 			client.connect(this);
@@ -264,7 +264,7 @@ public class HuaweiPushActivity extends BaseActivity implements OnClickListener{
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.push_gettoken_asyn:
-			getTokenAsyn();
+			getTokenAsync();
 			break;
 			
 		case R.id.push_gettoken_sync:

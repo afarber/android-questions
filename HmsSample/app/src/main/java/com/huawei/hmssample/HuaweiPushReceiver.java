@@ -34,9 +34,9 @@ import com.huawei.logger.Log;
  *           Transmission message will not be displayed in the notification bar, application will receive onpushmsg
  * onEvent This method is invoked after you set up the label, click to open the Notification bar message, and then click the button on the notification bar.
  */
-public class HuaweiPushRevicer extends PushReceiver {
+public class HuaweiPushReceiver extends PushReceiver {
 
-	public static final String TAG = "HuaweiPushRevicer";
+	public static final String TAG = "HuaweiPushReceiver";
 
 	public static final String ACTION_UPDATEUI = "action.updateUI"; 
     @Override
@@ -77,6 +77,7 @@ public class HuaweiPushRevicer extends PushReceiver {
         }
         
         String message = extras.getString(BOUND_KEY.pushMsgKey);
+        Log.i(TAG, "message:" + message);
         super.onEvent(context, event, extras);
     }
 
