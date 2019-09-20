@@ -1,5 +1,6 @@
 package com.huawei.hmssample;
 
+import com.huawei.hms.api.CheckUpdatelistener;
 import com.huawei.hms.api.HuaweiApiClient;
 import com.huawei.hms.support.api.client.PendingResult;
 import com.huawei.hms.support.api.client.ResultCallback;
@@ -130,7 +131,12 @@ public class HuaweiGameActivity extends BaseActivity implements View.OnClickList
 
         //在华为移动服务连接成功之后，需要调用checkUpdate来对应用进行升级检测
         //After Huawei Mobile Service connection is successful, we need to call Checkupdate to upgrade the application.
-        client.checkUpdate(this);
+        client.checkUpdate(this, new CheckUpdatelistener() {
+            @Override
+            public void onResult(int resultCode) {
+                Log.i(TAG, "CheckUpdatelistener.onResult: resultCode=" + resultCode);
+            }
+        });
     }
 
     /**

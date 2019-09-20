@@ -1,8 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    //ext.hmsVersion = '2.6.3.306'
-    ext.hmsVersion = '2.6.0.301'
+    ext.hmsVersion = '2.6.3.306'
 
     repositories {
         jcenter()

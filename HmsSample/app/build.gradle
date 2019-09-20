@@ -8,6 +8,7 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
+        resConfigs "en", "zh-rCN", "ru", "de", "fr", "pl", "nl"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
