@@ -10,9 +10,10 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!-- 允许使用网络 Allow network use-->
     <uses-permission android:name="android.permission.INTERNET" />
-
     <!-- OTA下载升级包的时候存放SD卡需要的权限 Store the upgrade package download by OTA need SD card permissions -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--For targetSdkVersion is greater than or equal to 26, the following permission is required -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
         android:allowBackup="true"
@@ -77,9 +78,16 @@
 
         <provider
             android:name="com.huawei.hms.update.provider.UpdateProvider"
-            android:authorities="com.huawei.hmssample.hms.update.provider"
+            android:authorities="${applicationId}.hms.update.provider"
             android:exported="false"
             android:grantUriPermissions="true" >
+        </provider>
+
+        <provider
+            android:name="com.huawei.updatesdk.fileprovider.UpdateSdkFileProvider"
+            android:authorities="${applicationId}.updateSdk.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
         </provider>
 
         <activity
@@ -108,14 +116,6 @@
         <!-- 应用下载服务 -->
         <service android:name="com.huawei.updatesdk.service.deamon.download.DownloadService"
             android:exported="false"/>
-
-        <provider
-            android:name="com.huawei.updatesdk.fileprovider.UpdateSdkFileProvider"
-            android:authorities="com.huawei.hmssample.updateSdk.fileProvider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-        </provider>
-
 
         <!-- 第三方相关 :接收Push消息（注册、Push消息、Push连接状态）广播 -->
         <receiver android:name=".HuaweiPushReceiver" >
