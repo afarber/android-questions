@@ -23,7 +23,7 @@
 
         <meta-data
             android:name="com.huawei.hms.client.appid"
-            android:value="appid=xxxx" />
+            android:value="appid=101099233" />
 
         <!-- CPID-->
        <meta-data
