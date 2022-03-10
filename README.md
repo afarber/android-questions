@@ -1,4 +1,4 @@
-android-newbie
+android-questions
 ==========
 
 Small projects for asking at Stackoverflow
