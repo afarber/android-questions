@@ -1,7 +1,7 @@
 android-newbie
 ==========
 
-Small projects created on my way to Android nirvana
+Small projects for asking at Stackoverflow
 
 The files are public domain - unless there is a different note (by their respective authors) on the top of some files.
 
