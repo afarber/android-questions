@@ -48,6 +48,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/HelloMoon/screenshot.png)
 
 
+[HuaweiPush](https://github.com/afarber/android-newbie/tree/master/HuaweiPush) Demo HUAWEI push token issue on ANE-LX1 EMUI 9.1 phone:
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/HuaweiPush/screenshot.jpg)
+
+
 [HmsSample](https://github.com/afarber/android-newbie/tree/master/HmsSample) HUAWEI Mobile Services sample:
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/HmsSample/screenshot.png)

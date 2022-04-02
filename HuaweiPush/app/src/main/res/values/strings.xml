@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">HuaweiPush</string>
+    <string name="test_huawei_push">Test HUAWEI Push</string>
+</resources>
