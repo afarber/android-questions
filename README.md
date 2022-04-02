@@ -48,7 +48,7 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/HelloMoon/screenshot.png)
 
 
-[HuaweiPush](https://github.com/afarber/android-newbie/tree/master/HuaweiPush) Demo HUAWEI push token issue on ANE-LX1 EMUI 9.1 phone:
+[HuaweiPush](https://github.com/afarber/android-newbie/tree/master/HuaweiPush) Retrieve HUAWEI push token:
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/HuaweiPush/screenshot.jpg)
 
