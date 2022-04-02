@@ -10,6 +10,10 @@ import android.util.Log;
 import com.huawei.hms.push.HmsMessageService;
 
 public class MyService extends HmsMessageService {
+    @Override
+    public void onCreate() {
+        Log.d(TAG,"MyService onCreate");
+    }
 
     @Override
     public void onNewToken(String token) {
