@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">BottomSheet1</string>
     <string name="show_bottom_sheet_dialog">Show bottom sheet dialog</string>
+    <string name="button_10">Button 10</string>
+    <string name="button_20">Button 20</string>
+    <string name="button_30">Button 30</string>
 </resources>
