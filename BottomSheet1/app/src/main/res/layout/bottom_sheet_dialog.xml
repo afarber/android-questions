@@ -17,21 +17,21 @@
         <Button
             android:id="@+id/button10"
             android:text="@string/button_10"
-            android:drawableLeft="@drawable/ic_dice_one"
+            android:drawableLeft="@drawable/ic_baseline_local_florist_24"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/button20"
             android:text="@string/button_20"
-            android:drawableLeft="@drawable/ic_dice_two"
+            android:drawableLeft="@drawable/ic_baseline_local_car_wash_24"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/button30"
             android:text="@string/button_30"
-            android:drawableLeft="@drawable/ic_dice_three"
+            android:drawableLeft="@drawable/ic_baseline_home_24"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
