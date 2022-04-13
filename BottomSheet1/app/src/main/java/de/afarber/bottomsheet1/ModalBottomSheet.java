@@ -24,9 +24,9 @@ public class ModalBottomSheet extends BottomSheetDialogFragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.bottom_sheet_dialog, container, false);
 
-        v.findViewById(R.id.button10).setOnClickListener(view -> closeBottomSheetDialog(view));
-        v.findViewById(R.id.button20).setOnClickListener(view -> closeBottomSheetDialog(view));
-        v.findViewById(R.id.button30).setOnClickListener(view -> closeBottomSheetDialog(view));
+        v.findViewById(R.id.button10).setOnClickListener(this::closeBottomSheetDialog);
+        v.findViewById(R.id.button20).setOnClickListener(this::closeBottomSheetDialog);
+        v.findViewById(R.id.button30).setOnClickListener(this::closeBottomSheetDialog);
 
         return v;
     }
