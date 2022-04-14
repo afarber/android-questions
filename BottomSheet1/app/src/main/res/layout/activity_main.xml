@@ -14,19 +14,19 @@
         android:gravity="center">
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/showDialogButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/show_bottom_sheet_dialog"
-            android:padding="4dp"
+            android:text="@string/show_modal_bottom_sheet_dialog"
+            android:padding="8dp"
         />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/showSheetButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/show_bottom_sheet"
-            android:padding="4dp"
+            android:padding="8dp"
         />
     </LinearLayout>
 
@@ -37,7 +37,7 @@
         android:orientation="vertical"
         android:background="@drawable/ic_launcher_background"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        app:behavior_hideable="true"
+        app:behavior_hideable="false"
         app:behavior_peekHeight="16dp">
 
         <Button
