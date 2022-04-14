@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,17 +43,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomSheetDialogFragment dialog = ModalBottomSheet.newInstance();
+        BottomSheetDialogFragment dialog = ModalSheet.newInstance();
         Button showDialog = findViewById(R.id.showDialogButton);
-        showDialog.setOnClickListener(view -> dialog.show(getSupportFragmentManager(), ModalBottomSheet.TAG));
+        showDialog.setOnClickListener(view -> dialog.show(getSupportFragmentManager(), ModalSheet.TAG));
 
+        TextView dragLabel = findViewById(R.id.dragLabel);
         LinearLayout sheet = findViewById(R.id.bottom_sheet_behavior_id);
+        sheet.findViewById(R.id.button10).setOnClickListener(this::closeSheet);
+        sheet.findViewById(R.id.button20).setOnClickListener(this::closeSheet);
+        sheet.findViewById(R.id.button30).setOnClickListener(this::closeSheet);
         BottomSheetBehavior<LinearLayout> behavior = BottomSheetBehavior.from(sheet);
         Log.d(TAG, "before onStateChanged: " + STATES.get(behavior.getState()));
         behavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View view, int newState) {
                 Log.d(TAG, "onStateChanged: " + STATES.get(newState));
+                if (newState == STATE_EXPANDED) {
+                    dragLabel.setText(R.string.drag_me_down);
+                    dragLabel.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_south_24, 0, R.drawable.ic_baseline_south_24, 0);
+                } else if (newState == STATE_COLLAPSED) {
+                    dragLabel.setText(R.string.drag_me_up);
+                    dragLabel.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_north_24, 0, R.drawable.ic_baseline_north_24, 0);
+                }
             }
 
             @Override
@@ -68,5 +81,19 @@ public class MainActivity extends AppCompatActivity {
                 behavior.setState(STATE_EXPANDED);
             }
         });
+    }
+
+    private void closeSheet(View view) {
+        Button button = (Button) view;
+        LinearLayout sheet = (LinearLayout) button.getParent();
+        BottomSheetBehavior<LinearLayout> behavior = BottomSheetBehavior.from(sheet);
+        Toast.makeText(this,
+                button.getText() + " is clicked",
+                Toast.LENGTH_SHORT).show();
+        if (behavior.getState() == STATE_EXPANDED) {
+            behavior.setState(STATE_COLLAPSED);
+        } else {
+            behavior.setState(STATE_EXPANDED);
+        }
     }
 }

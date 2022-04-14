@@ -11,11 +11,11 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-public class ModalBottomSheet extends BottomSheetDialogFragment {
-    public static final String TAG = ModalBottomSheet.class.getName();
+public class ModalSheet extends BottomSheetDialogFragment {
+    public static final String TAG = ModalSheet.class.getName();
 
-    public static ModalBottomSheet newInstance() {
-        return new ModalBottomSheet();
+    public static ModalSheet newInstance() {
+        return new ModalSheet();
     }
 
     @Override
@@ -24,14 +24,14 @@ public class ModalBottomSheet extends BottomSheetDialogFragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.bottom_sheet_dialog, container, false);
 
-        v.findViewById(R.id.button10).setOnClickListener(this::closeBottomSheetDialog);
-        v.findViewById(R.id.button20).setOnClickListener(this::closeBottomSheetDialog);
-        v.findViewById(R.id.button30).setOnClickListener(this::closeBottomSheetDialog);
+        v.findViewById(R.id.button10).setOnClickListener(this::closeSheet);
+        v.findViewById(R.id.button20).setOnClickListener(this::closeSheet);
+        v.findViewById(R.id.button30).setOnClickListener(this::closeSheet);
 
         return v;
     }
 
-    private void closeBottomSheetDialog(View view) {
+    private void closeSheet(View view) {
         Button button = (Button) view;
         Toast.makeText(requireContext(),
                 button.getText() + " is clicked",

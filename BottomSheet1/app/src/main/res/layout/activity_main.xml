@@ -17,7 +17,7 @@
             android:id="@+id/showDialogButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/show_modal_bottom_sheet_dialog"
+            android:text="@string/show_modal_dialog"
             android:padding="8dp"
         />
 
@@ -35,10 +35,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:gravity="center_horizontal"
         android:background="@drawable/ic_launcher_background"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         app:behavior_hideable="false"
-        app:behavior_peekHeight="16dp">
+        app:behavior_peekHeight="50dp">
+
+        <TextView
+            android:id="@+id/dragLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/drag_me_up"
+            android:drawableLeft="@drawable/ic_baseline_north_24"
+            android:drawableRight="@drawable/ic_baseline_north_24"
+            android:textAlignment="center"
+            android:maxHeight="40dp" />
 
         <Button
             android:id="@+id/button10"
