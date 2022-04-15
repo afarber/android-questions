@@ -53,15 +53,24 @@ public class MainActivity extends AppCompatActivity {
         sheet.findViewById(R.id.button20).setOnClickListener(this::closeSheet);
         sheet.findViewById(R.id.button30).setOnClickListener(this::closeSheet);
         BottomSheetBehavior<LinearLayout> behavior = BottomSheetBehavior.from(sheet);
-        Log.d(TAG, "before onStateChanged: " + STATES.get(behavior.getState()));
+        Button showSheet = findViewById(R.id.showSheetButton);
+        showSheet.setOnClickListener(view -> {
+            if (behavior.getState() == STATE_EXPANDED) {
+                behavior.setState(STATE_COLLAPSED);
+            } else {
+                behavior.setState(STATE_EXPANDED);
+            }
+        });
         behavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View view, int newState) {
                 Log.d(TAG, "onStateChanged: " + STATES.get(newState));
                 if (newState == STATE_EXPANDED) {
+                    showSheet.setText(R.string.close_bottom_sheet);
                     dragLabel.setText(R.string.drag_me_down);
                     dragLabel.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_south_24, 0, R.drawable.ic_baseline_south_24, 0);
                 } else if (newState == STATE_COLLAPSED) {
+                    showSheet.setText(R.string.show_bottom_sheet);
                     dragLabel.setText(R.string.drag_me_up);
                     dragLabel.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_north_24, 0, R.drawable.ic_baseline_north_24, 0);
                 }
@@ -70,15 +79,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSlide(@NonNull View view, float v) {
                 Log.d(TAG, "onSlide: " + v);
-            }
-        });
-
-        Button showSheet = findViewById(R.id.showSheetButton);
-        showSheet.setOnClickListener(view -> {
-            if (behavior.getState() == STATE_EXPANDED) {
-                behavior.setState(STATE_COLLAPSED);
-            } else {
-                behavior.setState(STATE_EXPANDED);
             }
         });
     }
