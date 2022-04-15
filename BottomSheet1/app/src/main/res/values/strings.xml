@@ -6,6 +6,8 @@
     <string name="button_10">Button 10</string>
     <string name="button_20">Button 20</string>
     <string name="button_30">Button 30</string>
+    <string name="button_40">Button 40</string>
+    <string name="button_50">Button 50</string>
     <string name="drag_me_up">Drag me up!</string>
     <string name="drag_me_down">Drag me down!</string>
 </resources>
