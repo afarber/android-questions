@@ -53,45 +53,53 @@
             android:maxHeight="40dp"
             />
 
-        <Button
-            android:id="@+id/button10"
-            android:text="@string/button_10"
-            android:drawableLeft="@drawable/ic_baseline_local_florist_24"
-            android:drawableTint="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <com.google.android.flexbox.FlexboxLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:justifyContent="space_evenly"
+            app:flexWrap="wrap">
 
-        <Button
-            android:id="@+id/button20"
-            android:text="@string/button_20"
-            android:drawableLeft="@drawable/ic_baseline_local_car_wash_24"
-            android:drawableTint="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <Button
+                android:id="@+id/button10"
+                android:text="@string/button_10"
+                android:drawableLeft="@drawable/ic_baseline_local_florist_24"
+                android:drawableTint="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/button30"
-            android:text="@string/button_30"
-            android:drawableLeft="@drawable/ic_baseline_home_24"
-            android:drawableTint="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <Button
+                android:id="@+id/button20"
+                android:text="@string/button_20"
+                android:drawableLeft="@drawable/ic_baseline_local_car_wash_24"
+                android:drawableTint="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/button40"
-            android:text="@string/button_40"
-            android:drawableLeft="@drawable/ic_baseline_account_circle_24"
-            android:drawableTint="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <Button
+                android:id="@+id/button30"
+                android:text="@string/button_30"
+                android:drawableLeft="@drawable/ic_baseline_home_24"
+                android:drawableTint="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/button50"
-            android:text="@string/button_50"
-            android:drawableLeft="@drawable/ic_baseline_add_location_24"
-            android:drawableTint="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <Button
+                android:id="@+id/button40"
+                android:text="@string/button_40"
+                android:drawableLeft="@drawable/ic_baseline_account_circle_24"
+                android:drawableTint="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/button50"
+                android:text="@string/button_50"
+                android:drawableLeft="@drawable/ic_baseline_add_location_24"
+                android:drawableTint="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.flexbox.FlexboxLayout>
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
