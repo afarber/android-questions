@@ -27,6 +27,8 @@ public class ModalSheet extends BottomSheetDialogFragment {
         v.findViewById(R.id.button10).setOnClickListener(this::closeSheet);
         v.findViewById(R.id.button20).setOnClickListener(this::closeSheet);
         v.findViewById(R.id.button30).setOnClickListener(this::closeSheet);
+        v.findViewById(R.id.button40).setOnClickListener(this::closeSheet);
+        v.findViewById(R.id.button50).setOnClickListener(this::closeSheet);
 
         return v;
     }

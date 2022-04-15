@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         sheet.findViewById(R.id.button10).setOnClickListener(this::closeSheet);
         sheet.findViewById(R.id.button20).setOnClickListener(this::closeSheet);
         sheet.findViewById(R.id.button30).setOnClickListener(this::closeSheet);
+        sheet.findViewById(R.id.button40).setOnClickListener(this::closeSheet);
+        sheet.findViewById(R.id.button50).setOnClickListener(this::closeSheet);
         BottomSheetBehavior<LinearLayout> behavior = BottomSheetBehavior.from(sheet);
         Button showSheet = findViewById(R.id.showSheetButton);
         showSheet.setOnClickListener(view -> {
