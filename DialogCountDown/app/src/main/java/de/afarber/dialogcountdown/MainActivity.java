@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Button button = findViewById(R.id.show_dialog_button);
         button.setOnClickListener(view -> {
-            MyDialog dialog = MyDialog.newInstance(20);
+            MyDialog dialog = new MyDialog();
             dialog.show(getSupportFragmentManager(), MyDialog.TAG);
         });
     }

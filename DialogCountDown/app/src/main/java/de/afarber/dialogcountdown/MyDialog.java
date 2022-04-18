@@ -12,44 +12,32 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 public class MyDialog extends AppCompatDialogFragment {
     public final static String TAG = MyDialog.class.getName();
-    private final static long DEFAULT_TIMEOUT = 30L;
+    private final static long TIMEOUT = 20L;
 
-    private long mTimeout;
+    private long mCountDown = TIMEOUT;
     private final Handler mHandler = new Handler();
+    // runs on main thread and decreases countdown by 1 second
     private final Runnable mRunnable = new Runnable() {
-        // runs on main thread and decreases countdown by 1 second
         @Override
         public void run() {
             AlertDialog dialog = (AlertDialog) requireDialog();
             Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-            negativeButton.setText(getString(R.string.dialog_cancel_button, mTimeout));
-            if (--mTimeout <= 0) {
+            negativeButton.setText(getString(R.string.dialog_cancel_button, mCountDown));
+            if (--mCountDown <= 0) {
                 dismiss();
             } else {
-                // run again in 1 second
                 mHandler.postDelayed(this, 1000L);
             }
         }
     };
 
-    public static MyDialog newInstance(long timeout) {
-        MyDialog dialog = new MyDialog();
-        Bundle args = new Bundle();
-        args.putLong("timeout", timeout);
-        dialog.setArguments(args);
-        return dialog;
-    }
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        mTimeout = getArguments() == null ? DEFAULT_TIMEOUT :
-            getArguments().getLong("timeout", DEFAULT_TIMEOUT);
-
         return new AlertDialog.Builder(requireActivity())
             .setTitle(R.string.dialog_title)
             .setPositiveButton(R.string.dialog_ok_button, (dialogInterface, i) -> Log.d(TAG, "Ok clicked"))
-            .setNegativeButton(getString(R.string.dialog_cancel_button, mTimeout), null)
+            .setNegativeButton(getString(R.string.dialog_cancel_button, mCountDown), null)
                 .create();
     }
 
