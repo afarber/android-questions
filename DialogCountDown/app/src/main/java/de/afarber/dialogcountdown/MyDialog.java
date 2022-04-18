@@ -19,6 +19,7 @@ public class MyDialog extends AppCompatDialogFragment {
         // runs on main thread and decreases countdown by 1 second
         @Override
         public void run() {
+            
             // run again in 1 second
             mHandler.postDelayed(this, 1000L);
         }
@@ -39,9 +40,9 @@ public class MyDialog extends AppCompatDialogFragment {
                 getArguments().getLong("timeout", DEFAULT_TIMEOUT);
 
         return new AlertDialog.Builder(requireActivity())
-            .setTitle("My dialog")
-            .setPositiveButton("ok", (dialogInterface, i) -> Log.d(TAG, "Ok clicked"))
-            .setNegativeButton("cancel", null)
+            .setTitle(R.string.dialog_title)
+            .setPositiveButton(R.string.dialog_ok_button, (dialogInterface, i) -> Log.d(TAG, "Ok clicked"))
+            .setNegativeButton(R.string.dialog_cancel_button, null)
                 .create();
     }
 
