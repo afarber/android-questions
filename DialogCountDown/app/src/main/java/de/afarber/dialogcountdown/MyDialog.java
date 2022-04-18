@@ -44,4 +44,16 @@ public class MyDialog extends AppCompatDialogFragment {
             .setNegativeButton("cancel", null)
                 .create();
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mRunnable.run();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mHandler.removeCallbacks(mRunnable);
+    }
 }
