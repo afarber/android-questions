@@ -1,10 +1,9 @@
 package de.afarber.dialogcountdown;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -13,11 +12,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button button = findViewById(R.id.show_dialog_button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO
-            }
+        button.setOnClickListener(view -> {
+            MyDialog dialog = MyDialog.newInstance(20);
+            dialog.show(getSupportFragmentManager(), MyDialog.TAG);
         });
     }
 }
