@@ -3,5 +3,5 @@
     <string name="show_dialog">Show dialog</string>
     <string name="dialog_title">My dialog</string>
     <string name="dialog_ok_button">ok</string>
-    <string name="dialog_cancel_button">cancel</string>
+    <string name="dialog_cancel_button">cancel (%d)</string>
 </resources>
