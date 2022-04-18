@@ -23,6 +23,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/CriminalIntent/screenshot.png)
 
 
+[DialogCountDown](https://github.com/afarber/android-newbie/tree/master/DialogCountDown):
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/DialogCountDown/screenshot.png)
+
+
 [DragAndDraw](https://github.com/afarber/android-newbie/tree/master/DragAndDraw):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/DragAndDraw/screenshot.png)
