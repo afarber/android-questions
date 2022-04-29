@@ -174,6 +174,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/PingMe/screenshot.png)
 
 
+[RoundedQRCode](https://github.com/afarber/android-newbie/tree/master/RoundedQRCode) - rounded QR code drawn in [Telegram](https://github.com/DrKLO/Telegram):
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/RoundedQRCode/screenshot.png)
+
+
 [QR_BT_Pairing](https://github.com/afarber/android-newbie/tree/master/QR_BT_Pairing):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/QR_BT_Pairing/screenshot.png)
