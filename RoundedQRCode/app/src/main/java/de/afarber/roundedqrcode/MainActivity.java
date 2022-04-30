@@ -5,21 +5,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-    private ImageView mImageView;
+    private QrView mQrView;
     private EditText mEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mImageView = findViewById(R.id.imageView);
+        mQrView = findViewById(R.id.qrView);
         mEditText = findViewById(R.id.editText);
         mEditText.setOnEditorActionListener((tv, actionId, event) -> {
             String str = tv.getText().toString();
@@ -32,4 +30,6 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
     }
+
 }
+
