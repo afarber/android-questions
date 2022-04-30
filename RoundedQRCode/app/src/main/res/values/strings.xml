@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Rounded QR Code</string>
+    <string name="enter_text_message">Enter text here</string>
+    <string name="qr_code_image">QR Code</string>
 </resources>
