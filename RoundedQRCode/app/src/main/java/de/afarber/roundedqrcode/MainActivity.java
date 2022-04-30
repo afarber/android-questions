@@ -10,20 +10,18 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-    private QrView mQrView;
-    private EditText mEditText;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mQrView = findViewById(R.id.qrView);
-        mEditText = findViewById(R.id.editText);
-        mEditText.setOnEditorActionListener((tv, actionId, event) -> {
-            String str = tv.getText().toString();
-            tv.setText(null);
+        QrView qrView = findViewById(R.id.qrView);
+        EditText editText = findViewById(R.id.editText);
+        editText.setOnEditorActionListener((tv, actionId, event) -> {
+            String str = tv.getText().toString().trim();
             if (!TextUtils.isEmpty(str)) {
+                tv.setText(null);
                 Toast.makeText(getBaseContext(), str, Toast.LENGTH_LONG).show();
+                // hide the soft keyboard
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(tv.getWindowToken(), 0);
             }
