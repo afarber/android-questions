@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
                 hints.put(EncodeHintType.MARGIN, 0);
                 hints.put(EncodeHintType.QR_VERSION, 4);
                 qrView.setImageBitmap(qrCode = createQR(str, 768, 768, hints, qrCode));
-                imageSize = qrCode.getWidth();
+                imageSize = qrCode == null ? 0 : qrCode.getWidth();
                 // hide the soft keyboard
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(tv.getWindowToken(), 0);
