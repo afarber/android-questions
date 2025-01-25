@@ -50,10 +50,6 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    // TODO use Jackson instead of obsolete Gson
-    //implementation(libs.converter.jackson)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

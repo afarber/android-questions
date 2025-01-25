@@ -1,23 +1,35 @@
 package com.wordsbyfarber.network
 
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Url
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.net.URL
+import java.util.regex.Pattern
 
-suspend fun downloadAndParseJson(language: String): Map<String, String> {
-    val url = "https://wordsbyfarber.com/Consts-$language.js"
-    val response = Retrofit.Builder()
-        .baseUrl("https://wordsbyfarber.com/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-        .create(ApiService::class.java)
-        .getJson(url)
+// Helper function to download and parse the JS file
+suspend fun downloadAndParseJs(language: String): Map<String, String> {
+    return withContext(Dispatchers.IO) {
+        val jsonData = mutableMapOf<String, String>()
+        try {
+            val url = "https://wordsbyfarber.com/Consts-$language.js"
+            val jsFileContent = URL(url).readText()
 
-    return response
-}
+            val pattern = Pattern.compile("const\\s+HASHED\\s*=\\s*\\{([^}]*)\\}")
+            val matcher = pattern.matcher(jsFileContent)
 
-interface ApiService {
-    @GET
-    suspend fun getJson(@Url url: String): Map<String, String>
+            if (matcher.find()) {
+                val jsonString = matcher.group(1).replace("\\s+".toRegex(), "")
+                val keyValuePattern = Pattern.compile("\"([^\"]+)\":\"([^\"]*)\",")
+                val keyValueMatcher = keyValuePattern.matcher(jsonString)
+
+                while (keyValueMatcher.find()) {
+                    val key = keyValueMatcher.group(1)
+                    val value = keyValueMatcher.group(2)
+                    jsonData[key] = value
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace() // Log the error for debugging purposes
+        }
+        jsonData
+    }
 }
