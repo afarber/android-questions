@@ -254,6 +254,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/WordGame/screenshot.png)
 
 
+[WordsByFarber](https://github.com/afarber/android-newbie/tree/master/WordsByFarber) Jetpack Compose with multiple Room databases:
+
+![screenshot](https://raw.github.com/afarber/android-newbie/master/WordsByFarber/screenshot.png)
+
+
 [ZXingTestActivity](https://github.com/afarber/android-newbie/tree/master/ZXingTestActivity) (by ZXing project, Apache License):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/ZXingTestActivity/screenshot.png)
