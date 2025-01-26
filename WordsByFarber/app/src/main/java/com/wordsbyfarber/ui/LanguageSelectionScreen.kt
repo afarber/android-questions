@@ -5,12 +5,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.statusBarsPadding
 
 @Composable
 fun LanguageSelectionScreen(onLanguageSelected: (String) -> Unit) {
@@ -28,10 +28,22 @@ fun LanguageSelectionScreen(onLanguageSelected: (String) -> Unit) {
                 // Make button occupy full width
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(language)
+                val flagEmoji = getFlagEmoji(language.uppercase())
+                Text("$flagEmoji $language")
             }
             // Add space between buttons
             Spacer(modifier = Modifier.height(4.dp))
         }
     }
+}
+
+fun getFlagEmoji(countryCode: String): String {
+    if (countryCode.length != 2) {
+        return "\uD83C\uDFC1" // Return chequered flag emoji for invalid country codes
+    }
+
+    val firstChar = Character.codePointAt(countryCode, 0) - 0x41 + 0x1F1E6
+    val secondChar = Character.codePointAt(countryCode, 1) - 0x41 + 0x1F1E6
+
+    return String(Character.toChars(firstChar)) + String(Character.toChars(secondChar))
 }
