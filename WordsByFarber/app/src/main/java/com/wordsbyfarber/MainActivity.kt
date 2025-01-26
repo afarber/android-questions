@@ -36,7 +36,7 @@ fun MyApp() {
     var language by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     var words by remember { mutableStateOf(emptyList<Words>()) }
-    var errorMessage by remember { mutableStateOf<String?>(null) } // New state for error messages
+    var errorMessage by remember { mutableStateOf<String?>(null) }
 
     Box(
         // Fill the entire screen
@@ -53,21 +53,29 @@ fun MyApp() {
 
                     coroutineScope.launch {
                         try {
-                            val jsonData = downloadAndParseJs(language)
-                            val wordList = jsonData.map { Words(it.key, it.value) }
-
                             val database = Room.databaseBuilder(
                                 context,
                                 WordsDatabase::class.java, "${language}_database"
                             ).build()
-                            database.wordsDao().deleteAll()
-                            database.wordsDao().insertAll(wordList)
+
+                            // Check the count of words in the database
+                            val count = database.wordsDao().countAll()
+                            if (count < 120000) {
+                                val jsonData = downloadAndParseJs(language)
+                                val wordList = jsonData.map { Words(it.key, it.value) }
+
+                                database.wordsDao().deleteAll()
+                                database.wordsDao().insertAll(wordList)
+                                words = wordList
+                            }
+
                             isLoading = false
-                            words = wordList
-                            errorMessage = null // Clear any previous error message
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                            errorMessage = e.message // Store the error message
+                            // Clear any previous error message
+                            errorMessage = null
+                        } catch (ex: Exception) {
+                            ex.printStackTrace()
+                            // Store the error message
+                            errorMessage = ex.message
                             isLoading = false
                         }
                     }
@@ -75,7 +83,8 @@ fun MyApp() {
             } else if (isLoading) {
                 CircularProgressIndicator()
             } else if (errorMessage != null) {
-                Text("Error: $errorMessage") // Display the error message
+                // Display the error message
+                Text("Error: $errorMessage")
             } else {
                 Text("Loaded!")
                 // Display the words based on the selection
