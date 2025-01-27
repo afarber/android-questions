@@ -4,9 +4,6 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
-import com.wordsbyfarber.data.Words
-import com.wordsbyfarber.data.WordsDao
-import com.wordsbyfarber.data.WordsDatabase
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -38,6 +35,44 @@ class WordsDaoTest {
     }
 
     @Test
+    fun testDeleteAll() = runBlocking {
+        val testWords = listOf(
+            Words(word = "a", explanation = "Has 1 letter"),
+            Words(word = "ab", explanation = "Has 2 letters")
+        )
+        wordsDao.insertAll(testWords)
+        wordsDao.deleteAll()
+
+        val count = wordsDao.countAll()
+        assertEquals(0, count)
+    }
+
+    @Test
+    fun testInsertAll() = runBlocking {
+        val testWords = listOf(
+            Words(word = "apple", explanation = "A fruit"),
+            Words(word = "banana", explanation = "Another fruit")
+        )
+        wordsDao.insertAll(testWords)
+
+        val count = wordsDao.countAll()
+        assertEquals(2, count)
+    }
+
+    @Test
+    fun testCountAll() = runBlocking {
+        val testWords = listOf(
+            Words(word = "a", explanation = "Has 1 letter"),
+            Words(word = "ab", explanation = "Has 2 letters"),
+            Words(word = "abc", explanation = "Has 3 letters")
+        )
+        wordsDao.insertAll(testWords)
+
+        val count = wordsDao.countAll()
+        assertEquals(3, count)
+    }
+
+    @Test
     fun testGetWordsByLength() = runBlocking {
         val testWords = listOf(
             Words(word = "a", explanation = "Has 1 letter"),
@@ -57,7 +92,7 @@ class WordsDaoTest {
         val testWords = listOf(
             Words(word = "apple", explanation = "Has an A in it"),
             Words(word = "banana", explanation = "Has an A in it"),
-            Words(word = "cherry", explanation =  ""),
+            Words(word = "cherry", explanation = ""),
             Words(word = "date", explanation = "Has an A in it")
         )
         wordsDao.insertAll(testWords)
