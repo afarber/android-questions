@@ -15,4 +15,10 @@ interface WordsDao {
 
     @Query("SELECT COUNT(*) FROM words")
     suspend fun countAll(): Int
+
+    @Query("SELECT * FROM words WHERE LENGTH(word) = :length")
+    suspend fun getWordsByLength(length: Int): List<Words>
+
+    @Query("SELECT * FROM words WHERE word LIKE '%' || :letter || '%'")
+    suspend fun getWordsByLetter(letter: String): List<Words>
 }

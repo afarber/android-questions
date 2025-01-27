@@ -11,6 +11,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -35,8 +36,9 @@ fun MyApp() {
 
     var language by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
-    var words by remember { mutableStateOf(emptyList<Words>()) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
+    var wordCount by remember { mutableIntStateOf(0) }
+    //var words by remember { mutableStateOf(emptyList<Words>()) }
 
     Box(
         // Fill the entire screen
@@ -59,14 +61,17 @@ fun MyApp() {
                             ).build()
 
                             // Check the count of words in the database
-                            val count = database.wordsDao().countAll()
-                            if (count < 120000) {
+                            wordCount = database.wordsDao().countAll()
+                            // if words count is low, (re)download them from /Consts-de.js
+                            if (wordCount < 120000) {
                                 val jsonData = downloadAndParseJs(language)
                                 val wordList = jsonData.map { Words(it.key, it.value) }
 
                                 database.wordsDao().deleteAll()
                                 database.wordsDao().insertAll(wordList)
-                                words = wordList
+
+                                // Update the count after inserting new words
+                                wordCount = database.wordsDao().countAll()
                             }
 
                             isLoading = false
@@ -86,8 +91,8 @@ fun MyApp() {
                 // Display the error message
                 Text("Error: $errorMessage")
             } else {
-                Text("Loaded!")
-                // Display the words based on the selection
+                Text("Loaded! Word count: $wordCount")
+                // TODO Display the words based on the selection
             }
         }
     }
