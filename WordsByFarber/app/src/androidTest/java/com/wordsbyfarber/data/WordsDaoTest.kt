@@ -40,10 +40,10 @@ class WordsDaoTest {
     @Test
     fun testGetWordsByLength() = runBlocking {
         val testWords = listOf(
-            Words(word = "a", explanation = ""),
-            Words(word = "ab", explanation = ""),
-            Words(word = "abc", explanation = ""),
-            Words(word = "abcd", explanation = "")
+            Words(word = "a", explanation = "Has 1 letter"),
+            Words(word = "ab", explanation = "Has 2 letters"),
+            Words(word = "abc", explanation = "Has 3 letters"),
+            Words(word = "abcd", explanation = "Has 4 letters")
         )
         wordsDao.insertAll(testWords)
 
@@ -57,8 +57,8 @@ class WordsDaoTest {
         val testWords = listOf(
             Words(word = "apple", explanation = "Has an A in it"),
             Words(word = "banana", explanation = "Has an A in it"),
-            Words(word = "cherry", explanation =  "Has no A in it"),
-            Words(word = "date", explanation = "")
+            Words(word = "cherry", explanation =  ""),
+            Words(word = "date", explanation = "Has an A in it")
         )
         wordsDao.insertAll(testWords)
 
