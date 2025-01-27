@@ -10,7 +10,7 @@ suspend fun downloadAndParseJs(language: String): Map<String, String> {
     return withContext(Dispatchers.IO) {
         val jsonData = mutableMapOf<String, String>()
         try {
-            val url = "https://wordsbyfarber.com/Consts-$language.js"
+            val url = "https://wordsbyfarber.com/Consts-${language}.js"
             val jsFileContent = URL(url).readText()
 
             val pattern = Pattern.compile("const\\s+HASHED\\s*=\\s*\\{([^}]*)\\}")
@@ -27,8 +27,8 @@ suspend fun downloadAndParseJs(language: String): Map<String, String> {
                     jsonData[key] = value
                 }
             }
-        } catch (e: Exception) {
-            e.printStackTrace() // Log the error for debugging purposes
+        } catch (ex: Exception) {
+            ex.printStackTrace()
         }
         jsonData
     }
