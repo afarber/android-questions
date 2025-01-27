@@ -2,9 +2,9 @@ name: Android CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -32,17 +32,16 @@ jobs:
 
     - name: Build and run tests
       run: ./gradlew build connectedCheck
-      working-directory: android-questions/WordyByFarber
+      working-directory: android-questions/WordsByFarber
 
     - name: Report Coverage
       if: always()
       run: ./gradlew jacocoTestReport
-      working-directory: android-questions/WordyByFarber
+      working-directory: android-questions/WordsByFarber
 
     - name: Upload Coverage to Codecov
       uses: codecov/codecov-action@v2
       with:
-        files: android-questions/WordyByFarber/app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        files: android-questions/WordsByFarber/app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
+        token: ${{ secrets.CODECOV_TOKEN }}
 
