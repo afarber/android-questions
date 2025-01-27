@@ -1,4 +1,4 @@
-package com.wordsbyfarber
+package com.wordsbyfarber.data
 
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
