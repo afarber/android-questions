@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.room.Room
-import com.wordsbyfarber.data.Words
 import com.wordsbyfarber.data.WordsDatabase
 import com.wordsbyfarber.network.downloadAndParseJs
 import com.wordsbyfarber.ui.LanguageSelectionScreen
@@ -64,11 +63,8 @@ fun MyApp() {
                             wordCount = database.wordsDao().countAll()
                             // if words count is low, (re)download them from /Consts-de.js
                             if (wordCount < 120000) {
-                                val jsonData = downloadAndParseJs(language)
-                                val wordList = jsonData.map { Words(it.key, it.value) }
-
                                 database.wordsDao().deleteAll()
-                                database.wordsDao().insertAll(wordList)
+                                downloadAndParseJs(language, database.wordsDao())
 
                                 // Update the count after inserting new words
                                 wordCount = database.wordsDao().countAll()
