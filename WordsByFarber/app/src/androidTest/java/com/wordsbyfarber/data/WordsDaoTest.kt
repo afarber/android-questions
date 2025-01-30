@@ -60,6 +60,17 @@ class WordsDaoTest {
     }
 
     @Test
+    fun testInsert() = runBlocking {
+        val word = Words(word = "kiwi", explanation = "A fruit")
+        wordsDao.insert(word)
+
+        val result = wordsDao.getWordsByLetter("k")
+        assertEquals(1, result.size)
+        assertEquals("kiwi", result[0].word)
+        assertEquals("A fruit", result[0].explanation)
+    }
+
+    @Test
     fun testCountAll() = runBlocking {
         val testWords = listOf(
             Words(word = "a", explanation = "Has 1 letter"),

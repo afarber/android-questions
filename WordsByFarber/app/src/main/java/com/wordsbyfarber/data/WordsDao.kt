@@ -13,6 +13,9 @@ interface WordsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(words: List<Words>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(word: Words)
+
     @Query("SELECT COUNT(*) FROM words")
     suspend fun countAll(): Int
 
