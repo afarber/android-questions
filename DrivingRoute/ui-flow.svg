@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Ebene_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1200 800">
+  <!-- Generator: Adobe Illustrator 29.1.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 142)  -->
+  <defs>
+    <style>
+      .st0, .st1, .st2, .st3, .st4, .st5, .st6, .st7, .st8, .st9 {
+        stroke-width: 2px;
+      }
+
+      .st0, .st10, .st11 {
+        fill: #f44336;
+      }
+
+      .st0, .st11 {
+        stroke: #c62828;
+      }
+
+      .st12, .st13, .st14, .st15, .st16, .st17, .st18, .st19, .st20, .st21, .st22, .st23, .st24, .st25, .st26, .st27, .st28, .st29, .st30, .st10 {
+        isolation: isolate;
+      }
+
+      .st12, .st13, .st16, .st17, .st19, .st21, .st22, .st23, .st25 {
+        font-family: Arial-BoldMT, Arial;
+        font-weight: 700;
+      }
+
+      .st12, .st14, .st16, .st18, .st31, .st30 {
+        fill: #333;
+      }
+
+      .st12, .st17, .st19, .st21, .st23 {
+        font-size: 14px;
+      }
+
+      .st13 {
+        fill: #f9a825;
+      }
+
+      .st13, .st18, .st24, .st26, .st27, .st10 {
+        font-size: 12px;
+      }
+
+      .st14, .st15, .st18, .st26, .st28, .st29, .st30 {
+        font-family: ArialMT, Arial;
+      }
+
+      .st14, .st22, .st29 {
+        font-size: 10px;
+      }
+
+      .st1 {
+        stroke: #f44336;
+        stroke-dasharray: 3 3;
+      }
+
+      .st1, .st32, .st4, .st33, .st34 {
+        fill: none;
+      }
+
+      .st15, .st7, .st29 {
+        fill: #2e7d32;
+      }
+
+      .st15, .st30 {
+        font-size: 9px;
+      }
+
+      .st16 {
+        font-size: 24px;
+      }
+
+      .st17 {
+        fill: #388e3c;
+      }
+
+      .st19 {
+        fill: #7b1fa2;
+      }
+
+      .st20 {
+        font-family: MyriadPro-Regular, 'Myriad Pro';
+      }
+
+      .st20, .st22, .st35, .st25, .st28 {
+        fill: #fff;
+      }
+
+      .st20, .st28 {
+        font-size: 6px;
+      }
+
+      .st36 {
+        fill: #2196f3;
+        stroke: #1565c0;
+      }
+
+      .st37 {
+        fill: #9e9e9e;
+        stroke: #616161;
+      }
+
+      .st2 {
+        fill: #e3f2fd;
+        stroke: #1976d2;
+      }
+
+      .st3 {
+        fill: #f3e5f5;
+        stroke: #7b1fa2;
+      }
+
+      .st21 {
+        fill: #1976d2;
+      }
+
+      .st4 {
+        stroke: #333;
+      }
+
+      .st23 {
+        fill: #f57c00;
+      }
+
+      .st35 {
+        stroke: #ccc;
+      }
+
+      .st5 {
+        fill: #fff3e0;
+        stroke: #f57c00;
+      }
+
+      .st24 {
+        fill: #e44311;
+      }
+
+      .st24, .st27, .st10 {
+        font-family: Arial-ItalicMT, Arial;
+        font-style: italic;
+      }
+
+      .st33, .st34 {
+        stroke: #2196f3;
+        stroke-width: 3px;
+      }
+
+      .st25 {
+        font-size: 8px;
+      }
+
+      .st26 {
+        fill: #1d1d1b;
+      }
+
+      .st38, .st9 {
+        fill: #4caf50;
+        stroke: #2e7d32;
+      }
+
+      .st27 {
+        fill: #d14416;
+      }
+
+      .st6 {
+        fill: #fff9c4;
+        stroke: #f9a825;
+      }
+
+      .st7 {
+        stroke: #1b5e20;
+      }
+
+      .st39 {
+        fill: #f5f5f5;
+      }
+
+      .st34 {
+        stroke-linecap: round;
+      }
+
+      .st8 {
+        fill: #e8f5e8;
+      }
+
+      .st8, .st40 {
+        stroke: #388e3c;
+      }
+
+      .st40 {
+        fill: #81c784;
+      }
+    </style>
+  </defs>
+  <rect class="st39" width="1200" height="800"/>
+  <text class="st16" transform="translate(396.7 30)"><tspan x="0" y="0">AAOS OSM Route Planner - UI Flow</tspan></text>
+  <g id="state1">
+    <rect class="st2" x="50" y="60" width="250" height="150" rx="8" ry="8"/>
+    <text class="st21" transform="translate(132.9 80)"><tspan x="0" y="0">STATE: IDLE</tspan></text>
+    <rect class="st40" x="70" y="95" width="180" height="100" rx="4" ry="4"/>
+    <text class="st29" transform="translate(124.2 140)"><tspan x="0" y="0">OSM Fullscreen</tspan></text>
+    <text class="st29" transform="translate(110.8 155)"><tspan x="0" y="0">Touch to place marker</tspan></text>
+    <text class="st27" transform="translate(106.6 230)"><tspan x="0" y="0">No floating buttons visible</tspan></text>
+  </g>
+  <path class="st32" d=""/>
+  <polygon class="st31" points="322 128 342 135 322 142 322 128"/>
+  <path class="st31" d="M340,135" marker-end="url(#arrowhead)"/>
+  <g id="state2">
+    <rect class="st5" x="350" y="60" width="250" height="150" rx="8" ry="8"/>
+    <text class="st23" transform="translate(391.4 80)"><tspan x="0" y="0">STATE: START_MARKER</tspan></text>
+    <rect class="st40" x="370" y="95" width="140" height="100" rx="4" ry="4"/>
+    <circle class="st9" cx="440" cy="130" r="8"/>
+    <text class="st25" transform="translate(437.3 135)"><tspan x="0" y="0">S</tspan></text>
+    <rect class="st38" x="520" y="105" width="60" height="25" rx="12" ry="12"/>
+    <text class="st22" transform="translate(538.6 120)"><tspan x="0" y="0">Start</tspan></text>
+    <rect class="st11" x="520" y="140" width="60" height="25" rx="12" ry="12"/>
+    <text class="st22" transform="translate(533.6 155)"><tspan x="0" y="0">Cancel</tspan></text>
+  </g>
+  <path class="st32" d=""/>
+  <polygon class="st31" points="482 232 475 252 468 232 482 232"/>
+  <path class="st31" d="M475,250" marker-end="url(#arrowhead)"/>
+  <text class="st26" transform="translate(437.6 224.8)"><tspan x="0" y="0">Click the Start button</tspan></text>
+  <path class="st32" d=""/>
+  <polygon class="st31" points="444.9 592.4 424.1 588.6 442.7 578.6 444.9 592.4"/>
+  <path class="st31" d="M175,250" marker-end="url(#arrowhead)"/>
+  <g id="state3">
+    <rect class="st3" x="350" y="260" width="250" height="150" rx="8" ry="8"/>
+    <text class="st19" transform="translate(391.3 280)"><tspan x="0" y="0">STATE: FINISH_MARKER</tspan></text>
+    <rect class="st40" x="370" y="295" width="140" height="100" rx="4" ry="4"/>
+    <circle class="st7" cx="410" cy="320" r="8"/>
+    <text class="st20" transform="translate(407.8 325)"><tspan x="0" y="0">✓</tspan></text>
+    <text class="st15" transform="translate(444.7 350)"><tspan x="0" y="0">Touch for finish</tspan></text>
+    <rect class="st37" x="520" y="305" width="60" height="25" rx="12" ry="12"/>
+    <text class="st22" transform="translate(535.3 320)"><tspan x="0" y="0">Finish</tspan></text>
+    <rect class="st11" x="520" y="340" width="60" height="25" rx="12" ry="12"/>
+    <text class="st22" transform="translate(533.6 355)"><tspan x="0" y="0">Cancel</tspan></text>
+  </g>
+  <path class="st32" d=""/>
+  <polygon class="st31" points="622 328 642 335 622 342 622 328"/>
+  <path class="st31" d="M640,335" marker-end="url(#arrowhead)"/>
+  <g id="state4">
+    <rect class="st8" x="650" y="260" width="250" height="150" rx="8" ry="8"/>
+    <text class="st17" transform="translate(702.3 280)"><tspan x="0" y="0">BOTH MARKERS SET</tspan></text>
+    <rect class="st40" x="670" y="295" width="140" height="100" rx="4" ry="4"/>
+    <circle class="st7" cx="700" cy="320" r="6"/>
+    <text class="st20" transform="translate(697.8 324)"><tspan x="0" y="0">✓</tspan></text>
+    <circle class="st0" cx="750" cy="350" r="6"/>
+    <text class="st28" transform="translate(748.2 354)"><tspan x="0" y="0">F</tspan></text>
+    <rect class="st36" x="820" y="305" width="60" height="25" rx="12" ry="12"/>
+    <text class="st22" transform="translate(835.8 320)"><tspan x="0" y="0">Route</tspan></text>
+    <rect class="st11" x="820" y="340" width="60" height="25" rx="12" ry="12"/>
+    <text class="st22" transform="translate(833.6 355)"><tspan x="0" y="0">Cancel</tspan></text>
+  </g>
+  <path class="st32" d=""/>
+  <polygon class="st31" points="782 432 775 452 768 432 782 432"/>
+  <path class="st31" d="M775,450" marker-end="url(#arrowhead)"/>
+  <text class="st26" transform="translate(725.9 426.3)"><tspan x="0" y="0">Click the Route button</tspan></text>
+  <g id="state5">
+    <rect class="st2" x="650" y="460" width="250" height="150" rx="8" ry="8"/>
+    <text class="st21" transform="translate(681 480)"><tspan x="0" y="0">STATE: ROUTE_DISPLAYED</tspan></text>
+    <rect class="st40" x="670" y="495" width="140" height="100" rx="4" ry="4"/>
+    <circle class="st7" cx="690" cy="515" r="6"/>
+    <text class="st20" transform="translate(687.8 519)"><tspan x="0" y="0">✓</tspan></text>
+    <circle class="st0" cx="750" cy="560" r="6"/>
+    <text class="st28" transform="translate(748.2 564)"><tspan x="0" y="0">F</tspan></text>
+    <path class="st34" d="M690,515c20,10,40,25,60,45"/>
+    <rect class="st11" x="820" y="520" width="60" height="25" rx="12" ry="12"/>
+    <text class="st22" transform="translate(833.6 535)"><tspan x="0" y="0">Cancel</tspan></text>
+    <text class="st24" transform="translate(716.3 630)"><tspan x="0" y="0">Auto-zoomed to fit route</tspan></text>
+  </g>
+  <g id="api-call">
+    <rect class="st6" x="950" y="460" width="200" height="100" rx="8" ry="8"/>
+    <text class="st13" transform="translate(1007.9 480)"><tspan x="0" y="0">OSRM API Call</tspan></text>
+    <text class="st30" transform="translate(1004.5 500)"><tspan x="0" y="0">router.project-osrm.org</tspan></text>
+    <text class="st30" transform="translate(1016.7 515)"><tspan x="0" y="0">/route/v1/driving/</tspan></text>
+    <text class="st30" transform="translate(1008.2 530)"><tspan x="0" y="0">{start_lng},{start_lat};</tspan></text>
+    <text class="st30" transform="translate(1006 545)"><tspan x="0" y="0">{finish_lng},{finish_lat}</tspan></text>
+  </g>
+  <path class="st32" d=""/>
+  <polygon class="st31" points="922 528 942 535 922 542 922 528"/>
+  <path class="st31" d="M940,535" marker-end="url(#arrowhead)"/>
+  <path class="st32" d=""/>
+  <polygon class="st31" points="154 262 161 242 168 262 154 262"/>
+  <path class="st31" d="M175,210" marker-end="url(#arrowhead)"/>
+  <text class="st10" transform="translate(449.4 590)"><tspan x="0" y="0">Cancel returns to IDLE</tspan></text>
+  <g id="legend">
+    <rect class="st35" x="50" y="650" width="300" height="120" rx="4" ry="4"/>
+    <text class="st12" transform="translate(175.1 670)"><tspan x="0" y="0">Legend</tspan></text>
+    <circle class="st9" cx="70" cy="690" r="6"/>
+    <text class="st28" transform="translate(68 695) scale(.7 1)"><tspan x="0" y="0">S</tspan></text>
+    <text class="st14" transform="translate(90 695)"><tspan x="0" y="0">Start Marker</tspan></text>
+    <circle class="st7" cx="180" cy="690" r="6"/>
+    <text class="st20" transform="translate(177.8 694) scale(.7 1)"><tspan x="0" y="0">✓</tspan></text>
+    <text class="st14" transform="translate(200 695)"><tspan x="0" y="0">Active Start</tspan></text>
+    <circle class="st0" cx="70" cy="715" r="6"/>
+    <text class="st28" transform="translate(68.2 719)"><tspan x="0" y="0">F</tspan></text>
+    <text class="st14" transform="translate(90 720)"><tspan x="0" y="0">Finish Marker</tspan></text>
+    <line class="st33" x1="180" y1="715" x2="200" y2="715"/>
+    <text class="st14" transform="translate(210 720)"><tspan x="0" y="0">Route Polyline</tspan></text>
+    <line class="st4" x1="70" y1="740" x2="90" y2="740"/>
+    <text class="st14" transform="translate(100 745)"><tspan x="0" y="0">User Action</tspan></text>
+    <line class="st1" x1="180" y1="740" x2="200" y2="740"/>
+    <text class="st14" transform="translate(210 745)"><tspan x="0" y="0">Cancel Action</tspan></text>
+  </g>
+  <text class="st18" transform="translate(262.9 124.4)"><tspan x="0" y="0">Touch anywhere in the map</tspan></text>
+  <text class="st18" transform="translate(561.3 326)"><tspan x="0" y="0">Touch another place in the map</tspan></text>
+</svg>
