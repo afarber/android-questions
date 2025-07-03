@@ -71,7 +71,7 @@ https://router.project-osrm.org/route/v1/driving/{start_lng},{start_lat};{finish
 
 ### Map Configuration
 - **Tile Source**: OpenStreetMap Mapnik
-- **Initial Center**: Berlin (13.4050, 52.5200)
+- **Initial Center**: Wolfsburg (10.7865, 52.4227)
 - **Initial Zoom**: Level 10
 - **Zoom Range**: 3-20
 

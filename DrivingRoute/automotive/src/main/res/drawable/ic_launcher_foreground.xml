@@ -9,40 +9,10 @@
       android:pathData="M25,54 L45,45 L55,63 L70,48 L83,54"
       android:strokeWidth="5"
       android:strokeColor="#2196F3"
-      android:strokeCap="round"
-      android:strokeJoin="round"
       android:fillColor="@android:color/transparent" />
   
   <!-- Green start dot (drawn on top) -->
-  <circle
-      android:fillColor="#4CAF50"
-      android:cx="25"
-      android:cy="54"
-      android:r="14" />
-  
-  <!-- White border for start dot -->
-  <circle
-      android:fillColor="@android:color/transparent"
-      android:strokeColor="#FFFFFF"
-      android:strokeWidth="2"
-      android:cx="25"
-      android:cy="54"
-      android:r="14" />
-  
+
   <!-- Red finish dot (drawn on top) -->
-  <circle
-      android:fillColor="#F44336"
-      android:cx="83"
-      android:cy="54"
-      android:r="14" />
-  
-  <!-- White border for finish dot -->
-  <circle
-      android:fillColor="@android:color/transparent"
-      android:strokeColor="#FFFFFF"
-      android:strokeWidth="2"
-      android:cx="83"
-      android:cy="54"
-      android:r="14" />
 
 </vector>

@@ -29,11 +29,11 @@ class MapController(
     private fun setupMap() {
         mapView.setTileSource(TileSourceFactory.MAPNIK)
         mapView.setMultiTouchControls(true)
-        mapView.controller.setZoom(10.0)
+        mapView.controller.setZoom(15.0)
         
-        // Set initial center to Berlin
-        val berlinCenter = GeoPoint(52.5200, 13.4050)
-        mapView.controller.setCenter(berlinCenter)
+        // Set initial center to Wolfsburg
+        val wolfsburgCenter = GeoPoint(52.4227, 10.7865)
+        mapView.controller.setCenter(wolfsburgCenter)
         
         // Configure zoom levels
         mapView.minZoomLevel = 3.0
