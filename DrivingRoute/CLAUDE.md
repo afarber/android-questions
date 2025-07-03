@@ -10,7 +10,7 @@ This is an Android Automotive OS (AAOS) route planning application built with Ko
 
 ## Development Commands
 
-Since this is a planning/documentation repository without actual Android source code yet, standard Android development commands will be:
+Standard Android development commands for this project:
 
 ```bash
 # Build the app
@@ -49,10 +49,11 @@ The app uses a simple state machine with 4 states:
 
 ## Key Dependencies
 
-- **osmdroid** (6.1.17) - OpenStreetMap Android library
-- **Retrofit** (2.9.0) - HTTP client for OSRM API
-- **Kotlin Coroutines** - Async operations for network calls
-- **Material Components** - UI components and FAB
+- **osmdroid** (6.1.20) - OpenStreetMap Android library
+- **Retrofit** (2.11.0) - HTTP client for OSRM API
+- **Kotlin Coroutines** (1.8.1) - Async operations for network calls
+- **Material Components** (1.12.0) - UI components and FAB
+- **Lifecycle** (2.8.7) - ViewModel and lifecycle-aware components
 
 ## OSRM Integration
 
@@ -85,10 +86,10 @@ https://router.project-osrm.org/route/v1/driving/{start_lng},{start_lat};{finish
 - **Width**: 8dp
 - **Auto-zoom**: Fits both markers with appropriate padding
 
-## File Structure (Planned)
+## File Structure
 
 ```
-app/src/main/java/de/afarber/drivingroute/
+automotive/src/main/java/de/afarber/drivingroute/
 ├── MainActivity.kt
 ├── model/
 │   ├── AppState.kt

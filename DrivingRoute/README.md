@@ -34,25 +34,52 @@ IDLE → START_MARKER → FINISH_MARKER → ROUTE_DISPLAYED
 
 ## Dependencies
 
-### build.gradle (Module: app)
+### Key Libraries (Version Catalog)
+The project uses Gradle version catalogs for dependency management. Current versions:
+
+- **osmdroid**: 6.1.20 - OpenStreetMap Android library
+- **Retrofit**: 2.11.0 - HTTP client for OSRM API
+- **Material Design**: 1.12.0 - UI components and FAB
+- **Coroutines**: 1.8.1 - Async operations for network calls
+- **Lifecycle**: 2.8.7 - ViewModel and lifecycle-aware components
+
+### gradle/libs.versions.toml
+```toml
+[versions]
+osmdroid = "6.1.20"
+retrofit = "2.11.0"
+material = "1.12.0"
+coroutines = "1.8.1"
+lifecycle = "2.8.7"
+
+[libraries]
+osmdroid-android = { group = "org.osmdroid", name = "osmdroid-android", version.ref = "osmdroid" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+```
+
+### automotive/build.gradle.kts
 ```kotlin
 dependencies {
-    implementation 'androidx.core:core-ktx:1.12.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.11.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(libs.androidx.constraintlayout)
     
     // OSM
-    implementation 'org.osmdroid:osmdroid-android:6.1.17'
+    implementation(libs.osmdroid.android)
     
     // Networking
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.okhttp.logging.interceptor)
     
     // Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
 }
 ```
 
@@ -98,7 +125,7 @@ dependencies {
 ## File Structure
 
 ```
-app/src/main/java/de/afarber/drivingroute/
+automotive/src/main/java/de/afarber/drivingroute/
 ├── MainActivity.kt
 ├── model/
 │   ├── AppState.kt
@@ -114,7 +141,7 @@ app/src/main/java/de/afarber/drivingroute/
     ├── PolylineDecoder.kt
     └── MapUtils.kt
 
-app/src/main/res/
+automotive/src/main/res/
 ├── layout/
 │   └── activity_main.xml
 ├── drawable/
