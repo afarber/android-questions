@@ -98,7 +98,7 @@ dependencies {
 ## File Structure
 
 ```
-app/src/main/java/de/afarber/aaosrouter/
+app/src/main/java/de/afarber/drivingroute/
 ├── MainActivity.kt
 ├── model/
 │   ├── AppState.kt
