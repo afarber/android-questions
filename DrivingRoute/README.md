@@ -1,6 +1,6 @@
 # AAOS OSM Route Planner
 
-A simple Kotlin app for Android Automotive OS (AAOS) that displays OpenStreetMap fullscreen with route planning capabilities using OSRM.
+A simple Kotlin app for Android Automotive OS (AAOS) that displays draggable and zoomable OpenStreetMap (OSM) fullscreen with up to 2 markers and a Cancel floating action button (FAB) with route planning capabilities using OSRM.
 
 ## Project Overview
 
@@ -14,8 +14,8 @@ A simple Kotlin app for Android Automotive OS (AAOS) that displays OpenStreetMap
 
 ### Target Platform
 - Google Pixel Tablet emulator with AAOS image
-- Minimum SDK: API 29 (Android 10)
 - Target SDK: API 34 (Android 14)
+- For simplicity, lower Android versions are not supported
 
 ## Architecture
 
@@ -97,7 +97,7 @@ dependencies {
 ## File Structure
 
 ```
-app/src/main/java/com/yourpackage/aaosrouter/
+app/src/main/java/de/afarber/aaosrouter/
 ├── MainActivity.kt
 ├── model/
 │   ├── AppState.kt
@@ -132,16 +132,16 @@ app/src/main/res/
 ### AppState.kt
 ```kotlin
 enum class AppState {
-    IDLE,               // No markers, waiting for first touch
-    START_MARKER,       // Start marker placed, show Start/Cancel
-    FINISH_MARKER,      // Start confirmed, waiting for finish marker
-    ROUTE_DISPLAYED     // Both markers set, route calculated and shown
+    IDLE,               // Both markers and Cancel FAB are hidden, waiting for first user touch
+    START_MARKER,       // Start marker has been placed and is shown, Cancel FAB is shown
+    FINISH_MARKER,      // Finish marker placed and shown, Start marker is shown, Cancel FAB is shown
+    ROUTE_DISPLAYED     // Both markers and Cancel FAB are shown, route calculated and drawn as polyline
 }
 ```
 
 ### MainActivity.kt
 - Single activity managing the entire app lifecycle
-- Hosts MapView and floating action buttons
+- Hosts MapView and the Cancel FAB
 - Coordinates between MapController and RouteManager
 
 ### MapController.kt
@@ -181,10 +181,10 @@ https://router.project-osrm.org/route/v1/driving/{start_lng},{start_lat};{finish
 
 ## UI Specifications
 
-### Floating Action Buttons
+### Floating Action Button
 - **Position**: Right side of screen, vertically centered
 - **Spacing**: 16dp between buttons
-- **Size**: 56dp diameter (standard FAB)
+- **Size**: 56dp diameter (standard red FAB with white cross)
 - **Elevation**: 6dp
 - **Colors**: Material Design primary/secondary
 
@@ -221,10 +221,10 @@ https://router.project-osrm.org/route/v1/driving/{start_lng},{start_lat};{finish
 - [ ] Rotation handling (if supported)
 
 ### Test Scenarios
-1. **Happy Path**: Place start → confirm → place finish → calculate route
-2. **Cancel at Start**: Place start → cancel
-3. **Cancel at Finish**: Place start → confirm → cancel
-4. **Cancel after Route**: Complete flow → cancel
+1. **Happy Path**: Place start marker → place finish → calculate route
+2. **Cancel at Start**: Place Start marker → press Cancel FAB
+3. **Cancel at Finish**: Place Start marker → Place Finish marker → press Cancel FAB
+4. **Cancel after Route**: Complete happy path → press Cancel FAB
 5. **Network Error**: Test with airplane mode
 6. **Invalid Coordinates**: Test with ocean coordinates
 
@@ -237,7 +237,7 @@ https://router.project-osrm.org/route/v1/driving/{start_lng},{start_lat};{finish
 
 ### Network Optimization
 - Implement request timeout (10 seconds)
-- Add retry logic for failed requests
+- Add retry logic for failed requests (max 3 retries)
 - Consider caching route responses
 
 ### AAOS Optimization
@@ -264,3 +264,4 @@ https://router.project-osrm.org/route/v1/driving/{start_lng},{start_lat};{finish
 - Traffic-aware routing
 - Offline map support
 - Route history
+
