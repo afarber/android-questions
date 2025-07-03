@@ -9,7 +9,7 @@ A simple Kotlin app for Android Automotive OS (AAOS) that displays draggable and
 - Touch-based marker placement for start and finish points
 - OSRM integration for route calculation
 - Visual route display with polyline rendering
-- Auto-zoom to fit both markers and route
+- Auto-zoom to fit both markers (Start and Finish)
 - Clean floating action button interface
 
 ### Target Platform
@@ -90,7 +90,8 @@ dependencies {
 - [ ] Render polyline on map
 
 ### Phase 5: Auto-zoom
-- [ ] Calculate bounding box for markers and route
+- [ ] Calculate bounding box for both markers (Start and Finish)
+- [ ] Use BoundingBox.increaseByScale() for padding
 - [ ] Implement smooth zoom animation
 - [ ] Add appropriate padding for AAOS screen
 
@@ -207,6 +208,12 @@ https://router.project-osrm.org/route/v1/driving/{start_lng},{start_lat};{finish
 - **Cap**: Round
 - **Join**: Round
 
+### Auto-zoom Behavior
+- **Trigger**: After route calculation and polyline rendering
+- **Target**: Bounding box containing both start and finish markers
+- **Padding**: Use BoundingBox.increaseByScale() with appropriate scale factor
+- **Animation**: Smooth zoom transition
+
 ## Testing Strategy
 
 ### Manual Testing Checklist
@@ -217,16 +224,18 @@ https://router.project-osrm.org/route/v1/driving/{start_lng},{start_lat};{finish
 - [ ] Cancel functionality clears state
 - [ ] Route calculation succeeds
 - [ ] Polyline renders properly
-- [ ] Auto-zoom includes all elements
+- [ ] Auto-zoom shows both markers clearly
 - [ ] Rotation handling (if supported)
 
 ### Test Scenarios
-1. **Happy Path**: Place start marker → place finish → calculate route
+1. **Happy Path**: Place Start marker → place Finish marker → calculate route → verify auto-zoom
 2. **Cancel at Start**: Place Start marker → press Cancel FAB
 3. **Cancel at Finish**: Place Start marker → Place Finish marker → press Cancel FAB
 4. **Cancel after Route**: Complete happy path → press Cancel FAB
 5. **Network Error**: Test with airplane mode
 6. **Invalid Coordinates**: Test with ocean coordinates
+7. **Close Markers**: Test auto-zoom with markers very close together
+8. **Distant Markers**: Test auto-zoom with markers far apart
 
 ## Performance Considerations
 
