@@ -301,3 +301,4 @@ https://router.project-osrm.org/route/v1/driving/{start_lng},{start_lat};{finish
 - Offline map support
 - Route history
 
+![screenshot](https://raw.github.com/afarber/android-newbie/master/DrivingRoute/screenshot.gif)
