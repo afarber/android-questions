@@ -220,7 +220,7 @@ https://router.project-osrm.org/route/v1/driving/{start_lng},{start_lat};{finish
 
 ### Map Configuration
 - **Tile Source**: OpenStreetMap Mapnik
-- **Initial Zoom**: Level 10
+- **Initial Zoom**: Level 15
 - **Initial Center**: Wolfsburg (10.7865, 52.4227)
 - **Min/Max Zoom**: 3-20
 - **Multitouch**: Enabled for AAOS gestures
@@ -234,8 +234,6 @@ https://router.project-osrm.org/route/v1/driving/{start_lng},{start_lat};{finish
 ### Route Polyline
 - **Color**: Blue (#2196F3)
 - **Width**: 8dp
-- **Cap**: Round
-- **Join**: Round
 
 ### Auto-zoom Behavior
 - **Trigger**: After route calculation and polyline rendering
