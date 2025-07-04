@@ -1,6 +1,6 @@
 # AAOS OSM Route Planner
 
-A simple Kotlin app for Android Automotive OS (AAOS) that displays draggable and zoomable OpenStreetMap (OSM) fullscreen with up to 2 markers and a Cancel floating action button (FAB) with route planning capabilities using OSRM.
+A simple Kotlin app for Android Automotive OS (AAOS) that displays draggable and zoomable OpenStreetMap (OSM) fullscreen with up to 2 markers and a Cancel floating action button (FAB) with route planning capabilities using public OSRM backend.
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/DrivingRoute/screenshot.gif)
 
