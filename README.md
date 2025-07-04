@@ -58,7 +58,7 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/GoogleAuth/screenshot.png)
 
 
-[HelloMoon](https://github.com/afarber/android-newbie/tree/master/HelloMoon) from the book [Android Programming: The Big Nerd Ranch Guide](https://www.bignerdranch.com/we-write/android-programming/):
+[HelloMoon](https://github.com/afarber/android-newbie/tree/master/HelloMoon) from the book [Android Programming: The Big Nerd Ranch Guide](https://www.amazon.de/stores/Brian-Hardy/author/B00C9F5OTQ):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/HelloMoon/screenshot.png)
 
@@ -73,7 +73,7 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/HmsSample/screenshot.png)
 
 
-[InteractiveChart](https://github.com/afarber/android-newbie/tree/master/InteractiveChart) the custom view with overscroller and edge effects from the Google guide [Animate a scroll gesture](https://developer.android.com/training/gestures/scroll):
+[InteractiveChart](https://github.com/afarber/android-newbie/tree/master/InteractiveChart) the custom view with overscroller and edge effects from the Google guide [Animate a scroll gesture](https://developer.android.com/develop/ui/views/touch-and-input/gestures/scroll):
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/InteractiveChart/screenshot.png)
 
@@ -249,7 +249,7 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/ValidatePrefs/screenshot.png)
 
 
-[Vehicles](https://github.com/afarber/android-newbie/tree/master/Vehicles) for [Droidcon 2019 challenge](https://echorebel.github.io/vehicles-maps-challenge/):
+[Vehicles](https://github.com/afarber/android-newbie/tree/master/Vehicles) for Droidcon 2019 challenge:
 
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/Vehicles/screenshot.png)
 
