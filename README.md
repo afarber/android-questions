@@ -34,6 +34,7 @@ Screenshots
 
 
 [DrivingRoute](https://github.com/afarber/android-newbie/tree/master/DrivingRoute) a Kotlin app for AAOS using OSRM backend for routing:
+
 ![screenshot](https://raw.github.com/afarber/android-newbie/master/DrivingRoute/screenshot.gif)
 
 
