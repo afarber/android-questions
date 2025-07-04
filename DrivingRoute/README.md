@@ -2,6 +2,8 @@
 
 A simple Kotlin app for Android Automotive OS (AAOS) that displays draggable and zoomable OpenStreetMap (OSM) fullscreen with up to 2 markers and a Cancel floating action button (FAB) with route planning capabilities using OSRM.
 
+![screenshot](https://raw.github.com/afarber/android-newbie/master/DrivingRoute/screenshot.gif)
+
 ## Project Overview
 
 ### Features
@@ -300,5 +302,3 @@ https://router.project-osrm.org/route/v1/driving/{start_lng},{start_lat};{finish
 - Traffic-aware routing
 - Offline map support
 - Route history
-
-![screenshot](https://raw.github.com/afarber/android-newbie/master/DrivingRoute/screenshot.gif)
