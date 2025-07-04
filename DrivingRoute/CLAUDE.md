@@ -72,7 +72,7 @@ https://router.project-osrm.org/route/v1/driving/{start_lng},{start_lat};{finish
 ### Map Configuration
 - **Tile Source**: OpenStreetMap Mapnik
 - **Initial Center**: Wolfsburg (10.7865, 52.4227)
-- **Initial Zoom**: Level 10
+- **Initial Zoom**: Level 15
 - **Zoom Range**: 3-20
 
 ### Markers
