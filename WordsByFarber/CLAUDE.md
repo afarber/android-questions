@@ -20,9 +20,9 @@ Initially a list of 6 languages is displayed
 # Dictionaries are obfuscated to prevent other developers from copying them
 
 - The dictionaries are maps, with a word (min 2 letters; in clear text or hashed) being the dictionary key and an optional word explanation in clear text (could be an empty string too) being the dictionary value
-- Words containing rare letter 1 or rare letter 2 are stored in clear text
-- Short words consisting only of 2 or 3 letters are stroed in clear text
-- All other words are hashed using ECHO as salt and a substring of MD5 as shown below
+- Words containing rare letter 1 or rare letter 2 are in clear text
+- Short words consisting only of 2 or 3 letters are in clear text
+- All other words are hashed using `ECHO` as salt and a substring of MD5 as shown below
 
 ```sql
 CREATE OR REPLACE FUNCTION words_hash(in_word text)
