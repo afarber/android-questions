@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rare_letter_1">Q</string>
+    <string name="rare_letter_2">Y</string>
+    <string name="hashed_dictionary_url">https://wordsbyfarber.com/Consts-de.js</string>
+</resources>
