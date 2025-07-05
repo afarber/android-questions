@@ -39,7 +39,7 @@ $func$
 $func$ LANGUAGE sql IMMUTABLE;
 ```
 
-The dictionaries are stored at https://wordsbyfarber.com/Consts-ru.js as HASHED variable:
+The `ru` dictionary is permanently stored at https://wordsbyfarber.com/Consts-ru.js as `HASHED` variable (same for other languages):
 
 ```javascript
 const HASHED={"e41cb5fe71388d82":"Лещина, лесной орешник","a9fcf410c2b5d832":"","9875fce1352a0c6b":"Растение семейства миртовые","5f90b2bcd00059ba":"","d59e22f04156cd76":"","70e159c45a494e2a":"Разновидность домашней одежды","fa219f71cb145b14":"","07b57c456007538f":"Изготовление основы ткани","ИНЪЕКЦИРОВАТЬ":"","81a0de947f06765a":"","3095c690d9786f37":"","e3251210636b413a":"Плоды лаврового дерева", ...... ,"77475d3632716519":"","cab1ab6c407e900b":"","___LANG___":"ru"};
