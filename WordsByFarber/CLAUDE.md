@@ -1,8 +1,8 @@
 # A word game stub for 6 languages
 
-This app is only a general word game stub, without any gameplay implemented.
+This Jetpack Compose and Kotlin app is only a general word game stub, without any gameplay implemented.
 
-Instead of real games it will display 2 different static grids to symbolize 2 types of word games, which I will implement later.
+Instead of real games it will display 2 different static grids to symbolize 2 types of word games, which will be implement later.
 
 ## Supported languages
 
@@ -13,26 +13,20 @@ Instead of real games it will display 2 different static grids to symbolize 2 ty
 - pl
 - ru
 
-The dictionary of each language should be stored in a separate Room database
+The dictionary of each language and a list of players should be stored in a separate Room database
 
-A simple Kotlin app with Jetpack Compose, where most screens have the following UI structure:
+Initially the Room database is empty and a list of 6 languages is displayed (Screen 1):
 
-- a screen title and a button on the top
-- a search input text field is displayed below, but only in some screens
-- the rest of the screen is occupied by a (filtered, if search field is non-empty) list
+| `language` | `rare_letter_1` | `rare_letter_2` | `hashed_dictionary_url`                | `min_words` | `top_url`                            |
+| ---------- | --------------- | --------------- | -------------------------------------- | ----------- | ------------------------------------ |
+| de         | Q               | Y               | https://wordsbyfarber.com/Consts-de.js | 180_000     | https://wordsbyfarber.com/de/top-all |
+| en         | Q               | X               | https://wordsbyfarber.com/Consts-en.js | 270_000     | https://wordsbyfarber.com/en/top-all |
+| fr         | K               | W               | https://wordsbyfarber.com/Consts-fr.js | 370_000     | https://wordsbyfarber.com/fr/top-all |
+| nl         | Q               | X               | https://wordsbyfarber.com/Consts-nl.js | 130_000     | https://wordsbyfarber.com/nl/top-all |
+| pl         | Ń               | Ź               | https://wordsbyfarber.com/Consts-pl.js | 3_000_000   | https://wordsbyfarber.com/pl/top-all |
+| ru         | Ъ               | Э               | https://wordsbyfarber.com/Consts-ru.js | 120_000     | https://wordsbyfarber.com/ru/top-all |
 
-Initially the Room is empty and a list of 6 languages is displayed (Screen 1):
-
-| `language` | `rare_letter_1` | `rare_letter_2` | `hashed_dictionary_url`                | `min_words` |
-| ---------- | --------------- | --------------- | -------------------------------------- | ----------- |
-| de         | Q               | Y               | https://wordsbyfarber.com/Consts-de.js | 180_000     |
-| en         | Q               | X               | https://wordsbyfarber.com/Consts-en.js | 270_000     |
-| fr         | K               | W               | https://wordsbyfarber.com/Consts-fr.js | 370_000     |
-| nl         | Q               | X               | https://wordsbyfarber.com/Consts-nl.js | 130_000     |
-| pl         | Ń               | Ź               | https://wordsbyfarber.com/Consts-pl.js | 3_000_000   |
-| ru         | Ъ               | Э               | https://wordsbyfarber.com/Consts-ru.js | 120_000     |
-
-When the user selects a language in Screen 1, the selected language is stored as `language` in shared preferences and download and parsing of Consts-{de,en,fr,nl,pl,ru}.js begins and Screen 2 is displayed.
+When the user selects a language in Screen 1, the selected language is stored as `language` in shared preferences and download and parsing of `Consts-{de,en,fr,nl,pl,ru}.js` files begins and Screen 2 is displayed.
 
 # Dictionaries
 
@@ -57,7 +51,7 @@ $func$
 $func$ LANGUAGE sql IMMUTABLE;
 ```
 
-The `ru` dictionary is permanently stored at [https://wordsbyfarber.com/Consts-ru.js](https://wordsbyfarber.com/Consts-ru.js) as `HASHED` variable (same for other languages):
+For example the `ru` dictionary is permanently stored at https://wordsbyfarber.com/Consts-ru.js as `HASHED` variable (similar for other languages):
 
 ```javascript
 const HASHED = {
@@ -76,8 +70,8 @@ const HASHED = {
 
 # Actions to perform when downloading or parsing dictionary (DownloadDictionary)
 
-- The Consts-{de,en,fr,nl,pl,ru}.js files are quite big, so they should be downloaded and parsed in chunks to save work memory
-- I do not think there is a JSON parsing library which could parse the file being downloaded chunk by chunk, so maybe a regex approach should be used?
+- The `Consts-{de,en,fr,nl,pl,ru}.js` files are quite big, so they should be downloaded and parsed in chunks to save work memory
+- I do not think there is a JSON parsing library available, which could parse the file being downloaded chunk by chunk, so maybe a regex approach should be used?
 - Parsing the dictionary should start when the substring `const HASHED={` has been found
 - The key/value pairs (that is word/explanation) should be stored into Room database
 - Parsing the dictionary should stop when the closing bracket `};` has been found
@@ -115,7 +109,7 @@ When the user touches one of the language list items:
 - The title displays localized "Loading dictionary" and a close button "X"
 - Pressing "X" runs FailureActions, then displays Screen 1
 - Failed download or failed parsing of `hashed_dictionary_url` runs FailureActions, then displays Screen 3
-- The rest of the screen is occupied by round loading indicator. If possible, the loading indicator max value is `min_words` and the current value is set by the low work memory parser. Do not get the total value of words from the Room if it costs too much CPU. As a fallback just display infinite round loading indicator
+- The rest of the screen is occupied by round loading indicator. If possible, the loading indicator max value is `min_words` and the current value is set by the low memory parser. Do not get the total value of words from the Room if it costs too much CPU. As a fallback just display infinite round loading indicator
 
 ## Screen 3 (Download failed)
 
@@ -160,24 +154,71 @@ When the user touches one of the language list items:
 
 ## Screen 7 (Top Players)
 
-- Look at the https://wordsbyfarber.com/ru/top-all to understand the available user data format!
-- The title displays localized "Top Players"
+- The players data is downloaded from `top_url`, then parsed (use a JSON parsing library) and stored as `players` table in the database
+- The title displays localized "Players"
 - A close button "X" is displayed at the top, pressing it navigates back to Screen 4
 - A search input text field is displayed below the title and button
 - The rest of the screen is occupied by a filtered list of top players (if search field is non-empty)
+- Each item of the list contains on the left side the `given` string and underneath it `elo` number. And on the right side the `photo` is displayed (it has the same height as `given` and `elo` together)
+- The list should be sorted by `elo` descending
+
+### Format of /{de,en,fr,nl,pl,ru}/top-all
+
+```javascript
+{
+  "data": [
+    {
+      "uid": 13480,
+      "elo": 3166,
+      "motto": null,
+      "given": "Наталья",
+      "photo": "https://i.okcdn.ru/i?r=B1NAm_VFBkioSGBqh1KeRFJlIZhBXcm_DfibKF7Mh7h0gr2BPfcnCmt_1Vkv8LJgLBCsUrXywuGHf7t3NX2eHfl0TVSSGrbmK_p25M6DiX0pAAYgAAAAKQ",
+      "lat": 32.0123,
+      "lng": 34.7705,
+      "avg_time": "02:54",
+      "avg_score": 23.5
+    },
+    {
+      "uid": 9844,
+      "elo": 3002,
+      "motto": null,
+      "given": "Ольга",
+      "photo": "https://i.okcdn.ru/i?r=B1NAm_VFBkioSGBqh1JNubGxYCJDrc45zveuvhWR59KbJkhM6a4ELTplS20lBIWrMDPjN8Wos7OkshmccZAK8AbWhsNIwyy6HSZvHorbybNVfsVSAAAAKQ",
+      "lat": 55.7386,
+      "lng": 37.6068,
+      "avg_time": "05:26",
+      "avg_score": 22.3
+    },
+    {
+      "uid": 15624,
+      "elo": 2926,
+      "motto": "здесь главное не победить,а мозги немного занять чем то полезным,чтобы совсем не атрофировались",
+      "given": "Анна",
+      "photo": "https://i.okcdn.ru/i?r=B1NAm_VFBkioSGBqh1IjleaM_2lAaeg9PrW6_8Wqy4sSwPWxcIV8HThYdD7byGOMy4L6rVj4u4B7VMavCKmQ9zhNTJC5aT9fdngqQzNwt-lDAYV8AAAAKQ",
+      "lat": 53.9007,
+      "lng": 27.5709,
+      "avg_time": "03:30",
+      "avg_score": 23.7
+    },
+    ...
+  ]
+}
+```
 
 ## Screen 8 (Your Profile)
 
 - The title displays localized "Your Profile"
 - A close button "X" is displayed at the top, pressing it navigates back to Screen 4
-- The rest of the screen is occupied by user profile details (currently a dummy user is displayed)
+- The rest of the screen is occupied by user profile details (currently the user with `uid` 5 is always displayed, the value of 5 is stored as `my_uid` in per-language integers.xml)
 
 ## Screen 9 (Find a Word)
 
 - The title displays localized "Find a Word"
 - A close button "X" is displayed at the top, pressing it navigates back to Screen 4
 - A search input text field is displayed below the title and button
-- The rest of the screen is occupied by a filtered list of words (if search field is non-empty)
+- The rest of the screen is occupied by a huge darg green thumbs up icon (meaning: the word is found in the `words` table) or dark red thumbs down (the word is not found)
+- Since most of the words in the Room database are hashed/obfuscated, same algorigthm should be applied to the word in the search input text field, before searching in the Room database for it
+- If there is a non-empty string explanation for the found word, it should be displayed below the thumbs up icon
 
 ## Screen 10 (2-letter words)
 
@@ -211,25 +252,25 @@ When the user touches one of the language list items:
 
 - The title displays localized "Preferences"
 - A close button "X" is displayed at the top, pressing it navigates back to Screen 4
-- The rest of the screen is occupied by a list of preference options
+- The rest of the screen is occupied by a list of 10 fake preference options with checkboxes
 
 ## Screen 15 (Help)
 
 - The title displays localized "Help"
 - A close button "X" is displayed at the top, pressing it navigates back to Screen 4
-- The rest of the screen is occupied by help content
+- The rest of the screen is occupied by fake lorem ipsum help content, stored as `help` in per-language strings.xml
 
 ## Screen 16 (Privacy Policy)
 
 - The title displays localized "Privacy Policy"
 - A close button "X" is displayed at the top, pressing it navigates back to Screen 4
-- The rest of the screen is occupied by the privacy policy text
+- The rest of the screen is occupied by fake lorem ipsum privacy policy text, stored as `privacy_policy` in per-language strings.xml
 
 ## Screen 17 (Terms of Service)
 
 - The title displays localized "Terms of Service"
 - A close button "X" is displayed at the top, pressing it navigates back to Screen 4
-- The rest of the screen is occupied by the terms of service text
+- The rest of the screen is occupied by fake lorem ipsum terms of service text, stored as `terms_of_service` in per-language strings.xml
 
 ## Text UI Flow Diagram
 

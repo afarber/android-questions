@@ -3,4 +3,8 @@
     <string name="rare_letter_1">Q</string>
     <string name="rare_letter_2">X</string>
     <string name="hashed_dictionary_url">https://wordsbyfarber.com/Consts-nl.js</string>
+    <string name="top_url">https://wordsbyfarber.com/nl/top-all</string>
+    <string name="help">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+    <string name="privacy_policy">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Mauris viverra veniam sit amet lacus cursus de sagittis. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Cras ultricies ligula sed magna dictum porta. Sed porttitor lectus nibh. Donec rutrum congue leo eget malesuada.</string>
+    <string name="terms_of_service">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi morbi tempus iaculis urna id volutpat lacus laoreet non. Sed viverra tellus in hac habitasse platea dictumst vestibulum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin nibh nisl condimentum id venenatis a condimentum vitae sapien. Ut porttitor leo a diam sollicitudin tempor id eu nisl.</string>
 </resources>
