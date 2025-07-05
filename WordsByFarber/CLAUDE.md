@@ -266,17 +266,17 @@ Game 2 ─> Screen 6          NO
 Top Players ─> Screen 7      |
 Your Profile ─> Screen 8     v
 Find Word ─> Screen 9        Screen 1
-2-letter ─> Screen 10        
-3-letter ─> Screen 11        
-Rare Letter 1 ─> Screen 12   
-Rare Letter 2 ─> Screen 13   
-Preferences ─> Screen 14     
-Help ─> Screen 15           
-Privacy ─> Screen 16         
-Terms ─> Screen 17           
-    |                        
-    v                        
-[Press X] ─> Screen 4        
+2-letter ─> Screen 10
+3-letter ─> Screen 11
+Rare Letter 1 ─> Screen 12
+Rare Letter 2 ─> Screen 13
+Preferences ─> Screen 14
+Help ─> Screen 15
+Privacy ─> Screen 16
+Terms ─> Screen 17
+    |
+    v
+[Press X] ─> Screen 4
 ```
 
 # Key Classes Structure
@@ -284,6 +284,7 @@ Terms ─> Screen 17
 ## Package: com.wordsbyfarber
 
 ### Data Layer
+
 ```
 com.wordsbyfarber.data
 ├── database/
@@ -303,6 +304,7 @@ com.wordsbyfarber.data
 ```
 
 ### Domain Layer
+
 ```
 com.wordsbyfarber.domain
 ├── usecases/
@@ -317,6 +319,7 @@ com.wordsbyfarber.domain
 ```
 
 ### UI Layer (Jetpack Compose)
+
 ```
 com.wordsbyfarber.ui
 ├── MainActivity.kt (Single Activity with Compose)
@@ -364,6 +367,7 @@ com.wordsbyfarber.ui
 ```
 
 ### Utils Layer
+
 ```
 com.wordsbyfarber.utils
 ├── Constants.kt (App constants)
@@ -461,6 +465,7 @@ com.wordsbyfarber.utils
 ## Data Layer Tests
 
 ### DictionaryRepository Tests
+
 - `test_getLanguages_returnsAllSupportedLanguages()`
 - `test_selectLanguage_storesLanguageInPreferences()`
 - `test_getCurrentLanguage_returnsStoredLanguage()`
@@ -471,6 +476,7 @@ com.wordsbyfarber.utils
 - `test_hasMinWords_returnsFalseWhenInsufficientWords()`
 
 ### DictionaryDownloader Tests
+
 - `test_downloadDictionary_successfulDownload()`
 - `test_downloadDictionary_networkError()`
 - `test_downloadDictionary_invalidUrl()`
@@ -478,6 +484,7 @@ com.wordsbyfarber.utils
 - `test_downloadDictionary_progressCallback()`
 
 ### DictionaryParser Tests
+
 - `test_parseDictionary_validJavaScriptFile()`
 - `test_parseDictionary_invalidJavaScriptFile()`
 - `test_parseDictionary_emptyFile()`
@@ -486,6 +493,7 @@ com.wordsbyfarber.utils
 - `test_parseDictionary_progressCallback()`
 
 ### WordDao Tests
+
 - `test_insertWords_storesWordsCorrectly()`
 - `test_getWordCount_returnsCorrectCount()`
 - `test_searchWords_returnsFilteredResults()`
@@ -496,20 +504,24 @@ com.wordsbyfarber.utils
 ## Domain Layer Tests
 
 ### GetLanguagesUseCase Tests
+
 - `test_execute_returnsAllSupportedLanguages()`
 - `test_execute_includesCorrectLanguageInfo()`
 
 ### SelectLanguageUseCase Tests
+
 - `test_execute_validLanguage_storesLanguage()`
 - `test_execute_invalidLanguage_throwsException()`
 
 ### DownloadDictionaryUseCase Tests
+
 - `test_execute_successfulDownload_storesWords()`
 - `test_execute_networkError_throwsException()`
 - `test_execute_parsingError_throwsException()`
 - `test_execute_cancelDownload_stopsProcess()`
 
 ### SearchWordsUseCase Tests
+
 - `test_execute_emptyQuery_returnsEmptyList()`
 - `test_execute_validQuery_returnsFilteredWords()`
 - `test_execute_caseInsensitiveSearch()`
@@ -517,6 +529,7 @@ com.wordsbyfarber.utils
 ## UI Layer Tests (Jetpack Compose)
 
 ### Screen Tests (Compose UI Tests)
+
 - `test_LanguageSelectionScreen_displaysAllLanguages()`
 - `test_LanguageSelectionScreen_clickLanguage_navigatesToLoading()`
 - `test_LoadingDictionaryScreen_displaysProgress()`
@@ -526,28 +539,33 @@ com.wordsbyfarber.utils
 - `test_SearchableScreens_filterResultsCorrectly()`
 
 ### ViewModel Tests
+
 - `test_LanguageSelectionViewModel_loadLanguages_populatesLanguageList()`
 - `test_LanguageSelectionViewModel_selectLanguage_updatesSelectedLanguage()`
 - `test_LanguageSelectionViewModel_selectLanguage_triggersNavigation()`
 
 ### LoadingDictionaryViewModel Tests
+
 - `test_startDownload_updatesProgressState()`
 - `test_downloadSuccess_navigatesToHome()`
 - `test_downloadFailure_navigatesToErrorScreen()`
 - `test_cancelDownload_stopsProcess()`
 
 ### HomeViewModel Tests
+
 - `test_loadHomeItems_populatesMenuList()`
 - `test_getCurrentLanguage_returnsSelectedLanguage()`
 - `test_switchLanguage_navigatesToLanguageSelection()`
 
 ### WordSearchViewModel Tests
+
 - `test_searchWords_updatesResultsList()`
 - `test_searchWords_emptyQuery_showsEmptyResults()`
 - `test_searchWords_validQuery_showsFilteredResults()`
 - `test_clearSearch_resetsResults()`
 
 ### Component Tests
+
 - `test_TopAppBar_displaysCorrectTitle()`
 - `test_TopAppBar_clickClose_triggersCallback()`
 - `test_SearchField_textChange_triggersSearch()`
@@ -557,6 +575,7 @@ com.wordsbyfarber.utils
 ## Integration Tests
 
 ### End-to-End Flow Tests
+
 - `test_firstLaunch_selectLanguage_downloadDictionary_showHome()`
 - `test_returningUser_showHomeDirectly()`
 - `test_switchLanguage_downloadNewDictionary()`
@@ -564,203 +583,10 @@ com.wordsbyfarber.utils
 - `test_cancelDownload_returnToLanguageSelection()`
 
 ### Database Integration Tests
+
 - `test_fullDictionaryDownload_storesAllWords()`
 - `test_wordSearch_acrossAllWordTypes()`
 - `test_languageSwitch_clearsOldData()`
-
-# Key Dependencies
-
-This project uses modern Android development practices with Jetpack Compose and the Version Catalog (libs.versions.toml) for dependency management.
-
-## Version Catalog Setup (libs.versions.toml)
-
-```toml
-[versions]
-agp = "8.2.0"
-kotlin = "1.9.20"
-coreKtx = "1.12.0"
-lifecycleRuntimeKtx = "2.7.0"
-activityCompose = "1.8.2"
-composeBom = "2023.10.01"
-room = "2.6.0"
-navigation = "2.7.4"
-okhttp = "4.12.0"
-hilt = "2.48"
-hiltNavigationCompose = "1.1.0"
-coroutines = "1.7.3"
-junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
-
-[libraries]
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
-androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
-androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
-androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
-androidx-ui = { group = "androidx.compose.ui", name = "ui" }
-androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
-androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
-androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
-androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-
-# Room
-androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
-androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
-androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
-
-# Navigation
-androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
-
-# Networking
-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
-
-# Dependency Injection
-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
-androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
-
-# Coroutines
-kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
-
-# Testing
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-
-[plugins]
-android-application = { id = "com.android.application", version.ref = "agp" }
-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
-```
-
-## Build Configuration (app/build.gradle.kts)
-
-```kotlin
-plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
-    alias(libs.plugins.dagger.hilt.android)
-}
-
-android {
-    namespace = "com.wordsbyfarber"
-    compileSdk = 34
-
-    defaultConfig {
-        applicationId = "com.wordsbyfarber"
-        minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
-    
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-    
-    buildFeatures {
-        compose = true
-    }
-    
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.4"
-    }
-    
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-}
-
-dependencies {
-    // Core Android
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.activity.compose)
-
-    // Compose BOM and UI
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-
-    // Navigation
-    implementation(libs.androidx.navigation.compose)
-
-    // Room Database
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    kapt(libs.androidx.room.compiler)
-
-    // Networking
-    implementation(libs.okhttp)
-
-    // Dependency Injection
-    implementation(libs.hilt.android)
-    implementation(libs.androidx.hilt.navigation.compose)
-    kapt(libs.hilt.android.compiler)
-
-    // Coroutines
-    implementation(libs.kotlinx.coroutines.android)
-
-    // Testing
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    
-    // Debug tools
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
-}
-```
-
-## Key Dependencies Explanation
-
-**Modern Dependency Management**: The project uses Gradle Version Catalogs (libs.versions.toml) which is the recommended approach since Android Gradle Plugin 7.0+. This centralizes version management and makes it easier to update dependencies across modules.
-
-**Jetpack Compose**: Full Compose UI toolkit for building native Android UIs declaratively, eliminating the need for XML layouts and fragments.
-
-**Room Database**: Local SQLite database with compile-time verification of SQL queries and seamless integration with Kotlin coroutines.
-
-**Hilt**: Google's recommended dependency injection library built on top of Dagger, providing simplified DI for Android.
-
-**Navigation Compose**: Type-safe navigation specifically designed for Jetpack Compose, replacing Fragment-based navigation.
-
-**OkHttp**: Modern HTTP client for efficient network requests, perfect for downloading the large dictionary files.
-
-**Coroutines**: Kotlin's concurrency framework for handling asynchronous operations like downloads and database access.
-
-The `implementation(libs.androidx.core.ktx)` syntax leverages the version catalog, where `libs` refers to the catalog, `androidx.core.ktx` matches the library name in the catalog, providing centralized version management and better IDE support.
 
 # Implementation details
 
