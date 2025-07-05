@@ -1,4 +1,4 @@
-# A word game with partly hashed game dictionaries for 6 languages
+# A word game stub for 6 languages
 
 Supported languages:
 
@@ -70,12 +70,22 @@ const HASHED = {
 };
 ```
 
+# Actions to perform when downloading or parsing dictionary (DownloadDictionary)
+
 - The Consts-{de,en,fr,nl,pl,ru}.js files are quite big, so they should be downloaded and parsed in chunks to save work memory
 - I do not think there is a JSON parsing library which could parse the file being downloaded chunk by chunk, so maybe a regex approach should be used?
 - Parsing the dictionary should start when the substring `const HASHED={` has been found
 - The key/value pairs (that is word/explanation) should be stored into Room database
 - Parsing the dictionary should stop when the closing bracket `};` has been found
 - The key entry `___LANG___` should be discarded, it should not be stored into Room
+- If possible without wasting too much CPU, the actual number of downloaded and parsed key/value pairs should be available for display in Screen 2
+
+# Actions to perform when dictionary download or parsing fails or users cancels the download (FailureActions)
+
+- Stop any running download
+- Delete record from the `words` table
+- If the user has canceled, then delete `language` from shared preferences
+- If download or parsing have failed, then do not delete `language` from shared preferences
 
 # UI flow
 
@@ -94,11 +104,43 @@ When the user touches one of the language list:
 
 - The 2-letter language code is stored as `language` in shared preferences
 - The Room database for that language is opened
-- If the `words` table has less than `min_words` records and there is no active download for the selected language, then that table is cleared and a new download and parsing is started from `hashed_dictionary_url`
+- If the `words` table has less than `min_words` records and there is no active download for the selected language, then that table is cleared and a new download and parsing is started from `hashed_dictionary_url` and Screen 2 is displayed (maybe the download and parsing code should be part of Screen 2?). Otherwise Screen 4 is displayed
 
 ## Screen 2 (Loading dictionary)
 
-## Screen 3 (Home list)
+- The title displays localized "Loading dictionary" and a close button "X"
+- Pressing "X" runs FailureActions, then displays Screen 1
+- Failed download or failed parsing of `hashed_dictionary_url` runs FailureActions, then displays Screen 3
+- The rest of the screen is occupied by round loading indicator. If possible, the loading indicator max value is `min_words` and the current value is set by the low work memory parser. Do not get the total value of words from the Room if it costs too much CPU. As a fallback just display infinite round loading indicator
+
+## Screen 3 (Download failed)
+
+- The title displays localized "Download failed" and a close button "X"
+- Pressing "X" runs FailureActions, then displays Screen 1
+- The rest of screen is occupied by a localized message asking the user to check the internet connection and a retry button
+- Pressing the retry button displays Screen 2 and
+
+## Screen 4 (Home)
+
+- Title says localized "Words by Farber", a button displaying 2-letter language code and the flag of the selected language is displayed near it
+- Pressing the flag button displays Screen 1 allowing the user to switch to another language
+- The rest of the screen is occupied by the following list
+
+### Home list
+
+- Game 1 (will display a 15x15 grid)
+- Game 2 (will display a 5x5 grid)
+- Top players
+- Your profile
+- Find a word
+- 2-letter words
+- 3-letter words
+- Words with `rare_letter_1`
+- Words with `rare_letter_2`
+- Preferences
+- Help
+- Privacy policy
+- Terms of service
 
 # Implementation details
 
