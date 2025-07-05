@@ -1,8 +1,10 @@
 # A word game stub for 6 languages
 
-This app is only a word game stub, without any gameplay implemented. Instead of real games it will display 2 different static grids to symbolize 2 types of word games, which I will implement later.
+This app is only a general word game stub, without any gameplay implemented.
 
-Supported languages:
+Instead of real games it will display 2 different static grids to symbolize 2 types of word games, which I will implement later.
+
+## Supported languages
 
 - de
 - en
@@ -95,7 +97,7 @@ const HASHED = {
 
 - Screen 1 is displayed as the very first screen to the user, if there is no valid `language` 2-letters value found in shared preferences
 - If there is `language` in shared preferences, but it is not one of the valid values , then `language` is deleted from shared preferences and Screen 1 is displayed
-- Also, if the user is at Screen 3 and presses the "Select language" button at the top, then Screen 1 is displayed
+- Also, if the user is at Screen 4 and presses the "Select language" button at the top, then Screen 1 is displayed
 - There is no title and no button at the top
 - The whole screen estate is occupied by the list with 6 entries
 - Each list item consists of text and colorful icon
@@ -143,6 +145,175 @@ When the user touches one of the language list:
 - Help
 - Privacy policy
 - Terms of service
+
+## Screen 5 (Game 1 - Static Grid 15x15)
+
+- The title displays localized "Game 1"
+- A close button "X" is displayed at the top, pressing it navigates back to Screen 4
+- The rest of the screen is occupied by a static 15x15 letter grid
+
+## Screen 6 (Game 2 - Static Grid 5x5)
+
+- The title displays localized "Game 2"
+- A close button "X" is displayed at the top, pressing it navigates back to Screen 4
+- The rest of the screen is occupied by a static 5x5 letter grid
+
+## Screen 7 (Top Players)
+
+- Look at the https://wordsbyfarber.com/ru/top-all to understand the available user data format!
+- The title displays localized "Top Players"
+- A close button "X" is displayed at the top, pressing it navigates back to Screen 4
+- A search input text field is displayed below the title and button
+- The rest of the screen is occupied by a filtered list of top players (if search field is non-empty)
+
+## Screen 8 (Your Profile)
+
+- The title displays localized "Your Profile"
+- A close button "X" is displayed at the top, pressing it navigates back to Screen 4
+- The rest of the screen is occupied by user profile details (currently a dummy user is displayed)
+
+## Screen 9 (Find a Word)
+
+- The title displays localized "Find a Word"
+- A close button "X" is displayed at the top, pressing it navigates back to Screen 4
+- A search input text field is displayed below the title and button
+- The rest of the screen is occupied by a filtered list of words (if search field is non-empty)
+
+## Screen 10 (2-letter words)
+
+- The title displays localized "2-letter words"
+- A close button "X" is displayed at the top, pressing it navigates back to Screen 4
+- A search input text field is displayed below the title and button
+- The rest of the screen is occupied by a filtered list of 2-letter words (if search field is non-empty)
+
+## Screen 11 (3-letter words)
+
+- The title displays localized "3-letter words"
+- A close button "X" is displayed at the top, pressing it navigates back to Screen 4
+- A search input text field is displayed below the title and button
+- The rest of the screen is occupied by a filtered list of 3-letter words (if search field is non-empty)
+
+## Screen 12 (Words with rare_letter_1)
+
+- The title displays localized "Words with [rare\_letter\_1]" (e.g., "Words with Q")
+- A close button "X" is displayed at the top, pressing it navigates back to Screen 4
+- A search input text field is displayed below the title and button
+- The rest of the screen is occupied by a filtered list of words containing `rare_letter_1` (if search field is non-empty)
+
+## Screen 13 (Words with rare_letter_2)
+
+- The title displays localized "Words with [rare\_letter\_2]" (e.g., "Words with Y")
+- A close button "X" is displayed at the top, pressing it navigates back to Screen 4
+- A search input text field is displayed below the title and button
+- The rest of the screen is occupied by a filtered list of words containing `rare_letter_2` (if search field is non-empty)
+
+## Screen 14 (Preferences)
+
+- The title displays localized "Preferences"
+- A close button "X" is displayed at the top, pressing it navigates back to Screen 4
+- The rest of the screen is occupied by a list of preference options
+
+## Screen 15 (Help)
+
+- The title displays localized "Help"
+- A close button "X" is displayed at the top, pressing it navigates back to Screen 4
+- The rest of the screen is occupied by help content
+
+## Screen 16 (Privacy Policy)
+
+- The title displays localized "Privacy Policy"
+- A close button "X" is displayed at the top, pressing it navigates back to Screen 4
+- The rest of the screen is occupied by the privacy policy text
+
+## Screen 17 (Terms of Service)
+
+- The title displays localized "Terms of Service"
+- A close button "X" is displayed at the top, pressing it navigates back to Screen 4
+- The rest of the screen is occupied by the terms of service text
+
+# Happy Path and Edge Cases
+
+## Happy Path
+
+1.  **First Launch**: User opens the app for the first time.
+
+    - App checks shared preferences, finds no valid language.
+    - **Screen 1** is displayed with a list of 6 languages.
+    - User selects "English (en)".
+    - App stores "en" in shared preferences.
+    - App opens the Room database for English.
+    - App checks `words` table, finds it empty (less than `min_words`).
+    - App clears the table and starts downloading `Consts-en.js`.
+    - **Screen 2** is displayed, showing a loading indicator and progress.
+    - Download completes successfully.
+    - Parsing completes successfully, storing words in the Room database.
+    - **Screen 4** (Home) is displayed with "Words by Farber" title, English flag, and the home list.
+    - User selects "Game 1".
+    - **Screen 5** is displayed with a static 15x15 grid.
+    - User presses "X" button.
+    - **Screen 4** is displayed again.
+
+2.  **Returning User (Dictionary Available)**: User opens the app after a successful download.
+
+    - App checks shared preferences, finds "en".
+    - App opens the Room database for English.
+    - App checks `words` table, finds more than `min_words` records.
+    - **Screen 4** (Home) is displayed directly.
+
+## Edge Cases
+
+1.  **No Internet Connection on First Download**:
+
+    - User opens the app, selects a language in **Screen 1**.
+    - App starts download in **Screen 2**.
+    - Download fails due to no internet connection.
+    - FailureActions are executed (stop download, delete words table records, _do not_ delete language from shared preferences).
+    - **Screen 3** (Download failed) is displayed.
+    - User restores internet connection and presses "Retry".
+    - App re-attempts download and parsing in **Screen 2**.
+    - If successful, proceeds to **Screen 4**.
+
+2.  **User Cancels Download**:
+
+    - User selects a language in **Screen 1**.
+    - **Screen 2** is displayed, showing download in progress.
+    - User presses the "X" button on **Screen 2**.
+    - FailureActions are executed (stop download, delete words table records, _delete_ language from shared preferences).
+    - **Screen 1** is displayed again.
+
+3.  **Corrupted Dictionary File Download**:
+
+    - User selects a language in **Screen 1**.
+    - App starts download in **Screen 2**.
+    - Download completes, but the `Consts-{lang}.js` file is corrupted or malformed, leading to parsing failure.
+    - FailureActions are executed (stop download, delete words table records, _do not_ delete language from shared preferences).
+    - **Screen 3** (Download failed) is displayed.
+
+4.  **Shared Preferences Language Invalid**:
+
+    - User previously selected a language, but the value in shared preferences is "xx" (not a supported 2-letter code).
+    - App starts.
+    - App checks shared preferences, finds "xx", deletes it.
+    - **Screen 1** is displayed.
+
+5.  **Room Database Corruption/Under `min_words` with Active Download**:
+
+    - User has a language selected, and a download was previously initiated (or partially completed), but the app crashed.
+    - App starts, finds language in shared preferences.
+    - App opens Room DB.
+    - App checks `words` table and finds it under `min_words`.
+    - App also detects an "active download" flag for this language.
+    - Instead of clearing the table and restarting, the app should resume the existing download or display **Screen 2** to indicate ongoing process. (Clarification: The current spec says "if there is no active download", implying a new download _only_ if no active one. The system should handle resuming or re-initiating depending on the state of the active download.)
+
+6.  **Switching Language After Full Download**:
+
+    - User has successfully downloaded English dictionary and is on **Screen 4**.
+    - User presses the flag button on **Screen 4**.
+    - **Screen 1** is displayed.
+    - User selects "German (de)".
+    - App stores "de" in shared preferences.
+    - App checks German `words` table, finds it empty.
+    - Download and parsing for German begins, **Screen 2** is displayed.
 
 # Implementation details
 
