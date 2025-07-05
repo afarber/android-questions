@@ -1,5 +1,7 @@
 # A word game stub for 6 languages
 
+This app is only a word game stub, without any gameplay implemented. Instead of real games it will display 2 different static grids to symbolize 2 types of word games, which I will implement later.
+
 Supported languages:
 
 - de
@@ -128,9 +130,9 @@ When the user touches one of the language list:
 
 ### Home list
 
-- Game 1 (will display a 15x15 grid)
-- Game 2 (will display a 5x5 grid)
-- Top players
+- Game 1 (will display a static 15x15 letter grid)
+- Game 2 (will display a static 5x5 letter grid)
+- Top players (using /ru/top-all /en/top-all etc)
 - Your profile
 - Find a word
 - 2-letter words
