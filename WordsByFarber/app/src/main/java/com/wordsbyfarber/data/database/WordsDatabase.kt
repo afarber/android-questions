@@ -16,16 +16,16 @@ abstract class WordsDatabase : RoomDatabase() {
 
     companion object {
         @Volatile
-        private var INSTANCE: WordsDatabase? = null
+        private val INSTANCES: MutableMap<String, WordsDatabase> = mutableMapOf()
 
-        fun getDatabase(context: Context, databaseName: String): WordsDatabase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
+        fun getDatabase(context: Context, languageCode: String): WordsDatabase {
+            return INSTANCES[languageCode] ?: synchronized(this) {
+                val instance = INSTANCES[languageCode] ?: Room.databaseBuilder(
                     context.applicationContext,
                     WordsDatabase::class.java,
-                    databaseName
+                    "words_database_$languageCode"
                 ).build()
-                INSTANCE = instance
+                INSTANCES[languageCode] = instance
                 instance
             }
         }
