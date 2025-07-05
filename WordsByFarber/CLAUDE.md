@@ -331,7 +331,9 @@ com.wordsbyfarber.data
 ├── database/
 │   ├── WordsDatabase.kt (Room Database)
 │   ├── WordEntity.kt (Room Entity)
-│   └── WordDao.kt (Room DAO)
+│   ├── WordDao.kt (Room DAO)
+│   ├── PlayerEntity.kt (Room Entity)
+│   └── PlayerDao.kt (Room DAO)
 ├── repository/
 │   ├── DictionaryRepository.kt (Data operations)
 │   └── PreferencesRepository.kt (SharedPreferences wrapper)
