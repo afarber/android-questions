@@ -32,7 +32,7 @@ Initially the Room is empty and a list of 6 languages is displayed (Screen 1):
 | pl         | Ń               | Ź               | https://wordsbyfarber.com/Consts-pl.js | 3_000_000   |
 | ru         | Ъ               | Э               | https://wordsbyfarber.com/Consts-ru.js | 120_000     |
 
-When the user selects a language in the Screen 1, the selected language is stored as `language` in shared preferences and download and parsing of Consts-{de,en,fr,nl,pl,ru}.js begins and Screen 2 is displayed
+When the user selects a language in Screen 1, the selected language is stored as `language` in shared preferences and download and parsing of Consts-{de,en,fr,nl,pl,ru}.js begins and Screen 2 is displayed.
 
 # Dictionaries
 
@@ -84,10 +84,10 @@ const HASHED = {
 - The key entry `___LANG___` should be discarded, it should not be stored into Room
 - If possible without wasting too much CPU, the actual number of downloaded and parsed key/value pairs should be available for display in Screen 2
 
-# Actions to perform when dictionary download or parsing fails or users cancels the download (FailureActions)
+# Actions to perform when dictionary download or parsing fails or user cancels the download (FailureActions)
 
 - Stop any running download
-- Delete record from the `words` table
+- Delete records from the `words` table
 - If the user has canceled, then delete `language` from shared preferences
 - If download or parsing have failed, then do not delete `language` from shared preferences
 
@@ -95,16 +95,16 @@ const HASHED = {
 
 ## Screen 1 (Select language)
 
-- Screen 1 is displayed as the very first screen to the user, if there is no valid `language` 2-letters value found in shared preferences
-- If there is `language` in shared preferences, but it is not one of the valid values , then `language` is deleted from shared preferences and Screen 1 is displayed
+- Screen 1 is displayed as the very first screen to the user, if there is no valid `language` 2-letter value found in shared preferences
+- If there is `language` in shared preferences, but it is not one of the valid values, then `language` is deleted from shared preferences and Screen 1 is displayed
 - Also, if the user is at Screen 4 and presses the "Select language" button at the top, then Screen 1 is displayed
 - There is no title and no button at the top
 - The whole screen estate is occupied by the list with 6 entries
 - Each list item consists of text and colorful icon
-- The text is human readable language name (written in that language!) followed by the 2-letters language code in brackets: "English (en)", "German (de)", etc
+- The text is human readable language name (written in that language!) followed by the 2-letter language code in brackets: "English (en)", "Deutsch (de)", etc
 - The icon is the simplified national flag, drawn as SVG icon
 
-When the user touches one of the language list:
+When the user touches one of the language list items:
 
 - The 2-letter language code is stored as `language` in shared preferences
 - The Room database for that language is opened
@@ -122,7 +122,7 @@ When the user touches one of the language list:
 - The title displays localized "Download failed" and a close button "X"
 - Pressing "X" runs FailureActions, then displays Screen 1
 - The rest of screen is occupied by a localized message asking the user to check the internet connection and a retry button
-- Pressing the retry button displays Screen 2 and
+- Pressing the retry button displays Screen 2 and starts the download again
 
 ## Screen 4 (Home)
 
@@ -231,6 +231,138 @@ When the user touches one of the language list:
 - A close button "X" is displayed at the top, pressing it navigates back to Screen 4
 - The rest of the screen is occupied by the terms of service text
 
+## Text UI Flow Diagram
+
+```
+Start App
+    |
+    v
+Check SharedPrefs
+    |
+    v
+[Language Valid?] ─NO─> Screen 1: Select Language
+    |                        |
+   YES                       v
+    |                  [User Selects Language]
+    |                        |
+    v                        v
+Check Room DB          Store Language in SharedPrefs
+    |                        |
+    v                        v
+[Words >= min_words?] ─NO─> Screen 2: Loading Dictionary
+    |                        |
+   YES                       v
+    |                  [Download Success?]
+    |                        |
+    v                       NO
+Screen 4: Home               |
+    |                        v
+    v                  Screen 3: Download Failed
+[User Selects Item]          |
+    |                        v
+    v                  [User Retries?] ─YES─> Screen 2
+Game 1 ─> Screen 5           |
+Game 2 ─> Screen 6          NO
+Top Players ─> Screen 7      |
+Your Profile ─> Screen 8     v
+Find Word ─> Screen 9        Screen 1
+2-letter ─> Screen 10        
+3-letter ─> Screen 11        
+Rare Letter 1 ─> Screen 12   
+Rare Letter 2 ─> Screen 13   
+Preferences ─> Screen 14     
+Help ─> Screen 15           
+Privacy ─> Screen 16         
+Terms ─> Screen 17           
+    |                        
+    v                        
+[Press X] ─> Screen 4        
+```
+
+# Key Classes Structure
+
+## Package: com.wordsbyfarber
+
+### Data Layer
+```
+com.wordsbyfarber.data
+├── database/
+│   ├── WordsDatabase.kt (Room Database)
+│   ├── WordEntity.kt (Room Entity)
+│   └── WordDao.kt (Room DAO)
+├── repository/
+│   ├── DictionaryRepository.kt (Data operations)
+│   └── PreferencesRepository.kt (SharedPreferences wrapper)
+├── network/
+│   ├── DictionaryDownloader.kt (HTTP download service)
+│   └── DictionaryParser.kt (JavaScript parsing logic)
+└── models/
+    ├── Language.kt (Language data class)
+    ├── DownloadState.kt (Download state enum)
+    └── WordItem.kt (Word display model)
+```
+
+### Domain Layer
+```
+com.wordsbyfarber.domain
+├── usecases/
+│   ├── GetLanguagesUseCase.kt
+│   ├── SelectLanguageUseCase.kt
+│   ├── DownloadDictionaryUseCase.kt
+│   ├── SearchWordsUseCase.kt
+│   └── GetWordsUseCase.kt
+└── models/
+    ├── LanguageInfo.kt
+    └── WordSearchResult.kt
+```
+
+### UI Layer
+```
+com.wordsbyfarber.ui
+├── activities/
+│   └── MainActivity.kt (Single Activity)
+├── fragments/
+│   ├── LanguageSelectionFragment.kt (Screen 1)
+│   ├── LoadingDictionaryFragment.kt (Screen 2)
+│   ├── DownloadFailedFragment.kt (Screen 3)
+│   ├── HomeFragment.kt (Screen 4)
+│   ├── Game1Fragment.kt (Screen 5)
+│   ├── Game2Fragment.kt (Screen 6)
+│   ├── TopPlayersFragment.kt (Screen 7)
+│   ├── ProfileFragment.kt (Screen 8)
+│   ├── FindWordFragment.kt (Screen 9)
+│   ├── TwoLetterWordsFragment.kt (Screen 10)
+│   ├── ThreeLetterWordsFragment.kt (Screen 11)
+│   ├── RareLetter1Fragment.kt (Screen 12)
+│   ├── RareLetter2Fragment.kt (Screen 13)
+│   ├── PreferencesFragment.kt (Screen 14)
+│   ├── HelpFragment.kt (Screen 15)
+│   ├── PrivacyPolicyFragment.kt (Screen 16)
+│   └── TermsOfServiceFragment.kt (Screen 17)
+├── adapters/
+│   ├── LanguageListAdapter.kt
+│   ├── WordListAdapter.kt
+│   └── HomeListAdapter.kt
+├── viewmodels/
+│   ├── LanguageSelectionViewModel.kt
+│   ├── LoadingDictionaryViewModel.kt
+│   ├── HomeViewModel.kt
+│   ├── WordSearchViewModel.kt
+│   └── GameViewModel.kt
+└── views/
+    ├── LetterGridView.kt (Custom view for game grids)
+    └── FlagIconView.kt (Custom SVG flag renderer)
+```
+
+### Utils Layer
+```
+com.wordsbyfarber.utils
+├── Constants.kt (App constants)
+├── Extensions.kt (Kotlin extensions)
+├── NetworkUtils.kt (Network connectivity)
+└── StringUtils.kt (String manipulation)
+```
+
 # Happy Path and Edge Cases
 
 ## Happy Path
@@ -314,6 +446,102 @@ When the user touches one of the language list:
     - App stores "de" in shared preferences.
     - App checks German `words` table, finds it empty.
     - Download and parsing for German begins, **Screen 2** is displayed.
+
+# Unit Tests
+
+## Data Layer Tests
+
+### DictionaryRepository Tests
+- `test_getLanguages_returnsAllSupportedLanguages()`
+- `test_selectLanguage_storesLanguageInPreferences()`
+- `test_getCurrentLanguage_returnsStoredLanguage()`
+- `test_getCurrentLanguage_returnsNullWhenNoLanguageStored()`
+- `test_clearWordsTable_removesAllWords()`
+- `test_getWordCount_returnsCorrectCount()`
+- `test_hasMinWords_returnsTrueWhenEnoughWords()`
+- `test_hasMinWords_returnsFalseWhenInsufficientWords()`
+
+### DictionaryDownloader Tests
+- `test_downloadDictionary_successfulDownload()`
+- `test_downloadDictionary_networkError()`
+- `test_downloadDictionary_invalidUrl()`
+- `test_downloadDictionary_cancelDownload()`
+- `test_downloadDictionary_progressCallback()`
+
+### DictionaryParser Tests
+- `test_parseDictionary_validJavaScriptFile()`
+- `test_parseDictionary_invalidJavaScriptFile()`
+- `test_parseDictionary_emptyFile()`
+- `test_parseDictionary_skipLangKey()`
+- `test_parseDictionary_handleSpecialCharacters()`
+- `test_parseDictionary_progressCallback()`
+
+### WordDao Tests
+- `test_insertWords_storesWordsCorrectly()`
+- `test_getWordCount_returnsCorrectCount()`
+- `test_searchWords_returnsFilteredResults()`
+- `test_getWordsByLength_returnsCorrectWords()`
+- `test_getWordsByRareLetter_returnsCorrectWords()`
+- `test_deleteAllWords_removesAllWords()`
+
+## Domain Layer Tests
+
+### GetLanguagesUseCase Tests
+- `test_execute_returnsAllSupportedLanguages()`
+- `test_execute_includesCorrectLanguageInfo()`
+
+### SelectLanguageUseCase Tests
+- `test_execute_validLanguage_storesLanguage()`
+- `test_execute_invalidLanguage_throwsException()`
+
+### DownloadDictionaryUseCase Tests
+- `test_execute_successfulDownload_storesWords()`
+- `test_execute_networkError_throwsException()`
+- `test_execute_parsingError_throwsException()`
+- `test_execute_cancelDownload_stopsProcess()`
+
+### SearchWordsUseCase Tests
+- `test_execute_emptyQuery_returnsEmptyList()`
+- `test_execute_validQuery_returnsFilteredWords()`
+- `test_execute_caseInsensitiveSearch()`
+
+## UI Layer Tests
+
+### LanguageSelectionViewModel Tests
+- `test_loadLanguages_populatesLanguageList()`
+- `test_selectLanguage_updatesSelectedLanguage()`
+- `test_selectLanguage_triggersNavigation()`
+
+### LoadingDictionaryViewModel Tests
+- `test_startDownload_updatesProgressState()`
+- `test_downloadSuccess_navigatesToHome()`
+- `test_downloadFailure_navigatesToErrorScreen()`
+- `test_cancelDownload_stopsProcess()`
+
+### HomeViewModel Tests
+- `test_loadHomeItems_populatesMenuList()`
+- `test_getCurrentLanguage_returnsSelectedLanguage()`
+- `test_switchLanguage_navigatesToLanguageSelection()`
+
+### WordSearchViewModel Tests
+- `test_searchWords_updatesResultsList()`
+- `test_searchWords_emptyQuery_showsEmptyResults()`
+- `test_searchWords_validQuery_showsFilteredResults()`
+- `test_clearSearch_resetsResults()`
+
+## Integration Tests
+
+### End-to-End Flow Tests
+- `test_firstLaunch_selectLanguage_downloadDictionary_showHome()`
+- `test_returningUser_showHomeDirectly()`
+- `test_switchLanguage_downloadNewDictionary()`
+- `test_downloadFailure_showErrorScreen_retrySuccess()`
+- `test_cancelDownload_returnToLanguageSelection()`
+
+### Database Integration Tests
+- `test_fullDictionaryDownload_storesAllWords()`
+- `test_wordSearch_acrossAllWordTypes()`
+- `test_languageSwitch_clearsOldData()`
 
 # Implementation details
 

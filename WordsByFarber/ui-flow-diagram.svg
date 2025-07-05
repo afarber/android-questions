@@ -1,0 +1,176 @@
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="800" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="600" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#2c3e50">
+    Words by Farber - UI Flow Diagram
+  </text>
+  
+  <!-- Legend -->
+  <g transform="translate(20, 60)">
+    <rect x="0" y="0" width="200" height="120" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1" rx="5"/>
+    <text x="10" y="20" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#2c3e50">Legend:</text>
+    <rect x="10" y="30" width="15" height="15" fill="#3498db" stroke="#2980b9" stroke-width="1"/>
+    <text x="30" y="42" font-family="Arial, sans-serif" font-size="11" fill="#2c3e50">Main Screens</text>
+    <rect x="10" y="50" width="15" height="15" fill="#e74c3c" stroke="#c0392b" stroke-width="1"/>
+    <text x="30" y="62" font-family="Arial, sans-serif" font-size="11" fill="#2c3e50">Error/Loading</text>
+    <rect x="10" y="70" width="15" height="15" fill="#27ae60" stroke="#229954" stroke-width="1"/>
+    <text x="30" y="82" font-family="Arial, sans-serif" font-size="11" fill="#2c3e50">Content Screens</text>
+    <circle cx="17" cy="97" r="8" fill="#f39c12" stroke="#e67e22" stroke-width="1"/>
+    <text x="30" y="102" font-family="Arial, sans-serif" font-size="11" fill="#2c3e50">Decision Points</text>
+  </g>
+  
+  <!-- Start -->
+  <ellipse cx="600" cy="120" rx="40" ry="20" fill="#9b59b6" stroke="#8e44ad" stroke-width="2"/>
+  <text x="600" y="126" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">START</text>
+  
+  <!-- Decision: Language Valid? -->
+  <circle cx="600" cy="180" r="25" fill="#f39c12" stroke="#e67e22" stroke-width="2"/>
+  <text x="600" y="172" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="white">Lang</text>
+  <text x="600" y="182" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="white">Valid?</text>
+  <text x="600" y="192" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="white"></text>
+  
+  <!-- Screen 1: Language Selection -->
+  <rect x="300" y="240" width="120" height="60" fill="#3498db" stroke="#2980b9" stroke-width="2" rx="5"/>
+  <text x="360" y="260" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">Screen 1</text>
+  <text x="360" y="275" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">Language</text>
+  <text x="360" y="287" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">Selection</text>
+  
+  <!-- Decision: Words >= min_words? -->
+  <circle cx="600" cy="270" r="25" fill="#f39c12" stroke="#e67e22" stroke-width="2"/>
+  <text x="600" y="262" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Words>=</text>
+  <text x="600" y="272" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">min?</text>
+  <text x="600" y="282" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white"></text>
+  
+  <!-- Screen 2: Loading Dictionary -->
+  <rect x="800" y="240" width="120" height="60" fill="#e74c3c" stroke="#c0392b" stroke-width="2" rx="5"/>
+  <text x="860" y="260" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">Screen 2</text>
+  <text x="860" y="275" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">Loading</text>
+  <text x="860" y="287" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">Dictionary</text>
+  
+  <!-- Screen 3: Download Failed -->
+  <rect x="800" y="350" width="120" height="60" fill="#e74c3c" stroke="#c0392b" stroke-width="2" rx="5"/>
+  <text x="860" y="370" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">Screen 3</text>
+  <text x="860" y="385" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">Download</text>
+  <text x="860" y="397" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">Failed</text>
+  
+  <!-- Screen 4: Home -->
+  <rect x="540" y="350" width="120" height="60" fill="#3498db" stroke="#2980b9" stroke-width="2" rx="5"/>
+  <text x="600" y="370" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="white" font-weight="bold">Screen 4</text>
+  <text x="600" y="385" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">Home</text>
+  <text x="600" y="397" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">(Main Menu)</text>
+  
+  <!-- Game Screens -->
+  <rect x="50" y="500" width="100" height="50" fill="#27ae60" stroke="#229954" stroke-width="2" rx="5"/>
+  <text x="100" y="518" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">Screen 5</text>
+  <text x="100" y="530" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="white">Game 1</text>
+  <text x="100" y="542" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="white">15x15 Grid</text>
+  
+  <rect x="170" y="500" width="100" height="50" fill="#27ae60" stroke="#229954" stroke-width="2" rx="5"/>
+  <text x="220" y="518" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">Screen 6</text>
+  <text x="220" y="530" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="white">Game 2</text>
+  <text x="220" y="542" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="white">5x5 Grid</text>
+  
+  <!-- Word Screens -->
+  <rect x="290" y="500" width="100" height="50" fill="#27ae60" stroke="#229954" stroke-width="2" rx="5"/>
+  <text x="340" y="518" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white" font-weight="bold">Screen 9</text>
+  <text x="340" y="530" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="white">Find a</text>
+  <text x="340" y="542" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="white">Word</text>
+  
+  <rect x="410" y="500" width="100" height="50" fill="#27ae60" stroke="#229954" stroke-width="2" rx="5"/>
+  <text x="460" y="515" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="white" font-weight="bold">Screens 10-13</text>
+  <text x="460" y="527" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">2-letter, 3-letter</text>
+  <text x="460" y="537" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Rare letter</text>
+  <text x="460" y="547" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">words</text>
+  
+  <!-- Other Screens -->
+  <rect x="730" y="500" width="100" height="50" fill="#27ae60" stroke="#229954" stroke-width="2" rx="5"/>
+  <text x="780" y="515" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="white" font-weight="bold">Screens 7-8</text>
+  <text x="780" y="527" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Top Players</text>
+  <text x="780" y="537" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Your Profile</text>
+  
+  <rect x="850" y="500" width="100" height="50" fill="#27ae60" stroke="#229954" stroke-width="2" rx="5"/>
+  <text x="900" y="515" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="white" font-weight="bold">Screens 14-17</text>
+  <text x="900" y="525" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Preferences</text>
+  <text x="900" y="535" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Help, Privacy</text>
+  <text x="900" y="545" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Terms</text>
+  
+  <!-- Arrows and Flow -->
+  <!-- Start to Language Valid -->
+  <line x1="600" y1="140" x2="600" y2="155" stroke="#34495e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Language Valid NO to Screen 1 -->
+  <line x1="580" y1="165" x2="430" y2="255" stroke="#34495e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="500" y="205" font-family="Arial, sans-serif" font-size="10" fill="#e74c3c" font-weight="bold">NO</text>
+  
+  <!-- Language Valid YES to Words Check -->
+  <line x1="600" y1="205" x2="600" y2="245" stroke="#34495e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="610" y="225" font-family="Arial, sans-serif" font-size="10" fill="#27ae60" font-weight="bold">YES</text>
+  
+  <!-- Screen 1 to Words Check -->
+  <line x1="420" y1="270" x2="575" y2="270" stroke="#34495e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="480" y="260" font-family="Arial, sans-serif" font-size="9" fill="#34495e">Select Language</text>
+  
+  <!-- Words Check NO to Screen 2 -->
+  <line x1="620" y1="255" x2="795" y2="255" stroke="#34495e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="700" y="245" font-family="Arial, sans-serif" font-size="10" fill="#e74c3c" font-weight="bold">NO</text>
+  
+  <!-- Words Check YES to Screen 4 -->
+  <line x1="600" y1="295" x2="600" y2="350" stroke="#34495e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="610" y="320" font-family="Arial, sans-serif" font-size="10" fill="#27ae60" font-weight="bold">YES</text>
+  
+  <!-- Screen 2 Success to Screen 4 -->
+  <path d="M 800 285 Q 720 320 660 365" stroke="#27ae60" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="720" y="320" font-family="Arial, sans-serif" font-size="9" fill="#27ae60">Success</text>
+  
+  <!-- Screen 2 Failure to Screen 3 -->
+  <line x1="860" y1="300" x2="860" y2="350" stroke="#e74c3c" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="870" y="325" font-family="Arial, sans-serif" font-size="9" fill="#e74c3c">Failure</text>
+  
+  <!-- Screen 3 Retry to Screen 2 -->
+  <path d="M 800 365 Q 740 315 800 255" stroke="#f39c12" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="720" y="340" font-family="Arial, sans-serif" font-size="9" fill="#f39c12">Retry</text>
+  
+  <!-- Screen 3 Cancel to Screen 1 -->
+  <path d="M 800 395 Q 550 450 360 300" stroke="#e74c3c" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="580" y="450" font-family="Arial, sans-serif" font-size="9" fill="#e74c3c">Cancel/X</text>
+  
+  <!-- Screen 4 to various screens -->
+  <line x1="540" y1="410" x2="100" y2="500" stroke="#34495e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="560" y1="410" x2="220" y2="500" stroke="#34495e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="580" y1="410" x2="340" y2="500" stroke="#34495e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="600" y1="410" x2="460" y2="500" stroke="#34495e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="620" y1="410" x2="780" y2="500" stroke="#34495e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="640" y1="410" x2="900" y2="500" stroke="#34495e" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Back arrows from content screens to Home (Screen 4) -->
+  <path d="M 100 500 Q 350 460 540 390" stroke="#95a5a6" stroke-width="1" stroke-dasharray="3,3" fill="none" marker-end="url(#smallarrowhead)"/>
+  <path d="M 220 500 Q 380 460 540 390" stroke="#95a5a6" stroke-width="1" stroke-dasharray="3,3" fill="none" marker-end="url(#smallarrowhead)"/>
+  <path d="M 340 500 Q 440 460 540 390" stroke="#95a5a6" stroke-width="1" stroke-dasharray="3,3" fill="none" marker-end="url(#smallarrowhead)"/>
+  <path d="M 460 500 Q 500 460 540 390" stroke="#95a5a6" stroke-width="1" stroke-dasharray="3,3" fill="none" marker-end="url(#smallarrowhead)"/>
+  <path d="M 780 500 Q 670 460 660 390" stroke="#95a5a6" stroke-width="1" stroke-dasharray="3,3" fill="none" marker-end="url(#smallarrowhead)"/>
+  <path d="M 900 500 Q 730 460 660 390" stroke="#95a5a6" stroke-width="1" stroke-dasharray="3,3" fill="none" marker-end="url(#smallarrowhead)"/>
+  
+  <!-- Language selection button from Screen 4 to Screen 1 -->
+  <path d="M 540 365 Q 450 320 360 300" stroke="#9b59b6" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="430" y="330" font-family="Arial, sans-serif" font-size="9" fill="#9b59b6">Flag Button</text>
+  
+  <!-- Arrow markers -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#34495e"/>
+    </marker>
+    <marker id="smallarrowhead" markerWidth="8" markerHeight="5" refX="8" refY="2.5" orient="auto">
+      <polygon points="0 0, 8 2.5, 0 5" fill="#95a5a6"/>
+    </marker>
+  </defs>
+  
+  <!-- Notes -->
+  <text x="20" y="680" font-family="Arial, sans-serif" font-size="11" fill="#7f8c8d">Notes:</text>
+  <text x="20" y="700" font-family="Arial, sans-serif" font-size="10" fill="#7f8c8d">• Solid arrows: Main navigation flow</text>
+  <text x="20" y="715" font-family="Arial, sans-serif" font-size="10" fill="#7f8c8d">• Dashed arrows: Back navigation (X button)</text>
+  <text x="20" y="730" font-family="Arial, sans-serif" font-size="10" fill="#7f8c8d">• All content screens (5-17) return to Home (4) via X button</text>
+  <text x="20" y="745" font-family="Arial, sans-serif" font-size="10" fill="#7f8c8d">• Purple arrow: Language selection from flag button</text>
+  
+</svg>
