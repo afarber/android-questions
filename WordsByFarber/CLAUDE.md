@@ -15,7 +15,7 @@ Instead of real games it will display 2 different static grids to symbolize 2 ty
 
 The dictionary of each language should be stored in a separate Room database
 
-A simple Kotlin app, where most screens have the following UI structure:
+A simple Kotlin app with Jetpack Compose, where most screens have the following UI structure:
 
 - a screen title and a button on the top
 - a search input text field is displayed below, but only in some screens
@@ -316,42 +316,51 @@ com.wordsbyfarber.domain
     └── WordSearchResult.kt
 ```
 
-### UI Layer
+### UI Layer (Jetpack Compose)
 ```
 com.wordsbyfarber.ui
-├── activities/
-│   └── MainActivity.kt (Single Activity)
-├── fragments/
-│   ├── LanguageSelectionFragment.kt (Screen 1)
-│   ├── LoadingDictionaryFragment.kt (Screen 2)
-│   ├── DownloadFailedFragment.kt (Screen 3)
-│   ├── HomeFragment.kt (Screen 4)
-│   ├── Game1Fragment.kt (Screen 5)
-│   ├── Game2Fragment.kt (Screen 6)
-│   ├── TopPlayersFragment.kt (Screen 7)
-│   ├── ProfileFragment.kt (Screen 8)
-│   ├── FindWordFragment.kt (Screen 9)
-│   ├── TwoLetterWordsFragment.kt (Screen 10)
-│   ├── ThreeLetterWordsFragment.kt (Screen 11)
-│   ├── RareLetter1Fragment.kt (Screen 12)
-│   ├── RareLetter2Fragment.kt (Screen 13)
-│   ├── PreferencesFragment.kt (Screen 14)
-│   ├── HelpFragment.kt (Screen 15)
-│   ├── PrivacyPolicyFragment.kt (Screen 16)
-│   └── TermsOfServiceFragment.kt (Screen 17)
-├── adapters/
-│   ├── LanguageListAdapter.kt
-│   ├── WordListAdapter.kt
-│   └── HomeListAdapter.kt
+├── MainActivity.kt (Single Activity with Compose)
+├── navigation/
+│   ├── AppNavigation.kt (Compose Navigation)
+│   └── Screen.kt (Screen route definitions)
+├── screens/
+│   ├── LanguageSelectionScreen.kt (Screen 1)
+│   ├── LoadingDictionaryScreen.kt (Screen 2)
+│   ├── DownloadFailedScreen.kt (Screen 3)
+│   ├── HomeScreen.kt (Screen 4)
+│   ├── Game1Screen.kt (Screen 5)
+│   ├── Game2Screen.kt (Screen 6)
+│   ├── TopPlayersScreen.kt (Screen 7)
+│   ├── ProfileScreen.kt (Screen 8)
+│   ├── FindWordScreen.kt (Screen 9)
+│   ├── TwoLetterWordsScreen.kt (Screen 10)
+│   ├── ThreeLetterWordsScreen.kt (Screen 11)
+│   ├── RareLetter1Screen.kt (Screen 12)
+│   ├── RareLetter2Screen.kt (Screen 13)
+│   ├── PreferencesScreen.kt (Screen 14)
+│   ├── HelpScreen.kt (Screen 15)
+│   ├── PrivacyPolicyScreen.kt (Screen 16)
+│   └── TermsOfServiceScreen.kt (Screen 17)
+├── components/
+│   ├── TopAppBar.kt (Reusable top bar with title and close button)
+│   ├── SearchField.kt (Reusable search input field)
+│   ├── LanguageListItem.kt (Language selection item with flag)
+│   ├── WordListItem.kt (Word display item)
+│   ├── HomeMenuItem.kt (Home screen menu item)
+│   ├── LetterGrid.kt (Composable letter grid for games)
+│   ├── LoadingIndicator.kt (Progress indicator component)
+│   └── FlagIcon.kt (SVG flag renderer composable)
 ├── viewmodels/
 │   ├── LanguageSelectionViewModel.kt
 │   ├── LoadingDictionaryViewModel.kt
 │   ├── HomeViewModel.kt
 │   ├── WordSearchViewModel.kt
 │   └── GameViewModel.kt
-└── views/
-    ├── LetterGridView.kt (Custom view for game grids)
-    └── FlagIconView.kt (Custom SVG flag renderer)
+└── theme/
+    ├── Color.kt (App color palette)
+    ├── Type.kt (Typography definitions)
+    ├── Theme.kt (App theme configuration)
+    └── Shapes.kt (Shape definitions)
 ```
 
 ### Utils Layer
@@ -505,12 +514,21 @@ com.wordsbyfarber.utils
 - `test_execute_validQuery_returnsFilteredWords()`
 - `test_execute_caseInsensitiveSearch()`
 
-## UI Layer Tests
+## UI Layer Tests (Jetpack Compose)
 
-### LanguageSelectionViewModel Tests
-- `test_loadLanguages_populatesLanguageList()`
-- `test_selectLanguage_updatesSelectedLanguage()`
-- `test_selectLanguage_triggersNavigation()`
+### Screen Tests (Compose UI Tests)
+- `test_LanguageSelectionScreen_displaysAllLanguages()`
+- `test_LanguageSelectionScreen_clickLanguage_navigatesToLoading()`
+- `test_LoadingDictionaryScreen_displaysProgress()`
+- `test_LoadingDictionaryScreen_clickClose_cancelsDownload()`
+- `test_HomeScreen_displaysMenuItems()`
+- `test_HomeScreen_clickMenuItem_navigatesToCorrectScreen()`
+- `test_SearchableScreens_filterResultsCorrectly()`
+
+### ViewModel Tests
+- `test_LanguageSelectionViewModel_loadLanguages_populatesLanguageList()`
+- `test_LanguageSelectionViewModel_selectLanguage_updatesSelectedLanguage()`
+- `test_LanguageSelectionViewModel_selectLanguage_triggersNavigation()`
 
 ### LoadingDictionaryViewModel Tests
 - `test_startDownload_updatesProgressState()`
@@ -529,6 +547,13 @@ com.wordsbyfarber.utils
 - `test_searchWords_validQuery_showsFilteredResults()`
 - `test_clearSearch_resetsResults()`
 
+### Component Tests
+- `test_TopAppBar_displaysCorrectTitle()`
+- `test_TopAppBar_clickClose_triggersCallback()`
+- `test_SearchField_textChange_triggersSearch()`
+- `test_LetterGrid_displaysCorrectLayout()`
+- `test_FlagIcon_displaysCorrectFlag()`
+
 ## Integration Tests
 
 ### End-to-End Flow Tests
@@ -542,6 +567,200 @@ com.wordsbyfarber.utils
 - `test_fullDictionaryDownload_storesAllWords()`
 - `test_wordSearch_acrossAllWordTypes()`
 - `test_languageSwitch_clearsOldData()`
+
+# Key Dependencies
+
+This project uses modern Android development practices with Jetpack Compose and the Version Catalog (libs.versions.toml) for dependency management.
+
+## Version Catalog Setup (libs.versions.toml)
+
+```toml
+[versions]
+agp = "8.2.0"
+kotlin = "1.9.20"
+coreKtx = "1.12.0"
+lifecycleRuntimeKtx = "2.7.0"
+activityCompose = "1.8.2"
+composeBom = "2023.10.01"
+room = "2.6.0"
+navigation = "2.7.4"
+okhttp = "4.12.0"
+hilt = "2.48"
+hiltNavigationCompose = "1.1.0"
+coroutines = "1.7.3"
+junit = "4.13.2"
+junitVersion = "1.1.5"
+espressoCore = "3.5.1"
+
+[libraries]
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+
+# Room
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+
+# Navigation
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
+
+# Networking
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+
+# Dependency Injection
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+
+# Coroutines
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+
+# Testing
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+```
+
+## Build Configuration (app/build.gradle.kts)
+
+```kotlin
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.dagger.hilt.android)
+}
+
+android {
+    namespace = "com.wordsbyfarber"
+    compileSdk = 34
+
+    defaultConfig {
+        applicationId = "com.wordsbyfarber"
+        minSdk = 24
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0"
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+    
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+    
+    buildFeatures {
+        compose = true
+    }
+    
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.4"
+    }
+    
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+}
+
+dependencies {
+    // Core Android
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.activity.compose)
+
+    // Compose BOM and UI
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
+
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
+
+    // Room Database
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
+
+    // Networking
+    implementation(libs.okhttp)
+
+    // Dependency Injection
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+    kapt(libs.hilt.android.compiler)
+
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.android)
+
+    // Testing
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    
+    // Debug tools
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
+}
+```
+
+## Key Dependencies Explanation
+
+**Modern Dependency Management**: The project uses Gradle Version Catalogs (libs.versions.toml) which is the recommended approach since Android Gradle Plugin 7.0+. This centralizes version management and makes it easier to update dependencies across modules.
+
+**Jetpack Compose**: Full Compose UI toolkit for building native Android UIs declaratively, eliminating the need for XML layouts and fragments.
+
+**Room Database**: Local SQLite database with compile-time verification of SQL queries and seamless integration with Kotlin coroutines.
+
+**Hilt**: Google's recommended dependency injection library built on top of Dagger, providing simplified DI for Android.
+
+**Navigation Compose**: Type-safe navigation specifically designed for Jetpack Compose, replacing Fragment-based navigation.
+
+**OkHttp**: Modern HTTP client for efficient network requests, perfect for downloading the large dictionary files.
+
+**Coroutines**: Kotlin's concurrency framework for handling asynchronous operations like downloads and database access.
+
+The `implementation(libs.androidx.core.ktx)` syntax leverages the version catalog, where `libs` refers to the catalog, `androidx.core.ktx` matches the library name in the catalog, providing centralized version management and better IDE support.
 
 # Implementation details
 
