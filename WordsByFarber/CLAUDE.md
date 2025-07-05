@@ -1,21 +1,38 @@
-# A word game with partly hashed game dictionaries for 6 languages: de, en, fr, nl, pl, ru
+# A word game with partly hashed game dictionaries for 6 languages
 
-A simple Kotlin app, where most pages have the following UI: a title, a search field and a filtered list.
+Supported languages:
 
-Initially a list of 6 languages is displayed
+- de
+- en
+- fr
+- nl
+- pl
+- ru
 
-| Language | Rare Letter 1 | Rare Letter 2 | Dictionary URL                         |
-| -------- | ------------- | ------------- | -------------------------------------- |
-| de       | Q             | Y             | https://wordsbyfarber.com/Consts-de.js |
-| en       | Q             | X             | https://wordsbyfarber.com/Consts-en.js |
-| fr       | K             | W             | https://wordsbyfarber.com/Consts-fr.js |
-| nl       | Q             | X             | https://wordsbyfarber.com/Consts-nl.js |
-| pl       | Ń             | Ź             | https://wordsbyfarber.com/Consts-pl.js |
-| ru       | Ъ             | Э             | https://wordsbyfarber.com/Consts-ru.js |
+The dictionary of each language should be stored in a separate Room database
+
+A simple Kotlin app, where most screens have the following UI structure:
+
+- a screen title and a button on the top
+- a search input text field is displayed below, but only in some screens
+- the rest of the screen is occupied by a (filtered, if search field is non-empty) list
+
+Initially the Room is empty and a list of 6 languages is displayed (Screen 1):
+
+| language | rare_letter_1 | rare_letter_2 | hashed_dictionary_url                  | min_words |
+| -------- | ------------- | ------------- | -------------------------------------- | --------- |
+| de       | Q             | Y             | https://wordsbyfarber.com/Consts-de.js | 180_000   |
+| en       | Q             | X             | https://wordsbyfarber.com/Consts-en.js | 270_000   |
+| fr       | K             | W             | https://wordsbyfarber.com/Consts-fr.js | 370_000   |
+| nl       | Q             | X             | https://wordsbyfarber.com/Consts-nl.js | 130_000   |
+| pl       | Ń             | Ź             | https://wordsbyfarber.com/Consts-pl.js | 3_000_000 |
+| ru       | Ъ             | Э             | https://wordsbyfarber.com/Consts-ru.js | 120_000   |
 
 - Store the rare letter 1 in pl/res/values/strings.xml as <string name="rare_letter_1">Ń</string>
 - Store the rare letter 2 in pl/res/values/strings.xml as <string name="rare_letter_2">Ź</string>
 - Follow the same pattern for the other 5 languages: de, en, fr, nl, ru
+
+When the user selects a language in the Screen 1, the selected language is stored as `language` in shared preferences and download and parsing of Consts-{de,en,fr,nl,pl,ru}.js begins and Screen 2 is displayed
 
 # Dictionaries are obfuscated to prevent other developers from copying them
 
@@ -51,3 +68,22 @@ const HASHED={"e41cb5fe71388d82":"Лещина, лесной орешник","a9
 - The key/value pairs (that is word/explanation) should be stored into Room database
 - Parsing the dictionary should stop when the closing bracket `};` has been found
 - The key entry `___LANG___` should be discarded, it should not be stored into Room
+
+## UI flow
+
+# Screen 1
+
+- Screen 1 is displayed as the very first screen to the user, if there is no valid `language` 2-letters value found in shared preferences
+- If there is `language` in shared preferences, but it is not one of the valid values , then `language` is deleted from shared preferences and Screen 1 is displayed
+- Also, if the user is at Screen 3 and presses the "Select language" button at the top, then Screen 1 is displayed
+- There is no title and no button at the top
+- The whole screen estate is occupied by the list with 6 entries
+- Each list item consists of text and colorful icon
+- The text is human readable language name (written in that language!) followed by the 2-letters language code in brackets: "English (en)", "German (de)", etc
+- The icon is the simplified national flag, drawn as SVG icon
+
+When the user touches one of the language list:
+
+- The 2-letter language code is stored as `language` in shared preferences
+- The Room database for that language is opened
+- If the `words` table has less than `min_words` records and there is no active download for the selected language then that table is cleared and a new download and parsing is started from `hashed_dictionary_url`
