@@ -19,7 +19,7 @@ fun AppNavigation(
         composable(Screen.LanguageSelection.route) {
             LanguageSelectionScreen(
                 viewModel = hiltViewModel(),
-                onLanguageSelected = { languageCode ->
+                onLanguageSelected = { languageCode: String ->
                     // Navigation logic will be handled in ViewModel
                 },
                 navController = navController
@@ -61,7 +61,7 @@ fun AppNavigation(
         composable(Screen.Home.route) {
             HomeScreen(
                 viewModel = hiltViewModel(),
-                onMenuItemClicked = { menuItem ->
+                onMenuItemClicked = { menuItem: String ->
                     when (menuItem) {
                         "Game 1" -> navController.navigate(Screen.Game1.route)
                         "Game 2" -> navController.navigate(Screen.Game2.route)

@@ -15,18 +15,19 @@ abstract class WordsDatabase : RoomDatabase() {
     abstract fun playerDao(): PlayerDao
 
     companion object {
-        @Volatile
         private val INSTANCES: MutableMap<String, WordsDatabase> = mutableMapOf()
 
         fun getDatabase(context: Context, languageCode: String): WordsDatabase {
-            return INSTANCES[languageCode] ?: synchronized(this) {
-                val instance = INSTANCES[languageCode] ?: Room.databaseBuilder(
-                    context.applicationContext,
-                    WordsDatabase::class.java,
-                    "words_database_$languageCode"
-                ).build()
-                INSTANCES[languageCode] = instance
-                instance
+            return synchronized(this) {
+                INSTANCES[languageCode] ?: run {
+                    val instance = Room.databaseBuilder(
+                        context.applicationContext,
+                        WordsDatabase::class.java,
+                        "words_database_$languageCode"
+                    ).build()
+                    INSTANCES[languageCode] = instance
+                    instance
+                }
             }
         }
     }
