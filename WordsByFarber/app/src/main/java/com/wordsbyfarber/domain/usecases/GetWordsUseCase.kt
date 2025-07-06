@@ -6,9 +6,8 @@ import com.wordsbyfarber.domain.models.WordSearchResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
-class GetWordsUseCase @Inject constructor(
+class GetWordsUseCase(
     private val dictionaryRepository: DictionaryRepository,
     private val preferencesRepository: PreferencesRepository
 ) {

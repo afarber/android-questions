@@ -13,7 +13,9 @@ Instead of real games it will display 2 different static grids to symbolize 2 ty
 - pl
 - ru
 
-The dictionary of each language and a list of players should be stored in a separate Room database
+The dictionary of each language and a list of players should be stored in a separate Room database!
+
+Do not use kapt, ksp, Hilt or DI yet, because I do not have enough Kotlin experience for that!
 
 Initially the Room database is empty and a list of 6 languages is displayed (Screen 1):
 

@@ -2,9 +2,8 @@ package com.wordsbyfarber.domain.usecases
 
 import com.wordsbyfarber.data.repository.DictionaryRepository
 import com.wordsbyfarber.data.repository.PreferencesRepository
-import javax.inject.Inject
 
-class SelectLanguageUseCase @Inject constructor(
+class SelectLanguageUseCase(
     private val dictionaryRepository: DictionaryRepository,
     private val preferencesRepository: PreferencesRepository
 ) {

@@ -7,7 +7,6 @@ import com.wordsbyfarber.data.models.Language
 import com.wordsbyfarber.data.repository.DictionaryRepository
 import com.wordsbyfarber.data.repository.PreferencesRepository
 import com.wordsbyfarber.utils.StringUtils
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,10 +14,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class WordSearchViewModel @Inject constructor(
+class WordSearchViewModel(
     private val dictionaryRepository: DictionaryRepository,
     private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {

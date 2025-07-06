@@ -2,11 +2,8 @@ package com.wordsbyfarber.data.repository
 
 import android.content.SharedPreferences
 import com.wordsbyfarber.utils.Constants
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class PreferencesRepository @Inject constructor(
+class PreferencesRepository(
     private val sharedPreferences: SharedPreferences
 ) {
 

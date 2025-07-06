@@ -5,15 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.wordsbyfarber.data.models.Language
 import com.wordsbyfarber.data.repository.DictionaryRepository
 import com.wordsbyfarber.data.repository.PreferencesRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class HomeViewModel @Inject constructor(
+class HomeViewModel(
     private val dictionaryRepository: DictionaryRepository,
     private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {

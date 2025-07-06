@@ -6,7 +6,6 @@ import com.wordsbyfarber.data.database.WordEntity
 import com.wordsbyfarber.data.models.Language
 import com.wordsbyfarber.data.repository.DictionaryRepository
 import com.wordsbyfarber.data.repository.PreferencesRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,10 +14,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class WordListViewModel @Inject constructor(
+class WordListViewModel(
     private val dictionaryRepository: DictionaryRepository,
     private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {

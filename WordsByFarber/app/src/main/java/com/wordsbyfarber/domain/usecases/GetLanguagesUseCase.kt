@@ -3,9 +3,8 @@ package com.wordsbyfarber.domain.usecases
 import com.wordsbyfarber.data.repository.DictionaryRepository
 import com.wordsbyfarber.data.repository.PreferencesRepository
 import com.wordsbyfarber.domain.models.LanguageInfo
-import javax.inject.Inject
 
-class GetLanguagesUseCase @Inject constructor(
+class GetLanguagesUseCase(
     private val dictionaryRepository: DictionaryRepository,
     private val preferencesRepository: PreferencesRepository
 ) {

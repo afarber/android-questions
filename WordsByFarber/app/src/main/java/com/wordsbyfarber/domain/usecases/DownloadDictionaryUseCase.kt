@@ -6,9 +6,8 @@ import com.wordsbyfarber.data.repository.PreferencesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
-import javax.inject.Inject
 
-class DownloadDictionaryUseCase @Inject constructor(
+class DownloadDictionaryUseCase(
     private val dictionaryRepository: DictionaryRepository,
     private val preferencesRepository: PreferencesRepository
 ) {

@@ -3,11 +3,8 @@ package com.wordsbyfarber.data.network
 import com.wordsbyfarber.data.database.WordEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class DictionaryParser @Inject constructor() {
+class DictionaryParser {
     
     fun parseJavaScriptDictionary(
         content: String,

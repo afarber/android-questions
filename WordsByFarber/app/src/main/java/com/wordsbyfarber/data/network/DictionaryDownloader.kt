@@ -5,11 +5,8 @@ import kotlinx.coroutines.flow.flow
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.IOException
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class DictionaryDownloader @Inject constructor(
+class DictionaryDownloader(
     private val okHttpClient: OkHttpClient
 ) {
     fun downloadDictionary(url: String): Flow<DownloadResult> = flow {
