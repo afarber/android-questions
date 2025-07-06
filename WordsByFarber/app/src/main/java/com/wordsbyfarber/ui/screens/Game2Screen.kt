@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.screens
 
+// Screen 6: Game 2 screen displaying static 5x5 letter grid
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding

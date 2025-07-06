@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.viewmodels
 
+// ViewModel for word search screen handling word lookup with hashing algorithm
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wordsbyfarber.data.database.WordEntity

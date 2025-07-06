@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.navigation
 
+// Navigation component managing screen transitions and navigation logic
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue

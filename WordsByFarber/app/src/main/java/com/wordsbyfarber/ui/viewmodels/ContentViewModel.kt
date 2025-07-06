@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.viewmodels
 
+// ViewModel for content screens managing help, privacy policy, and terms of service
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wordsbyfarber.data.repository.PreferencesRepository

@@ -1,5 +1,6 @@
 package com.wordsbyfarber.data.database
 
+// Room entity representing a word in the dictionary with optional explanation
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 

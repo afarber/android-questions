@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.screens
 
+// Screen 3: Download failed screen with retry option and error message
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

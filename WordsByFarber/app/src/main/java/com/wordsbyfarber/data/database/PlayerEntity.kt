@@ -1,5 +1,6 @@
 package com.wordsbyfarber.data.database
 
+// Room entity representing a player with statistics and profile information
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 

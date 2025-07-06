@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.screens
 
+// Screen 1: Language selection screen displaying list of supported languages
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

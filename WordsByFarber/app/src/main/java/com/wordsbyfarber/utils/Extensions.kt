@@ -1,5 +1,6 @@
 package com.wordsbyfarber.utils
 
+// Extension functions and composable utilities for lifecycle management and data formatting
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue

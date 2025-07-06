@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.screens
 
+// Screen 2: Dictionary loading screen showing download/parsing progress
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

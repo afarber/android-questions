@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.navigation
 
+// Sealed class defining all navigation routes for app screens
 import com.wordsbyfarber.utils.Constants
 
 sealed class Screen(val route: String) {

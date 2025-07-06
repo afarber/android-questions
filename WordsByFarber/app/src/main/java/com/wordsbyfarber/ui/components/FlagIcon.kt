@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.components
 
+// SVG-style flag icon component drawing national flags for supported languages
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

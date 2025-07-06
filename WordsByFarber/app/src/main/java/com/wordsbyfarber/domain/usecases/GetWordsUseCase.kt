@@ -1,5 +1,6 @@
 package com.wordsbyfarber.domain.usecases
 
+// Use case for retrieving filtered word lists based on type and search criteria
 import com.wordsbyfarber.data.repository.DictionaryRepository
 import com.wordsbyfarber.data.repository.PreferencesRepository
 import com.wordsbyfarber.domain.models.WordSearchResult

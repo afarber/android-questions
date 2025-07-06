@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.viewmodels
 
+// ViewModel for top players screen managing player loading and search functionality
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wordsbyfarber.data.database.PlayerEntity

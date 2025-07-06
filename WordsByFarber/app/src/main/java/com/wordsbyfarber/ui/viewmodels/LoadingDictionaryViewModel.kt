@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.viewmodels
 
+// ViewModel for dictionary loading screen managing download and parsing operations
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.components
 
+// Reusable list item components for languages, home menu, words, and players
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

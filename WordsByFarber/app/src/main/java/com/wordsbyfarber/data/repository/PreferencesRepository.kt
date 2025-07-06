@@ -1,5 +1,6 @@
 package com.wordsbyfarber.data.repository
 
+// Repository providing wrapper methods for SharedPreferences operations
 import android.content.SharedPreferences
 import com.wordsbyfarber.utils.Constants
 

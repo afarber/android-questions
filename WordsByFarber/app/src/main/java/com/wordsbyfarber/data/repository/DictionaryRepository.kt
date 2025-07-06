@@ -1,5 +1,6 @@
 package com.wordsbyfarber.data.repository
 
+// Repository handling dictionary operations including download, parsing, and database access
 import android.content.Context
 import com.wordsbyfarber.data.database.PlayerEntity
 import com.wordsbyfarber.data.database.WordEntity

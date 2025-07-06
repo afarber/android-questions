@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.screens
 
+// Simple placeholder screen component for unimplemented screens
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding

@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.viewmodels
 
+// ViewModel for download failed screen handling retry and cancellation actions
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope

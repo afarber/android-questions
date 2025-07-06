@@ -1,5 +1,6 @@
 package com.wordsbyfarber.domain.usecases
 
+// Use case for searching words with different criteria and applying hash algorithm
 import com.wordsbyfarber.data.repository.DictionaryRepository
 import com.wordsbyfarber.domain.models.WordSearchResult
 import com.wordsbyfarber.utils.StringUtils

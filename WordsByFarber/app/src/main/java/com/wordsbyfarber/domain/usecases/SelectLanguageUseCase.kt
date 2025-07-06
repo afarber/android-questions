@@ -1,5 +1,6 @@
 package com.wordsbyfarber.domain.usecases
 
+// Use case for selecting a language and determining next navigation step
 import com.wordsbyfarber.data.repository.DictionaryRepository
 import com.wordsbyfarber.data.repository.PreferencesRepository
 

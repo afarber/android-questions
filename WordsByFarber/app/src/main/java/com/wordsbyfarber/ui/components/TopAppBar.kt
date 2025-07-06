@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.components
 
+// Reusable top app bar components with close buttons and language selection
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer

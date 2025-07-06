@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.components
 
+// Letter grid component for displaying static game grids (5x5 and 15x15)
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable

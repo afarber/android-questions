@@ -1,5 +1,6 @@
 package com.wordsbyfarber.utils
 
+// String manipulation utilities including word hashing algorithm and data formatting
 import java.security.MessageDigest
 
 object StringUtils {

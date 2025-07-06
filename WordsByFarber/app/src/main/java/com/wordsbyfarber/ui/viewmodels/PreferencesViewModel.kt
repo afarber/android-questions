@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.viewmodels
 
+// ViewModel for preferences screen managing app settings and configuration options
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wordsbyfarber.data.repository.PreferencesRepository

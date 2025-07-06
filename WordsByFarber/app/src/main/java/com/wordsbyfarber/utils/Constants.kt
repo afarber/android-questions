@@ -1,5 +1,6 @@
 package com.wordsbyfarber.utils
 
+// Application constants including supported languages, screen routes, and preferences keys
 object Constants {
     const val HASH_SALT = "ECHO"
     const val MD5_SUBSTRING_LENGTH = 16

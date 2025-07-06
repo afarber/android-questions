@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.components
 
+// Reusable search input field component with clear button and keyboard actions
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions

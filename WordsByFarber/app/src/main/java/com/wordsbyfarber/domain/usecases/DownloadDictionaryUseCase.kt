@@ -1,5 +1,6 @@
 package com.wordsbyfarber.domain.usecases
 
+// Use case for managing dictionary download with state tracking and error handling
 import com.wordsbyfarber.data.repository.DictionaryRepository
 import com.wordsbyfarber.data.repository.DictionaryDownloadState
 import com.wordsbyfarber.data.repository.PreferencesRepository

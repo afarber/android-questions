@@ -19,6 +19,8 @@ Do not use Hilt or DI yet, because I do not have enough Kotlin experience for th
 
 KSP (Kotlin Symbol Processing) is used minimally only for Room database annotation processing - this is required for Room to work.
 
+Add a comment to the top of each class with a short explanation of its purpose.
+
 Initially the Room database is empty and a list of 6 languages is displayed (Screen 1):
 
 | `language` | `rare_letter_1` | `rare_letter_2` | `hashed_dictionary_url`                | `min_words` | `top_url`                            |

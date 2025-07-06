@@ -1,5 +1,6 @@
 package com.wordsbyfarber.domain.usecases
 
+// Use case for retrieving supported languages with selection state
 import com.wordsbyfarber.data.repository.DictionaryRepository
 import com.wordsbyfarber.data.repository.PreferencesRepository
 import com.wordsbyfarber.domain.models.LanguageInfo

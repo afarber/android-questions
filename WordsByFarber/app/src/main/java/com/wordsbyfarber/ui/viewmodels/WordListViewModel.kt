@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.viewmodels
 
+// ViewModel for word list screens managing word filtering by length and rare letters
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wordsbyfarber.data.database.WordEntity

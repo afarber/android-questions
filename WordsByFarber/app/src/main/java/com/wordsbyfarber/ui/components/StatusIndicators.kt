@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.components
 
+// Status indicator components for word search results and success/error messages
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

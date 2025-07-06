@@ -1,5 +1,6 @@
 package com.wordsbyfarber.utils
 
+// Network connectivity utilities for checking internet availability and connection type
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities

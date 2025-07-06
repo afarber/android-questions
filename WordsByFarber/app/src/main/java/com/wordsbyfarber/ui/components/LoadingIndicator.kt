@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.components
 
+// Loading indicator components supporting both determinate and indeterminate progress
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

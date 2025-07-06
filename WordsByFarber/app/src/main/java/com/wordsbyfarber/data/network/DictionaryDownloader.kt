@@ -1,5 +1,6 @@
 package com.wordsbyfarber.data.network
 
+// Service for downloading dictionary files from remote URLs with progress tracking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.OkHttpClient

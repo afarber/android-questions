@@ -1,5 +1,6 @@
 package com.wordsbyfarber.data.database
 
+// Room DAO for accessing and manipulating player data in the database
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy

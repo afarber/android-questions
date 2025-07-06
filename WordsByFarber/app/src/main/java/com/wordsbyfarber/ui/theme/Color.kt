@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.theme
 
+// Color palette definitions for app theme including light and dark mode colors
 import androidx.compose.ui.graphics.Color
 
 val Purple80 = Color(0xFFD0BCFF)

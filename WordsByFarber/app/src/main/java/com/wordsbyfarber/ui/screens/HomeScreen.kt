@@ -1,5 +1,6 @@
 package com.wordsbyfarber.ui.screens
 
+// Screen 4: Home screen displaying main menu with game options and features
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues

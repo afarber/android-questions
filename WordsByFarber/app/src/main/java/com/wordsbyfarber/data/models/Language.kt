@@ -1,5 +1,6 @@
 package com.wordsbyfarber.data.models
 
+// Data class representing a supported language with its configuration
 data class Language(
     val code: String,
     val name: String,

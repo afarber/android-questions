@@ -1,5 +1,6 @@
 package com.wordsbyfarber.data.network
 
+// Parser for extracting word data from JavaScript dictionary files
 import com.wordsbyfarber.data.database.WordEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

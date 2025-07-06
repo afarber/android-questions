@@ -1,5 +1,6 @@
 package com.wordsbyfarber
 
+// Main activity that hosts the Compose UI and manages app navigation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
