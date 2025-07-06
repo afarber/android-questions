@@ -16,7 +16,7 @@ class GetWordsUseCase @Inject constructor(
         searchQuery: String,
         wordType: WordType
     ): Flow<List<WordSearchResult>> {
-        val languageCode = preferencesRepository.getSelectedLanguage()
+        val languageCode = preferencesRepository.getLanguage()
             ?: return flowOf(emptyList())
         
         return when (wordType) {

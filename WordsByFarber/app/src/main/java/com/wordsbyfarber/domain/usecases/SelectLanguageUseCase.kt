@@ -15,10 +15,10 @@ class SelectLanguageUseCase @Inject constructor(
             return SelectLanguageResult.InvalidLanguage
         }
         
-        preferencesRepository.setSelectedLanguage(languageCode)
+        preferencesRepository.setLanguage(languageCode)
         
         val hasMinWords = dictionaryRepository.hasMinWords(languageCode)
-        val isDownloadActive = preferencesRepository.isDownloadActive(languageCode)
+        val isDownloadActive = preferencesRepository.getDownloadState(languageCode) != null
         
         return when {
             hasMinWords -> SelectLanguageResult.NavigateToHome

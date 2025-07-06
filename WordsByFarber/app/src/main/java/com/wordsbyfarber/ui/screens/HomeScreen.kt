@@ -10,7 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material.icons.filled.GamepadFilled
+import androidx.compose.material.icons.filled.Gamepad
 import androidx.compose.material.icons.filled.Games
 import androidx.compose.material.icons.filled.Grid3x3
 import androidx.compose.material.icons.filled.Help

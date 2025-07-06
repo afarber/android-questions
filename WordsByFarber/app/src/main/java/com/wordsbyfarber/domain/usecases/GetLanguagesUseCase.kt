@@ -11,7 +11,7 @@ class GetLanguagesUseCase @Inject constructor(
 ) {
     operator fun invoke(): List<LanguageInfo> {
         val languages = dictionaryRepository.getLanguages()
-        val selectedLanguage = preferencesRepository.getSelectedLanguage()
+        val selectedLanguage = preferencesRepository.getLanguage()
         
         return languages.map { language ->
             LanguageInfo(

@@ -15,7 +15,7 @@ class DownloadDictionaryUseCase @Inject constructor(
     operator fun invoke(languageCode: String): Flow<DictionaryDownloadState> {
         return dictionaryRepository.downloadAndParseDictionary(languageCode)
             .onStart {
-                preferencesRepository.setDownloadState(languageCode, true)
+                preferencesRepository.setDownloadState(languageCode, "active")
             }
             .onCompletion { throwable ->
                 preferencesRepository.clearDownloadState(languageCode)
@@ -29,7 +29,7 @@ class DownloadDictionaryUseCase @Inject constructor(
     suspend fun cancelDownload(languageCode: String) {
         preferencesRepository.clearDownloadState(languageCode)
         dictionaryRepository.clearWordsTable(languageCode)
-        preferencesRepository.clearSelectedLanguage()
+        preferencesRepository.clearLanguage()
     }
     
     suspend fun handleFailure(languageCode: String) {

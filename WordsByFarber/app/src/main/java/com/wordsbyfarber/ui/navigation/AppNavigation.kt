@@ -19,41 +19,47 @@ fun AppNavigation(
         composable(Screen.LanguageSelection.route) {
             LanguageSelectionScreen(
                 viewModel = hiltViewModel(),
-                onLanguageSelected = { languageCode: String ->
-                    // Navigation logic will be handled in ViewModel
+                onNavigateToHome = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.LanguageSelection.route) { inclusive = true }
+                    }
                 },
-                navController = navController
+                onNavigateToLoading = {
+                    navController.navigate(Screen.LoadingDictionary.route)
+                }
             )
         }
         
         composable(Screen.LoadingDictionary.route) {
             LoadingDictionaryScreen(
                 viewModel = hiltViewModel(),
-                onCloseClicked = {
-                    navController.navigate(Screen.LanguageSelection.route) {
-                        popUpTo(Screen.LanguageSelection.route) { inclusive = true }
-                    }
-                },
-                onDownloadComplete = {
+                languageCode = "en", // TODO: Pass actual language code
+                onNavigateToHome = {
                     navController.navigate(Screen.Home.route) {
                         popUpTo(Screen.LanguageSelection.route) { inclusive = true }
                     }
                 },
-                onDownloadFailed = {
+                onNavigateToError = {
                     navController.navigate(Screen.DownloadFailed.route)
+                },
+                onNavigateToLanguageSelection = {
+                    navController.navigate(Screen.LanguageSelection.route) {
+                        popUpTo(Screen.LanguageSelection.route) { inclusive = true }
+                    }
                 }
             )
         }
         
         composable(Screen.DownloadFailed.route) {
             DownloadFailedScreen(
-                onCloseClicked = {
+                viewModel = hiltViewModel(),
+                onNavigateToLoading = {
+                    navController.navigate(Screen.LoadingDictionary.route)
+                },
+                onNavigateToLanguageSelection = {
                     navController.navigate(Screen.LanguageSelection.route) {
                         popUpTo(Screen.LanguageSelection.route) { inclusive = true }
                     }
-                },
-                onRetryClicked = {
-                    navController.navigate(Screen.LoadingDictionary.route)
                 }
             )
         }
@@ -61,111 +67,159 @@ fun AppNavigation(
         composable(Screen.Home.route) {
             HomeScreen(
                 viewModel = hiltViewModel(),
-                onMenuItemClicked = { menuItem: String ->
-                    when (menuItem) {
-                        "Game 1" -> navController.navigate(Screen.Game1.route)
-                        "Game 2" -> navController.navigate(Screen.Game2.route)
-                        "Top players" -> navController.navigate(Screen.TopPlayers.route)
-                        "Your profile" -> navController.navigate(Screen.Profile.route)
-                        "Find a word" -> navController.navigate(Screen.FindWord.route)
-                        "2-letter words" -> navController.navigate(Screen.TwoLetterWords.route)
-                        "3-letter words" -> navController.navigate(Screen.ThreeLetterWords.route)
-                        "Words with rare letter 1" -> navController.navigate(Screen.RareLetter1Words.route)
-                        "Words with rare letter 2" -> navController.navigate(Screen.RareLetter2Words.route)
-                        "Preferences" -> navController.navigate(Screen.Preferences.route)
-                        "Help" -> navController.navigate(Screen.Help.route)
-                        "Privacy policy" -> navController.navigate(Screen.PrivacyPolicy.route)
-                        "Terms of service" -> navController.navigate(Screen.TermsOfService.route)
-                    }
-                },
-                onLanguageButtonClicked = {
+                onNavigateToLanguageSelection = {
                     navController.navigate(Screen.LanguageSelection.route)
+                },
+                onNavigateToGame1 = {
+                    navController.navigate(Screen.Game1.route)
+                },
+                onNavigateToGame2 = {
+                    navController.navigate(Screen.Game2.route)
+                },
+                onNavigateToTopPlayers = {
+                    navController.navigate(Screen.TopPlayers.route)
+                },
+                onNavigateToProfile = {
+                    navController.navigate(Screen.Profile.route)
+                },
+                onNavigateToFindWord = {
+                    navController.navigate(Screen.FindWord.route)
+                },
+                onNavigateToTwoLetterWords = {
+                    navController.navigate(Screen.TwoLetterWords.route)
+                },
+                onNavigateToThreeLetterWords = {
+                    navController.navigate(Screen.ThreeLetterWords.route)
+                },
+                onNavigateToRareLetter1Words = {
+                    navController.navigate(Screen.RareLetter1Words.route)
+                },
+                onNavigateToRareLetter2Words = {
+                    navController.navigate(Screen.RareLetter2Words.route)
+                },
+                onNavigateToPreferences = {
+                    navController.navigate(Screen.Preferences.route)
+                },
+                onNavigateToHelp = {
+                    navController.navigate(Screen.Help.route)
+                },
+                onNavigateToPrivacyPolicy = {
+                    navController.navigate(Screen.PrivacyPolicy.route)
+                },
+                onNavigateToTermsOfService = {
+                    navController.navigate(Screen.TermsOfService.route)
                 }
             )
         }
         
         composable(Screen.Game1.route) {
             Game1Screen(
-                onCloseClicked = { navController.popBackStack() }
+                viewModel = hiltViewModel(),
+                onNavigateToHome = { navController.popBackStack() }
             )
         }
         
         composable(Screen.Game2.route) {
             Game2Screen(
-                onCloseClicked = { navController.popBackStack() }
+                viewModel = hiltViewModel(),
+                onNavigateToHome = { navController.popBackStack() }
             )
         }
         
         composable(Screen.TopPlayers.route) {
             TopPlayersScreen(
                 viewModel = hiltViewModel(),
-                onCloseClicked = { navController.popBackStack() }
+                onNavigateToHome = { navController.popBackStack() },
+                onNavigateToLanguageSelection = {
+                    navController.navigate(Screen.LanguageSelection.route)
+                }
             )
         }
         
         composable(Screen.Profile.route) {
             ProfileScreen(
                 viewModel = hiltViewModel(),
-                onCloseClicked = { navController.popBackStack() }
+                onNavigateToHome = { navController.popBackStack() },
+                onNavigateToLanguageSelection = {
+                    navController.navigate(Screen.LanguageSelection.route)
+                }
             )
         }
         
         composable(Screen.FindWord.route) {
             FindWordScreen(
                 viewModel = hiltViewModel(),
-                onCloseClicked = { navController.popBackStack() }
+                onNavigateToHome = { navController.popBackStack() },
+                onNavigateToLanguageSelection = {
+                    navController.navigate(Screen.LanguageSelection.route)
+                }
             )
         }
         
         composable(Screen.TwoLetterWords.route) {
             TwoLetterWordsScreen(
                 viewModel = hiltViewModel(),
-                onCloseClicked = { navController.popBackStack() }
+                onNavigateToHome = { navController.popBackStack() },
+                onNavigateToLanguageSelection = {
+                    navController.navigate(Screen.LanguageSelection.route)
+                }
             )
         }
         
         composable(Screen.ThreeLetterWords.route) {
             ThreeLetterWordsScreen(
                 viewModel = hiltViewModel(),
-                onCloseClicked = { navController.popBackStack() }
+                onNavigateToHome = { navController.popBackStack() },
+                onNavigateToLanguageSelection = {
+                    navController.navigate(Screen.LanguageSelection.route)
+                }
             )
         }
         
         composable(Screen.RareLetter1Words.route) {
             RareLetter1Screen(
                 viewModel = hiltViewModel(),
-                onCloseClicked = { navController.popBackStack() }
+                onNavigateToHome = { navController.popBackStack() },
+                onNavigateToLanguageSelection = {
+                    navController.navigate(Screen.LanguageSelection.route)
+                }
             )
         }
         
         composable(Screen.RareLetter2Words.route) {
             RareLetter2Screen(
                 viewModel = hiltViewModel(),
-                onCloseClicked = { navController.popBackStack() }
+                onNavigateToHome = { navController.popBackStack() },
+                onNavigateToLanguageSelection = {
+                    navController.navigate(Screen.LanguageSelection.route)
+                }
             )
         }
         
         composable(Screen.Preferences.route) {
             PreferencesScreen(
-                onCloseClicked = { navController.popBackStack() }
+                onNavigateToHome = { navController.popBackStack() }
             )
         }
         
         composable(Screen.Help.route) {
             HelpScreen(
-                onCloseClicked = { navController.popBackStack() }
+                viewModel = hiltViewModel(),
+                onNavigateToHome = { navController.popBackStack() }
             )
         }
         
         composable(Screen.PrivacyPolicy.route) {
             PrivacyPolicyScreen(
-                onCloseClicked = { navController.popBackStack() }
+                viewModel = hiltViewModel(),
+                onNavigateToHome = { navController.popBackStack() }
             )
         }
         
         composable(Screen.TermsOfService.route) {
             TermsOfServiceScreen(
-                onCloseClicked = { navController.popBackStack() }
+                viewModel = hiltViewModel(),
+                onNavigateToHome = { navController.popBackStack() }
             )
         }
     }
