@@ -45,8 +45,7 @@ object AppModule {
         DatabaseModule::class,
         LanguageSpecificDatabaseModule::class,
         NetworkModule::class,
-        RepositoryModule::class,
-        UseCaseModule::class
+        RepositoryModule::class
     ]
 )
 @InstallIn(SingletonComponent::class)

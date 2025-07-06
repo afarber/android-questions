@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.dagger.hilt.android)
 }
 
@@ -44,9 +44,6 @@ android {
     }
 }
 
-kapt {
-    correctErrorTypes = true
-}
 
 dependencies {
 
@@ -79,7 +76,7 @@ dependencies {
     // Room Database
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
-    kapt(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
 
     // Networking
     implementation(libs.okhttp)
@@ -87,7 +84,7 @@ dependencies {
     // Dependency Injection
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
