@@ -1,6 +1,7 @@
 package com.wordsbyfarber.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.wordsbyfarber.data.repository.DictionaryRepository
 import com.wordsbyfarber.data.repository.PreferencesRepository
@@ -10,7 +11,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class DownloadFailedViewModel(
-    private val dictionaryRepository: DictionaryRepository,
     private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
@@ -18,53 +18,19 @@ class DownloadFailedViewModel(
     val uiState: StateFlow<DownloadFailedUiState> = _uiState.asStateFlow()
 
     fun retry() {
-        viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(
-                isRetrying = true,
-                shouldNavigateToLoading = false,
-                shouldNavigateToLanguageSelection = false
-            )
-            
-            try {
-                val languageCode = preferencesRepository.getLanguage()
-                if (languageCode != null) {
-                    dictionaryRepository.clearWordsTable(languageCode)
-                    _uiState.value = _uiState.value.copy(
-                        isRetrying = false,
-                        shouldNavigateToLoading = true
-                    )
-                } else {
-                    _uiState.value = _uiState.value.copy(
-                        isRetrying = false,
-                        shouldNavigateToLanguageSelection = true
-                    )
-                }
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
-                    isRetrying = false,
-                    error = e.message ?: "Error during retry"
-                )
-            }
-        }
+        _uiState.value = _uiState.value.copy(
+            isRetrying = true,
+            shouldNavigateToLoading = true,
+            shouldNavigateToLanguageSelection = false
+        )
     }
 
     fun close() {
         viewModelScope.launch {
-            try {
-                val languageCode = preferencesRepository.getLanguage()
-                if (languageCode != null) {
-                    dictionaryRepository.clearWordsTable(languageCode)
-                }
-                preferencesRepository.clearLanguage()
-                
-                _uiState.value = _uiState.value.copy(
-                    shouldNavigateToLanguageSelection = true
-                )
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
-                    error = e.message ?: "Error during close"
-                )
-            }
+            preferencesRepository.clearLanguage()
+            _uiState.value = _uiState.value.copy(
+                shouldNavigateToLanguageSelection = true
+            )
         }
     }
 
@@ -77,6 +43,18 @@ class DownloadFailedViewModel(
 
     fun clearError() {
         _uiState.value = _uiState.value.copy(error = null)
+    }
+
+    class Factory(
+        private val preferencesRepository: PreferencesRepository
+    ) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(DownloadFailedViewModel::class.java)) {
+                return DownloadFailedViewModel(preferencesRepository) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
     }
 }
 

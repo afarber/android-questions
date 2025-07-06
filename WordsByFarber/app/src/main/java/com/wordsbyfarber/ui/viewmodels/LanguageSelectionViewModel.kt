@@ -1,6 +1,7 @@
 package com.wordsbyfarber.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.wordsbyfarber.data.models.Language
 import com.wordsbyfarber.data.repository.DictionaryRepository
@@ -72,6 +73,19 @@ class LanguageSelectionViewModel(
 
     fun clearError() {
         _uiState.value = _uiState.value.copy(error = null)
+    }
+
+    class Factory(
+        private val preferencesRepository: PreferencesRepository,
+        private val dictionaryRepository: DictionaryRepository
+    ) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(LanguageSelectionViewModel::class.java)) {
+                return LanguageSelectionViewModel(dictionaryRepository, preferencesRepository) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
     }
 }
 

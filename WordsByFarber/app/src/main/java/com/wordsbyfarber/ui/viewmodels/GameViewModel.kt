@@ -1,42 +1,26 @@
 package com.wordsbyfarber.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.wordsbyfarber.data.repository.PreferencesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
-class GameViewModel(
-    private val preferencesRepository: PreferencesRepository
-) : ViewModel() {
+class GameViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(GameUiState())
     val uiState: StateFlow<GameUiState> = _uiState.asStateFlow()
 
     fun initializeGame(gameType: GameType) {
-        viewModelScope.launch {
-            try {
-                val languageCode = preferencesRepository.getLanguage()
-                
-                val grid = when (gameType) {
-                    GameType.Game1 -> generateStaticGrid15x15()
-                    GameType.Game2 -> generateStaticGrid5x5()
-                }
-                
-                _uiState.value = _uiState.value.copy(
-                    gameType = gameType,
-                    grid = grid,
-                    currentLanguage = languageCode,
-                    isInitialized = true
-                )
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
-                    error = e.message ?: "Error initializing game"
-                )
-            }
+        val grid = when (gameType) {
+            GameType.Game1 -> generateStaticGrid15x15()
+            GameType.Game2 -> generateStaticGrid5x5()
         }
+        
+        _uiState.value = _uiState.value.copy(
+            gameType = gameType,
+            grid = grid,
+            isInitialized = true
+        )
     }
 
     fun close() {

@@ -1,3 +1,31 @@
 <resources>
     <string name="app_name">Words by Farber</string>
+    
+    <!-- Screen titles -->
+    <string name="loading_dictionary">Loading Dictionary</string>
+    <string name="download_failed">Download Failed</string>
+    <string name="game_1">Game 1</string>
+    <string name="game_2">Game 2</string>
+    
+    <!-- Download failed screen -->
+    <string name="download_failed_title">Download Failed</string>
+    <string name="download_failed_message">Please check your internet connection and try again.</string>
+    <string name="retry">Retry</string>
+    <string name="retrying">Retrying...</string>
+    
+    <!-- Home menu items -->
+    <string name="top_players">Top Players</string>
+    <string name="your_profile">Your Profile</string>
+    <string name="find_word">Find a Word</string>
+    <string name="two_letter_words">2-letter words</string>
+    <string name="three_letter_words">3-letter words</string>
+    <string name="rare_letter_1_words">Words with rare letter 1</string>
+    <string name="rare_letter_2_words">Words with rare letter 2</string>
+    <string name="preferences">Preferences</string>
+    <string name="help">Help</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="terms_of_service">Terms of Service</string>
+    
+    <!-- Messages -->
+    <string name="no_menu_items">No menu items available</string>
 </resources>

@@ -10,6 +10,10 @@ class PreferencesRepository(
     fun getLanguage(): String? {
         return sharedPreferences.getString(Constants.Preferences.KEY_LANGUAGE, null)
     }
+    
+    fun getCurrentLanguage(): String? {
+        return getLanguage()
+    }
 
     fun setLanguage(languageCode: String) {
         sharedPreferences.edit()

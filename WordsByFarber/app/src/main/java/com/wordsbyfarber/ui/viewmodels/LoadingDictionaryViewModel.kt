@@ -1,6 +1,8 @@
 package com.wordsbyfarber.ui.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.wordsbyfarber.data.repository.DictionaryRepository
 import com.wordsbyfarber.data.repository.DictionaryDownloadState
@@ -12,7 +14,8 @@ import kotlinx.coroutines.launch
 
 class LoadingDictionaryViewModel(
     private val dictionaryRepository: DictionaryRepository,
-    private val preferencesRepository: PreferencesRepository
+    private val preferencesRepository: PreferencesRepository,
+    private val context: Context
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoadingDictionaryUiState())
@@ -112,6 +115,28 @@ class LoadingDictionaryViewModel(
 
     fun clearError() {
         _uiState.value = _uiState.value.copy(error = null)
+    }
+
+    init {
+        // Start download automatically when ViewModel is created
+        val languageCode = preferencesRepository.getCurrentLanguage()
+        if (languageCode != null) {
+            startDownload(languageCode)
+        }
+    }
+
+    class Factory(
+        private val preferencesRepository: PreferencesRepository,
+        private val dictionaryRepository: DictionaryRepository,
+        private val context: Context
+    ) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(LoadingDictionaryViewModel::class.java)) {
+                return LoadingDictionaryViewModel(dictionaryRepository, preferencesRepository, context) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
     }
 }
 

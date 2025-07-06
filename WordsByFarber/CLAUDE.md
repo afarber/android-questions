@@ -15,7 +15,9 @@ Instead of real games it will display 2 different static grids to symbolize 2 ty
 
 The dictionary of each language and a list of players should be stored in a separate Room database!
 
-Do not use kapt, ksp, Hilt or DI yet, because I do not have enough Kotlin experience for that!
+Do not use Hilt or DI yet, because I do not have enough Kotlin experience for that!
+
+KSP (Kotlin Symbol Processing) is used minimally only for Room database annotation processing - this is required for Room to work.
 
 Initially the Room database is empty and a list of 6 languages is displayed (Screen 1):
 
@@ -505,7 +507,7 @@ com.wordsbyfarber.utils
     - App checks German `words` table, finds it empty.
     - Download and parsing for German begins, **Screen 2** is displayed.
 
-# Unit Tests
+# Unit Tests (Do not implement them yet!)
 
 ## Data Layer Tests
 
