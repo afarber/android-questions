@@ -9,6 +9,7 @@ import com.wordsbyfarber.data.network.DictionaryDownloader
 import com.wordsbyfarber.data.network.DictionaryParser
 import com.wordsbyfarber.data.network.DownloadResult
 import com.wordsbyfarber.data.network.ParseResult
+import com.wordsbyfarber.di.DatabaseProvider
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -18,6 +19,7 @@ import javax.inject.Singleton
 @Singleton
 class DictionaryRepository @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val databaseProvider: DatabaseProvider,
     private val downloader: DictionaryDownloader,
     private val parser: DictionaryParser
 ) {
@@ -26,7 +28,7 @@ class DictionaryRepository @Inject constructor(
     }
     
     private fun getDatabase(languageCode: String): WordsDatabase {
-        return WordsDatabase.getDatabase(context, languageCode)
+        return databaseProvider.getDatabase(languageCode)
     }
     
     fun getLanguages(): List<Language> {
