@@ -4,120 +4,132 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is an Android Automotive OS (AAOS) route planning application built with Kotlin. The app displays a fullscreen OpenStreetMap with draggable markers for route planning using the OSRM routing service.
+This is an Android Automotive OS (AAOS) application that provides route planning functionality using OpenStreetMap and OSRM routing service. The app displays a fullscreen map where users can place start and finish markers by tapping, then calculates and displays the route between them.
 
-**Target Platform**: Google Pixel Tablet emulator with AAOS image, API 34 (Android 14)
+## Build Commands
 
-## Development Commands
-
-Standard Android development commands for this project:
-
+### Standard Android Development Commands
 ```bash
-# Build the app
+# Build the project
+./gradlew build
+
+# Build debug APK
 ./gradlew assembleDebug
+
+# Build release APK
+./gradlew assembleRelease
 
 # Run tests
 ./gradlew test
-
-# Install on device/emulator
-./gradlew installDebug
+./gradlew connectedAndroidTest
 
 # Clean build
 ./gradlew clean
 
-# Lint check
+# Install debug APK to connected device
+./gradlew installDebug
+```
+
+### Linting and Code Quality
+```bash
+# Run lint checks
 ./gradlew lint
+
+# Run Kotlin linter (if ktlint is configured)
+./gradlew ktlintCheck
+
+# Auto-fix Kotlin formatting issues
+./gradlew ktlintFormat
 ```
 
 ## Architecture
 
-### Core State Management
-The app uses a simple state machine with 4 states:
-- `IDLE` → `START_MARKER` → `FINISH_MARKER` → `ROUTE_DISPLAYED`
-- All states can transition back to `IDLE` via Cancel button
+### State Management
+The app uses a simple state machine pattern with `AppState` enum:
+- `IDLE`: No markers placed, waiting for user input
+- `START_MARKER`: Start marker placed, waiting for finish marker
+- `FINISH_MARKER`: Both markers placed, ready for route calculation
+- `ROUTE_DISPLAYED`: Route calculated and displayed
 
 ### Key Components
-1. **MainActivity** - Single activity hosting MapView and Cancel FAB
-2. **MapController** - Manages map interactions, marker placement, zoom control
-3. **RouteRepository** - Handles OSRM API calls and route data
-4. **AppState** - Enum managing UI state transitions
+- **MainActivity**: Main activity implementing `MapEventsReceiver` for map touch handling
+- **MapController**: Manages map operations, markers, and route display
+- **RouteRepository**: Handles OSRM API communication using Retrofit
+- **AppState**: Enum defining application states
+- **PolylineDecoder**: Utility for decoding OSRM polyline geometry
 
 ### Data Flow
-1. User touches map → Places marker → Updates AppState
-2. Both markers placed → OSRM API call → Route calculation
-3. Route response → Polyline rendering → Auto-zoom to fit markers
+1. User taps map → MainActivity handles touch via `MapEventsReceiver`
+2. State transitions managed in `handleMapTap()`
+3. Route calculation triggered when finish marker is placed
+4. OSRM API called via `RouteRepository`
+5. Route polyline decoded and displayed via `MapController`
 
 ## Key Dependencies
 
-- **osmdroid** (6.1.20) - OpenStreetMap Android library
-- **Retrofit** (2.11.0) - HTTP client for OSRM API
-- **Kotlin Coroutines** (1.8.1) - Async operations for network calls
-- **Material Components** (1.12.0) - UI components and FAB
-- **Lifecycle** (2.8.7) - ViewModel and lifecycle-aware components
+### Core Libraries
+- **osmdroid**: 6.1.20 - OpenStreetMap display
+- **Retrofit**: 2.11.0 - HTTP client for OSRM API
+- **Kotlin Coroutines**: 1.8.1 - Async operations
+- **Material Design**: 1.12.0 - UI components
 
-## OSRM Integration
-
-### API Endpoint
-```
-https://router.project-osrm.org/route/v1/driving/{start_lng},{start_lat};{finish_lng},{finish_lat}
-```
-
-### Response Structure
-- Routes contain encoded polyline geometry
-- Requires Google polyline algorithm decoding
-- Precision factor: 1e5
-
-## UI Specifications
-
-### Map Configuration
-- **Tile Source**: OpenStreetMap Mapnik
-- **Initial Center**: Wolfsburg (10.7865, 52.4227)
-- **Initial Zoom**: Level 15
-- **Zoom Range**: 3-20
-
-### Markers
-- **Start Marker**: Green circle with "S" label
-- **Finish Marker**: Red circle with "F" label  
-- **Active Start**: Green circle with checkmark
-- **Size**: 24dp diameter
-
-### Route Display
-- **Polyline Color**: Blue (#2196F3)
-- **Width**: 8dp
-- **Auto-zoom**: Fits both markers with appropriate padding
+### Target Platform
+- **Min SDK**: 34 (Android 14)
+- **Target SDK**: 35
+- **Compile SDK**: 35
+- **Java Version**: 11
 
 ## File Structure
 
 ```
 automotive/src/main/java/de/afarber/drivingroute/
-├── MainActivity.kt
+├── MainActivity.kt           # Main activity with map event handling
 ├── model/
-│   ├── AppState.kt
-│   ├── RoutePoint.kt
-│   └── OSRMResponse.kt
+│   ├── AppState.kt          # Application state enum
+│   ├── OSRMResponse.kt      # API response data classes
+│   └── RoutePoint.kt        # Route point data model
 ├── network/
-│   ├── OSRMService.kt
-│   └── RouteRepository.kt
+│   ├── OSRMService.kt       # Retrofit service interface
+│   └── RouteRepository.kt   # Network operations repository
 ├── ui/
-│   ├── MapController.kt
-│   └── FloatingButtonManager.kt
+│   └── MapController.kt     # Map operations and marker management
 └── utils/
-    ├── PolylineDecoder.kt
-    └── MapUtils.kt
+    ├── MapUtils.kt          # Map utility functions
+    └── PolylineDecoder.kt   # OSRM polyline decoder
 ```
 
-## Testing Strategy
+## Configuration
 
-### Manual Testing Focus
-- Touch gesture accuracy (marker placement)
-- State transitions and button visibility
-- Network error handling
-- Auto-zoom behavior with various marker distances
-- Cancel functionality at each state
+### Map Configuration
+- Initial center: Wolfsburg (52.4227, 10.7865)
+- Initial zoom: Level 15
+- Tile source: OpenStreetMap Mapnik
+- Multi-touch controls enabled
 
-### Test Scenarios
-1. Happy path: Start marker → Finish marker → Route display
-2. Cancel at each state
-3. Network errors (airplane mode)
-4. Edge cases (ocean coordinates, very close/distant markers)
+### OSRM Integration
+- Base URL: `https://router.project-osrm.org/`
+- Endpoint: `/route/v1/driving/{coordinates}`
+- Response format: JSON with encoded polyline geometry
 
+## Development Notes
+
+### Working with Maps
+- Map initialization handled in `MapController.setupMap()`
+- Markers created programmatically with custom icons
+- Route polylines added at index 0 to draw under markers
+- Auto-zoom implemented using bounding box calculation
+
+### State Management
+- State transitions only occur in `MainActivity.updateState()`
+- UI updates triggered by state changes in `updateUI()`
+- Cancel button visibility tied to current state
+
+### Network Operations
+- All API calls use coroutines with proper error handling
+- Repository pattern isolates network logic from UI
+- Route calculation errors displayed as Toast messages
+
+### Testing
+- Unit tests in `automotive/src/test/`
+- Instrumented tests in `automotive/src/androidTest/`
+- Test target: Google Pixel Tablet emulator with AAOS image
