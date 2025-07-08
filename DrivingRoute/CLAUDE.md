@@ -4,132 +4,132 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is an Android Automotive OS (AAOS) application that provides route planning functionality using OpenStreetMap and OSRM routing service. The app displays a fullscreen map where users can place start and finish markers by tapping, then calculates and displays the route between them.
+This is an Android Automotive OS (AAOS) application that provides route planning using OpenStreetMap and OSRM. The app displays a fullscreen map where users can place start and finish markers, calculate routes, and view polyline overlays.
 
 ## Build Commands
 
-### Standard Android Development Commands
+### Build and Run
 ```bash
-# Build the project
-./gradlew build
-
-# Build debug APK
-./gradlew assembleDebug
-
-# Build release APK
-./gradlew assembleRelease
-
-# Run tests
-./gradlew test
-./gradlew connectedAndroidTest
-
-# Clean build
-./gradlew clean
-
-# Install debug APK to connected device
-./gradlew installDebug
+./gradlew :automotive:assembleDebug    # Build debug APK
+./gradlew :automotive:assembleRelease  # Build release APK
+./gradlew :automotive:installDebug     # Install debug APK to connected device
 ```
 
-### Linting and Code Quality
+### Testing
 ```bash
-# Run lint checks
-./gradlew lint
+./gradlew :automotive:test                    # Run unit tests
+./gradlew :automotive:connectedAndroidTest    # Run instrumentation tests
+./gradlew :automotive:testDebugUnitTest       # Run debug unit tests only
+```
 
-# Run Kotlin linter (if ktlint is configured)
-./gradlew ktlintCheck
+### Code Quality
+```bash
+./gradlew :automotive:lintDebug        # Run lint checks
+./gradlew :automotive:lintRelease      # Run lint for release build
+```
 
-# Auto-fix Kotlin formatting issues
-./gradlew ktlintFormat
+### Clean
+```bash
+./gradlew clean                        # Clean all build artifacts
+./gradlew :automotive:clean           # Clean automotive module only
 ```
 
 ## Architecture
 
+### Core Components
+- **MainActivity**: Single activity managing the entire app lifecycle, implements MapEventsReceiver
+- **AppState**: Enum managing interaction states (IDLE → START_MARKER → FINISH_MARKER → ROUTE_DISPLAYED)
+- **MapController**: Handles map interactions, marker placement, and route rendering
+- **RouteRepository**: Manages OSRM API calls using Retrofit with proper error handling
+
 ### State Management
-The app uses a simple state machine pattern with `AppState` enum:
-- `IDLE`: No markers placed, waiting for user input
-- `START_MARKER`: Start marker placed, waiting for finish marker
-- `FINISH_MARKER`: Both markers placed, ready for route calculation
-- `ROUTE_DISPLAYED`: Route calculated and displayed
+The app uses a simple state machine:
+```
+IDLE → START_MARKER → FINISH_MARKER → ROUTE_DISPLAYED
+  ↑        ↓              ↓              ↓
+  └────── CANCEL ────── CANCEL ──────── CANCEL
+```
 
-### Key Components
-- **MainActivity**: Main activity implementing `MapEventsReceiver` for map touch handling
-- **MapController**: Manages map operations, markers, and route display
-- **RouteRepository**: Handles OSRM API communication using Retrofit
-- **AppState**: Enum defining application states
-- **PolylineDecoder**: Utility for decoding OSRM polyline geometry
+### Key Libraries
+- **osmdroid 6.1.20**: OpenStreetMap rendering
+- **Retrofit 2.11.0**: HTTP client for OSRM API
+- **Coroutines 1.8.1**: Async operations
+- **Material Design 1.12.0**: UI components
 
-### Data Flow
-1. User taps map → MainActivity handles touch via `MapEventsReceiver`
-2. State transitions managed in `handleMapTap()`
-3. Route calculation triggered when finish marker is placed
-4. OSRM API called via `RouteRepository`
-5. Route polyline decoded and displayed via `MapController`
-
-## Key Dependencies
-
-### Core Libraries
-- **osmdroid**: 6.1.20 - OpenStreetMap display
-- **Retrofit**: 2.11.0 - HTTP client for OSRM API
-- **Kotlin Coroutines**: 1.8.1 - Async operations
-- **Material Design**: 1.12.0 - UI components
-
-### Target Platform
-- **Min SDK**: 34 (Android 14)
-- **Target SDK**: 35
-- **Compile SDK**: 35
-- **Java Version**: 11
-
-## File Structure
+## Package Structure
 
 ```
-automotive/src/main/java/de/afarber/drivingroute/
-├── MainActivity.kt           # Main activity with map event handling
+de.afarber.drivingroute/
+├── MainActivity.kt          # Main activity and state management
 ├── model/
-│   ├── AppState.kt          # Application state enum
-│   ├── OSRMResponse.kt      # API response data classes
-│   └── RoutePoint.kt        # Route point data model
+│   ├── AppState.kt         # App state enum
+│   ├── OSRMResponse.kt     # OSRM API response models
+│   └── RoutePoint.kt       # Route point data class
 ├── network/
-│   ├── OSRMService.kt       # Retrofit service interface
-│   └── RouteRepository.kt   # Network operations repository
+│   ├── OSRMService.kt      # Retrofit service interface
+│   └── RouteRepository.kt  # Repository pattern for API calls
 ├── ui/
-│   └── MapController.kt     # Map operations and marker management
+│   └── MapController.kt    # Map interaction and rendering
 └── utils/
-    ├── MapUtils.kt          # Map utility functions
-    └── PolylineDecoder.kt   # OSRM polyline decoder
+    ├── MapUtils.kt         # Map utility functions
+    └── PolylineDecoder.kt  # Polyline geometry decoding
 ```
 
-## Configuration
+## Key Implementation Details
 
-### Map Configuration
-- Initial center: Wolfsburg (52.4227, 10.7865)
-- Initial zoom: Level 15
-- Tile source: OpenStreetMap Mapnik
-- Multi-touch controls enabled
+### Map Interaction
+- Single-touch places markers in sequence (start → finish)
+- MapEventsReceiver interface handles touch events
+- Auto-zoom to fit both markers after route calculation
+- Cancel FAB clears all markers and routes
 
 ### OSRM Integration
-- Base URL: `https://router.project-osrm.org/`
-- Endpoint: `/route/v1/driving/{coordinates}`
-- Response format: JSON with encoded polyline geometry
+- Uses public OSRM endpoint: `https://router.project-osrm.org/route/v1/driving/`
+- Polyline geometry decoded using Google's polyline algorithm
+- Network calls handled with Kotlin coroutines and proper error handling
+
+### Target Platform
+- Android API 34+ (Android 14)
+- Optimized for AAOS (Android Automotive OS)
+- Landscape orientation primary
+- Google Pixel Tablet emulator with AAOS image
+
+## Testing Strategy
+
+### Unit Tests
+- Located in `automotive/src/test/java/`
+- Focus on business logic and data models
+- Use JUnit 4.13.2
+
+### Instrumentation Tests
+- Located in `automotive/src/androidTest/java/`
+- Test UI interactions and map functionality
+- Use Espresso 3.6.1
+
+### Manual Testing Scenarios
+1. Happy path: Place start → place finish → calculate route
+2. Cancel operations at each state
+3. Network error handling
+4. Invalid coordinates handling
+5. Map gestures (pan, zoom, pinch)
 
 ## Development Notes
 
-### Working with Maps
-- Map initialization handled in `MapController.setupMap()`
-- Markers created programmatically with custom icons
-- Route polylines added at index 0 to draw under markers
-- Auto-zoom implemented using bounding box calculation
+### Gradle Configuration
+- Uses Kotlin DSL for build files
+- Version catalog in `gradle/libs.versions.toml`
+- Minimum SDK: 34, Target SDK: 35
+- Java 11 compatibility
 
-### State Management
-- State transitions only occur in `MainActivity.updateState()`
-- UI updates triggered by state changes in `updateUI()`
-- Cancel button visibility tied to current state
+### Dependencies Management
+All dependencies are managed through the version catalog system. When adding new dependencies:
+1. Add version to `gradle/libs.versions.toml`
+2. Add library reference in `[libraries]` section
+3. Reference in `automotive/build.gradle.kts` using `libs.` prefix
 
-### Network Operations
-- All API calls use coroutines with proper error handling
-- Repository pattern isolates network logic from UI
-- Route calculation errors displayed as Toast messages
-
-### Testing
-- Unit tests in `automotive/src/test/`
-- Instrumented tests in `automotive/src/androidTest/`
-- Test target: Google Pixel Tablet emulator with AAOS image
+### Code Conventions
+- Follow standard Kotlin conventions
+- Use meaningful variable names and package structure
+- Implement proper error handling with try-catch blocks
+- Log important state transitions and errors using Android Log
+- Use coroutines for all network operations
