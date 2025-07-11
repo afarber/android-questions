@@ -43,13 +43,13 @@ class DictionaryRepository(
     
     private fun getLanguageName(code: String): String {
         return when (code) {
-            "de" -> "Deutsch (de)"
-            "en" -> "English (en)"
-            "fr" -> "Français (fr)"
-            "nl" -> "Nederlands (nl)"
-            "pl" -> "Polski (pl)"
-            "ru" -> "Русский (ru)"
-            else -> "$code ($code)"
+            "de" -> "Deutsch"
+            "en" -> "English"
+            "fr" -> "Français"
+            "nl" -> "Nederlands"
+            "pl" -> "Polski"
+            "ru" -> "Русский"
+            else -> code
         }
     }
     

@@ -76,7 +76,7 @@ fun LanguageListItem(
                 )
                 
                 Text(
-                    text = "${language.minWords} words minimum",
+                    text = language.code,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -300,7 +300,7 @@ fun LanguageListItemPreview() {
         LanguageListItem(
             language = Language(
                 code = "en",
-                name = "English (en)",
+                name = "English",
                 rareLetter1 = "Q",
                 rareLetter2 = "X",
                 hashedDictionaryUrl = "",
