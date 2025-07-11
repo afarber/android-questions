@@ -101,12 +101,13 @@ const HASHED = {
 - There is no title and no button at the top
 - The whole screen estate is occupied by the list with 6 entries
 - Each list item consists of text and colorful icon
-- The text is human readable language name (written in that language!) followed by the 2-letter language code in brackets: "English (en)", "Deutsch (de)", etc
+- The text is human readable language name (written in that language!) with the 2-letter language code displayed below: "English" with "en" below, "Deutsch" with "de" below, etc
 - The icon is the simplified national flag, drawn as SVG icon
 
 When the user touches one of the language list items:
 
 - The 2-letter language code is stored as `language` in shared preferences
+- The app switches to the selected language's locale to load language-specific resources (`hashed_dictionary_url`, `rare_letter_1`, `rare_letter_2`, `min_words`, `my_uid`, `top_url`) from the appropriate `values-{lang}/` resource folder
 - The Room database for that language is opened
 - If the `words` table has less than `min_words` records and there is no active download for the selected language, then that table is cleared and a new download and parsing is started from `hashed_dictionary_url` and Screen 2 is displayed (maybe the download and parsing code should be part of Screen 2?). Otherwise Screen 4 is displayed
 

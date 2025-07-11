@@ -54,26 +54,36 @@ class DictionaryRepository(
     }
     
     private fun getStringResource(languageCode: String, resourceName: String): String {
-        val resourceId = context.resources.getIdentifier(
+        val locale = java.util.Locale(languageCode)
+        val config = android.content.res.Configuration(context.resources.configuration)
+        config.setLocale(locale)
+        val localizedContext = context.createConfigurationContext(config)
+        
+        val resourceId = localizedContext.resources.getIdentifier(
             resourceName,
             "string",
             context.packageName
         )
         return if (resourceId != 0) {
-            context.getString(resourceId)
+            localizedContext.getString(resourceId)
         } else {
             ""
         }
     }
     
     private fun getIntegerResource(languageCode: String, resourceName: String): Int {
-        val resourceId = context.resources.getIdentifier(
+        val locale = java.util.Locale(languageCode)
+        val config = android.content.res.Configuration(context.resources.configuration)
+        config.setLocale(locale)
+        val localizedContext = context.createConfigurationContext(config)
+        
+        val resourceId = localizedContext.resources.getIdentifier(
             resourceName,
             "integer", 
             context.packageName
         )
         return if (resourceId != 0) {
-            context.resources.getInteger(resourceId)
+            localizedContext.resources.getInteger(resourceId)
         } else {
             0
         }
