@@ -24,7 +24,7 @@ Add a comment to the top of each class with a short explanation of its purpose.
 Initially the Room database is empty and a list of 6 languages is displayed (Screen 1):
 
 | `language` | `rare_letter_1` | `rare_letter_2` | `hashed_dictionary_url`                | `min_words` | `top_url`                            |
-| ---------- | --------------- | --------------- | -------------------------------------- | ----------- | ------------------------------------ |
+|------------|-----------------|-----------------|----------------------------------------|-------------|--------------------------------------|
 | de         | Q               | Y               | https://wordsbyfarber.com/Consts-de.js | 180_000     | https://wordsbyfarber.com/de/top-all |
 | en         | Q               | X               | https://wordsbyfarber.com/Consts-en.js | 270_000     | https://wordsbyfarber.com/en/top-all |
 | fr         | K               | W               | https://wordsbyfarber.com/Consts-fr.js | 370_000     | https://wordsbyfarber.com/fr/top-all |
@@ -223,8 +223,8 @@ When the user touches one of the language list items:
 - The title displays localized "Find a Word"
 - A close button "X" is displayed at the top, pressing it navigates back to Screen 4
 - A search input text field is displayed below the title and button
-- The rest of the screen is occupied by a huge darg green thumbs up icon (meaning: the word is found in the `words` table) or dark red thumbs down (the word is not found)
-- Since most of the words in the Room database are hashed/obfuscated, same algorigthm should be applied to the word in the search input text field, before searching in the Room database for it
+- The rest of the screen is occupied by a huge dark green thumbs up icon (meaning: the word is found in the `words` table) or dark red thumbs down (the word is not found)
+- Since most of the words in the Room database are hashed/obfuscated, same algorithm should be applied to the word in the search input text field, before searching in the Room database for it
 - If there is a non-empty string explanation for the found word, it should be displayed below the thumbs up icon
 
 ## Screen 10 (2-letter words)
