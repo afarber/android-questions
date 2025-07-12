@@ -94,38 +94,6 @@ class PreferencesRepositoryTest {
         verify(mockEditor).apply()
     }
 
-    @Test
-    fun `setDownloadState should store download state with language prefix`() {
-        // When
-        preferencesRepository.setDownloadState("de", "downloading")
-        
-        // Then
-        verify(mockEditor).putString("${Constants.Preferences.KEY_DOWNLOAD_STATE}_de", "downloading")
-        verify(mockEditor).apply()
-    }
-
-    @Test
-    fun `getDownloadState should return download state for language`() {
-        // Given
-        whenever(mockSharedPreferences.getString("${Constants.Preferences.KEY_DOWNLOAD_STATE}_de", null))
-            .thenReturn("downloading")
-        
-        // When
-        val result = preferencesRepository.getDownloadState("de")
-        
-        // Then
-        assertEquals("downloading", result)
-    }
-
-    @Test
-    fun `clearDownloadState should remove download state for language`() {
-        // When
-        preferencesRepository.clearDownloadState("de")
-        
-        // Then
-        verify(mockEditor).remove("${Constants.Preferences.KEY_DOWNLOAD_STATE}_de")
-        verify(mockEditor).apply()
-    }
 
     @Test
     fun `setBooleanPreference should store boolean value`() {

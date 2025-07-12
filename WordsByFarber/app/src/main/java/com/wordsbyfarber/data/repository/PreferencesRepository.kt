@@ -29,21 +29,6 @@ class PreferencesRepository(
         }
     }
 
-    fun getDownloadState(languageCode: String): String? {
-        return sharedPreferences.getString("${Constants.Preferences.KEY_DOWNLOAD_STATE}_$languageCode", null)
-    }
-
-    fun setDownloadState(languageCode: String, state: String) {
-        sharedPreferences.edit {
-            putString("${Constants.Preferences.KEY_DOWNLOAD_STATE}_$languageCode", state)
-        }
-    }
-
-    fun clearDownloadState(languageCode: String) {
-        sharedPreferences.edit {
-            remove("${Constants.Preferences.KEY_DOWNLOAD_STATE}_$languageCode")
-        }
-    }
 
     fun getBooleanPreference(key: String, defaultValue: Boolean = false): Boolean {
         return sharedPreferences.getBoolean(key, defaultValue)

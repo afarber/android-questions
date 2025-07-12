@@ -3,6 +3,7 @@ package com.wordsbyfarber.domain.usecases
 // Use case for selecting a language and determining next navigation step
 import com.wordsbyfarber.data.repository.DictionaryRepository
 import com.wordsbyfarber.data.repository.PreferencesRepository
+import com.wordsbyfarber.data.models.DownloadTracker
 
 class SelectLanguageUseCase(
     private val dictionaryRepository: DictionaryRepository,
@@ -18,7 +19,7 @@ class SelectLanguageUseCase(
         preferencesRepository.setLanguage(languageCode)
         
         val hasMinWords = dictionaryRepository.hasMinWords(languageCode)
-        val isDownloadActive = preferencesRepository.getDownloadState(languageCode) != null
+        val isDownloadActive = DownloadTracker.isDownloadActive(languageCode)
         
         return when {
             hasMinWords -> SelectLanguageResult.NavigateToHome

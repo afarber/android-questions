@@ -19,6 +19,7 @@ import com.wordsbyfarber.data.repository.DictionaryRepository
 import com.wordsbyfarber.data.repository.PreferencesRepository
 import com.wordsbyfarber.ui.viewmodels.LanguageSelectionViewModel
 import com.wordsbyfarber.data.models.Language
+import com.wordsbyfarber.data.models.DownloadTracker
 import com.wordsbyfarber.utils.Constants
 
 @ExperimentalCoroutinesApi
@@ -42,6 +43,9 @@ class LanguageSelectionIntegrationTest {
     fun setup() {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(testDispatcher)
+        
+        // Clear download tracker state
+        DownloadTracker.clearAll()
         
         // Setup SharedPreferences mocks
         whenever(mockSharedPreferences.edit()).thenReturn(mockEditor)
@@ -214,5 +218,52 @@ class LanguageSelectionIntegrationTest {
         assertEquals("Ъ", russianLanguage.rareLetter1)
         assertEquals("Э", russianLanguage.rareLetter2)
         assertEquals(120_000, russianLanguage.minWords)
+    }
+
+    @Test
+    fun `verify DownloadTracker integration with language selection`() = testScope.runTest {
+        // Given
+        val germanLanguage = Language.getLanguage("de")!!
+        whenever(mockDictionaryRepository.hasMinWords("de")).thenReturn(false)
+        
+        // Verify initial state
+        assertFalse(DownloadTracker.isDownloadActive("de"))
+        
+        // When - User selects German language
+        viewModel.selectLanguage(germanLanguage)
+        testDispatcher.scheduler.advanceUntilIdle()
+        
+        // Then - Verify download tracking is NOT automatically started 
+        // (Download tracking is handled by DownloadDictionaryUseCase, not LanguageSelectionViewModel)
+        assertFalse(DownloadTracker.isDownloadActive("de"))
+        
+        // But language should be stored in SharedPreferences
+        verify(mockEditor).putString(Constants.Preferences.KEY_LANGUAGE, "de")
+        
+        // And navigation should be set to loading screen
+        val state = viewModel.uiState.value
+        assertTrue(state.shouldNavigateToLoading)
+        assertFalse(state.shouldNavigateToHome)
+    }
+
+    @Test
+    fun `verify SelectLanguageUseCase respects active downloads`() = testScope.runTest {
+        // Given - Simulate an active download
+        DownloadTracker.startDownload("de")
+        assertTrue(DownloadTracker.isDownloadActive("de"))
+        
+        // Create a SelectLanguageUseCase for testing
+        val selectLanguageUseCase = com.wordsbyfarber.domain.usecases.SelectLanguageUseCase(
+            mockDictionaryRepository, preferencesRepository
+        )
+        
+        // When - Try to select the same language
+        val result = selectLanguageUseCase("de")
+        
+        // Then - Should navigate to loading (existing download)
+        assertEquals(com.wordsbyfarber.domain.usecases.SelectLanguageResult.NavigateToLoading, result)
+        
+        // And language should still be stored
+        verify(mockEditor).putString(Constants.Preferences.KEY_LANGUAGE, "de")
     }
 }

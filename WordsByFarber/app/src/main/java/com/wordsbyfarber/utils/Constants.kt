@@ -30,6 +30,5 @@ object Constants {
     object Preferences {
         const val PREFS_NAME = "words_by_farber_prefs"
         const val KEY_LANGUAGE = "language"
-        const val KEY_DOWNLOAD_STATE = "download_state"
     }
 }

@@ -9,6 +9,8 @@ data class Language(
     val hashedDictionaryUrl: String,
     val topUrl: String,
     val minWords: Int,
+    // myUid is currently used to select a user to be displayed in "My profile" screen,
+    // it will be removed after Google/Huawei/Amazon logins are implemented
     val myUid: Int
 ) {
     companion object {
