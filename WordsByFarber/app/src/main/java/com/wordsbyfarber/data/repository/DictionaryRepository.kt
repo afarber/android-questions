@@ -18,65 +18,17 @@ class DictionaryRepository(
     private val downloader: DictionaryDownloader,
     private val parser: DictionaryParser
 ) {
-    companion object {
-        val SUPPORTED_LANGUAGES = listOf("de", "en", "fr", "nl", "pl", "ru")
-    }
     
     private fun getDatabase(languageCode: String): WordsDatabase {
         return WordsDatabase.getDatabase(context, languageCode)
     }
     
     fun getLanguages(): List<Language> {
-        return SUPPORTED_LANGUAGES.map { code ->
-            Language(
-                code = code,
-                name = getLanguageName(code),
-                rareLetter1 = getStringResource(code, "rare_letter_1"),
-                rareLetter2 = getStringResource(code, "rare_letter_2"),
-                hashedDictionaryUrl = getStringResource(code, "hashed_dictionary_url"),
-                topUrl = getStringResource(code, "top_url"),
-                minWords = getIntegerResource(code, "min_words"),
-                myUid = getIntegerResource(code, "my_uid")
-            )
-        }
+        return Language.getAllLanguages()
     }
     
-    private fun getLanguageName(code: String): String {
-        return when (code) {
-            "de" -> "Deutsch"
-            "en" -> "English"
-            "fr" -> "Français"
-            "nl" -> "Nederlands"
-            "pl" -> "Polski"
-            "ru" -> "Русский"
-            else -> code
-        }
-    }
-    
-    private fun getStringResource(languageCode: String, resourceName: String): String {
-        val resourceId = context.resources.getIdentifier(
-            resourceName,
-            "string",
-            context.packageName
-        )
-        return if (resourceId != 0) {
-            context.getString(resourceId)
-        } else {
-            throw IllegalArgumentException("Resource not found: $resourceName for language $languageCode")
-        }
-    }
-
-    private fun getIntegerResource(languageCode: String, resourceName: String): Int {
-        val resourceId = context.resources.getIdentifier(
-            resourceName,
-            "integer",
-            context.packageName
-        )
-        return if (resourceId != 0) {
-            context.resources.getInteger(resourceId)
-        } else {
-            0
-        }
+    fun getLanguage(languageCode: String): Language? {
+        return Language.getLanguage(languageCode)
     }
     
     suspend fun getWordCount(languageCode: String): Int {
@@ -84,7 +36,7 @@ class DictionaryRepository(
     }
     
     suspend fun hasMinWords(languageCode: String): Boolean {
-        val language = getLanguages().find { it.code == languageCode } ?: return false
+        val language = getLanguage(languageCode) ?: return false
         val wordCount = getWordCount(languageCode)
         return wordCount >= language.minWords
     }
@@ -94,7 +46,7 @@ class DictionaryRepository(
     }
     
     fun downloadAndParseDictionary(languageCode: String): Flow<DictionaryDownloadState> = flow {
-        val language = getLanguages().find { it.code == languageCode }
+        val language = getLanguage(languageCode)
         if (language == null) {
             emit(DictionaryDownloadState.Error("Language not supported: $languageCode"))
             return@flow
