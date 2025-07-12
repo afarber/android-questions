@@ -3,13 +3,11 @@ package com.wordsbyfarber.ui.screens
 // Screen 1: Language selection screen displaying list of supported languages
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -26,8 +24,8 @@ import com.wordsbyfarber.data.models.Language
 import com.wordsbyfarber.ui.components.LanguageListItem
 import com.wordsbyfarber.ui.components.LoadingIndicator
 import com.wordsbyfarber.ui.theme.WordsByFarberTheme
-import com.wordsbyfarber.ui.viewmodels.LanguageSelectionViewModel
 import com.wordsbyfarber.ui.viewmodels.LanguageSelectionUiState
+import com.wordsbyfarber.ui.viewmodels.LanguageSelectionViewModel
 
 @Composable
 fun LanguageSelectionScreen(

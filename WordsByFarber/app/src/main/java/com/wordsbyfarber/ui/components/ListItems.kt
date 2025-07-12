@@ -2,7 +2,6 @@ package com.wordsbyfarber.ui.components
 
 // Reusable list item components for languages, home menu, words, and players
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -168,7 +167,7 @@ fun WordListItem(
                 color = MaterialTheme.colorScheme.onSurface
             )
             
-            if (!word.explanation.isNullOrBlank()) {
+            if (word.explanation.isNotBlank()) {
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = word.explanation,

@@ -70,8 +70,7 @@ class WordListViewModel(
                         state.allWords
                     } else {
                         state.allWords.filter { word ->
-                            word.word.contains(query, ignoreCase = true) ||
-                            word.explanation?.contains(query, ignoreCase = true) == true
+                            word.word.contains(query, ignoreCase = true) || word.explanation.contains(query, ignoreCase = true)
                         }
                     }
                 }

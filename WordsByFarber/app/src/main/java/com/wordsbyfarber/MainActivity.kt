@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
         val okHttpClient = okhttp3.OkHttpClient()
         val downloader = com.wordsbyfarber.data.network.DictionaryDownloader(okHttpClient)
         val parser = com.wordsbyfarber.data.network.DictionaryParser()
-        dictionaryRepository = com.wordsbyfarber.data.repository.DictionaryRepository(this, downloader, parser)
+        dictionaryRepository = DictionaryRepository(this, downloader, parser)
         
         setContent {
             WordsByFarberTheme {

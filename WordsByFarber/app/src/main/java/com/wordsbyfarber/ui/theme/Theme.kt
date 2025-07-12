@@ -1,7 +1,6 @@
 package com.wordsbyfarber.ui.theme
 
 // Main theme configuration supporting light/dark modes and dynamic colors
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
