@@ -24,15 +24,10 @@ class DictionaryDownloader(
                 emit(DownloadResult.Error("HTTP ${response.code}: ${response.message}"))
                 return@flow
             }
-            
-            val responseBody = response.body
-            if (responseBody == null) {
-                emit(DownloadResult.Error("Empty response body"))
-                return@flow
-            }
-            
-            val contentLength = responseBody.contentLength()
-            val inputStream = responseBody.byteStream()
+
+            // response.body is never null for successful responses
+            val contentLength = response.body.contentLength()
+            val inputStream = response.body.byteStream()
             val chunks = mutableListOf<String>()
             
             var totalBytesRead = 0L

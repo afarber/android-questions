@@ -3,6 +3,7 @@ package com.wordsbyfarber.data.repository
 // Repository providing wrapper methods for SharedPreferences operations
 import android.content.SharedPreferences
 import com.wordsbyfarber.utils.Constants
+import androidx.core.content.edit
 
 class PreferencesRepository(
     private val sharedPreferences: SharedPreferences
@@ -17,15 +18,15 @@ class PreferencesRepository(
     }
 
     fun setLanguage(languageCode: String) {
-        sharedPreferences.edit()
-            .putString(Constants.Preferences.KEY_LANGUAGE, languageCode)
-            .apply()
+        sharedPreferences.edit {
+            putString(Constants.Preferences.KEY_LANGUAGE, languageCode)
+        }
     }
 
     fun clearLanguage() {
-        sharedPreferences.edit()
-            .remove(Constants.Preferences.KEY_LANGUAGE)
-            .apply()
+        sharedPreferences.edit {
+            remove(Constants.Preferences.KEY_LANGUAGE)
+        }
     }
 
     fun getDownloadState(languageCode: String): String? {
@@ -33,15 +34,15 @@ class PreferencesRepository(
     }
 
     fun setDownloadState(languageCode: String, state: String) {
-        sharedPreferences.edit()
-            .putString("${Constants.Preferences.KEY_DOWNLOAD_STATE}_$languageCode", state)
-            .apply()
+        sharedPreferences.edit {
+            putString("${Constants.Preferences.KEY_DOWNLOAD_STATE}_$languageCode", state)
+        }
     }
 
     fun clearDownloadState(languageCode: String) {
-        sharedPreferences.edit()
-            .remove("${Constants.Preferences.KEY_DOWNLOAD_STATE}_$languageCode")
-            .apply()
+        sharedPreferences.edit {
+            remove("${Constants.Preferences.KEY_DOWNLOAD_STATE}_$languageCode")
+        }
     }
 
     fun getBooleanPreference(key: String, defaultValue: Boolean = false): Boolean {
@@ -49,9 +50,9 @@ class PreferencesRepository(
     }
 
     fun setBooleanPreference(key: String, value: Boolean) {
-        sharedPreferences.edit()
-            .putBoolean(key, value)
-            .apply()
+        sharedPreferences.edit {
+            putBoolean(key, value)
+        }
     }
 
     fun getStringPreference(key: String, defaultValue: String? = null): String? {
@@ -59,9 +60,9 @@ class PreferencesRepository(
     }
 
     fun setStringPreference(key: String, value: String) {
-        sharedPreferences.edit()
-            .putString(key, value)
-            .apply()
+        sharedPreferences.edit {
+            putString(key, value)
+        }
     }
 
     fun getIntPreference(key: String, defaultValue: Int = 0): Int {
@@ -69,12 +70,12 @@ class PreferencesRepository(
     }
 
     fun setIntPreference(key: String, value: Int) {
-        sharedPreferences.edit()
-            .putInt(key, value)
-            .apply()
+        sharedPreferences.edit {
+            putInt(key, value)
+        }
     }
 
     fun clearAll() {
-        sharedPreferences.edit().clear().apply()
+        sharedPreferences.edit { clear() }
     }
 }

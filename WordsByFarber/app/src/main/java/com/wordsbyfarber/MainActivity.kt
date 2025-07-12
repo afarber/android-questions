@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import com.wordsbyfarber.data.network.DictionaryDownloader
+import com.wordsbyfarber.data.network.DictionaryParser
 import com.wordsbyfarber.data.repository.DictionaryRepository
 import com.wordsbyfarber.data.repository.PreferencesRepository
 import com.wordsbyfarber.ui.navigation.AppNavigation
@@ -28,8 +30,8 @@ class MainActivity : ComponentActivity() {
         preferencesRepository = PreferencesRepository(sharedPreferences)
         
         val okHttpClient = okhttp3.OkHttpClient()
-        val downloader = com.wordsbyfarber.data.network.DictionaryDownloader(okHttpClient)
-        val parser = com.wordsbyfarber.data.network.DictionaryParser()
+        val downloader = DictionaryDownloader(okHttpClient)
+        val parser = DictionaryParser()
         dictionaryRepository = DictionaryRepository(this, downloader, parser)
         
         setContent {

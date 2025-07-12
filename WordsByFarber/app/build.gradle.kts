@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.wordsbyfarber"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.wordsbyfarber"
