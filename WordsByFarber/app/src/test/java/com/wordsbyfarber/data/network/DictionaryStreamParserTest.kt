@@ -10,11 +10,11 @@ import org.junit.Test
 
 class DictionaryStreamParserTest {
     
-    private lateinit var parser: DictionaryStreamParser
+    private lateinit var parser: TestDictionaryStreamParser
     
     @Before
     fun setUp() {
-        parser = DictionaryStreamParser()
+        parser = TestDictionaryStreamParser()
     }
     
     @Test

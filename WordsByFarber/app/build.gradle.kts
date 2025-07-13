@@ -25,6 +25,7 @@ android {
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
+            isReturnDefaultValues = true // Return default values for all Android API calls
         }
     }
 
