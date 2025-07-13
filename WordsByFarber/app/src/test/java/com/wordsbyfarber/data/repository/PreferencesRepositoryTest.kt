@@ -94,41 +94,6 @@ class PreferencesRepositoryTest {
         verify(mockEditor).apply()
     }
 
-
-    @Test
-    fun `setBooleanPreference should store boolean value`() {
-        // When
-        preferencesRepository.setBooleanPreference("test_key", true)
-        
-        // Then
-        verify(mockEditor).putBoolean("test_key", true)
-        verify(mockEditor).apply()
-    }
-
-    @Test
-    fun `getBooleanPreference should return stored boolean value`() {
-        // Given
-        whenever(mockSharedPreferences.getBoolean("test_key", false)).thenReturn(true)
-        
-        // When
-        val result = preferencesRepository.getBooleanPreference("test_key")
-        
-        // Then
-        assertTrue(result)
-    }
-
-    @Test
-    fun `getBooleanPreference should return default value when not found`() {
-        // Given
-        whenever(mockSharedPreferences.getBoolean("missing_key", false)).thenReturn(false)
-        
-        // When
-        val result = preferencesRepository.getBooleanPreference("missing_key")
-        
-        // Then
-        assertFalse(result)
-    }
-
     @Test
     fun `clearAll should clear all preferences`() {
         // When

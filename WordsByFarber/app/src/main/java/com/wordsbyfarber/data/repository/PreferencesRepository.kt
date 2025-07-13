@@ -29,37 +29,6 @@ class PreferencesRepository(
         }
     }
 
-
-    fun getBooleanPreference(key: String, defaultValue: Boolean = false): Boolean {
-        return sharedPreferences.getBoolean(key, defaultValue)
-    }
-
-    fun setBooleanPreference(key: String, value: Boolean) {
-        sharedPreferences.edit {
-            putBoolean(key, value)
-        }
-    }
-
-    fun getStringPreference(key: String, defaultValue: String? = null): String? {
-        return sharedPreferences.getString(key, defaultValue)
-    }
-
-    fun setStringPreference(key: String, value: String) {
-        sharedPreferences.edit {
-            putString(key, value)
-        }
-    }
-
-    fun getIntPreference(key: String, defaultValue: Int = 0): Int {
-        return sharedPreferences.getInt(key, defaultValue)
-    }
-
-    fun setIntPreference(key: String, value: Int) {
-        sharedPreferences.edit {
-            putInt(key, value)
-        }
-    }
-
     fun clearAll() {
         sharedPreferences.edit { clear() }
     }
