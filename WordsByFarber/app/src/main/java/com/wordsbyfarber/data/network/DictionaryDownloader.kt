@@ -1,6 +1,7 @@
 package com.wordsbyfarber.data.network
 
 // Service for downloading dictionary files from remote URLs with progress tracking
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -12,26 +13,37 @@ import java.io.IOException
 class DictionaryDownloader(
     private val okHttpClient: OkHttpClient
 ) {
+    companion object {
+        private val TAG = DictionaryDownloader::class.java.simpleName
+    }
+
     fun downloadDictionary(url: String): Flow<DownloadResult> = flow {
         try {
+            Log.d(TAG, "Starting download from: $url")
             emit(DownloadResult.Loading(0))
             
             val request = Request.Builder()
                 .url(url)
                 .build()
             
+            Log.d(TAG, "Executing HTTP request...")
             val response = okHttpClient.newCall(request).execute()
             
             if (!response.isSuccessful) {
-                emit(DownloadResult.Error("HTTP ${response.code}: ${response.message}"))
+                val errorMsg = "HTTP ${response.code}: ${response.message}"
+                Log.e(TAG, "HTTP request failed: $errorMsg")
+                emit(DownloadResult.Error(errorMsg))
                 return@flow
             }
+            
+            Log.d(TAG, "HTTP request successful, starting download...")
 
             // response.body is never null for successful responses
             val contentLength = response.body.contentLength()
             val inputStream = response.body.byteStream()
             val chunks = mutableListOf<String>()
             
+            Log.d(TAG, "Content length: $contentLength bytes")
             var totalBytesRead = 0L
             val buffer = ByteArray(8192)
             
@@ -53,12 +65,21 @@ class DictionaryDownloader(
             }
             
             val fullContent = chunks.joinToString("")
+            Log.d(TAG, "Download completed successfully. Total size: $totalBytesRead bytes")
             emit(DownloadResult.Success(fullContent))
             
         } catch (e: IOException) {
-            emit(DownloadResult.Error("Network error: ${e.message}"))
+            Log.e(TAG, "Network error during download from $url", e)
+            emit(DownloadResult.Error("Failed to download dictionary. Please check your internet connection and try again."))
+        } catch (e: SecurityException) {
+            Log.e(TAG, "Permission error during download from $url", e)
+            emit(DownloadResult.Error("Failed to download dictionary. Please try again later."))
+        } catch (e: android.os.NetworkOnMainThreadException) {
+            Log.e(TAG, "CRITICAL: Network operation attempted on main thread. This should not happen with flowOn(Dispatchers.IO).", e)
+            emit(DownloadResult.Error("Failed to download dictionary. Please try again later."))
         } catch (e: Exception) {
-            emit(DownloadResult.Error("Unexpected error of type ${e.javaClass.simpleName}: ${e.message}"))
+            Log.e(TAG, "Unexpected error during download from $url: ${e.javaClass.simpleName}", e)
+            emit(DownloadResult.Error("Failed to download dictionary. Please try again later."))
         }
     }.flowOn(Dispatchers.IO)
 }

@@ -2,6 +2,7 @@ package com.wordsbyfarber.ui.viewmodels
 
 // ViewModel for dictionary loading screen managing download and parsing operations
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -19,6 +20,10 @@ class LoadingDictionaryViewModel(
     private val context: Context
 ) : ViewModel() {
 
+    companion object {
+        private val TAG = LoadingDictionaryViewModel::class.java.simpleName
+    }
+
     private val _uiState = MutableStateFlow(LoadingDictionaryUiState())
     val uiState: StateFlow<LoadingDictionaryUiState> = _uiState.asStateFlow()
 
@@ -27,6 +32,7 @@ class LoadingDictionaryViewModel(
     fun startDownload(languageCode: String) {
         downloadJob?.cancel()
         downloadJob = viewModelScope.launch {
+            Log.d(TAG, "Starting dictionary download for language: $languageCode")
             _uiState.value = _uiState.value.copy(
                 isLoading = true,
                 progress = 0,
@@ -36,6 +42,7 @@ class LoadingDictionaryViewModel(
             )
             
             try {
+                Log.d(TAG, "Clearing existing words table for language: $languageCode")
                 dictionaryRepository.clearWordsTable(languageCode)
                 
                 dictionaryRepository.downloadAndParseDictionary(languageCode)
@@ -56,6 +63,7 @@ class LoadingDictionaryViewModel(
                                 )
                             }
                             is DictionaryDownloadState.Success -> {
+                                Log.d(TAG, "Dictionary download completed successfully. Word count: ${state.wordCount}")
                                 _uiState.value = _uiState.value.copy(
                                     isLoading = false,
                                     progress = 100,
@@ -65,6 +73,7 @@ class LoadingDictionaryViewModel(
                                 )
                             }
                             is DictionaryDownloadState.Error -> {
+                                Log.e(TAG, "Dictionary download failed: ${state.message}")
                                 _uiState.value = _uiState.value.copy(
                                     isLoading = false,
                                     error = state.message,
@@ -74,9 +83,10 @@ class LoadingDictionaryViewModel(
                         }
                     }
             } catch (e: Exception) {
+                Log.e(TAG, "Unexpected error during dictionary download for language: $languageCode", e)
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
-                    error = e.message ?: "Unknown error occurred",
+                    error = "Failed to download dictionary. Please try again later.",
                     shouldNavigateToError = true
                 )
             }
@@ -84,11 +94,13 @@ class LoadingDictionaryViewModel(
     }
 
     fun cancelDownload() {
+        Log.d(TAG, "User canceled dictionary download")
         downloadJob?.cancel()
         viewModelScope.launch {
             try {
                 val languageCode = preferencesRepository.getLanguage()
                 if (languageCode != null) {
+                    Log.d(TAG, "Clearing words table for canceled download: $languageCode")
                     dictionaryRepository.clearWordsTable(languageCode)
                 }
                 preferencesRepository.clearLanguage()
@@ -98,9 +110,10 @@ class LoadingDictionaryViewModel(
                     shouldNavigateToLanguageSelection = true
                 )
             } catch (e: Exception) {
+                Log.e(TAG, "Error during download cancellation", e)
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
-                    error = e.message ?: "Error during cancellation"
+                    error = "Failed to cancel download. Please try again."
                 )
             }
         }

@@ -1,24 +1,31 @@
 package com.wordsbyfarber.data.network
 
 // Parser for extracting word data from JavaScript dictionary files
+import android.util.Log
 import com.wordsbyfarber.data.database.WordEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class DictionaryParser {
     
+    companion object {
+        private val TAG = DictionaryParser::class.java.simpleName
+    }
+    
     fun parseJavaScriptDictionary(
         content: String,
         onProgress: (Int) -> Unit = {}
     ): Flow<ParseResult> = flow {
         try {
+            Log.d(TAG, "Starting to parse dictionary content (${content.length} characters)")
             emit(ParseResult.Loading(0))
             
             // Find the start of the HASHED object
             val startMarker = "const HASHED={"
             val startIndex = content.indexOf(startMarker)
             if (startIndex == -1) {
-                emit(ParseResult.Error("Could not find 'const HASHED={' in content"))
+                Log.e(TAG, "Could not find 'const HASHED={' marker in content")
+                emit(ParseResult.Error("Dictionary file format is invalid. Please try again later."))
                 return@flow
             }
             
@@ -26,7 +33,8 @@ class DictionaryParser {
             val endMarker = "};"
             val endIndex = content.indexOf(endMarker, startIndex)
             if (endIndex == -1) {
-                emit(ParseResult.Error("Could not find closing '};' in content"))
+                Log.e(TAG, "Could not find closing '};' marker in content")
+                emit(ParseResult.Error("Dictionary file format is invalid. Please try again later."))
                 return@flow
             }
             
@@ -58,10 +66,12 @@ class DictionaryParser {
                 }
             }
             
+            Log.d(TAG, "Successfully parsed ${words.size} words from dictionary")
             emit(ParseResult.Success(words))
             
         } catch (e: Exception) {
-            emit(ParseResult.Error("Parsing error: ${e.message}"))
+            Log.e(TAG, "Error parsing dictionary content", e)
+            emit(ParseResult.Error("Failed to parse dictionary. Please try again later."))
         }
     }
 }
