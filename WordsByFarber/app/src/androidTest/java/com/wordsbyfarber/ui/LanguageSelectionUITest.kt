@@ -23,6 +23,7 @@ import com.wordsbyfarber.data.network.DictionaryDownloader
 import com.wordsbyfarber.data.network.DictionaryParser
 import com.wordsbyfarber.utils.Constants
 import kotlinx.coroutines.test.runTest
+import okhttp3.OkHttpClient
 
 @RunWith(AndroidJUnit4::class)
 class LanguageSelectionUITest {
@@ -48,7 +49,8 @@ class LanguageSelectionUITest {
         preferencesRepository = PreferencesRepository(sharedPreferences)
         
         // Create DictionaryRepository with real dependencies
-        val downloader = DictionaryDownloader()
+        val okHttpClient = OkHttpClient()
+        val downloader = DictionaryDownloader(okHttpClient)
         val parser = DictionaryParser()
         dictionaryRepository = DictionaryRepository(context, downloader, parser)
         
@@ -62,8 +64,7 @@ class LanguageSelectionUITest {
         composeTestRule.setContent {
             LanguageSelectionScreen(
                 viewModel = viewModel,
-                onNavigateToHome = { },
-                onNavigateToLoading = { }
+                onLanguageSelected = { }
             )
         }
 
@@ -87,8 +88,7 @@ class LanguageSelectionUITest {
         composeTestRule.setContent {
             LanguageSelectionScreen(
                 viewModel = viewModel,
-                onNavigateToHome = { },
-                onNavigateToLoading = { }
+                onLanguageSelected = { }
             )
         }
 
@@ -112,8 +112,7 @@ class LanguageSelectionUITest {
         composeTestRule.setContent {
             LanguageSelectionScreen(
                 viewModel = viewModel,
-                onNavigateToHome = { },
-                onNavigateToLoading = { }
+                onLanguageSelected = { }
             )
         }
 
@@ -137,8 +136,7 @@ class LanguageSelectionUITest {
         composeTestRule.setContent {
             LanguageSelectionScreen(
                 viewModel = viewModel,
-                onNavigateToHome = { },
-                onNavigateToLoading = { }
+                onLanguageSelected = { }
             )
         }
 
@@ -157,8 +155,7 @@ class LanguageSelectionUITest {
         composeTestRule.setContent {
             LanguageSelectionScreen(
                 viewModel = viewModel,
-                onNavigateToHome = { },
-                onNavigateToLoading = { }
+                onLanguageSelected = { }
             )
         }
 
@@ -177,8 +174,7 @@ class LanguageSelectionUITest {
         composeTestRule.setContent {
             LanguageSelectionScreen(
                 viewModel = viewModel,
-                onNavigateToHome = { },
-                onNavigateToLoading = { }
+                onLanguageSelected = { }
             )
         }
 
@@ -203,8 +199,7 @@ class LanguageSelectionUITest {
         composeTestRule.setContent {
             LanguageSelectionScreen(
                 viewModel = viewModel,
-                onNavigateToHome = { },
-                onNavigateToLoading = { }
+                onLanguageSelected = { }
             )
         }
 
