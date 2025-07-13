@@ -1,6 +1,7 @@
 package com.wordsbyfarber.data.network
 
-// Service for downloading dictionary files from remote URLs with progress tracking
+// Service for downloading dictionary files from remote URLs with streaming chunk processing
+// Integrates with DictionaryStreamParser for memory-efficient parsing during download
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -11,15 +12,23 @@ import okhttp3.Request
 import java.io.IOException
 
 class DictionaryDownloader(
-    private val okHttpClient: OkHttpClient
+    private val okHttpClient: OkHttpClient,
+    private val streamParser: DictionaryStreamParser = DictionaryStreamParser()
 ) {
     companion object {
         private val TAG = DictionaryDownloader::class.java.simpleName
     }
 
-    fun downloadDictionary(url: String): Flow<DownloadResult> = flow {
+    /**
+     * Downloads dictionary file and streams chunks to parser for memory-efficient processing.
+     * Uses curly bracket detection with regex backtrack approach to find "const HASHED={" pattern.
+     * 
+     * @param url URL to download dictionary from
+     * @param minWords Expected minimum words for this language (used as 100% baseline for parsing progress)
+     */
+    fun downloadAndParseDictionary(url: String, minWords: Int = 100_000): Flow<DownloadResult> = flow {
         try {
-            Log.d(TAG, "Starting download from: $url")
+            Log.d(TAG, "Starting streaming download and parse from: $url")
             emit(DownloadResult.Loading(0))
             
             val request = Request.Builder()
@@ -36,9 +45,8 @@ class DictionaryDownloader(
                 return@flow
             }
             
-            Log.d(TAG, "HTTP request successful, starting download...")
+            Log.d(TAG, "HTTP request successful, starting streaming download...")
 
-            // response.body is never null for successful responses
             val contentLength = response.body.contentLength()
             val inputStream = response.body.byteStream()
             val chunks = mutableListOf<String>()
@@ -56,7 +64,7 @@ class DictionaryDownloader(
                 chunks.add(chunk)
                 
                 val progress = if (contentLength > 0) {
-                    (totalBytesRead * 100 / contentLength).toInt()
+                    (totalBytesRead * 50 / contentLength).toInt() // Reserve 50% for download, 50% for parsing
                 } else {
                     0
                 }
@@ -64,9 +72,26 @@ class DictionaryDownloader(
                 emit(DownloadResult.Loading(progress))
             }
             
-            val fullContent = chunks.joinToString("")
-            Log.d(TAG, "Download completed successfully. Total size: $totalBytesRead bytes")
-            emit(DownloadResult.Success(fullContent))
+            Log.d(TAG, "Download completed, starting streaming parse of ${chunks.size} chunks")
+            
+            // Stream the chunks to the parser using minWords as progress baseline
+            streamParser.parseStreamingChunks(chunks, minWords).collect { parseResult ->
+                when (parseResult) {
+                    is ParseResult.Loading -> {
+                        // Offset parsing progress to second half (50-100%)
+                        val totalProgress = 50 + (parseResult.progress * 50 / 100)
+                        emit(DownloadResult.Loading(totalProgress))
+                    }
+                    is ParseResult.Success -> {
+                        Log.d(TAG, "Streaming parse completed successfully with ${parseResult.words.size} words")
+                        emit(DownloadResult.Success(parseResult.words))
+                    }
+                    is ParseResult.Error -> {
+                        Log.e(TAG, "Streaming parse failed: ${parseResult.message}")
+                        emit(DownloadResult.Error(parseResult.message))
+                    }
+                }
+            }
             
         } catch (e: IOException) {
             Log.e(TAG, "Network error during download from $url", e)
@@ -86,6 +111,6 @@ class DictionaryDownloader(
 
 sealed class DownloadResult {
     data class Loading(val progress: Int) : DownloadResult()
-    data class Success(val content: String) : DownloadResult()
+    data class Success(val words: List<com.wordsbyfarber.data.database.WordEntity>) : DownloadResult()
     data class Error(val message: String) : DownloadResult()
 }

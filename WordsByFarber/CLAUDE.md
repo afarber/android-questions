@@ -90,13 +90,45 @@ const HASHED = {
 
 # Actions to perform when downloading or parsing dictionary (DownloadDictionary)
 
-- The `Consts-{de,en,fr,nl,pl,ru}.js` files are quite big, so they should be downloaded and parsed in chunks to save work memory
-- I do not think there is a JSON parsing library available, which could parse the file being downloaded chunk by chunk, so maybe a regex approach should be used?
-- Parsing the dictionary should start when the substring `const HASHED={` has been found
-- The key/value pairs (that is word/explanation) should be stored into Room database
-- Parsing the dictionary should stop when the closing bracket `};` has been found
-- The key entry `___LANG___` should be discarded, it should not be stored into Room
-- If possible without wasting too much CPU, the actual number of downloaded and parsed key/value pairs should be available for display in Screen 2
+## Streaming Download and Parse Approach
+
+The `Consts-{de,en,fr,nl,pl,ru}.js` files are quite large (especially Polish with 3M+ words), requiring a memory-efficient streaming approach:
+
+### Implementation Strategy
+
+1. **Curly Bracket Detection with Regex Backtrack**:
+   - Download file in 8KB chunks using OkHttp
+   - Look for opening curly brackets `{` in each chunk
+   - When found, backtrack with whitespace-tolerant regex to check for `const HASHED\s*=\s*\{` pattern
+   - This handles the case where the pattern is split across chunk boundaries
+   - Multiple curly brackets exist before the target pattern (from COUNTRY, LETTERS, VALUES, NUMBERS objects)
+
+2. **JSON Streaming with JsonReader**:
+   - Once `const HASHED={` pattern is found, discard everything before the opening brace
+   - Switch to JSON parsing mode using Android's built-in `JsonReader` for memory efficiency
+   - Parse key-value pairs incrementally without loading entire JSON into memory
+   - Store each pair as `WordEntity(word=key, explanation=value)` in Room database
+   - Filter out the `___LANG___` key during parsing (do not store in database)
+
+3. **Progress Tracking**:
+   - Download progress: 0-50% (based on bytes downloaded vs content-length)
+   - Parse progress: 50-100% (based on parsed words vs min_words baseline)
+   - Uses per-language `min_words` value as 100% baseline for parsing progress calculation
+   - Progress updates every 1000 parsed entries to avoid excessive UI updates
+   - Example: If min_words=180,000 for German and 90,000 words are parsed, shows 75% parsing progress
+
+### Key Classes
+
+- **DictionaryStreamParser**: Implements curly bracket detection and JsonReader streaming
+- **DictionaryDownloader**: Coordinates streaming download with parser integration
+- Uses OkHttp for reliable HTTP streaming with proper error handling
+
+### Error Handling
+
+- Pattern not found: "Dictionary file format is invalid"
+- Network errors: "Check internet connection and try again"
+- Malformed JSON: "Dictionary download incomplete"
+- Pattern split across chunks: Handled by accumulated buffer approach
 
 # Actions to perform when dictionary download or parsing fails or user cancels the download (FailureActions)
 

@@ -54,31 +54,19 @@ class DictionaryRepository(
         
         emit(DictionaryDownloadState.Downloading(0))
         
-        downloader.downloadDictionary(language.hashedDictionaryUrl).collect { downloadResult ->
+        downloader.downloadAndParseDictionary(language.hashedDictionaryUrl, language.minWords).collect { downloadResult ->
             when (downloadResult) {
                 is DownloadResult.Loading -> {
-                    emit(DictionaryDownloadState.Downloading(downloadResult.progress))
+                    if (downloadResult.progress <= 50) {
+                        emit(DictionaryDownloadState.Downloading(downloadResult.progress * 2)) // Scale 0-50% to 0-100%
+                    } else {
+                        emit(DictionaryDownloadState.Parsing((downloadResult.progress - 50) * 2)) // Scale 50-100% to 0-100%
+                    }
                 }
                 is DownloadResult.Success -> {
-                    emit(DictionaryDownloadState.Parsing(0))
-                    
-                    parser.parseJavaScriptDictionary(downloadResult.content) { progress ->
-                        // Progress callback handled in flow
-                    }.collect { parseResult ->
-                        when (parseResult) {
-                            is ParseResult.Loading -> {
-                                emit(DictionaryDownloadState.Parsing(parseResult.progress))
-                            }
-                            is ParseResult.Success -> {
-                                // Store words in database
-                                getDatabase(languageCode).wordDao().insertWords(parseResult.words)
-                                emit(DictionaryDownloadState.Success(parseResult.words.size))
-                            }
-                            is ParseResult.Error -> {
-                                emit(DictionaryDownloadState.Error(parseResult.message))
-                            }
-                        }
-                    }
+                    // Store words in database
+                    getDatabase(languageCode).wordDao().insertWords(downloadResult.words)
+                    emit(DictionaryDownloadState.Success(downloadResult.words.size))
                 }
                 is DownloadResult.Error -> {
                     emit(DictionaryDownloadState.Error(downloadResult.message))
