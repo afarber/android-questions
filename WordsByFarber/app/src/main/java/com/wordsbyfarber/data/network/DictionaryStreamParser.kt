@@ -221,3 +221,9 @@ class DictionaryStreamParser {
     }
 }
 
+sealed class ParseResult {
+    data class Loading(val progress: Int) : ParseResult()
+    data class Success(val words: List<WordEntity>) : ParseResult()
+    data class Error(val message: String) : ParseResult()
+}
+

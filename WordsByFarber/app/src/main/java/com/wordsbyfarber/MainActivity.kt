@@ -10,7 +10,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.wordsbyfarber.data.network.DictionaryDownloader
-import com.wordsbyfarber.data.network.DictionaryParser
 import com.wordsbyfarber.data.repository.DictionaryRepository
 import com.wordsbyfarber.data.repository.PreferencesRepository
 import com.wordsbyfarber.ui.navigation.AppNavigation
@@ -31,8 +30,7 @@ class MainActivity : ComponentActivity() {
         
         val okHttpClient = okhttp3.OkHttpClient()
         val downloader = DictionaryDownloader(okHttpClient)
-        val parser = DictionaryParser()
-        dictionaryRepository = DictionaryRepository(this, downloader, parser)
+        dictionaryRepository = DictionaryRepository(this, downloader)
         
         setContent {
             WordsByFarberTheme {

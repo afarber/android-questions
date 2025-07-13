@@ -20,7 +20,6 @@ import com.wordsbyfarber.data.repository.PreferencesRepository
 import com.wordsbyfarber.ui.screens.LanguageSelectionScreen
 import com.wordsbyfarber.ui.viewmodels.LanguageSelectionViewModel
 import com.wordsbyfarber.data.network.DictionaryDownloader
-import com.wordsbyfarber.data.network.DictionaryParser
 import com.wordsbyfarber.utils.Constants
 import kotlinx.coroutines.test.runTest
 import okhttp3.OkHttpClient
@@ -51,8 +50,7 @@ class LanguageSelectionUITest {
         // Create DictionaryRepository with real dependencies
         val okHttpClient = OkHttpClient()
         val downloader = DictionaryDownloader(okHttpClient)
-        val parser = DictionaryParser()
-        dictionaryRepository = DictionaryRepository(context, downloader, parser)
+        dictionaryRepository = DictionaryRepository(context, downloader)
         
         // Create ViewModel
         viewModel = LanguageSelectionViewModel(dictionaryRepository, preferencesRepository)

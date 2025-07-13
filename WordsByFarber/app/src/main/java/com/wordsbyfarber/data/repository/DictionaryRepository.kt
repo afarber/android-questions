@@ -7,7 +7,6 @@ import com.wordsbyfarber.data.database.WordEntity
 import com.wordsbyfarber.data.database.WordsDatabase
 import com.wordsbyfarber.data.models.Language
 import com.wordsbyfarber.data.network.DictionaryDownloader
-import com.wordsbyfarber.data.network.DictionaryParser
 import com.wordsbyfarber.data.network.DownloadResult
 import com.wordsbyfarber.data.network.ParseResult
 import kotlinx.coroutines.flow.Flow
@@ -15,8 +14,7 @@ import kotlinx.coroutines.flow.flow
 
 class DictionaryRepository(
     private val context: Context,
-    private val downloader: DictionaryDownloader,
-    private val parser: DictionaryParser
+    private val downloader: DictionaryDownloader
 ) {
     
     private fun getDatabase(languageCode: String): WordsDatabase {
