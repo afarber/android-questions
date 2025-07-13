@@ -257,6 +257,9 @@ class LanguageSelectionIntegrationTest {
             mockDictionaryRepository, preferencesRepository
         )
         
+        // Setup mock for hasMinWords
+        whenever(mockDictionaryRepository.hasMinWords("de")).thenReturn(false)
+        
         // When - Try to select the same language
         val result = selectLanguageUseCase("de")
         

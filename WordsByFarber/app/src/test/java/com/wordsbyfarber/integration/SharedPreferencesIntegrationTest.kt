@@ -101,7 +101,9 @@ class SharedPreferencesIntegrationTest {
         preferencesFields.forEach { field ->
             assertTrue(
                 "Forbidden constant '${field.name}' found in Constants.Preferences. Only language (and future login) keys are allowed.",
-                allowedConstantNames.contains(field.name) || field.name.contains("INSTANCE")
+                allowedConstantNames.contains(field.name) || 
+                field.name.contains("INSTANCE") || 
+                field.name.startsWith("$") // Kotlin compiler-generated fields
             )
         }
     }
