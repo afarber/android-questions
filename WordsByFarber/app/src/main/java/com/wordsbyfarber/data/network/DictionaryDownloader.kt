@@ -1,8 +1,10 @@
 package com.wordsbyfarber.data.network
 
 // Service for downloading dictionary files from remote URLs with progress tracking
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.IOException
@@ -56,9 +58,9 @@ class DictionaryDownloader(
         } catch (e: IOException) {
             emit(DownloadResult.Error("Network error: ${e.message}"))
         } catch (e: Exception) {
-            emit(DownloadResult.Error("Unexpected error: ${e.message}"))
+            emit(DownloadResult.Error("Unexpected error of type ${e.javaClass.simpleName}: ${e.message}"))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 }
 
 sealed class DownloadResult {

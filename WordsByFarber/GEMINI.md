@@ -54,3 +54,8 @@ The project is well-structured and follows the architecture described in `CLAUDE
 *   [ ] Implement the "Preferences", "Help", "Privacy Policy", and "Terms of Service" screens.
 *   [ ] Write unit tests for the data, domain, and UI layers.
 *   [ ] Add animations and transitions to improve the user experience.
+
+- The myUid field in the Language data class is a temporary placeholder for the user's unique identifier until a proper authentication system is in place. It is used to select a user to be displayed in the "My profile" screen.
+- The only allowed values in shared prefs are the string values "language" and (in future) "login"
+
+
