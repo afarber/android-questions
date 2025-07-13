@@ -21,6 +21,20 @@ KSP (Kotlin Symbol Processing) is used minimally only for Room database annotati
 
 Add a comment to the top of each class with a short explanation of its purpose.
 
+## SharedPreferences Usage
+
+**IMPORTANT**: SharedPreferences should contain ONLY the following values:
+
+1. **`"language"`** (String) - Currently implemented. Stores the selected 2-letter language code ("de", "en", "fr", "nl", "pl", "ru")
+2. **`"login"`** (String) - Reserved for future implementation when Google/Amazon/Huawei login is added
+
+**NO OTHER VALUES** should ever be stored in SharedPreferences. The app architecture uses:
+- **Room database** for all data persistence (words, players, etc.)
+- **DownloadTracker singleton** for in-memory download state tracking
+- **Static constants** for configuration values
+
+All tests must verify this constraint and ensure no additional keys are ever added to SharedPreferences.
+
 Initially the Room database is empty and a list of 6 languages is displayed (Screen 1):
 
 | `language` | `rare_letter_1` | `rare_letter_2` | `hashed_dictionary_url`                | `min_words` | `top_url`                            |

@@ -29,6 +29,9 @@ object Constants {
     
     object Preferences {
         const val PREFS_NAME = "words_by_farber_prefs"
+        // the language selected by the user
         const val KEY_LANGUAGE = "language"
+        // the Google/Amazon/Huawei login string, currently not implemented
+        const val KEY_LOGIN = "login"
     }
 }
