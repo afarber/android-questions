@@ -21,6 +21,12 @@ android {
             useSupportLibrary = true
         }
     }
+    
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
 
     buildTypes {
         release {
@@ -97,6 +103,9 @@ dependencies {
     testImplementation(libs.mockito.core)
     testImplementation(libs.mockito.kotlin)
     testImplementation(libs.kotlinx.coroutines.test)
+    
+    // Note: Mockito requires -XX:+EnableDynamicAgentLoading JVM flag for future JDK compatibility.
+    // This flag is configured in gradle.properties: org.gradle.jvmargs=-XX:+EnableDynamicAgentLoading
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
