@@ -13,7 +13,7 @@ navigation = "2.9.1"
 okhttp = "5.1.0"
 coroutines = "1.10.2"
 coil = "2.7.0"
-mockito = "5.15.2"
+mockito = "5.18.0"
 mockitoKotlin = "5.4.0"
 
 [libraries]
