@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "de.afarber.drivingroute"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "de.afarber.drivingroute"
