@@ -1,26 +1,44 @@
 package de.afarber.drivingroute.utils
 
-import org.osmdroid.util.BoundingBox
-import org.osmdroid.util.GeoPoint
+import de.afarber.openmapview.LatLng
+import de.afarber.openmapview.LatLngBounds
 
 object MapUtils {
     
-    fun calculateBoundingBox(points: List<GeoPoint>): BoundingBox {
+    fun calculateBoundingBox(points: List<LatLng>): LatLngBounds {
         if (points.isEmpty()) {
             throw IllegalArgumentException("Points list cannot be empty")
         }
-        
-        val minLat = points.minOf { it.latitude }
-        val maxLat = points.maxOf { it.latitude }
-        val minLon = points.minOf { it.longitude }
-        val maxLon = points.maxOf { it.longitude }
-        
-        return BoundingBox(maxLat, maxLon, minLat, minLon)
+
+        val builder = LatLngBounds.builder()
+        points.forEach { builder.include(it) }
+        return builder.build()
     }
     
-    fun createBoundingBoxWithPadding(start: GeoPoint, finish: GeoPoint, paddingFactor: Double = 1.2): BoundingBox {
+    fun createBoundingBoxWithPadding(
+        start: LatLng,
+        finish: LatLng,
+        paddingFactor: Double = 1.2
+    ): LatLngBounds {
         val points = listOf(start, finish)
-        val boundingBox = calculateBoundingBox(points)
-        return boundingBox.increaseByScale(paddingFactor.toFloat())
+        val bounds = calculateBoundingBox(points)
+
+        val center = bounds.getCenter()
+        val latSpan = bounds.northeast.latitude - bounds.southwest.latitude
+        val lngSpan = bounds.northeast.longitude - bounds.southwest.longitude
+
+        val newLatSpan = latSpan * paddingFactor
+        val newLngSpan = lngSpan * paddingFactor
+
+        val southwest = LatLng(
+            center.latitude - newLatSpan / 2,
+            center.longitude - newLngSpan / 2
+        )
+        val northeast = LatLng(
+            center.latitude + newLatSpan / 2,
+            center.longitude + newLngSpan / 2
+        )
+
+        return LatLngBounds(southwest, northeast)
     }
 }

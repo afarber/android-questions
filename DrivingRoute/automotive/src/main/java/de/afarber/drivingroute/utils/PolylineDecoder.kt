@@ -1,11 +1,11 @@
 package de.afarber.drivingroute.utils
 
-import org.osmdroid.util.GeoPoint
+import de.afarber.openmapview.LatLng
 
 object PolylineDecoder {
     
-    fun decode(polyline: String): List<GeoPoint> {
-        val coordinates = mutableListOf<GeoPoint>()
+    fun decode(polyline: String): List<LatLng> {
+        val coordinates = mutableListOf<LatLng>()
         var index = 0
         val len = polyline.length
         var lat = 0
@@ -37,7 +37,7 @@ object PolylineDecoder {
             val dlng = if (result and 1 != 0) (result shr 1).inv() else result shr 1
             lng += dlng
             
-            coordinates.add(GeoPoint(lat / 1E5, lng / 1E5))
+            coordinates.add(LatLng(lat / 1E5, lng / 1E5))
         }
         
         return coordinates

@@ -3,7 +3,7 @@ package de.afarber.drivingroute.network
 import de.afarber.drivingroute.model.OSRMResponse
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.osmdroid.util.GeoPoint
+import de.afarber.openmapview.LatLng
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -32,7 +32,7 @@ class RouteRepository {
         osrmService = retrofit.create(OSRMService::class.java)
     }
     
-    suspend fun getRoute(start: GeoPoint, finish: GeoPoint): Result<OSRMResponse> {
+    suspend fun getRoute(start: LatLng, finish: LatLng): Result<OSRMResponse> {
         return try {
             val coordinates = "${start.longitude},${start.latitude};${finish.longitude},${finish.latitude}"
             val response = osrmService.getRoute(coordinates)

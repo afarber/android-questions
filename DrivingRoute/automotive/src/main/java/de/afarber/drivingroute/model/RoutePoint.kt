@@ -1,9 +1,9 @@
 package de.afarber.drivingroute.model
 
-import org.osmdroid.util.GeoPoint
+import de.afarber.openmapview.LatLng
 
 data class RoutePoint(
-    val geoPoint: GeoPoint,
+    val geoPoint: LatLng,
     val type: MarkerType
 ) {
     enum class MarkerType {
