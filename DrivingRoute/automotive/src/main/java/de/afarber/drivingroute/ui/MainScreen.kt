@@ -1,11 +1,5 @@
 package de.afarber.drivingroute.ui
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Rect
-import android.graphics.Typeface
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,9 +22,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
-import de.afarber.openmapview.BitmapDescriptor
 import de.afarber.drivingroute.R
 import de.afarber.drivingroute.model.AppState
+import de.afarber.drivingroute.ui.theme.ROUTE_BLUE_INT
 import de.afarber.drivingroute.ui.theme.Red500
 import de.afarber.drivingroute.utils.MapUtils
 import de.afarber.openmapview.BitmapDescriptorFactory
@@ -126,6 +120,10 @@ fun MapViewContainer(
                 setOnMapClickListener { latLng ->
                     onMapClick(latLng)
                 }
+
+                setOnMarkerClickListener { marker ->
+                    true
+                }
             }
         },
         update = { mapView ->
@@ -137,8 +135,7 @@ fun MapViewContainer(
                     Marker(
                         position = start,
                         title = "Start",
-                        icon = createMarkerIcon(context, "S", de.afarber.drivingroute.ui.theme.Green500.value.toLong().toInt()),
-                        anchor = Pair(0.5f, 1.0f)
+                        icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
                     )
                 )
             }
@@ -148,8 +145,7 @@ fun MapViewContainer(
                     Marker(
                         position = finish,
                         title = "Finish",
-                        icon = createMarkerIcon(context, "F", de.afarber.drivingroute.ui.theme.Red500.value.toLong().toInt()),
-                        anchor = Pair(0.5f, 1.0f)
+                        icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)
                     )
                 )
             }
@@ -158,7 +154,7 @@ fun MapViewContainer(
                 mapView.addPolyline(
                     Polyline(
                         points = routePoints,
-                        strokeColor = de.afarber.drivingroute.ui.theme.RouteBlue.value.toLong().toInt(),
+                        strokeColor = ROUTE_BLUE_INT,
                         strokeWidth = 8f
                     )
                 )
@@ -175,34 +171,3 @@ fun MapViewContainer(
     )
 }
 
-private fun createMarkerIcon(context: android.content.Context, text: String, color: Int): BitmapDescriptor {
-    val size = 72
-    val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
-    val canvas = Canvas(bitmap)
-
-    val paint = Paint().apply {
-        isAntiAlias = true
-    }
-
-    paint.color = color
-    paint.style = Paint.Style.FILL
-    canvas.drawCircle(size / 2f, size / 2f, size / 2f - 4, paint)
-
-    paint.color = Color.WHITE
-    paint.style = Paint.Style.STROKE
-    paint.strokeWidth = 4f
-    canvas.drawCircle(size / 2f, size / 2f, size / 2f - 4, paint)
-
-    paint.color = Color.WHITE
-    paint.style = Paint.Style.FILL
-    paint.textSize = 32f
-    paint.textAlign = Paint.Align.CENTER
-    paint.typeface = Typeface.DEFAULT_BOLD
-
-    val textBounds = Rect()
-    paint.getTextBounds(text, 0, text.length, textBounds)
-    val textY = size / 2f + textBounds.height() / 2f
-    canvas.drawText(text, size / 2f, textY, paint)
-
-    return BitmapDescriptorFactory.fromBitmap(bitmap)
-}
