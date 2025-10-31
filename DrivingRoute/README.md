@@ -29,7 +29,8 @@ A modern Android Automotive OS (AAOS) route planning application built with Jetp
 - **OpenMapView** - Custom map library for Android (replaces osmdroid)
 - **MVVM Pattern** - ViewModel with StateFlow for reactive state management
 - **Coroutines** - Async operations for network calls
-- **Retrofit 3** - Type-safe HTTP client for OSRM API
+- **Ktor 3** - Modern async HTTP client with native Kotlin coroutines support
+- **kotlinx.serialization** - Compile-time safe JSON serialization
 
 ### Core Components
 1. **MainActivity** - ComponentActivity hosting Compose UI in DrivingRouteTheme
@@ -41,16 +42,15 @@ A modern Android Automotive OS (AAOS) route planning application built with Jetp
    - `routePoints`: List<LatLng> for blue polyline
    - `routeInfo`: String? for distance/duration toast
    - `errorMessage`: String? for snackbar errors
-4. **RouteRepository** - Retrofit setup with OkHttp, 10-second timeouts, logging interceptor
-5. **OSRMService** - Retrofit interface for OSRM API calls
-6. **OpenMapView Integration** - AndroidView wrapper with lifecycle observer, markers, polylines, and camera animations
+4. **RouteRepository** - Ktor HttpClient with Android engine, 10-second timeouts, logging plugin
+5. **OpenMapView Integration** - AndroidView wrapper with lifecycle observer, markers, polylines, and camera animations
 
 ### State Flow
 
 ```
-IDLE → START_MARKER → FINISH_MARKER → ROUTE_DISPLAYED
-  ↑        ↓              ↓              ↓
-  └────── CANCEL ────── CANCEL ──────── CANCEL
+IDLE -> START_MARKER -> FINISH_MARKER -> ROUTE_DISPLAYED
+  ^          |               |               |
+  +--------- CANCEL -------- CANCEL -------- CANCEL
 ```
 
 - **IDLE**: No markers, Cancel FAB hidden, waiting for first tap
@@ -64,12 +64,12 @@ The project uses Gradle version catalogs for dependency management. See `gradle/
 
 ### Key Libraries
 - **OpenMapView** - Custom Android map library
-- **Retrofit** - HTTP client for OSRM API
+- **Ktor Client** - Modern HTTP client for OSRM API
+- **kotlinx.serialization** - Compile-time JSON serialization
 - **Compose BOM** - Jetpack Compose UI components
 - **Material3** - Material Design 3 components
 - **Coroutines** - Async operations
 - **Lifecycle** - ViewModel and lifecycle-aware components
-- **OkHttp Logging Interceptor** - HTTP request/response logging
 - **Kotlin** - Primary language with JVM target 11
 
 ### Version Catalog Reference
@@ -77,7 +77,7 @@ The project uses Gradle version catalogs for dependency management. See `gradle/
 Check `gradle/libs.versions.toml` for current dependency versions. Key sections:
 - `[versions]` - Version numbers for all dependencies
 - `[libraries]` - Library definitions with group/name/version references
-- `[plugins]` - Gradle plugins (Android, Kotlin, Compose)
+- `[plugins]` - Gradle plugins (Android, Kotlin, Compose, Serialization)
 
 ### Permissions (AndroidManifest.xml)
 ```xml
@@ -128,10 +128,9 @@ automotive/src/main/java/de/afarber/drivingroute/
 ├── model/
 │   ├── AppState.kt                # 4-state enum for UI flow
 │   ├── RoutePoint.kt              # Data class for route points
-│   └── OSRMResponse.kt            # Data classes for OSRM API response
+│   └── OSRMResponse.kt            # kotlinx.serialization data classes for OSRM API
 ├── network/
-│   ├── OSRMService.kt             # Retrofit service interface
-│   └── RouteRepository.kt         # API client with OkHttp, timeouts, logging
+│   └── RouteRepository.kt         # Ktor HttpClient with plugins
 ├── ui/
 │   ├── MainScreen.kt              # Compose UI with map, FAB, state handling
 │   ├── MainViewModel.kt           # StateFlow-based state management
@@ -215,15 +214,70 @@ AndroidView(
 - Uses `BitmapDescriptorFactory.defaultMarker()` for colored markers
 - Polyline strokeColor requires Int (not Compose Color)
 
+### HTTP Client Implementation
+
+**RouteRepository.kt** uses Ktor HttpClient with Android engine:
+
+```kotlin
+private val client = HttpClient(Android) {
+    // Base URL configuration
+    defaultRequest {
+        url("https://router.project-osrm.org/")
+    }
+
+    // Content negotiation for JSON serialization
+    install(ContentNegotiation) {
+        json(Json {
+            ignoreUnknownKeys = true
+            isLenient = true
+            prettyPrint = true
+        })
+    }
+
+    // Logging plugin
+    install(Logging) {
+        logger = object : Logger {
+            override fun log(message: String) {
+                Log.d("KtorClient", message)
+            }
+        }
+        level = LogLevel.BODY
+    }
+
+    // Timeout configuration
+    install(HttpTimeout) {
+        connectTimeoutMillis = 10_000
+        requestTimeoutMillis = 10_000
+        socketTimeoutMillis = 10_000
+    }
+}
+```
+
+**Key Features:**
+- **Ktor Android Engine**: Native Android HTTP implementation
+- **ContentNegotiation Plugin**: Automatic JSON serialization via kotlinx.serialization
+- **Logging Plugin**: Logs requests/responses to logcat with "KtorClient" tag
+- **HttpTimeout Plugin**: 10-second timeouts for connect/request/socket operations
+- **Coroutines-First**: Built for Kotlin suspend functions from the ground up
+
 ### OSRM API Integration
 
-**RouteRepository.kt** Implementation:
+**API Details:**
 - **Base URL**: `https://router.project-osrm.org/`
 - **Endpoint**: `route/v1/driving/{coordinates}`
-- **Format**: `{lng1},{lat1};{lng2},{lat2}?overview=full&geometries=polyline`
-- **Timeout**: 10 seconds for connect, read, and write operations
-- **Logging**: HTTP body logging via OkHttp interceptor
+- **Format**: `{lng1},{lat1};{lng2},{lat2}`
+- **Timeout**: 10 seconds for all network operations
+- **Serialization**: kotlinx.serialization with compile-time code generation
 - **Error Handling**: Result<T> wrapper for success/failure handling
+
+**Request Example:**
+```kotlin
+val response = client.get {
+    url {
+        path("route/v1/driving/$coordinates")
+    }
+}
+```
 
 ### Polyline Processing
 - Decodes OSRM polyline geometry using Google's algorithm
@@ -266,7 +320,7 @@ AndroidView(
 - **Manual Testing**: All core functionality verified on emulator
 
 ### Verified Functionality
-1. **Happy Path**: Place Start → Place Finish → Calculate route → Auto-zoom works
+1. **Happy Path**: Place Start -> Place Finish -> Calculate route -> Auto-zoom works
 2. **Cancel Operations**: Cancel works in all states (START_MARKER, FINISH_MARKER, ROUTE_DISPLAYED)
 3. **Map Interactions**: Pan, zoom, pinch gestures functional
 4. **Network Handling**: Route calculation with proper error handling and timeouts
@@ -275,50 +329,3 @@ AndroidView(
 7. **Markers**: Green/red markers render correctly
 8. **Route Display**: Blue polyline renders with distance/duration toast
 
-### Performance Features
-
-**Memory Management**
-- Markers created via OpenMapView's BitmapDescriptorFactory
-- Previous polylines cleared before adding new ones
-- Map tile caching handled by OpenMapView
-
-**Network Optimization**
-- 10-second timeout implemented for all operations
-- Proper error handling with user-friendly messages
-- HTTP logging interceptor for debugging
-
-**AAOS Optimization**
-- Touch targets sized appropriately
-- Landscape orientation optimized
-- Proper lifecycle handling with LifecycleObserver
-
-## HTTP Client Architecture Note
-
-### Current Implementation: Retrofit + OkHttp
-
-This project uses Retrofit 3.0.0 with OkHttp as the underlying HTTP engine. This is the standard, well-supported architecture for Android networking.
-
-**Why OkHttp?**
-- Native integration with Retrofit (default HTTP client)
-- Excellent interceptor support (logging, authentication, etc.)
-- Built-in connection pooling and caching
-- Mature, battle-tested library
-- First-class Kotlin coroutines support
-
-**Alternative Considered: Ktor**
-
-Ktor was evaluated as an alternative HTTP client. However, **Ktor is not compatible with Retrofit** because:
-1. Retrofit is architecturally built on OkHttp - no Ktor adapter exists
-2. They are competing HTTP frameworks, not complementary solutions
-3. Retrofit's CallAdapter and Converter APIs expect OkHttp types
-
-**If Ktor is desired:** Would require removing Retrofit entirely and implementing direct Ktor HttpClient calls with kotlinx.serialization. This would be a complete networking layer rewrite with no clear technical benefit over the current implementation.
-
-**Recommendation:** Keep the current Retrofit + OkHttp architecture. It is idiomatic, performant, and well-maintained.
-
-## Future Enhancement Opportunities
-- Multiple route alternatives
-- Offline map caching
-- Voice guidance integration
-- Route waypoint support
-- Traffic-aware routing
