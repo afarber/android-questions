@@ -123,7 +123,7 @@ Check `gradle/libs.versions.toml` for current dependency versions. Key sections:
 ## File Structure
 
 ```
-automotive/src/main/java/de/afarber/drivingroute/
+automotive/src/main/kotlin/de/afarber/drivingroute/
 ├── MainActivity.kt                 # Compose entry point (18 lines)
 ├── model/
 │   ├── AppState.kt                # 4-state enum for UI flow
@@ -315,8 +315,8 @@ val response = client.get {
 ## Testing & Quality
 
 ### Current Test Coverage
-- **Unit Tests**: Located in `automotive/src/test/java/` (JUnit)
-- **Instrumentation Tests**: Located in `automotive/src/androidTest/java/` (AndroidX Test + Espresso)
+- **Unit Tests**: Located in `automotive/src/test/kotlin/` (JUnit)
+- **Instrumentation Tests**: Located in `automotive/src/androidTest/kotlin/` (AndroidX Test + Espresso)
 - **Manual Testing**: All core functionality verified on emulator
 
 ### Verified Functionality
