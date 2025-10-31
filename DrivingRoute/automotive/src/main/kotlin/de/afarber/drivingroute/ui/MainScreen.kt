@@ -17,15 +17,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import de.afarber.drivingroute.R
 import de.afarber.drivingroute.model.AppState
-import de.afarber.drivingroute.ui.theme.ROUTE_BLUE_INT
 import de.afarber.drivingroute.ui.theme.Red500
+import de.afarber.drivingroute.ui.theme.RouteBlue
 import de.afarber.drivingroute.utils.MapUtils
 import de.afarber.openmapview.BitmapDescriptorFactory
 import de.afarber.openmapview.CameraUpdateFactory
@@ -154,7 +154,7 @@ fun MapViewContainer(
                 mapView.addPolyline(
                     Polyline(
                         points = routePoints,
-                        strokeColor = ROUTE_BLUE_INT,
+                        strokeColor = RouteBlue,
                         strokeWidth = 8f
                     )
                 )
