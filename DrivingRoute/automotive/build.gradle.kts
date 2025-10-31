@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -41,8 +42,9 @@ android {
     }
     packaging {
         resources {
-            // Exclude duplicate MANIFEST.MF files from okhttp-logging-interceptor and jspecify dependencies
-            excludes += "/META-INF/versions/9/OSGI-INF/MANIFEST.MF"
+            // Exclude duplicate license files from Ktor dependencies
+            excludes += "/META-INF/LICENSE.md"
+            excludes += "/META-INF/LICENSE-notice.md"
         }
     }
 }
@@ -65,9 +67,12 @@ dependencies {
     implementation(libs.openmapview)
 
     // Networking
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.gson)
-    implementation(libs.okhttp.logging.interceptor)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.client.logging)
+    implementation(libs.kotlinx.serialization.json)
 
     // Coroutines & Lifecycle
     implementation(libs.kotlinx.coroutines.android)

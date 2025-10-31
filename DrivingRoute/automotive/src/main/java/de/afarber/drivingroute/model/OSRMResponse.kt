@@ -1,17 +1,20 @@
 package de.afarber.drivingroute.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class OSRMResponse(
-    @SerializedName("routes")
+    @SerialName("routes")
     val routes: List<Route>
 ) {
+    @Serializable
     data class Route(
-        @SerializedName("geometry")
+        @SerialName("geometry")
         val geometry: String,
-        @SerializedName("duration")
+        @SerialName("duration")
         val duration: Double,
-        @SerializedName("distance")
+        @SerialName("distance")
         val distance: Double
     )
 }
