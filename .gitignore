@@ -5,6 +5,9 @@
 # Files for the Dalvik VM
 *.dex
 
+# Java memory dumps
+*.hprof
+
 # Java class files
 *.class
 
@@ -13,8 +16,6 @@ bin/
 gen/
 
 # Gradle files
-local.properties
-gradle.properties
 .gradle/
 build/
 
