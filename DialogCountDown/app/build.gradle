@@ -3,6 +3,7 @@ plugins {
 }
 
 android {
+    namespace "de.afarber.dialogcountdown"
     compileSdk 32
 
     defaultConfig {

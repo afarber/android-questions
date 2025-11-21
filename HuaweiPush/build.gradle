@@ -7,15 +7,15 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.2'
+        classpath 'com.android.tools.build:gradle:8.5.0'
         classpath 'net.sf.proguard:proguard-gradle:6.0.3'
-        classpath 'com.huawei.agconnect:agcp:1.6.3.300'
+        classpath 'com.huawei.agconnect:agcp:1.9.1.301'
     }
 }
 
 plugins {
-    id 'com.android.application' version '7.1.2' apply false
-    id 'com.android.library' version '7.1.2' apply false
+    id 'com.android.application' version '8.5.0' apply false
+    id 'com.android.library' version '8.5.0' apply false
 }
 
 task clean(type: Delete) {

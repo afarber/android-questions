@@ -3,6 +3,7 @@ plugins {
 }
 
 android {
+    namespace "de.afarber.qrencoder"
     compileSdk 32
 
     defaultConfig {

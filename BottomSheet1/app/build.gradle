@@ -3,6 +3,7 @@ plugins {
 }
 
 android {
+    namespace "de.afarber.bottomsheet1"
     compileSdk 32
 
     defaultConfig {

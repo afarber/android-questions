@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+    namespace "de.afarber.topplayers"
     compileSdkVersion 28
     defaultConfig {
         applicationId "de.afarber.topplayers"

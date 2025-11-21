@@ -3,6 +3,7 @@ plugins {
 }
 
 android {
+    namespace "de.afarber.roundedqrcode"
     compileSdk 32
 
     defaultConfig {

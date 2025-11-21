@@ -4,6 +4,7 @@ plugins {
 }
 
 android {
+    namespace "de.afarber.huaweipush"
     compileSdk 32
 
     defaultConfig {
