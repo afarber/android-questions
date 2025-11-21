@@ -1,19 +1,21 @@
 package de.afarber.drivingroute.ui
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -40,7 +42,6 @@ fun MainScreen(
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val snackbarHostState = remember { SnackbarHostState() }
 
     val appState by viewModel.appState.collectAsState()
     val startMarker by viewModel.startMarker.collectAsState()
@@ -49,21 +50,7 @@ fun MainScreen(
     val routeInfo by viewModel.routeInfo.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
-    LaunchedEffect(routeInfo) {
-        routeInfo?.let {
-            Toast.makeText(context, it, Toast.LENGTH_LONG).show()
-        }
-    }
-
-    LaunchedEffect(errorMessage) {
-        errorMessage?.let {
-            snackbarHostState.showSnackbar(it)
-            viewModel.clearError()
-        }
-    }
-
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
             if (appState != AppState.IDLE) {
                 FloatingActionButton(
@@ -93,7 +80,31 @@ fun MainScreen(
                 },
                 lifecycleOwner = lifecycleOwner
             )
+
+            // Show route info card when route is available
+            routeInfo?.let { info ->
+                RouteInfoCard(
+                    routeInfo = info,
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = 16.dp)
+                )
+            }
         }
+    }
+
+    // AlertDialog shown when errorMessage is not null
+    errorMessage?.let { message ->
+        AlertDialog(
+            onDismissRequest = { viewModel.clearError() },
+            confirmButton = {
+                TextButton(onClick = { viewModel.clearError() }) {
+                    Text("OK")
+                }
+            },
+            title = { Text("Notice") },
+            text = { Text(message) }
+        )
     }
 }
 
@@ -111,7 +122,6 @@ fun MapViewContainer(
         factory = { ctx ->
             OpenMapView(ctx).apply {
                 lifecycleOwner.lifecycle.addObserver(this)
-                // Map type is set to default (STANDARD) automatically
                 setZoom(15.0)
                 setCenter(LatLng(52.4227, 10.7865))
                 setMinZoomPreference(3.0f)
@@ -171,3 +181,23 @@ fun MapViewContainer(
     )
 }
 
+@Composable
+fun RouteInfoCard(
+    routeInfo: String,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier,
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        )
+    ) {
+        Text(
+            text = routeInfo,
+            style = MaterialTheme.typography.headlineMedium,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
+        )
+    }
+}

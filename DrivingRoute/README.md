@@ -92,6 +92,23 @@ Check `gradle/libs.versions.toml` for current dependency versions. Key sections:
 - Android Studio (latest version)
 - Android Automotive OS emulator or physical device
 - Internet connection for OSRM API calls
+- At least 4GB RAM allocated to Gradle (configured in `gradle.properties`)
+
+### Environment Setup
+
+If building from command line, set up your environment:
+
+```bash
+# Add to ~/.profile or ~/.bashrc
+export JAVA_HOME=/snap/android-studio/current/jbr  # For snap installation
+export PATH=$JAVA_HOME/bin:$PATH
+export PATH=$PATH:$HOME/Android/Sdk/platform-tools
+
+# Reload profile
+source ~/.profile
+```
+
+**Note:** The project requires `gradle.properties` with AndroidX support and memory settings. This file is included in the repository.
 
 ### Building the App
 ```bash
