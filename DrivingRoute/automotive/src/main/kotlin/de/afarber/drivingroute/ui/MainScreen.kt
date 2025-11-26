@@ -16,21 +16,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import de.afarber.drivingroute.R
 import de.afarber.drivingroute.model.AppState
 import de.afarber.drivingroute.ui.theme.Red500
-import de.afarber.drivingroute.ui.theme.RouteBlue
-import de.afarber.drivingroute.utils.MapUtils
-import de.afarber.openmapview.BitmapDescriptorFactory
-import de.afarber.openmapview.CameraUpdateFactory
-import de.afarber.openmapview.LatLng
-import de.afarber.openmapview.Marker
-import de.afarber.openmapview.OpenMapView
-import de.afarber.openmapview.Polyline
 
 @Composable
 fun MainScreen(
@@ -102,78 +93,5 @@ fun MainScreen(
             text = { Text(message) }
         )
     }
-}
-
-@Composable
-fun MapViewContainer(
-    startMarker: LatLng?,
-    finishMarker: LatLng?,
-    routePoints: List<LatLng>,
-    onMapClick: (LatLng) -> Unit,
-    lifecycleOwner: androidx.lifecycle.LifecycleOwner
-) {
-    val context = LocalContext.current
-
-    AndroidView(
-        factory = { ctx ->
-            OpenMapView(ctx).apply {
-                lifecycleOwner.lifecycle.addObserver(this)
-                setZoom(15.0f)
-                setCenter(LatLng(52.4227, 10.7865))
-                setMinZoomPreference(3.0f)
-                setMaxZoomPreference(20.0f)
-
-                setOnMapClickListener { latLng ->
-                    onMapClick(latLng)
-                }
-
-                setOnMarkerClickListener { marker ->
-                    true
-                }
-            }
-        },
-        update = { mapView ->
-            mapView.clearMarkers()
-            mapView.clearPolylines()
-
-            startMarker?.let { start ->
-                mapView.addMarker(
-                    Marker(
-                        position = start,
-                        title = "Start",
-                        icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
-                    )
-                )
-            }
-
-            finishMarker?.let { finish ->
-                mapView.addMarker(
-                    Marker(
-                        position = finish,
-                        title = "Finish",
-                        icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)
-                    )
-                )
-            }
-
-            if (routePoints.isNotEmpty()) {
-                mapView.addPolyline(
-                    Polyline(
-                        points = routePoints,
-                        strokeColor = RouteBlue,
-                        strokeWidth = 8f
-                    )
-                )
-
-                if (startMarker != null && finishMarker != null) {
-                    val bounds = MapUtils.createBoundingBoxWithPadding(startMarker, finishMarker, 1.3)
-                    mapView.animateCamera(
-                        CameraUpdateFactory.newLatLngBounds(bounds, 100)
-                    )
-                }
-            }
-        },
-        modifier = Modifier.fillMaxSize()
-    )
 }
 
