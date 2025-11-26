@@ -4,15 +4,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -122,7 +118,7 @@ fun MapViewContainer(
         factory = { ctx ->
             OpenMapView(ctx).apply {
                 lifecycleOwner.lifecycle.addObserver(this)
-                setZoom(15.0)
+                setZoom(15.0f)
                 setCenter(LatLng(52.4227, 10.7865))
                 setMinZoomPreference(3.0f)
                 setMaxZoomPreference(20.0f)
@@ -181,23 +177,3 @@ fun MapViewContainer(
     )
 }
 
-@Composable
-fun RouteInfoCard(
-    routeInfo: String,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier,
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        )
-    ) {
-        Text(
-            text = routeInfo,
-            style = MaterialTheme.typography.headlineMedium,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
-        )
-    }
-}
