@@ -49,8 +49,12 @@ fun MainScreen(
     //val context = LocalContext.current
     //val scope = rememberCoroutineScope()
     val lifecycleOwner = LocalLifecycleOwner.current
+
     val snackbarHostState = remember { SnackbarHostState() }
     var isSnackbarVisible by remember { mutableStateOf(false) }
+
+    var onZoomIn by remember { mutableStateOf<(() -> Unit)?>(null) }
+    var onZoomOut by remember { mutableStateOf<(() -> Unit)?>(null) }
 
     val appState by viewModel.appState.collectAsState()
     val startMarker by viewModel.startMarker.collectAsState()
@@ -90,6 +94,10 @@ fun MainScreen(
                 onMapClick = { latLng ->
                     viewModel.handleMapClick(latLng)
                 },
+                onMapReady = { zoomIn, zoomOut ->
+                    onZoomIn = zoomIn
+                    onZoomOut = zoomOut
+                },
                 lifecycleOwner = lifecycleOwner
             )
 
@@ -114,7 +122,7 @@ fun MainScreen(
             ) {
                 Row {
                     FilledIconButton(
-                        onClick = { /* TODO: zoom out */ },
+                        onClick = { onZoomOut?.invoke() },
                         modifier = Modifier.size(56.dp),
                         shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp),
                         colors = IconButtonDefaults.filledIconButtonColors(
@@ -127,7 +135,7 @@ fun MainScreen(
                         )
                     }
                     FilledIconButton(
-                        onClick = { /* TODO: zoom in */ },
+                        onClick = { onZoomIn?.invoke() },
                         modifier = Modifier.size(56.dp),
                         shape = RoundedCornerShape(topEnd = 12.dp, bottomEnd = 12.dp),
                         colors = IconButtonDefaults.filledIconButtonColors(
