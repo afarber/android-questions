@@ -53,8 +53,9 @@ fun MainScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     var isSnackbarVisible by remember { mutableStateOf(false) }
 
-    var onZoomIn by remember { mutableStateOf<(() -> Unit)?>(null) }
-    var onZoomOut by remember { mutableStateOf<(() -> Unit)?>(null) }
+    // Store zoom control functions provided by MapViewContainer
+    var zoomIn by remember { mutableStateOf({}) }
+    var zoomOut by remember { mutableStateOf({}) }
 
     val appState by viewModel.appState.collectAsState()
     val startMarker by viewModel.startMarker.collectAsState()
@@ -94,10 +95,9 @@ fun MainScreen(
                 onMapClick = { latLng ->
                     viewModel.handleMapClick(latLng)
                 },
-                onMapReady = { zoomIn, zoomOut ->
-                    onZoomIn = zoomIn
-                    onZoomOut = zoomOut
-                },
+                // Receive zoom functions from MapViewContainer and store them
+                onZoomIn = { fn -> zoomIn = fn },
+                onZoomOut = { fn -> zoomOut = fn },
                 lifecycleOwner = lifecycleOwner
             )
 
@@ -122,7 +122,7 @@ fun MainScreen(
             ) {
                 Row {
                     FilledIconButton(
-                        onClick = { onZoomOut?.invoke() },
+                        onClick = { zoomOut() },
                         modifier = Modifier.size(56.dp),
                         shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp),
                         colors = IconButtonDefaults.filledIconButtonColors(
@@ -135,7 +135,7 @@ fun MainScreen(
                         )
                     }
                     FilledIconButton(
-                        onClick = { onZoomIn?.invoke() },
+                        onClick = { zoomIn() },
                         modifier = Modifier.size(56.dp),
                         shape = RoundedCornerShape(topEnd = 12.dp, bottomEnd = 12.dp),
                         colors = IconButtonDefaults.filledIconButtonColors(

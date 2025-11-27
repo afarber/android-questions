@@ -20,7 +20,8 @@ fun MapViewContainer(
     finishMarker: LatLng?,
     routePoints: List<LatLng>,
     onMapClick: (LatLng) -> Unit,
-    onMapReady: (zoomIn: () -> Unit, zoomOut: () -> Unit) -> Unit,
+    onZoomIn: (() -> Unit) -> Unit,
+    onZoomOut: (() -> Unit) -> Unit,
     lifecycleOwner: LifecycleOwner
 ) {
     AndroidView(
@@ -29,8 +30,6 @@ fun MapViewContainer(
                 lifecycleOwner.lifecycle.addObserver(this)
                 setZoom(15.0f)
                 setCenter(LatLng(52.4227, 10.7865))
-                //setMinZoomPreference(3.0f)
-                //setMaxZoomPreference(20.0f)
 
                 setOnMapClickListener { latLng ->
                     onMapClick(latLng)
@@ -40,11 +39,9 @@ fun MapViewContainer(
                     true
                 }
 
-                // Provide zoom functions to parent
-                onMapReady(
-                    { animateCamera(CameraUpdateFactory.zoomIn()) },
-                    { animateCamera(CameraUpdateFactory.zoomOut()) }
-                )
+                // Provide zoom functions to parent by calling callbacks with lambdas
+                onZoomIn { animateCamera(CameraUpdateFactory.zoomIn()) }
+                onZoomOut { animateCamera(CameraUpdateFactory.zoomOut()) }
             }
         },
         update = { mapView ->
