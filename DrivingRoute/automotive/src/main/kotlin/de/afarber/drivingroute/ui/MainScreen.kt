@@ -15,7 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +39,7 @@ fun MainScreen(
     //val scope = rememberCoroutineScope()
     val lifecycleOwner = LocalLifecycleOwner.current
     val snackbarHostState = remember { SnackbarHostState() }
+    var isSnackbarVisible by remember { mutableStateOf(false) }
 
     val appState by viewModel.appState.collectAsState()
     val startMarker by viewModel.startMarker.collectAsState()
@@ -47,7 +50,7 @@ fun MainScreen(
 
     Scaffold(
         floatingActionButton = {
-            if (appState != AppState.IDLE) {
+            if (appState != AppState.IDLE && !isSnackbarVisible) {
                 FloatingActionButton(
                     onClick = { viewModel.clearAll() },
                     containerColor = Red500
@@ -94,11 +97,13 @@ fun MainScreen(
     // Show snack bar when errorMessage is not null
     LaunchedEffect(errorMessage) {
         errorMessage?.let { message ->
+            isSnackbarVisible = true
             val result = snackbarHostState.showSnackbar(
                 message = message,
                 actionLabel = "OK",
                 duration = SnackbarDuration.Short
             )
+            isSnackbarVisible = false
             when (result) {
                 SnackbarResult.ActionPerformed -> {
                     Log.d(LOG_TAG, "Snackbar ActionPerformed")
