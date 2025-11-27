@@ -1,20 +1,24 @@
 package de.afarber.drivingroute.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -23,12 +27,16 @@ import de.afarber.drivingroute.R
 import de.afarber.drivingroute.model.AppState
 import de.afarber.drivingroute.ui.theme.Red500
 
+private const val LOG_TAG = "MainScreen"
+
 @Composable
 fun MainScreen(
     viewModel: MainViewModel = viewModel()
 ) {
-    val context = LocalContext.current
+    //val context = LocalContext.current
+    //val scope = rememberCoroutineScope()
     val lifecycleOwner = LocalLifecycleOwner.current
+    val snackbarHostState = remember { SnackbarHostState() }
 
     val appState by viewModel.appState.collectAsState()
     val startMarker by viewModel.startMarker.collectAsState()
@@ -42,15 +50,18 @@ fun MainScreen(
             if (appState != AppState.IDLE) {
                 FloatingActionButton(
                     onClick = { viewModel.clearAll() },
-                    containerColor = androidx.compose.ui.graphics.Color(Red500.value)
+                    containerColor = Red500
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_close),
                         contentDescription = "Cancel",
-                        tint = androidx.compose.ui.graphics.Color.White
+                        tint = Color.White
                     )
                 }
             }
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
         }
     ) { paddingValues ->
         Box(
@@ -80,18 +91,25 @@ fun MainScreen(
         }
     }
 
-    // AlertDialog shown when errorMessage is not null
-    errorMessage?.let { message ->
-        AlertDialog(
-            onDismissRequest = { viewModel.clearError() },
-            confirmButton = {
-                TextButton(onClick = { viewModel.clearError() }) {
-                    Text("OK")
+    // Show snack bar when errorMessage is not null
+    LaunchedEffect(errorMessage) {
+        errorMessage?.let { message ->
+            val result = snackbarHostState.showSnackbar(
+                message = message,
+                actionLabel = "OK",
+                duration = SnackbarDuration.Short
+            )
+            when (result) {
+                SnackbarResult.ActionPerformed -> {
+                    Log.d(LOG_TAG, "Snackbar ActionPerformed")
+                    // viewModel.retry()
                 }
-            },
-            title = { Text("Notice") },
-            text = { Text(message) }
-        )
+                SnackbarResult.Dismissed -> {
+                    Log.d(LOG_TAG, "Snackbar Dismissed")
+                }
+            }
+            viewModel.clearError()
+        }
     }
 }
 
