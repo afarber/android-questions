@@ -2,15 +2,25 @@ package de.afarber.drivingroute.ui
 
 import android.util.Log
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -28,6 +38,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import de.afarber.drivingroute.R
 import de.afarber.drivingroute.model.AppState
 import de.afarber.drivingroute.ui.theme.Red500
+
 
 private const val LOG_TAG = "MainScreen"
 
@@ -90,6 +101,45 @@ fun MainScreen(
                         .align(Alignment.TopCenter)
                         .padding(top = 16.dp)
                 )
+            }
+
+            // Zoom toolbar in bottom left
+            Surface(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(start = 16.dp, bottom = 16.dp),
+                shape = RoundedCornerShape(12.dp),
+                shadowElevation = 6.dp,
+                color = MaterialTheme.colorScheme.surface
+            ) {
+                Row {
+                    FilledIconButton(
+                        onClick = { /* TODO: zoom out */ },
+                        modifier = Modifier.size(56.dp),
+                        shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp),
+                        colors = IconButtonDefaults.filledIconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Remove,
+                            contentDescription = "Zoom out"
+                        )
+                    }
+                    FilledIconButton(
+                        onClick = { /* TODO: zoom in */ },
+                        modifier = Modifier.size(56.dp),
+                        shape = RoundedCornerShape(topEnd = 12.dp, bottomEnd = 12.dp),
+                        colors = IconButtonDefaults.filledIconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Zoom in"
+                        )
+                    }
+                }
             }
         }
     }
