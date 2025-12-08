@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Words by Farber</string>
+
+    <!-- Navigation -->
+    <string name="back">Назад</string>
+    <string name="retry">Повторить</string>
+
+    <!-- Language Selection Screen -->
+    <string name="select_language">Выберите язык</string>
+
+    <!-- Loading Screen -->
+    <string name="downloading">Загрузка...</string>
+    <string name="inserting_words">Добавление слов...</string>
+    <string name="words_count">%1$s слов</string>
+
+    <!-- Home Screen -->
+    <string name="two_letter_words">Слова из 2 букв: %1$d</string>
+    <string name="three_letter_words">Слова из 3 букв: %1$d</string>
+
+    <!-- Failed Download Screen -->
+    <string name="download_failed">Ошибка загрузки</string>
+</resources>

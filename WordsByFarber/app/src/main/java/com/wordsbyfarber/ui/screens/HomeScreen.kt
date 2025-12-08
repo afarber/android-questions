@@ -17,14 +17,29 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.wordsbyfarber.R
 import com.wordsbyfarber.viewmodel.DictionaryViewModel
 
+/**
+ * Main screen displayed after a dictionary is successfully loaded.
+ *
+ * Shows statistics about the loaded dictionary, including counts of
+ * 2-letter and 3-letter words. The word counts are loaded from the
+ * Room database and update reactively via Flow.
+ *
+ * @param viewModel The ViewModel that provides access to dictionary data
+ * @param onBack Callback invoked when the user presses the back button,
+ *               typically navigates back to language selection
+ */
 @Composable
 fun HomeScreen(
     viewModel: DictionaryViewModel,
     onBack: () -> Unit
 ) {
+    // Collect word counts from the database as State
+    // initial = 0 provides a default while the Flow hasn't emitted yet
     val twoLetterCount by viewModel.getWordCount(2).collectAsState(initial = 0)
     val threeLetterCount by viewModel.getWordCount(3).collectAsState(initial = 0)
 
@@ -34,8 +49,13 @@ fun HomeScreen(
                 NavigationBarItem(
                     selected = false,
                     onClick = onBack,
-                    icon = { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back") },
-                    label = { Text("Back") }
+                    icon = {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
+                    },
+                    label = { Text(stringResource(R.string.back)) }
                 )
             }
         }
@@ -48,6 +68,7 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            // Display the selected language name as a header
             viewModel.selectedLanguage?.let { language ->
                 Text(
                     text = language.name,
@@ -56,14 +77,16 @@ fun HomeScreen(
                 )
             }
 
+            // Word count statistics
+            // stringResource with format arguments: %1$d is replaced by the count
             Text(
-                text = "2-letter words: $twoLetterCount",
+                text = stringResource(R.string.two_letter_words, twoLetterCount),
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
 
             Text(
-                text = "3-letter words: $threeLetterCount",
+                text = stringResource(R.string.three_letter_words, threeLetterCount),
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(vertical = 8.dp)
             )

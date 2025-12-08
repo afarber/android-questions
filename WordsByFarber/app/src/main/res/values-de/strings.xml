@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Words by Farber</string>
+
+    <!-- Navigation -->
+    <string name="back">Zurück</string>
+    <string name="retry">Wiederholen</string>
+
+    <!-- Language Selection Screen -->
+    <string name="select_language">Sprache wählen</string>
+
+    <!-- Loading Screen -->
+    <string name="downloading">Herunterladen...</string>
+    <string name="inserting_words">Wörter einfügen...</string>
+    <string name="words_count">%1$s Wörter</string>
+
+    <!-- Home Screen -->
+    <string name="two_letter_words">2-Buchstaben-Wörter: %1$d</string>
+    <string name="three_letter_words">3-Buchstaben-Wörter: %1$d</string>
+
+    <!-- Failed Download Screen -->
+    <string name="download_failed">Download fehlgeschlagen</string>
+</resources>

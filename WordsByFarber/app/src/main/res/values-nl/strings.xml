@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Words by Farber</string>
+
+    <!-- Navigation -->
+    <string name="back">Terug</string>
+    <string name="retry">Opnieuw</string>
+
+    <!-- Language Selection Screen -->
+    <string name="select_language">Kies taal</string>
+
+    <!-- Loading Screen -->
+    <string name="downloading">Downloaden...</string>
+    <string name="inserting_words">Woorden invoegen...</string>
+    <string name="words_count">%1$s woorden</string>
+
+    <!-- Home Screen -->
+    <string name="two_letter_words">2-letterwoorden: %1$d</string>
+    <string name="three_letter_words">3-letterwoorden: %1$d</string>
+
+    <!-- Failed Download Screen -->
+    <string name="download_failed">Download mislukt</string>
+</resources>
