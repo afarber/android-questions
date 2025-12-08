@@ -20,34 +20,49 @@ class DictionaryRepository(
 ) {
     private val json = Json { ignoreUnknownKeys = true }
 
-    suspend fun downloadAndStoreDictionary(language: Language): Result<Unit> {
+    companion object {
+        private const val BATCH_SIZE = 1000
+    }
+
+    suspend fun downloadAndStoreDictionary(
+        language: Language,
+        onProgress: (wordsInserted: Int) -> Unit = {}
+    ): Result<Unit> {
         return runCatching {
             val jsContent = httpClient.get(language.hashedDictionaryUrl).bodyAsText()
             withContext(Dispatchers.Default) {
                 val db = WordDatabase.getInstance(context, language.code)
                 db.wordDao().deleteAll()
-                parseAndInsertWords(jsContent, db)
+                parseAndInsertWords(jsContent, db, onProgress)
             }
         }
     }
 
-    private suspend fun parseAndInsertWords(jsContent: String, db: WordDatabase) {
+    private suspend fun parseAndInsertWords(
+        jsContent: String,
+        db: WordDatabase,
+        onProgress: (wordsInserted: Int) -> Unit
+    ) {
         val jsonString = extractHashedJson(jsContent)
 
         // Parse as JsonObject and insert in batches to reduce memory pressure
         val jsonObject = json.decodeFromString<JsonObject>(jsonString)
-        val batchSize = 1000
         val batch = mutableListOf<WordEntity>()
+        var totalInserted = 0
 
         for ((word, value) in jsonObject) {
             batch.add(WordEntity(word = word, explanation = value.jsonPrimitive.content))
-            if (batch.size >= batchSize) {
+            if (batch.size >= BATCH_SIZE) {
                 db.wordDao().insertWords(batch)
+                totalInserted += batch.size
+                onProgress(totalInserted)
                 batch.clear()
             }
         }
         if (batch.isNotEmpty()) {
             db.wordDao().insertWords(batch)
+            totalInserted += batch.size
+            onProgress(totalInserted)
         }
     }
 
