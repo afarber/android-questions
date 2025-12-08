@@ -69,6 +69,7 @@ fun LoadingDictionaryScreen(
             verticalArrangement = Arrangement.Center
         ) {
             val loadingState = downloadState as? DownloadState.Loading
+            val isSuccess = downloadState is DownloadState.Success
 
             Box(
                 contentAlignment = Alignment.Center,
@@ -83,9 +84,13 @@ fun LoadingDictionaryScreen(
                     trackColor = MaterialTheme.colorScheme.surfaceVariant
                 )
 
-                // Animated progress
+                // Animated progress (keep at 100% on success)
                 val animatedProgress by animateFloatAsState(
-                    targetValue = loadingState?.progress ?: 0f,
+                    targetValue = when {
+                        isSuccess -> 1f
+                        loadingState != null -> loadingState.progress
+                        else -> 0f
+                    },
                     animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
                     label = "progress"
                 )
@@ -98,9 +103,9 @@ fun LoadingDictionaryScreen(
                 )
 
                 // Percentage text in center
-                loadingState?.let {
+                if (loadingState != null || isSuccess) {
                     Text(
-                        text = "${(it.progress * 100).toInt()}%",
+                        text = "${(animatedProgress * 100).toInt()}%",
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.primary
                     )
