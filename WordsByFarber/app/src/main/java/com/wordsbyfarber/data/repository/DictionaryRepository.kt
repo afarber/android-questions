@@ -7,8 +7,12 @@ import com.wordsbyfarber.data.model.Language
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
 class DictionaryRepository(
     private val context: Context,
@@ -19,23 +23,35 @@ class DictionaryRepository(
     suspend fun downloadAndStoreDictionary(language: Language): Result<Unit> {
         return runCatching {
             val jsContent = httpClient.get(language.hashedDictionaryUrl).bodyAsText()
-            val words = parseHashedDictionary(jsContent)
-            val db = WordDatabase.getInstance(context, language.code)
-            db.wordDao().deleteAll()
-            db.wordDao().insertWords(words)
+            withContext(Dispatchers.Default) {
+                val db = WordDatabase.getInstance(context, language.code)
+                db.wordDao().deleteAll()
+                parseAndInsertWords(jsContent, db)
+            }
         }
     }
 
-    private fun parseHashedDictionary(jsContent: String): List<WordEntity> {
-        // The JS file contains multiple const declarations:
-        // const COUNTRY="nl";
-        // const LETTERS_EN=[...];
-        // const VALUES={...};
-        // const NUMBERS={...};
-        // const HASHED={"word1":"explanation1","word2":"explanation2",...}
-        //
-        // We need to find specifically "const HASHED=" and extract only that JSON object
+    private suspend fun parseAndInsertWords(jsContent: String, db: WordDatabase) {
+        val jsonString = extractHashedJson(jsContent)
 
+        // Parse as JsonObject and insert in batches to reduce memory pressure
+        val jsonObject = json.decodeFromString<JsonObject>(jsonString)
+        val batchSize = 1000
+        val batch = mutableListOf<WordEntity>()
+
+        for ((word, value) in jsonObject) {
+            batch.add(WordEntity(word = word, explanation = value.jsonPrimitive.content))
+            if (batch.size >= batchSize) {
+                db.wordDao().insertWords(batch)
+                batch.clear()
+            }
+        }
+        if (batch.isNotEmpty()) {
+            db.wordDao().insertWords(batch)
+        }
+    }
+
+    private fun extractHashedJson(jsContent: String): String {
         val hashedMarker = "const HASHED="
         val hashedStart = jsContent.indexOf(hashedMarker)
 
@@ -43,13 +59,11 @@ class DictionaryRepository(
             throw IllegalArgumentException("Could not find 'const HASHED=' in JavaScript content")
         }
 
-        // Find the opening brace after "const HASHED="
         val jsonStart = jsContent.indexOf('{', hashedStart)
         if (jsonStart == -1) {
             throw IllegalArgumentException("Could not find opening brace after 'const HASHED='")
         }
 
-        // Find the matching closing brace by counting braces
         var braceCount = 0
         var jsonEnd = -1
         for (i in jsonStart until jsContent.length) {
@@ -69,15 +83,7 @@ class DictionaryRepository(
             throw IllegalArgumentException("Could not find matching closing brace for HASHED object")
         }
 
-        val jsonString = jsContent.substring(jsonStart, jsonEnd)
-
-        // Parse as Map<String, String>
-        val wordMap: Map<String, String> = json.decodeFromString(jsonString)
-
-        // Convert to list of WordEntity
-        return wordMap.map { (word, explanation) ->
-            WordEntity(word = word, explanation = explanation)
-        }
+        return jsContent.substring(jsonStart, jsonEnd)
     }
 
     fun getWordCountByLength(languageCode: String, length: Int): Flow<Int> {
