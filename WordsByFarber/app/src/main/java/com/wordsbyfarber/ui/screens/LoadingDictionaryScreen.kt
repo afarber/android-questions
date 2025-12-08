@@ -68,52 +68,61 @@ fun LoadingDictionaryScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            val loadingState = downloadState as? DownloadState.Loading
+            val insertingState = downloadState as? DownloadState.Inserting
+            val isDownloading = downloadState is DownloadState.Downloading
             val isSuccess = downloadState is DownloadState.Success
 
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier.size(96.dp)
             ) {
-                // Background track
-                CircularProgressIndicator(
-                    progress = { 1f },
-                    modifier = Modifier.size(96.dp),
-                    strokeWidth = 8.dp,
-                    color = MaterialTheme.colorScheme.surfaceVariant,
-                    trackColor = MaterialTheme.colorScheme.surfaceVariant
-                )
-
-                // Animated progress (keep at 100% on success)
-                val animatedProgress by animateFloatAsState(
-                    targetValue = when {
-                        isSuccess -> 1f
-                        loadingState != null -> loadingState.progress
-                        else -> 0f
-                    },
-                    animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
-                    label = "progress"
-                )
-
-                CircularProgressIndicator(
-                    progress = { animatedProgress },
-                    modifier = Modifier.size(96.dp),
-                    strokeWidth = 8.dp,
-                    trackColor = MaterialTheme.colorScheme.surfaceVariant
-                )
-
-                // Percentage text in center
-                if (loadingState != null || isSuccess) {
-                    Text(
-                        text = "${(animatedProgress * 100).toInt()}%",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.primary
+                if (isDownloading) {
+                    // Indeterminate spinner while downloading
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(96.dp),
+                        strokeWidth = 8.dp
                     )
+                } else {
+                    // Background track
+                    CircularProgressIndicator(
+                        progress = { 1f },
+                        modifier = Modifier.size(96.dp),
+                        strokeWidth = 8.dp,
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        trackColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
+
+                    // Animated progress (keep at 100% on success)
+                    val animatedProgress by animateFloatAsState(
+                        targetValue = when {
+                            isSuccess -> 1f
+                            insertingState != null -> insertingState.progress
+                            else -> 0f
+                        },
+                        animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
+                        label = "progress"
+                    )
+
+                    CircularProgressIndicator(
+                        progress = { animatedProgress },
+                        modifier = Modifier.size(96.dp),
+                        strokeWidth = 8.dp,
+                        trackColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
+
+                    // Percentage text in center
+                    if (insertingState != null || isSuccess) {
+                        Text(
+                            text = "${(animatedProgress * 100).toInt()}%",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
             }
 
             Text(
-                text = "Loading dictionary...",
+                text = if (isDownloading) "Downloading..." else "Inserting words...",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(top = 24.dp)
             )
@@ -128,7 +137,7 @@ fun LoadingDictionaryScreen(
             }
 
             // Show word count progress
-            loadingState?.let {
+            insertingState?.let {
                 val numberFormat = NumberFormat.getNumberInstance()
                 Text(
                     text = "${numberFormat.format(it.wordsInserted)} words",

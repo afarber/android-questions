@@ -28,9 +28,9 @@ class DictionaryViewModel(
     fun downloadDictionary() {
         val language = selectedLanguage ?: return
         viewModelScope.launch {
-            _downloadState.value = DownloadState.Loading(0, language.minWords)
+            _downloadState.value = DownloadState.Downloading
             repository.downloadAndStoreDictionary(language) { wordsInserted ->
-                _downloadState.value = DownloadState.Loading(wordsInserted, language.minWords)
+                _downloadState.value = DownloadState.Inserting(wordsInserted, language.minWords)
             }
                 .onSuccess { _downloadState.value = DownloadState.Success }
                 .onFailure { _downloadState.value = DownloadState.Error(it.message ?: "Unknown error") }
@@ -45,7 +45,8 @@ class DictionaryViewModel(
 
 sealed class DownloadState {
     data object Idle : DownloadState()
-    data class Loading(val wordsInserted: Int, val expectedWords: Int) : DownloadState() {
+    data object Downloading : DownloadState()
+    data class Inserting(val wordsInserted: Int, val expectedWords: Int) : DownloadState() {
         val progress: Float
             get() = if (expectedWords > 0) {
                 (wordsInserted.toFloat() / expectedWords).coerceIn(0f, 1f)
