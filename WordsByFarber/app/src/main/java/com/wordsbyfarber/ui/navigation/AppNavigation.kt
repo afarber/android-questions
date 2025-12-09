@@ -12,6 +12,7 @@ import com.wordsbyfarber.ui.screens.FailedDownloadScreen
 import com.wordsbyfarber.ui.screens.HomeScreen
 import com.wordsbyfarber.ui.screens.LanguageSelectionScreen
 import com.wordsbyfarber.ui.screens.LoadingDictionaryScreen
+import com.wordsbyfarber.util.LocaleManager
 import com.wordsbyfarber.viewmodel.DictionaryViewModel
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
@@ -38,6 +39,8 @@ fun AppNavigation(viewModel: DictionaryViewModel = koinViewModel()) {
             entry<LanguageSelectionRoute> {
                 LanguageSelectionScreen(
                     onLanguageSelected = { language ->
+                        // Switch app UI language to match selected dictionary
+                        LocaleManager.setLanguage(language.code)
                         viewModel.selectLanguage(language)
                         backStack.add(LoadingDictionaryRoute(language.code))
                     }
