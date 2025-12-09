@@ -69,13 +69,11 @@ fun HomeScreen(
             verticalArrangement = Arrangement.Center
         ) {
             // Display the selected language name as a header
-            viewModel.selectedLanguage?.let { language ->
-                Text(
-                    text = language.name,
-                    style = MaterialTheme.typography.displaySmall,
-                    modifier = Modifier.padding(bottom = 32.dp)
-                )
-            }
+            Text(
+                text = viewModel.selectedLanguage.name,
+                style = MaterialTheme.typography.displaySmall,
+                modifier = Modifier.padding(bottom = 32.dp)
+            )
 
             // Word count statistics
             // stringResource with format arguments: %1$d is replaced by the count

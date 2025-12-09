@@ -1,7 +1,10 @@
 package com.wordsbyfarber.util
 
+import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
+
+private const val TAG = "WordsByFarber"
 
 /**
  * Utility object for managing app-wide locale/language settings.
@@ -25,6 +28,8 @@ object LocaleManager {
      * @param languageCode BCP47 language tag (e.g., "de", "en", "fr", "nl", "pl", "ru")
      */
     fun setLanguage(languageCode: String) {
+        Log.d(TAG, "LocaleManager.setLanguage: $languageCode")
+
         // Create a LocaleListCompat from the language tag
         // forLanguageTags parses BCP47 format like "en-US" or simple "en"
         val localeList = LocaleListCompat.forLanguageTags(languageCode)
@@ -32,5 +37,7 @@ object LocaleManager {
         // Apply the locale to the app
         // This triggers UI refresh on Android 12+ or activity recreation on older versions
         AppCompatDelegate.setApplicationLocales(localeList)
+
+        Log.d(TAG, "LocaleManager: Applied locales: ${AppCompatDelegate.getApplicationLocales()}")
     }
 }

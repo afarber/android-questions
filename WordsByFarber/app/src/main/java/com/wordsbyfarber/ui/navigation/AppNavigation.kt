@@ -1,9 +1,6 @@
 package com.wordsbyfarber.ui.navigation
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -41,7 +38,7 @@ fun AppNavigation(viewModel: DictionaryViewModel = koinViewModel()) {
                     onLanguageSelected = { language ->
                         // Switch app UI language to match selected dictionary
                         LocaleManager.setLanguage(language.code)
-                        viewModel.selectLanguage(language)
+                        viewModel.setLanguage(language)
                         backStack.add(LoadingDictionaryRoute(language.code))
                     }
                 )

@@ -1,14 +1,20 @@
 package com.wordsbyfarber.viewmodel
 
+import android.content.Context
+import android.util.Log
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wordsbyfarber.data.model.Language
+import com.wordsbyfarber.data.preferences.LanguagePreferences
 import com.wordsbyfarber.data.repository.DictionaryRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
+
+private const val TAG = "WordsByFarber"
 
 /**
  * ViewModel that manages dictionary download and data access.
@@ -18,17 +24,21 @@ import kotlinx.coroutines.launch
  * for dependency injection of the repository.
  *
  * @param repository The repository that handles network and database operations
+ * @param dataStore DataStore for persisting language preference
+ * @param context Application context for reading system locale
  */
 class DictionaryViewModel(
-    private val repository: DictionaryRepository
+    private val repository: DictionaryRepository,
+    private val dataStore: DataStore<Preferences>,
+    context: Context
 ) : ViewModel() {
 
     /**
      * The currently selected language for dictionary operations.
-     * Null if no language has been selected yet.
+     * Non-nullable - initialized from DataStore, system locale, or default "en".
      * Private setter ensures only this ViewModel can modify it.
      */
-    var selectedLanguage: Language? = null
+    var selectedLanguage: Language
         private set
 
     // Backing property pattern: _downloadState is mutable internally,
@@ -41,15 +51,26 @@ class DictionaryViewModel(
      */
     val downloadState: StateFlow<DownloadState> = _downloadState
 
+    init {
+        selectedLanguage = LanguagePreferences.getInitialLanguage(dataStore, context)
+        Log.d(TAG, "ViewModel init: selectedLanguage=${selectedLanguage.code}")
+    }
+
     /**
      * Sets the language for subsequent dictionary operations.
      * Resets the download state to Idle when switching languages.
+     * Persists the selection to DataStore.
      *
      * @param language The language to select
      */
-    fun selectLanguage(language: Language) {
+    fun setLanguage(language: Language) {
+        Log.d(TAG, "setLanguage: ${language.code}, persisting to DataStore")
         selectedLanguage = language
         _downloadState.value = DownloadState.Idle
+
+        viewModelScope.launch {
+            LanguagePreferences.saveLanguage(dataStore, language.code)
+        }
     }
 
     /**
@@ -57,22 +78,14 @@ class DictionaryViewModel(
      *
      * Downloads the dictionary file from the server and inserts words into
      * the local Room database. Progress is reported via [downloadState].
-     *
-     * Does nothing if no language is selected (early return with ?: operator).
      */
     fun downloadDictionary() {
-        // Elvis operator: if selectedLanguage is null, return early
-        val language = selectedLanguage ?: return
-
-        // viewModelScope automatically cancels coroutines when ViewModel is cleared
         viewModelScope.launch {
             _downloadState.value = DownloadState.Downloading
 
-            // Pass a lambda to receive progress updates during batch inserts
-            repository.downloadAndStoreDictionary(language) { wordsInserted ->
-                _downloadState.value = DownloadState.Inserting(wordsInserted, language.minWords)
+            repository.downloadAndStoreDictionary(selectedLanguage) { wordsInserted ->
+                _downloadState.value = DownloadState.Inserting(wordsInserted, selectedLanguage.minWords)
             }
-                // Result.onSuccess/onFailure pattern for handling the result
                 .onSuccess { _downloadState.value = DownloadState.Success }
                 .onFailure { _downloadState.value = DownloadState.Error(it.message ?: "Unknown error") }
         }
@@ -82,11 +95,10 @@ class DictionaryViewModel(
      * Returns a Flow of word count for a specific word length.
      *
      * @param length The word length to count (e.g., 2 for two-letter words)
-     * @return Flow that emits the count, or flowOf(0) if no language selected
+     * @return Flow that emits the count
      */
     fun getWordCount(length: Int): Flow<Int> {
-        val code = selectedLanguage?.code ?: return flowOf(0)
-        return repository.getWordCountByLength(code, length)
+        return repository.getWordCountByLength(selectedLanguage.code, length)
     }
 }
 
