@@ -1,0 +1,406 @@
+     WordsByFarber App Architecture Diagrams
+
+     1. APP STARTUP FLOW
+
+     +---------------------------+
+     |     Android System        |
+     +------------+--------------+
+                  |
+                  | launches
+                  v
+     +---------------------------+
+     | WordsByFarberApplication  |  <-- Application class (runs FIRST)
+     |     onCreate()            |
+     +------------+--------------+
+                  |
+                  | startKoin { modules(appModule) }
+                  v
+     +---------------------------+
+     |      Koin DI Container    |  <-- Creates singletons:
+     |  +---------------------+  |      - HttpClient
+     |  | HttpClient          |  |      - DataStore
+     |  | DataStore           |  |      - DictionaryRepository
+     |  | DictionaryRepository|  |
+     |  +---------------------+  |
+     +------------+--------------+
+                  |
+                  | then Android launches
+                  v
+     +---------------------------+
+     |     MainActivity          |
+     |     onCreate()            |
+     +------------+--------------+
+                  |
+                  | setContent { WordsByFarberTheme { AppNavigation() } }
+                  v
+     +---------------------------+
+     |     AppNavigation         |  <-- Composable function
+     |  (Navigation 3 setup)     |
+     +------------+--------------+
+                  |
+                  | shows first screen
+                  v
+     +---------------------------+
+     | LanguageSelectionScreen   |
+     +---------------------------+
+
+     2. PROJECT STRUCTURE (Package Layout)
+
+     app/src/main/java/com/wordsbyfarber/
+     |
+     +-- WordsByFarberApplication.kt   <-- Entry point, Koin setup
+     +-- MainActivity.kt               <-- Single Activity (Compose)
+     |
+     +-- di/
+     |   +-- AppModule.kt              <-- Koin module (what to inject)
+     |
+     +-- data/
+     |   +-- model/
+     |   |   +-- Language.kt           <-- Data class + SupportedLanguages
+     |   |
+     |   +-- database/
+     |   |   +-- WordEntity.kt         <-- Room entity (table row)
+     |   |   +-- WordDao.kt            <-- Room DAO (SQL queries)
+     |   |   +-- WordDatabase.kt       <-- Room database (per language)
+     |   |
+     |   +-- repository/
+     |   |   +-- DictionaryRepository.kt  <-- Network + DB operations
+     |   |
+     |   +-- preferences/
+     |       +-- LanguagePreferences.kt   <-- DataStore helpers
+     |
+     +-- viewmodel/
+     |   +-- DictionaryViewModel.kt    <-- UI state + business logic
+     |
+     +-- ui/
+     |   +-- navigation/
+     |   |   +-- AppNavigation.kt      <-- Nav3 routes + NavDisplay
+     |   |
+     |   +-- screens/
+     |   |   +-- LanguageSelectionScreen.kt
+     |   |   +-- LoadingDictionaryScreen.kt
+     |   |   +-- HomeScreen.kt
+     |   |   +-- FailedDownloadScreen.kt
+     |   |
+     |   +-- theme/
+     |       +-- Theme.kt, Color.kt, Type.kt
+     |
+     +-- util/
+         +-- LocaleManager.kt          <-- App language switching
+
+     3. DEPENDENCY INJECTION (Koin)
+
+     AppModule.kt defines what Koin can provide:
+
+     +------------------------------------------------------------------+
+     | appModule = module {                                              |
+     |                                                                   |
+     |   single { HttpClient(...) }     <-- ONE instance for whole app   |
+     |      |                                                            |
+     |      |   single { dataStore }    <-- ONE DataStore instance       |
+     |      |      |                                                     |
+     |      v      v                                                     |
+     |   single { DictionaryRepository(context, get()) }                 |
+     |      |               ^                                            |
+     |      |               | get() = asks Koin for HttpClient           |
+     |      v                                                            |
+     |   viewModel { DictionaryViewModel(get(), get(), context) }        |
+     |                        ^     ^                                    |
+     |                        |     | get() = asks Koin for dependencies |
+     |           Repository --+     +-- DataStore                        |
+     +------------------------------------------------------------------+
+
+     How screens get the ViewModel:
+
+     +------------------------+
+     | LanguageSelectionScreen|
+     +------------------------+
+                 |
+                 | in AppNavigation:
+                 | viewModel: DictionaryViewModel = koinViewModel()
+                 v
+     +------------------------+
+     |   Koin looks up        |
+     |   DictionaryViewModel  |
+     |   in appModule         |
+     +------------------------+
+                 |
+                 | Koin creates it with all dependencies
+                 v
+     +------------------------+
+     | DictionaryViewModel    |
+     |  - repository (injected)|
+     |  - dataStore (injected) |
+     +------------------------+
+
+     4. NAVIGATION FLOW (Navigation 3)
+
+     Routes are defined as Kotlin objects/classes:
+
+       @Serializable data object LanguageSelectionRoute : NavKey
+       @Serializable data class LoadingDictionaryRoute(val languageCode: String) : NavKey
+       @Serializable data class HomeRoute(val languageCode: String) : NavKey
+       @Serializable data class FailedDownloadRoute(val languageCode: String, val errorMessage: String) : NavKey
+
+
+     Screen Flow:
+
+     +-------------------------+
+     | LanguageSelectionRoute  |  <-- STARTING SCREEN
+     +----------+--------------+
+                |
+                | user taps language card
+                | backStack.add(LoadingDictionaryRoute("de"))
+                v
+     +-------------------------+
+     | LoadingDictionaryRoute  |
+     +----------+--------------+
+                |
+                +--------------- onSuccess() ---------------+
+                |                                           |
+                v                                           v
+     +-------------------------+              +-------------------------+
+     | FailedDownloadRoute     |              | HomeRoute               |
+     | (shows error + retry)   |              | (shows word counts)     |
+     +-------------------------+              +-------------------------+
+                |                                           |
+                | onRetry()                                 | onBack()
+                | backStack.add(LoadingDictionaryRoute)     | backStack.clear()
+                v                                           | backStack.add(LanguageSelectionRoute)
+         (tries again)                                      v
+                                              +-------------------------+
+                                              | LanguageSelectionRoute  |
+                                              +-------------------------+
+
+
+     BackStack visualization:
+
+     Initial:          [LanguageSelection]
+
+     User picks "de":  [LanguageSelection, LoadingDictionary("de")]
+
+     On success:       [LanguageSelection, Home("de")]
+                       (clear + add LanguageSelection + add Home)
+
+     On back from Home:[LanguageSelection]
+                       (clear + add LanguageSelection)
+
+     5. DATA FLOW (Dictionary Download)
+
+     +-------------------+
+     | User taps         |
+     | language card     |
+     +---------+---------+
+               |
+               v
+     +---------+---------+
+     | LanguageSelection |
+     | Screen calls:     |
+     | viewModel.        |
+     |  setLanguage()    |
+     +---------+---------+
+               |
+               | navigates to LoadingDictionaryScreen
+               v
+     +---------+---------+
+     | LaunchedEffect    |
+     | calls:            |
+     | viewModel.        |
+     | downloadDictionary|
+     +---------+---------+
+               |
+               v
+     +---------+--------------------+
+     | DictionaryViewModel          |
+     |                              |
+     | _downloadState = Downloading |
+     | repository.downloadAndStore()|
+     +---------+--------------------+
+               |
+               v
+     +---------+------------------------------+
+     | DictionaryRepository                    |
+     |                                         |
+     | 1. httpClient.get(language.hashedUrl)   |
+     |    downloads JS file from server        |
+     |                                         |
+     | 2. extractHashedJson(jsContent)         |
+     |    finds "const HASHED={...}"           |
+     |                                         |
+     | 3. json.decodeFromString<JsonObject>()  |
+     |    parses JSON into map                 |
+     |                                         |
+     | 4. For each word in batch of 1000:      |
+     |    db.wordDao().insertWords(batch)      |
+     |    onProgress(totalInserted)            |
+     +---------+-------------------------------+
+               |
+               | onProgress callback
+               v
+     +---------+--------------------+
+     | DictionaryViewModel          |
+     |                              |
+     | _downloadState =             |
+     |   Inserting(count, expected) |
+     +---------+--------------------+
+               |
+               | StateFlow emits new state
+               v
+     +---------+--------------------+
+     | LoadingDictionaryScreen      |
+     |                              |
+     | val downloadState by         |
+     |   viewModel.downloadState    |
+     |     .collectAsState()        |
+     |                              |
+     | Updates UI with progress %   |
+     +---------+--------------------+
+               |
+               | when state == Success
+               v
+     +---------+--------------------+
+     | Navigate to HomeRoute        |
+     +------------------------------+
+
+     6. STATE FLOW (Download States)
+
+     sealed class DownloadState
+
+     +--------+      download       +--------------+
+     |  Idle  | ------------------> | Downloading  |
+     +--------+                     +--------------+
+                                          |
+                          +---------------+---------------+
+                          |                               |
+                   onProgress()                      onFailure()
+                          |                               |
+                          v                               v
+                 +-----------------+              +---------------+
+                 | Inserting       |              | Error         |
+                 |  - wordsInserted|              |  - message    |
+                 |  - expectedWords|              +---------------+
+                 |  - progress (%) |
+                 +-----------------+
+                          |
+                   all words done
+                          |
+                          v
+                 +-----------------+
+                 | Success         |
+                 +-----------------+
+
+
+     UI reacts to each state:
+
+     State          | What UI Shows
+     ---------------+------------------------------------------
+     Idle           | Nothing (initial state)
+     Downloading    | Spinning circle (indeterminate)
+     Inserting      | Progress circle + percentage + word count
+     Success        | 100% briefly, then navigate to Home
+     Error          | Navigate to FailedDownloadScreen
+
+     7. ROOM DATABASE (Per-Language)
+
+     Each language has its OWN database file:
+
+       de.db  <-- German words
+       en.db  <-- English words
+       fr.db  <-- French words
+       ...
+
+     WordDatabase.getInstance(context, "de") returns:
+       - If current language == "de": return existing instance
+       - If current language != "de": CLOSE old db, open de.db
+
+     +---------------------------+
+     | WordDatabase              |
+     | (RoomDatabase)            |
+     +---------------------------+
+                 |
+                 | abstract fun wordDao(): WordDao
+                 v
+     +---------------------------+
+     | WordDao                   |
+     | (interface with @Query)   |
+     +---------------------------+
+     | @Insert insertWords()     |
+     | @Query deleteAll()        |
+     | @Query getWordCountByLength()|
+     | @Query getWordsByLength() |
+     | @Query getWordsByRareLetter()|
+     +---------------------------+
+                 |
+                 | operates on
+                 v
+     +---------------------------+
+     | WordEntity                |
+     | (Room @Entity = table)    |
+     +---------------------------+
+     | @PrimaryKey word: String  |
+     | explanation: String       |
+     +---------------------------+
+
+     SQL table "words":
+     +------------------+------------------------+
+     | word (PK)        | explanation            |
+     +------------------+------------------------+
+     | "AA"             | "a type of lava"       |
+     | "AB"             | "abdominal muscle"     |
+     | ...              | ...                    |
+     +------------------+------------------------+
+
+     8. COMPOSE UI HIERARCHY
+
+     MainActivity
+         |
+         +-- setContent
+                 |
+                 +-- WordsByFarberTheme (Material 3 colors/typography)
+                         |
+                         +-- AppNavigation (Composable function)
+                                 |
+                                 +-- NavDisplay (Navigation 3 component)
+                                         |
+                                         +-- entryProvider (defines which screen for each route)
+                                                 |
+                         +-----------------------+------------------------+
+                         |                       |                        |
+                 LanguageSelection         LoadingDictionary         HomeScreen
+                 Screen                    Screen
+                     |                           |                        |
+                     +-- Scaffold                +-- Scaffold             +-- Scaffold
+                         |                           |                        |
+                         +-- LazyColumn              +-- Column               +-- Column
+                             |                           |                        |
+                             +-- items(languages)        +-- CircularProgress     +-- Text (language)
+                                 |                       +-- Text (status)        +-- Text (2-letter count)
+                                 +-- Card (clickable)                             +-- Text (3-letter count)
+
+     KEY KOTLIN CONCEPTS USED
+
+     1. data class    - Auto-generates equals(), hashCode(), copy(), toString()
+        data class Language(val code: String, val name: String)
+
+     2. object        - Singleton (only one instance exists)
+        object SupportedLanguages { val languages = mapOf(...) }
+
+     3. sealed class  - Restricted hierarchy (all subclasses known at compile time)
+        sealed class DownloadState { ... }
+
+     4. Flow          - Async stream of values (like LiveData but better)
+        fun getWordCount(): Flow<Int>
+
+     5. StateFlow     - Flow that always has a current value
+        val downloadState: StateFlow<DownloadState>
+
+     6. by            - Delegation (collectAsState converts Flow to Compose State)
+        val count by viewModel.getWordCount().collectAsState(initial = 0)
+
+     7. @Composable   - Function that describes UI (re-runs when state changes)
+        @Composable fun HomeScreen(...) { ... }
+
+     8. LaunchedEffect - Runs suspend code when composable enters composition
+        LaunchedEffect(Unit) { viewModel.downloadDictionary() }
+
+
