@@ -1,5 +1,26 @@
+/**
+ * Language model and supported languages configuration.
+ *
+ * This file defines the Language data class and the list of all supported
+ * dictionary languages with their configuration (URLs, expected word counts, etc.).
+ */
 package com.wordsbyfarber.data.model
 
+/**
+ * Represents a supported dictionary language with all its configuration.
+ *
+ * data class = Kotlin auto-generates equals(), hashCode(), toString(), copy()
+ * All properties are val = immutable (cannot be changed after creation)
+ *
+ * @property code ISO 639-1 language code (e.g., "de", "en", "fr")
+ * @property name Display name in the native language (e.g., "Deutsch", "English")
+ * @property rareLetter1 First rare letter for this language (for Scrabble strategy)
+ * @property rareLetter2 Second rare letter for this language
+ * @property hashedDictionaryUrl URL to download the dictionary JavaScript file
+ * @property topUrl URL for the top players leaderboard
+ * @property minWords Expected minimum word count (used for progress calculation)
+ * @property myUid User ID for the leaderboard
+ */
 data class Language(
     val code: String,
     val name: String,
@@ -11,7 +32,19 @@ data class Language(
     val myUid: Int
 )
 
+/**
+ * Singleton object containing all supported languages.
+ *
+ * object = Kotlin singleton, only one instance exists
+ * Accessed as SupportedLanguages.languages
+ */
 object SupportedLanguages {
+    /**
+     * Map of language code to Language configuration.
+     *
+     * mapOf() creates an immutable Map<String, Language>
+     * Keys are ISO 639-1 codes, values are Language instances
+     */
     val languages = mapOf(
         "de" to Language(
             code = "de",
