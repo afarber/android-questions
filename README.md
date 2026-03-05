@@ -259,16 +259,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-questions/master/WordGame/screenshot.png)
 
 
-[WordsByFarber](https://github.com/afarber/android-questions/tree/master/WordsByFarber) Jetpack Compose with multiple Room databases:
-
-![screenshot](https://raw.github.com/afarber/android-questions/master/WordsByFarber/screenshot.png)
-
-
 [ZXingTestActivity](https://github.com/afarber/android-questions/tree/master/ZXingTestActivity) (by ZXing project, Apache License):
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/ZXingTestActivity/screenshot.png)
 
-
+==========
 
 ![StackOverflow](http://stackoverflow.com/users/flair/165071.png)
 
