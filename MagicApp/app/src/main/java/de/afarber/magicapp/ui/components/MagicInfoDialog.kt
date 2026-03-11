@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import de.afarber.magicapp.BuildConfig
 
 @Composable
-fun magicInfoDialog(onDismiss: () -> Unit) {
+fun MagicInfoDialog(onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
         text = { Text("Magic App ${BuildConfig.VERSION_NAME}") },

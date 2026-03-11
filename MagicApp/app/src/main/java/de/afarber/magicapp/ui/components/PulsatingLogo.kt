@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
 @Composable
-fun pulsatingLogo(
+fun PulsatingLogo(
     pulseTriggerKey: Int,
     modifier: Modifier = Modifier,
 ) {

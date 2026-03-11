@@ -31,7 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun magicCard(
+fun MagicCard(
     title: String,
     onInfoClick: () -> Unit,
     modifier: Modifier = Modifier,

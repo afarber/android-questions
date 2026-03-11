@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import de.afarber.magicapp.ui.navigation.MenuSection
 
 @Composable
-fun magicNavPanel(
+fun MagicNavPanel(
     selectedSection: MenuSection,
     onSectionSelected: (MenuSection) -> Unit,
     logoPulseTriggerKey: Int,
@@ -44,7 +44,7 @@ fun magicNavPanel(
                 .padding(horizontal = 10.dp, vertical = 14.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            pulsatingLogo(pulseTriggerKey = logoPulseTriggerKey)
+            PulsatingLogo(pulseTriggerKey = logoPulseTriggerKey)
             Spacer(modifier = Modifier.width(10.dp))
             Text(
                 text = "MAGIC\nEngineering\nMenu",

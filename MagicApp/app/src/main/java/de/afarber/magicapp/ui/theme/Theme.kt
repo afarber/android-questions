@@ -25,7 +25,7 @@ private val LightColorScheme =
     )
 
 @Composable
-fun magicAppTheme(
+fun MagicAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {

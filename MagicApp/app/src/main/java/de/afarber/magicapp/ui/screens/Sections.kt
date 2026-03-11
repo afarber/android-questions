@@ -51,8 +51,8 @@ import de.afarber.magicapp.data.tls.TlsCertificateInspector
 import de.afarber.magicapp.data.websocket.WebSocketConnectionState
 import de.afarber.magicapp.data.websocket.WebSocketEchoRepository
 import de.afarber.magicapp.data.websocket.WebSocketRuntimeState
+import de.afarber.magicapp.ui.components.MagicCard
 import de.afarber.magicapp.ui.components.isWideScreen
-import de.afarber.magicapp.ui.components.magicCard
 import de.afarber.magicapp.ui.navigation.MenuSection
 import kotlinx.coroutines.launch
 
@@ -77,7 +77,7 @@ private fun parseHostPortFromUrl(
 }
 
 @Composable
-fun sectionContent(
+fun SectionContent(
     selectedSection: MenuSection,
     onInfoClick: () -> Unit,
 ) {
@@ -754,7 +754,7 @@ private fun httpInputCard(
     onReloadClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    magicCard(
+    MagicCard(
         title = "HTTP Input",
         onInfoClick = onInfoClick,
         onReloadClick = onReloadClick,
@@ -808,7 +808,7 @@ private fun httpOutputCard(
             HttpProbeStatus.Failure -> "Failure"
         }
 
-    magicCard(
+    MagicCard(
         title = "HTTP Output",
         onInfoClick = onInfoClick,
         onReloadClick = onReloadClick,
@@ -869,7 +869,7 @@ private fun webSocketInputCard(
             "Connect"
         }
 
-    magicCard(
+    MagicCard(
         title = "Websockets Input",
         onInfoClick = onInfoClick,
         onReloadClick = onReloadClick,
@@ -935,7 +935,7 @@ private fun webSocketOutputCard(
             WebSocketConnectionState.Connected -> "Connected"
         }
 
-    magicCard(
+    MagicCard(
         title = "Websockets Output",
         onInfoClick = onInfoClick,
         onReloadClick = onReloadClick,
@@ -1033,7 +1033,7 @@ private fun mqttInputCard(
         }
     val subscribeLabel = if (mqttState.isSubscribed) "Unsubscribe" else "Subscribe"
 
-    magicCard(
+    MagicCard(
         title = title,
         onInfoClick = onInfoClick,
         onReloadClick = onReloadClick,
@@ -1132,7 +1132,7 @@ private fun mqttOutputCard(
             MqttConnectionState.Connected -> "Connected"
         }
 
-    magicCard(
+    MagicCard(
         title = title,
         onInfoClick = onInfoClick,
         onReloadClick = onReloadClick,
@@ -1219,7 +1219,7 @@ private fun networkStateCard(
     onInfoClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    magicCard(
+    MagicCard(
         title = "Network State",
         onInfoClick = onInfoClick,
         modifier = modifier.heightIn(min = 280.dp),
@@ -1234,7 +1234,7 @@ private fun networkStateCard(
 
         if (!state.available) {
             Text("No active network")
-            return@magicCard
+            return@MagicCard
         }
 
         Text("Network ID: ${state.networkId}")
@@ -1264,7 +1264,7 @@ private fun internetConnectivityCard(
             InternetStatus.Idle -> "Not checked"
         }
 
-    magicCard(
+    MagicCard(
         title = "Internet Connectivity",
         onInfoClick = onInfoClick,
         onReloadClick = onReloadClick,
@@ -1285,7 +1285,7 @@ private fun oemNetworkPreferencesCard(
     onInfoClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    magicCard(
+    MagicCard(
         title = "OEM Network Preferences",
         onInfoClick = onInfoClick,
         modifier = modifier.heightIn(min = 260.dp),
@@ -1307,7 +1307,7 @@ private fun getTokenCard(
     var accountName by rememberSaveable { mutableStateOf("") }
     var operationTypeId by rememberSaveable { mutableStateOf("") }
 
-    magicCard(
+    MagicCard(
         title = "Get Token",
         onInfoClick = onInfoClick,
         onReloadClick = {},
@@ -1343,7 +1343,7 @@ private fun placeholderInputCard(
 ) {
     var values by rememberSaveable(title) { mutableStateOf(fieldLabels.associateWith { "" }) }
 
-    magicCard(
+    MagicCard(
         title = title,
         onInfoClick = onInfoClick,
         onReloadClick = onReloadClick,
@@ -1372,7 +1372,7 @@ private fun magicServiceInformationCard(
 ) {
     var status by rememberSaveable { mutableStateOf("connected") }
 
-    magicCard(
+    MagicCard(
         title = "Information",
         onInfoClick = onInfoClick,
         modifier = modifier,
@@ -1416,7 +1416,7 @@ private fun invocationUrlsCard(
     var mqttBackend by rememberSaveable { mutableStateOf("") }
     var tokenServer by rememberSaveable { mutableStateOf("") }
 
-    magicCard(
+    MagicCard(
         title = "Invocation URLs",
         onInfoClick = onInfoClick,
         onReloadClick = {},

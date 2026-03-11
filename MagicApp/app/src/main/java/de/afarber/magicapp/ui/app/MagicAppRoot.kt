@@ -30,21 +30,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import de.afarber.magicapp.ui.components.MagicInfoDialog
+import de.afarber.magicapp.ui.components.MagicNavPanel
 import de.afarber.magicapp.ui.components.accentColor
 import de.afarber.magicapp.ui.components.isWideScreen
-import de.afarber.magicapp.ui.components.magicInfoDialog
-import de.afarber.magicapp.ui.components.magicNavPanel
 import de.afarber.magicapp.ui.navigation.MenuSection
-import de.afarber.magicapp.ui.screens.sectionContent
+import de.afarber.magicapp.ui.screens.SectionContent
 import kotlinx.coroutines.launch
 
 @Composable
-fun magicAppRoot() {
+fun MagicAppRoot() {
     var selectedSection by rememberSaveable { mutableStateOf(MenuSection.Connectivity) }
     var showInfoDialog by rememberSaveable { mutableStateOf(false) }
 
     if (showInfoDialog) {
-        magicInfoDialog(onDismiss = { showInfoDialog = false })
+        MagicInfoDialog(onDismiss = { showInfoDialog = false })
     }
 
     if (isWideScreen(900)) {
@@ -69,7 +69,7 @@ private fun desktopLayout(
     onInfoClick: () -> Unit,
 ) {
     Row(modifier = Modifier.fillMaxSize()) {
-        magicNavPanel(
+        MagicNavPanel(
             selectedSection = selectedSection,
             onSectionSelected = onSectionSelected,
             logoPulseTriggerKey = selectedSection.ordinal,
@@ -80,7 +80,7 @@ private fun desktopLayout(
         )
         VerticalDivider(color = accentColor().copy(alpha = 0.35f))
         Box(modifier = Modifier.fillMaxSize()) {
-            sectionContent(
+            SectionContent(
                 selectedSection = selectedSection,
                 onInfoClick = onInfoClick,
             )
@@ -109,7 +109,7 @@ private fun compactLayout(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                magicNavPanel(
+                MagicNavPanel(
                     selectedSection = selectedSection,
                     onSectionSelected = {
                         onSectionSelected(it)
@@ -145,7 +145,7 @@ private fun compactLayout(
                         .fillMaxSize()
                         .padding(padding),
             ) {
-                sectionContent(selectedSection = selectedSection, onInfoClick = onInfoClick)
+                SectionContent(selectedSection = selectedSection, onInfoClick = onInfoClick)
             }
         }
     }
