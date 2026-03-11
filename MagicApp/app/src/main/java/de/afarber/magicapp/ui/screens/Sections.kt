@@ -37,9 +37,11 @@ import de.afarber.magicapp.BuildConfig
 import de.afarber.magicapp.data.config.BackendEndpoints
 import de.afarber.magicapp.data.connectivity.ConnectivityRepository
 import de.afarber.magicapp.data.connectivity.NetworkStateUiModel
+import de.afarber.magicapp.data.http.HttpProbeConfig
 import de.afarber.magicapp.data.http.HttpProbeRepository
 import de.afarber.magicapp.data.http.HttpProbeState
 import de.afarber.magicapp.data.http.HttpProbeStatus
+import de.afarber.magicapp.data.mqtt.MqttConnectConfig
 import de.afarber.magicapp.data.mqtt.MqttConnectionState
 import de.afarber.magicapp.data.mqtt.MqttRepository
 import de.afarber.magicapp.data.mqtt.MqttRuntimeState
@@ -48,6 +50,7 @@ import de.afarber.magicapp.data.network.InternetCheckState
 import de.afarber.magicapp.data.network.InternetStatus
 import de.afarber.magicapp.data.tls.TlsCertificateInfo
 import de.afarber.magicapp.data.tls.TlsCertificateInspector
+import de.afarber.magicapp.data.websocket.WebSocketConnectConfig
 import de.afarber.magicapp.data.websocket.WebSocketConnectionState
 import de.afarber.magicapp.data.websocket.WebSocketEchoRepository
 import de.afarber.magicapp.data.websocket.WebSocketRuntimeState
@@ -271,7 +274,12 @@ private fun httpSection(onInfoClick: () -> Unit) {
     val requestAction: () -> Unit = {
         localError = null
         scope.launch {
-            repository.runRequest(url = url, trustAnyTls = trustAnyTls)
+            repository.execute(
+                HttpProbeConfig(
+                    url = url,
+                    trustAnyTls = trustAnyTls,
+                ),
+            )
         }
     }
     val reloadAction: () -> Unit = requestAction
@@ -393,7 +401,12 @@ private fun websocketsSection(onInfoClick: () -> Unit) {
             } else {
                 localError = null
                 scope.launch {
-                    repository.connect(url = wsUrl.trim(), trustAnyTls = trustAnyTls)
+                    repository.connect(
+                        WebSocketConnectConfig(
+                            url = wsUrl.trim(),
+                            trustAnyTls = trustAnyTls,
+                        ),
+                    )
                 }
             }
         }
@@ -405,7 +418,12 @@ private fun websocketsSection(onInfoClick: () -> Unit) {
         } else {
             localError = null
             scope.launch {
-                repository.reconnect(url = wsUrl.trim(), trustAnyTls = trustAnyTls)
+                repository.reconnect(
+                    WebSocketConnectConfig(
+                        url = wsUrl.trim(),
+                        trustAnyTls = trustAnyTls,
+                    ),
+                )
             }
         }
     }
@@ -531,10 +549,12 @@ private fun mqttSection(onInfoClick: () -> Unit) {
             if (parsedPort != null) {
                 scope.launch {
                     repository.connect(
-                        host = host.trim(),
-                        port = parsedPort,
-                        clientId = clientId.trim(),
-                        insecureTls = trustAnyTls,
+                        MqttConnectConfig.fromHostPort(
+                            host = host.trim(),
+                            port = parsedPort,
+                            clientId = clientId.trim(),
+                            trustAnyTls = trustAnyTls,
+                        ),
                     )
                 }
             }
@@ -546,10 +566,12 @@ private fun mqttSection(onInfoClick: () -> Unit) {
         if (parsedPort != null) {
             scope.launch {
                 repository.reconnect(
-                    host = host.trim(),
-                    port = parsedPort,
-                    clientId = clientId.trim(),
-                    insecureTls = trustAnyTls,
+                    MqttConnectConfig.fromHostPort(
+                        host = host.trim(),
+                        port = parsedPort,
+                        clientId = clientId.trim(),
+                        trustAnyTls = trustAnyTls,
+                    ),
                 )
             }
         }

@@ -6,6 +6,13 @@ import com.neovisionaries.ws.client.WebSocketAdapter
 import com.neovisionaries.ws.client.WebSocketException
 import com.neovisionaries.ws.client.WebSocketFactory
 import com.neovisionaries.ws.client.WebSocketFrame
+import de.afarber.magicapp.data.common.ClearableOutput
+import de.afarber.magicapp.data.common.ClosableRepo
+import de.afarber.magicapp.data.common.ConnectableRepo
+import de.afarber.magicapp.data.common.StateHolder
+import de.afarber.magicapp.data.common.nowTimestamp
+import de.afarber.magicapp.data.common.prependCapped
+import de.afarber.magicapp.data.common.toErrorText
 import de.afarber.magicapp.data.tls.TrustfulManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,36 +20,37 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
-class WebSocketEchoRepository {
-    private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+class WebSocketEchoRepository :
+    StateHolder<WebSocketRuntimeState>,
+    ClearableOutput,
+    ClosableRepo,
+    ConnectableRepo<WebSocketConnectConfig> {
     private val _state = MutableStateFlow(WebSocketRuntimeState())
 
     private var socket: WebSocket? = null
 
-    val state: StateFlow<WebSocketRuntimeState> = _state.asStateFlow()
+    override val state: StateFlow<WebSocketRuntimeState> = _state.asStateFlow()
 
-    suspend fun connect(
-        url: String,
-        trustAnyTls: Boolean,
-    ) {
-        val trimmedUrl = url.trim()
+    override suspend fun connect(config: WebSocketConnectConfig) {
+        val trimmedUrl = config.url.trim()
         if (trimmedUrl.isBlank()) {
             reportError("WebSocket URL is empty")
             return
         }
 
         _state.update {
-            it.copy(connectionState = WebSocketConnectionState.Connecting, lastError = null)
+            it.copy(
+                connectionState = WebSocketConnectionState.Connecting,
+                lastError = null,
+            )
         }
 
         withContext(Dispatchers.IO) {
             closeActiveSocket()
             try {
                 val factory = WebSocketFactory().setConnectionTimeout(10_000)
-                if (trustAnyTls && trimmedUrl.startsWith("wss://", ignoreCase = true)) {
+                if (config.trustAnyTls && trimmedUrl.startsWith("wss://", ignoreCase = true)) {
                     factory.setSSLSocketFactory(TrustfulManager.socketFactory())
                     factory.setVerifyHostname(false)
                 }
@@ -52,7 +60,7 @@ class WebSocketEchoRepository {
                 socket = newSocket
                 newSocket.connectAsynchronously()
             } catch (e: Exception) {
-                val detail = "Connect failed: ${e.javaClass.simpleName}: ${e.message ?: "Unknown error"}"
+                val detail = "Connect failed: ${e.toErrorText()}"
                 Log.e(TAG, detail, e)
                 _state.update {
                     it.copy(
@@ -64,15 +72,7 @@ class WebSocketEchoRepository {
         }
     }
 
-    suspend fun reconnect(
-        url: String,
-        trustAnyTls: Boolean,
-    ) {
-        disconnect()
-        connect(url = url, trustAnyTls = trustAnyTls)
-    }
-
-    suspend fun disconnect() {
+    override suspend fun disconnect() {
         withContext(Dispatchers.IO) {
             closeActiveSocket()
             _state.update {
@@ -94,16 +94,16 @@ class WebSocketEchoRepository {
                 pushMessage(direction = "OUT", payload = payload)
                 _state.update { it.copy(lastError = null) }
             } catch (e: Exception) {
-                reportError("Send failed: ${e.javaClass.simpleName}: ${e.message ?: "Unknown error"}", e)
+                reportError("Send failed: ${e.toErrorText()}", e)
             }
         }
     }
 
-    fun clearOutput() {
+    override fun clearOutput() {
         _state.update { it.copy(messages = emptyList(), lastError = null) }
     }
 
-    fun close() {
+    override fun close() {
         runCatching { closeActiveSocket() }
         _state.value = WebSocketRuntimeState()
     }
@@ -135,7 +135,7 @@ class WebSocketEchoRepository {
                 exception: WebSocketException?,
             ) {
                 reportError(
-                    "Connect error: ${exception?.javaClass?.simpleName ?: "WebSocketException"}: ${exception?.message ?: "Unknown error"}",
+                    "Connect error: ${exception?.toErrorText() ?: "WebSocketException: Unknown error"}",
                     exception,
                 )
                 _state.update {
@@ -167,7 +167,7 @@ class WebSocketEchoRepository {
                 cause: WebSocketException?,
             ) {
                 reportError(
-                    "WebSocket error: ${cause?.javaClass?.simpleName ?: "WebSocketException"}: ${cause?.message ?: "Unknown error"}",
+                    "WebSocket error: ${cause?.toErrorText() ?: "WebSocketException: Unknown error"}",
                     cause,
                 )
             }
@@ -179,12 +179,12 @@ class WebSocketEchoRepository {
     ) {
         val message =
             WebSocketMessageUi(
-                timestamp = now(),
+                timestamp = nowTimestamp(),
                 direction = direction,
                 payload = payload,
             )
         _state.update {
-            it.copy(messages = listOf(message) + it.messages.take(99))
+            it.copy(messages = prependCapped(message, it.messages))
         }
     }
 
@@ -192,10 +192,10 @@ class WebSocketEchoRepository {
         message: String,
         throwable: Throwable? = null,
     ) {
-        if (throwable != null) {
-            Log.e(TAG, message, throwable)
-        } else {
+        if (throwable == null) {
             Log.e(TAG, message)
+        } else {
+            Log.e(TAG, message, throwable)
         }
         _state.update { it.copy(lastError = message) }
     }
@@ -208,8 +208,6 @@ class WebSocketEchoRepository {
         }
         socket = null
     }
-
-    private fun now(): String = LocalDateTime.now().format(formatter)
 
     companion object {
         private const val TAG = "MagicApp-WS"

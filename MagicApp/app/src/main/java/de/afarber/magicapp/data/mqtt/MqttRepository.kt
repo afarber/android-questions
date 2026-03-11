@@ -1,6 +1,13 @@
 package de.afarber.magicapp.data.mqtt
 
 import android.util.Log
+import de.afarber.magicapp.data.common.ClearableOutput
+import de.afarber.magicapp.data.common.ClosableRepo
+import de.afarber.magicapp.data.common.ConnectableRepo
+import de.afarber.magicapp.data.common.StateHolder
+import de.afarber.magicapp.data.common.nowTimestamp
+import de.afarber.magicapp.data.common.prependCapped
+import de.afarber.magicapp.data.common.toErrorText
 import de.afarber.magicapp.data.tls.TrustfulManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,156 +22,85 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions
 import org.eclipse.paho.client.mqttv3.MqttException
 import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import java.net.URI
 import java.util.UUID
 
-class MqttRepository {
-    private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+class MqttRepository :
+    StateHolder<MqttRuntimeState>,
+    ClearableOutput,
+    ClosableRepo,
+    ConnectableRepo<MqttConnectConfig> {
     private val _state = MutableStateFlow(MqttRuntimeState())
 
     private var client: MqttAsyncClient? = null
-    private var reconnectTopic: String? = null
 
-    val state: StateFlow<MqttRuntimeState> = _state.asStateFlow()
+    override val state: StateFlow<MqttRuntimeState> = _state.asStateFlow()
 
-    suspend fun connect(
-        host: String,
-        port: Int,
-        clientId: String,
-        insecureTls: Boolean = false,
-    ) {
-        if (host.isBlank()) {
-            reportError("Broker host is empty")
-            return
-        }
-
-        if (port <= 0 || port > 65535) {
-            reportError("Broker port is invalid")
+    override suspend fun connect(config: MqttConnectConfig) {
+        val serverUri = config.serverUri.trim()
+        if (!validateConnectConfig(config.copy(serverUri = serverUri))) {
             return
         }
 
         _state.update {
-            it.copy(connectionState = MqttConnectionState.Connecting, lastError = null)
+            it.copy(
+                connectionState = MqttConnectionState.Connecting,
+                lastError = null,
+            )
         }
 
         withContext(Dispatchers.IO) {
-            val serverUris = buildServerUris(host, port)
-            var lastFailure: Throwable? = null
-            var connected = false
-            val attemptErrors = mutableListOf<String>()
-
-            for (serverUri in serverUris) {
-                var activeClient: MqttAsyncClient? = null
-                try {
-                    activeClient = ensureClient(serverUri, clientId)
-                    if (activeClient.isConnected) {
-                        _state.update {
-                            it.copy(connectionState = MqttConnectionState.Connected, lastError = null)
-                        }
-                        connected = true
-                        break
-                    }
-
-                    val options =
-                        MqttConnectOptions().apply {
-                            isAutomaticReconnect = true
-                            isCleanSession = true
-                            keepAliveInterval = 20
-                            connectionTimeout = 10
-                            mqttVersion = MqttConnectOptions.MQTT_VERSION_3_1_1
-                            if (insecureTls && serverUri.startsWith("ssl://")) {
-                                socketFactory = TrustfulManager.socketFactory()
-                            }
-                        }
-
-                    Log.i(
-                        TAG,
-                        "Connecting to $serverUri (insecureTls=${insecureTls && serverUri.startsWith("ssl://")})",
-                    )
-                    activeClient.connect(options).waitForCompletion(10_000)
-                    _state.update {
-                        it.copy(connectionState = MqttConnectionState.Connected, lastError = null)
-                    }
-                    connected = true
-                    break
-                } catch (e: Exception) {
-                    lastFailure = e
-                    attemptErrors += "$serverUri -> ${formatError("Attempt failed", e)}"
-                    Log.e(TAG, "Connect attempt failed for $serverUri", e)
-                    // Ensure partial failed clients/sockets do not linger.
-                    activeClient?.let { failedClient ->
-                        runCatching {
-                            if (failedClient.isConnected) {
-                                failedClient.disconnectForcibly(500, 500, false)
-                            }
-                            failedClient.close()
-                        }
-                        if (client === failedClient) {
-                            client = null
-                        }
-                    }
-                }
-            }
-
-            if (!connected) {
-                val detail =
-                    buildString {
-                        append("Connect failed (tried ${serverUris.joinToString()})")
-                        if (attemptErrors.isNotEmpty()) {
-                            append(": ").append(attemptErrors.joinToString(" | "))
-                        } else if (lastFailure != null) {
-                            append(": ").append(formatError("Attempt failed", lastFailure))
-                        }
-                    }
-                _state.update {
-                    it.copy(
-                        connectionState = MqttConnectionState.Disconnected,
-                        lastError = detail,
-                    )
-                }
-            }
-        }
-    }
-
-    suspend fun disconnect(clearSubscription: Boolean = true) {
-        withContext(Dispatchers.IO) {
+            var activeClient: MqttAsyncClient? = null
             try {
-                client?.let { activeClient ->
-                    if (activeClient.isConnected) {
-                        activeClient.disconnect().waitForCompletion(5_000)
+                activeClient = ensureClient(serverUri = serverUri, clientId = config.clientId)
+                if (activeClient.isConnected) {
+                    _state.update {
+                        it.copy(
+                            connectionState = MqttConnectionState.Connected,
+                            lastError = null,
+                        )
                     }
+                    return@withContext
                 }
-            } catch (_: Exception) {
-                // Ignore disconnect errors.
-            } finally {
+
+                val options = buildConnectOptions(serverUri = serverUri, trustAnyTls = config.trustAnyTls)
+                Log.i(
+                    TAG,
+                    "Connecting to $serverUri (trustAnyTls=${config.trustAnyTls && serverUri.startsWith("ssl://", ignoreCase = true)})",
+                )
+                activeClient.connect(options).waitForCompletion(10_000)
+                _state.update {
+                    it.copy(
+                        connectionState = MqttConnectionState.Connected,
+                        lastError = null,
+                    )
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Connect failed for $serverUri", e)
+                activeClient?.let { closeClient(it) }
+                if (client === activeClient) {
+                    client = null
+                }
                 _state.update {
                     it.copy(
                         connectionState = MqttConnectionState.Disconnected,
-                        subscribedTopic = if (clearSubscription) null else it.subscribedTopic,
+                        lastError = formatMqttError("Connect failed", e),
                     )
                 }
             }
         }
     }
 
-    suspend fun reconnect(
-        host: String,
-        port: Int,
-        clientId: String,
-        insecureTls: Boolean = false,
-    ) {
+    override suspend fun disconnect() {
+        disconnectInternal(clearSubscription = true)
+    }
+
+    override suspend fun reconnect(config: MqttConnectConfig) {
         val topicToRestore = _state.value.subscribedTopic
-        reconnectTopic = topicToRestore
-        disconnect(clearSubscription = false)
-        connect(
-            host = host,
-            port = port,
-            clientId = clientId,
-            insecureTls = insecureTls,
-        )
+        disconnectInternal(clearSubscription = false)
+        connect(config)
         if (_state.value.connectionState == MqttConnectionState.Connected && !topicToRestore.isNullOrBlank()) {
-            subscribe(topicToRestore)
+            subscribe(topic = topicToRestore)
         }
     }
 
@@ -186,12 +122,11 @@ class MqttRepository {
 
             try {
                 activeClient.subscribe(topic, qos).waitForCompletion(5_000)
-                reconnectTopic = topic
                 _state.update {
                     it.copy(subscribedTopic = topic, lastError = null)
                 }
             } catch (e: Exception) {
-                reportError(formatError("Subscribe failed", e), e)
+                reportError(formatMqttError("Subscribe failed", e), e)
             }
         }
     }
@@ -206,18 +141,16 @@ class MqttRepository {
             val activeClient = client
             if (activeClient == null || !activeClient.isConnected) {
                 _state.update { it.copy(subscribedTopic = null) }
-                reconnectTopic = null
                 return@withContext
             }
 
             try {
                 activeClient.unsubscribe(topic).waitForCompletion(5_000)
-                reconnectTopic = null
                 _state.update {
                     it.copy(subscribedTopic = null, lastError = null)
                 }
             } catch (e: Exception) {
-                reportError(formatError("Unsubscribe failed", e), e)
+                reportError(formatMqttError("Unsubscribe failed", e), e)
             }
         }
     }
@@ -249,31 +182,58 @@ class MqttRepository {
                 activeClient.publish(topic, message).waitForCompletion(5_000)
                 _state.update { it.copy(lastError = null) }
             } catch (e: Exception) {
-                reportError(formatError("Publish failed", e), e)
+                reportError(formatMqttError("Publish failed", e), e)
             }
         }
     }
 
-    fun clearMessages() {
-        _state.update { it.copy(messages = emptyList()) }
-    }
-
-    fun clearOutput() {
+    override fun clearOutput() {
         _state.update { it.copy(messages = emptyList(), lastError = null) }
     }
 
-    fun close() {
-        runCatching {
-            client?.let { activeClient ->
-                if (activeClient.isConnected) {
-                    activeClient.disconnectForcibly(500, 500, false)
+    override fun close() {
+        runCatching { client?.let { closeClient(it) } }
+        client = null
+        _state.value = MqttRuntimeState()
+    }
+
+    private suspend fun disconnectInternal(clearSubscription: Boolean) {
+        withContext(Dispatchers.IO) {
+            try {
+                client?.let { activeClient ->
+                    if (activeClient.isConnected) {
+                        activeClient.disconnect().waitForCompletion(5_000)
+                    }
                 }
-                activeClient.close()
+            } catch (_: Exception) {
+                // Ignore disconnect errors.
+            } finally {
+                _state.update {
+                    it.copy(
+                        connectionState = MqttConnectionState.Disconnected,
+                        subscribedTopic = if (clearSubscription) null else it.subscribedTopic,
+                    )
+                }
             }
         }
-        client = null
-        reconnectTopic = null
-        _state.value = MqttRuntimeState()
+    }
+
+    private fun validateConnectConfig(config: MqttConnectConfig): Boolean {
+        if (config.serverUri.isBlank()) {
+            reportError("Server URI is empty")
+            return false
+        }
+
+        val uri = runCatching { URI(config.serverUri) }.getOrNull()
+        if (uri == null || uri.host.isNullOrBlank() || uri.port !in 1..65535) {
+            reportError("Server URI is invalid")
+            return false
+        }
+        if (uri.scheme !in setOf("tcp", "ssl")) {
+            reportError("Server URI must use tcp:// or ssl://")
+            return false
+        }
+        return true
     }
 
     private fun ensureClient(
@@ -281,80 +241,88 @@ class MqttRepository {
         clientId: String,
     ): MqttAsyncClient {
         val safeClientId = clientId.ifBlank { generateClientId() }
-
         val current = client
         if (current != null && current.serverURI == serverUri && current.clientId == safeClientId) {
             return current
         }
 
-        current?.let {
-            runCatching {
-                if (it.isConnected) {
-                    it.disconnectForcibly(500, 500, false)
+        current?.let { closeClient(it) }
+
+        val newClient = MqttAsyncClient(serverUri, safeClientId, MemoryPersistence())
+        newClient.setCallback(createCallback())
+        client = newClient
+        return newClient
+    }
+
+    private fun createCallback(): MqttCallbackExtended =
+        object : MqttCallbackExtended {
+            override fun connectComplete(
+                reconnect: Boolean,
+                serverURI: String?,
+            ) {
+                _state.update {
+                    it.copy(
+                        connectionState = MqttConnectionState.Connected,
+                        lastError = null,
+                    )
                 }
-                it.close()
+                Log.i(TAG, "Connected to ${serverURI.orEmpty()} (reconnect=$reconnect)")
+            }
+
+            override fun connectionLost(cause: Throwable?) {
+                Log.e(TAG, "Connection lost", cause)
+                _state.update {
+                    it.copy(
+                        connectionState = MqttConnectionState.Disconnected,
+                        lastError =
+                            cause?.let { throwable ->
+                                formatMqttError("Connection lost", throwable)
+                            } ?: "Connection lost",
+                    )
+                }
+            }
+
+            override fun messageArrived(
+                topic: String?,
+                message: MqttMessage?,
+            ) {
+                val item =
+                    MqttMessageUi(
+                        timestamp = nowTimestamp(),
+                        topic = topic.orEmpty(),
+                        payload = message?.payload?.toString(Charsets.UTF_8).orEmpty(),
+                    )
+                _state.update {
+                    it.copy(messages = prependCapped(item, it.messages))
+                }
+            }
+
+            override fun deliveryComplete(token: IMqttDeliveryToken?) {
+                // Publish confirmation is not shown separately in this UI.
             }
         }
 
-        return MqttAsyncClient(serverUri, safeClientId, MemoryPersistence()).also { newClient ->
-            newClient.setCallback(
-                object : MqttCallbackExtended {
-                    override fun connectComplete(
-                        reconnect: Boolean,
-                        serverURI: String?,
-                    ) {
-                        _state.update {
-                            it.copy(connectionState = MqttConnectionState.Connected, lastError = null)
-                        }
-                        Log.i(TAG, "Connected to ${serverURI.orEmpty()} (reconnect=$reconnect)")
-                        val topic = reconnectTopic
-                        if (reconnect && !topic.isNullOrBlank()) {
-                            runCatching {
-                                newClient.subscribe(topic, 0).waitForCompletion(5_000)
-                                _state.update { state ->
-                                    state.copy(subscribedTopic = topic, lastError = null)
-                                }
-                            }.onFailure {
-                                reportError(formatError("Re-subscribe failed", it), it)
-                            }
-                        }
-                    }
+    private fun buildConnectOptions(
+        serverUri: String,
+        trustAnyTls: Boolean,
+    ): MqttConnectOptions =
+        MqttConnectOptions().apply {
+            isAutomaticReconnect = false
+            isCleanSession = true
+            keepAliveInterval = 20
+            connectionTimeout = 10
+            mqttVersion = MqttConnectOptions.MQTT_VERSION_3_1_1
+            if (trustAnyTls && serverUri.startsWith("ssl://", ignoreCase = true)) {
+                socketFactory = TrustfulManager.socketFactory()
+            }
+        }
 
-                    override fun connectionLost(cause: Throwable?) {
-                        Log.e(TAG, "Connection lost", cause)
-                        _state.update {
-                            it.copy(
-                                connectionState = MqttConnectionState.Disconnected,
-                                lastError =
-                                    cause?.let { throwable ->
-                                        formatError("Connection lost", throwable)
-                                    } ?: "Connection lost",
-                            )
-                        }
-                    }
-
-                    override fun messageArrived(
-                        topic: String?,
-                        message: MqttMessage?,
-                    ) {
-                        val payload = message?.payload?.toString(Charsets.UTF_8).orEmpty()
-                        val item =
-                            MqttMessageUi(
-                                timestamp = LocalDateTime.now().format(formatter),
-                                topic = topic.orEmpty(),
-                                payload = payload,
-                            )
-                        _state.update {
-                            it.copy(messages = listOf(item) + it.messages.take(99))
-                        }
-                    }
-
-                    override fun deliveryComplete(token: IMqttDeliveryToken?) {
-                        // Publish confirmation is not shown separately in this UI.
-                    }
-                },
-            )
-            client = newClient
+    private fun closeClient(activeClient: MqttAsyncClient) {
+        runCatching {
+            if (activeClient.isConnected) {
+                activeClient.disconnectForcibly(500, 500, false)
+            }
+            activeClient.close()
         }
     }
 
@@ -370,36 +338,12 @@ class MqttRepository {
         _state.update { it.copy(lastError = message) }
     }
 
-    private fun buildServerUris(
-        host: String,
-        port: Int,
-    ): List<String> =
-        listOf(
-            buildUriForHostAndPort(
-                host = host,
-                port = port,
-            ),
-        )
-
-    private fun buildUriForHostAndPort(
-        host: String,
-        port: Int,
-    ): String =
-        when (port) {
-            8883 -> "ssl://$host:$port"
-            else -> "tcp://$host:$port"
-        }
-
-    private fun formatError(
+    private fun formatMqttError(
         prefix: String,
         throwable: Throwable,
     ): String =
         if (throwable is MqttException) {
-            val base =
-                buildString {
-                    append(prefix)
-                    append(" (reasonCode=").append(throwable.reasonCode).append(")")
-                }
+            val base = "$prefix (reasonCode=${throwable.reasonCode})"
             val causeText = throwable.cause?.message
             val messageText = throwable.message
             when {
@@ -408,7 +352,7 @@ class MqttRepository {
                 else -> base
             }
         } else {
-            "$prefix: ${throwable.javaClass.simpleName}: ${throwable.message ?: "Unknown error"}"
+            "$prefix: ${throwable.toErrorText()}"
         }
 
     companion object {
