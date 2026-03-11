@@ -1,20 +1,16 @@
 package de.afarber.MagicApp.data.http
 
 import android.util.Log
+import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
-import java.net.HttpURLConnection
-import java.net.URL
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import javax.net.ssl.HttpsURLConnection
-import javax.net.ssl.SSLContext
-import javax.net.ssl.TrustManager
-import javax.net.ssl.X509TrustManager
 
 class HttpProbeRepository {
     private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
@@ -41,30 +37,19 @@ class HttpProbeRepository {
         }
 
         withContext(Dispatchers.IO) {
-            var connection: HttpURLConnection? = null
+            val client = KtorHttpClientFactory.create(
+                trustAnyTls = trustAnyTls,
+                timeoutMillis = 10_000L
+            )
             try {
-                connection = (URL(trimmedUrl).openConnection() as HttpURLConnection).apply {
-                    requestMethod = "GET"
-                    connectTimeout = 10_000
-                    readTimeout = 10_000
-                    useCaches = false
-                    if (this is HttpsURLConnection && trustAnyTls) {
-                        sslSocketFactory = insecureTlsSocketFactory()
-                        hostnameVerifier = javax.net.ssl.HostnameVerifier { _, _ -> true }
-                    }
-                }
-
-                val responseCode = connection.responseCode
-                val responseText = (if (responseCode in 200..299) {
-                    connection.inputStream
-                } else {
-                    connection.errorStream
-                })?.bufferedReader()?.use { it.readText() }?.take(240)
+                val response = client.get(trimmedUrl)
+                val responseCode = response.status.value
+                val responseText = response.bodyAsText().take(240)
 
                 val isSuccess = responseCode in 200..299
                 val details = buildString {
                     append("HTTP ").append(responseCode)
-                    if (!responseText.isNullOrBlank()) {
+                    if (responseText.isNotBlank()) {
                         append(" - ").append(responseText.replace('\n', ' '))
                     }
                 }
@@ -108,7 +93,7 @@ class HttpProbeRepository {
                     )
                 }
             } finally {
-                connection?.disconnect()
+                client.close()
             }
         }
     }
@@ -135,17 +120,6 @@ class HttpProbeRepository {
             )
         }
     }
-
-    private fun insecureTlsSocketFactory() = SSLContext.getInstance("TLS").apply {
-        val trustManagers = arrayOf<TrustManager>(
-            object : X509TrustManager {
-                override fun checkClientTrusted(chain: Array<java.security.cert.X509Certificate>, authType: String) {}
-                override fun checkServerTrusted(chain: Array<java.security.cert.X509Certificate>, authType: String) {}
-                override fun getAcceptedIssuers(): Array<java.security.cert.X509Certificate> = emptyArray()
-            }
-        )
-        init(null, trustManagers, java.security.SecureRandom())
-    }.socketFactory
 
     private fun now(): String = LocalDateTime.now().format(formatter)
 

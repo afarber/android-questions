@@ -1,6 +1,7 @@
 package de.afarber.MagicApp.data.mqtt
 
 import android.util.Log
+import de.afarber.MagicApp.data.tls.TrustfulManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,10 +18,6 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.UUID
-import javax.net.ssl.SSLContext
-import javax.net.ssl.SSLSocketFactory
-import javax.net.ssl.TrustManager
-import javax.net.ssl.X509TrustManager
 
 class MqttRepository {
     private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
@@ -35,8 +32,7 @@ class MqttRepository {
         host: String,
         port: Int,
         clientId: String,
-        insecureTls: Boolean = false,
-        webSocketPath: String? = null
+        insecureTls: Boolean = false
     ) {
         if (host.isBlank()) {
             reportError("Broker host is empty")
@@ -53,7 +49,7 @@ class MqttRepository {
         }
 
         withContext(Dispatchers.IO) {
-            val serverUris = buildServerUris(host, port, webSocketPath)
+            val serverUris = buildServerUris(host, port)
             var lastFailure: Throwable? = null
             var connected = false
             val attemptErrors = mutableListOf<String>()
@@ -76,14 +72,14 @@ class MqttRepository {
                         keepAliveInterval = 20
                         connectionTimeout = 10
                         mqttVersion = MqttConnectOptions.MQTT_VERSION_3_1_1
-                        if (insecureTls && isTlsUri(serverUri)) {
-                            socketFactory = insecureTlsSocketFactory()
+                        if (insecureTls && serverUri.startsWith("ssl://")) {
+                            socketFactory = TrustfulManager.socketFactory()
                         }
                     }
 
                     Log.i(
                         TAG,
-                        "Connecting to $serverUri (insecureTls=${insecureTls && isTlsUri(serverUri)})"
+                        "Connecting to $serverUri (insecureTls=${insecureTls && serverUri.startsWith("ssl://")})"
                     )
                     activeClient.connect(options).waitForCompletion(10_000)
                     _state.update {
@@ -154,8 +150,7 @@ class MqttRepository {
         host: String,
         port: Int,
         clientId: String,
-        insecureTls: Boolean = false,
-        webSocketPath: String? = null
+        insecureTls: Boolean = false
     ) {
         val topicToRestore = _state.value.subscribedTopic
         reconnectTopic = topicToRestore
@@ -164,8 +159,7 @@ class MqttRepository {
             host = host,
             port = port,
             clientId = clientId,
-            insecureTls = insecureTls,
-            webSocketPath = webSocketPath
+            insecureTls = insecureTls
         )
         if (_state.value.connectionState == MqttConnectionState.Connected && !topicToRestore.isNullOrBlank()) {
             subscribe(topicToRestore)
@@ -349,54 +343,20 @@ class MqttRepository {
         _state.update { it.copy(lastError = message) }
     }
 
-    private fun buildServerUris(host: String, port: Int, webSocketPath: String?): List<String> {
+    private fun buildServerUris(host: String, port: Int): List<String> {
         return listOf(
             buildUriForHostAndPort(
                 host = host,
-                port = port,
-                webSocketPath = webSocketPath
+                port = port
             )
         )
     }
 
-    private fun buildUriForHostAndPort(host: String, port: Int, webSocketPath: String?): String {
-        if (webSocketPath != null) {
-            val normalizedPath = normalizeWebSocketPath(webSocketPath)
-            val scheme = if (port == 8080 || port == 80) "ws" else "wss"
-            return "$scheme://$host:$port$normalizedPath"
-        }
-
+    private fun buildUriForHostAndPort(host: String, port: Int): String {
         return when (port) {
             8883 -> "ssl://$host:$port"
-            8080 -> "ws://$host:$port"
-            8081 -> "wss://$host:$port"
             else -> "tcp://$host:$port"
         }
-    }
-
-    private fun normalizeWebSocketPath(path: String): String {
-        val trimmed = path.trim()
-        if (trimmed.isBlank()) {
-            return "/"
-        }
-        return if (trimmed.startsWith("/")) trimmed else "/$trimmed"
-    }
-
-    private fun isTlsUri(uri: String): Boolean {
-        return uri.startsWith("ssl://") || uri.startsWith("wss://")
-    }
-
-    private fun insecureTlsSocketFactory(): SSLSocketFactory {
-        val trustAllCerts = arrayOf<TrustManager>(
-            object : X509TrustManager {
-                override fun checkClientTrusted(chain: Array<java.security.cert.X509Certificate>, authType: String) {}
-                override fun checkServerTrusted(chain: Array<java.security.cert.X509Certificate>, authType: String) {}
-                override fun getAcceptedIssuers(): Array<java.security.cert.X509Certificate> = emptyArray()
-            }
-        )
-        val sslContext = SSLContext.getInstance("TLS")
-        sslContext.init(null, trustAllCerts, java.security.SecureRandom())
-        return sslContext.socketFactory
     }
 
     private fun formatError(prefix: String, throwable: Throwable): String {

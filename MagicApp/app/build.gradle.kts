@@ -68,6 +68,9 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.google.material)
     implementation(libs.eclipse.paho.mqttv3)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.nv.websocket.client)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

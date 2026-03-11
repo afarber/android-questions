@@ -1,14 +1,10 @@
 package de.afarber.MagicApp.data.tls
 
-import android.annotation.SuppressLint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.security.cert.X509Certificate
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSocket
-import javax.net.ssl.SSLSocketFactory
-import javax.net.ssl.TrustManager
-import javax.net.ssl.X509TrustManager
 
 data class TlsCertificateInfo(
     val subject: String,
@@ -24,7 +20,7 @@ class TlsCertificateInspector {
             require(port in 1..65535) { "Port must be between 1 and 65535" }
 
             val socketFactory = if (trustAnyTls) {
-                insecureSocketFactory()
+                TrustfulManager.socketFactory()
             } else {
                 SSLContext.getDefault().socketFactory
             }
@@ -45,21 +41,5 @@ class TlsCertificateInspector {
                 )
             }
         }
-    }
-
-    private fun insecureSocketFactory(): SSLSocketFactory {
-        val trustManagers = arrayOf<TrustManager>(
-            @SuppressLint("CustomX509TrustManager")
-            object : X509TrustManager {
-                @SuppressLint("TrustAllX509TrustManager")
-                override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {}
-                @SuppressLint("TrustAllX509TrustManager")
-                override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {}
-                override fun getAcceptedIssuers(): Array<X509Certificate> = emptyArray()
-            }
-        )
-        val context = SSLContext.getInstance("TLS")
-        context.init(null, trustManagers, java.security.SecureRandom())
-        return context.socketFactory
     }
 }

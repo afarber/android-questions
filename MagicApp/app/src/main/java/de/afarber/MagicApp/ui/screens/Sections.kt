@@ -48,16 +48,13 @@ import de.afarber.MagicApp.data.network.InternetCheckState
 import de.afarber.MagicApp.data.network.InternetStatus
 import de.afarber.MagicApp.data.tls.TlsCertificateInfo
 import de.afarber.MagicApp.data.tls.TlsCertificateInspector
+import de.afarber.MagicApp.data.websocket.WebSocketConnectionState
+import de.afarber.MagicApp.data.websocket.WebSocketEchoRepository
+import de.afarber.MagicApp.data.websocket.WebSocketRuntimeState
 import de.afarber.MagicApp.ui.components.MagicCard
 import de.afarber.MagicApp.ui.components.isWideScreen
 import de.afarber.MagicApp.ui.navigation.MenuSection
 import kotlinx.coroutines.launch
-
-private data class ParsedWebSocketEndpoint(
-    val host: String,
-    val port: Int,
-    val path: String
-)
 
 private data class ParsedHostPort(
     val host: String,
@@ -328,14 +325,12 @@ private fun HttpSection(onInfoClick: () -> Unit) {
 
 @Composable
 private fun WebsocketsSection(onInfoClick: () -> Unit) {
-    val repository = remember { MqttRepository() }
-    val mqttState by repository.state.collectAsStateWithLifecycle()
+    val repository = remember { WebSocketEchoRepository() }
+    val wsState by repository.state.collectAsStateWithLifecycle()
     val tlsInspector = remember { TlsCertificateInspector() }
     val scope = rememberCoroutineScope()
 
     var wsUrl by rememberSaveable { mutableStateOf(BackendEndpoints.WS_URL) }
-    var clientId by rememberSaveable { mutableStateOf(MqttRepository.generateClientId(prefix = "MagicWs")) }
-    var topic by rememberSaveable { mutableStateOf("de/afarber/magicapp/test") }
     var payload by rememberSaveable { mutableStateOf("") }
     var trustAnyTls by rememberSaveable { mutableStateOf(true) }
     var localError by rememberSaveable { mutableStateOf<String?>(null) }
@@ -349,86 +344,69 @@ private fun WebsocketsSection(onInfoClick: () -> Unit) {
         }
     }
 
-    fun parseEndpointOrReport(): ParsedWebSocketEndpoint? {
-        val endpoint = runCatching { java.net.URL(wsUrl.trim()) }.getOrNull()
-        if (endpoint == null || endpoint.host.isNullOrBlank()) {
+    fun parseHostPortOrReport(): ParsedHostPort? {
+        val endpoint = runCatching { java.net.URI(wsUrl.trim()) }.getOrNull()
+        if (endpoint == null) {
             localError = "Websocket URL is invalid"
             return null
         }
-        val scheme = endpoint.protocol?.lowercase().orEmpty()
+        val scheme = endpoint.scheme?.lowercase().orEmpty()
         if (scheme !in setOf("http", "https", "ws", "wss")) {
             localError = "Websocket URL must use http/https/ws/wss"
             return null
         }
+        val host = endpoint.host
+        if (host.isNullOrBlank()) {
+            localError = "Websocket URL host is empty"
+            return null
+        }
         val defaultPort = if (scheme == "http" || scheme == "ws") 80 else 443
         val port = if (endpoint.port > 0) endpoint.port else defaultPort
-        val query = endpoint.query?.let { "?$it" }.orEmpty()
-        val path = (endpoint.path?.ifBlank { "/" } ?: "/") + query
-        return ParsedWebSocketEndpoint(
-            host = endpoint.host,
-            port = port,
-            path = path
+        return ParsedHostPort(
+            host = host,
+            port = port
         ).also {
             localError = null
         }
     }
 
     val connectAction: () -> Unit = {
-        if (mqttState.connectionState == MqttConnectionState.Connected) {
+        if (wsState.connectionState == WebSocketConnectionState.Connected) {
             scope.launch { repository.disconnect() }
         } else {
-            val endpoint = parseEndpointOrReport()
-            if (endpoint != null) {
+            if (wsUrl.isBlank()) {
+                localError = "Websocket URL is empty"
+            } else {
+                localError = null
                 scope.launch {
-                    repository.connect(
-                        host = endpoint.host,
-                        port = endpoint.port,
-                        clientId = clientId.trim(),
-                        insecureTls = trustAnyTls,
-                        webSocketPath = endpoint.path
-                    )
+                    repository.connect(url = wsUrl.trim(), trustAnyTls = trustAnyTls)
                 }
             }
         }
     }
 
     val reloadAction: () -> Unit = {
-        val endpoint = parseEndpointOrReport()
-        if (endpoint != null) {
+        if (wsUrl.isBlank()) {
+            localError = "Websocket URL is empty"
+        } else {
+            localError = null
             scope.launch {
-                repository.reconnect(
-                    host = endpoint.host,
-                    port = endpoint.port,
-                    clientId = clientId.trim(),
-                    insecureTls = trustAnyTls,
-                    webSocketPath = endpoint.path
-                )
+                repository.reconnect(url = wsUrl.trim(), trustAnyTls = trustAnyTls)
             }
         }
     }
 
-    val subscribeAction: () -> Unit = {
-        if (mqttState.isSubscribed) {
-            scope.launch { repository.unsubscribe() }
-        } else if (topic.isBlank()) {
-            localError = "Topic is empty"
+    val sendAction: () -> Unit = {
+        if (payload.isBlank()) {
+            localError = "Payload is empty"
         } else {
             localError = null
-            scope.launch { repository.subscribe(topic = topic.trim()) }
-        }
-    }
-
-    val publishAction: () -> Unit = {
-        if (topic.isBlank()) {
-            localError = "Topic is empty"
-        } else {
-            localError = null
-            scope.launch { repository.publish(topic = topic.trim(), payload = payload) }
+            scope.launch { repository.send(payload = payload) }
         }
     }
 
     val showCertAction: () -> Unit = showWsCert@{
-        val endpoint = parseEndpointOrReport() ?: return@showWsCert
+        val endpoint = parseHostPortOrReport() ?: return@showWsCert
         scope.launch {
             runCatching {
                 tlsInspector.fetchCertificateInfo(
@@ -459,40 +437,26 @@ private fun WebsocketsSection(onInfoClick: () -> Unit) {
 
     TransportTwoPane(
         left = {
-            MqttInputCard(
-                title = "Websockets Input",
-                host = wsUrl,
-                onHostChange = { wsUrl = it },
-                hostLabel = "Websocket URL",
-                portText = "",
-                onPortChange = {},
-                portLabel = "Broker Port",
-                showPortField = false,
-                trustAnyTls = trustAnyTls,
-                onTrustAnyTlsChange = { trustAnyTls = it },
-                webSocketPath = null,
-                onWebSocketPathChange = null,
-                clientId = clientId,
-                onClientIdChange = { clientId = it },
-                topic = topic,
-                onTopicChange = { topic = it },
+            WebSocketInputCard(
+                wsUrl = wsUrl,
+                onWsUrlChange = { wsUrl = it },
                 payload = payload,
                 onPayloadChange = { payload = it },
-                mqttState = mqttState,
+                wsState = wsState,
+                trustAnyTls = trustAnyTls,
+                onTrustAnyTlsChange = { trustAnyTls = it },
                 onConnectClick = connectAction,
-                onSubscribeClick = subscribeAction,
-                onPublishClick = publishAction,
+                onSendClick = sendAction,
                 onShowCertClick = showCertAction,
                 onInfoClick = onInfoClick,
                 onReloadClick = reloadAction
             )
         },
         right = {
-            MqttOutputCard(
-                title = "Websockets Output",
-                mqttState = mqttState,
+            WebSocketOutputCard(
+                state = wsState,
                 localError = localError,
-                onClearMessagesClick = {
+                onClearClick = {
                     localError = null
                     repository.clearOutput()
                 },
@@ -645,8 +609,6 @@ private fun MqttSection(onInfoClick: () -> Unit) {
                 portLabel = "Broker Port",
                 trustAnyTls = trustAnyTls,
                 onTrustAnyTlsChange = { trustAnyTls = it },
-                webSocketPath = null,
-                onWebSocketPathChange = null,
                 clientId = clientId,
                 onClientIdChange = { clientId = it },
                 topic = topic,
@@ -864,6 +826,128 @@ private fun HttpOutputCard(
 }
 
 @Composable
+private fun WebSocketInputCard(
+    wsUrl: String,
+    onWsUrlChange: (String) -> Unit,
+    payload: String,
+    onPayloadChange: (String) -> Unit,
+    wsState: WebSocketRuntimeState,
+    trustAnyTls: Boolean,
+    onTrustAnyTlsChange: (Boolean) -> Unit,
+    onConnectClick: () -> Unit,
+    onSendClick: () -> Unit,
+    onShowCertClick: () -> Unit,
+    onInfoClick: () -> Unit,
+    onReloadClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val connectLabel = if (wsState.connectionState == WebSocketConnectionState.Connected) {
+        "Disconnect"
+    } else {
+        "Connect"
+    }
+
+    MagicCard(
+        title = "Websockets Input",
+        onInfoClick = onInfoClick,
+        onReloadClick = onReloadClick,
+        modifier = modifier
+    ) {
+        OutlinedTextField(
+            value = wsUrl,
+            onValueChange = onWsUrlChange,
+            label = { Text("Websocket URL") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Checkbox(
+                checked = trustAnyTls,
+                onCheckedChange = onTrustAnyTlsChange
+            )
+            Text("Trust any TLS certificate")
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = onShowCertClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Show Backend TLS Cert")
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+            value = payload,
+            onValueChange = onPayloadChange,
+            label = { Text("Payload") },
+            minLines = 2,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Button(onClick = onConnectClick, modifier = Modifier.weight(1f)) {
+                Text(connectLabel)
+            }
+            Button(onClick = onSendClick, modifier = Modifier.weight(1f)) {
+                Text("Send")
+            }
+        }
+    }
+}
+
+@Composable
+private fun WebSocketOutputCard(
+    state: WebSocketRuntimeState,
+    localError: String?,
+    onClearClick: () -> Unit,
+    onInfoClick: () -> Unit,
+    onReloadClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val statusText = when (state.connectionState) {
+        WebSocketConnectionState.Disconnected -> "Disconnected"
+        WebSocketConnectionState.Connecting -> "Connecting"
+        WebSocketConnectionState.Connected -> "Connected"
+    }
+
+    MagicCard(
+        title = "Websockets Output",
+        onInfoClick = onInfoClick,
+        onReloadClick = onReloadClick,
+        modifier = modifier.heightIn(min = 280.dp)
+    ) {
+        Text("Status: $statusText")
+        Text("Last Error: ${localError ?: state.lastError ?: "-"}")
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = onClearClick,
+            modifier = Modifier.align(Alignment.End)
+        ) {
+            Text("Clear")
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 160.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            if (state.messages.isEmpty()) {
+                Text("No messages")
+            } else {
+                state.messages.forEach { message ->
+                    Text("${message.timestamp} ${message.direction}")
+                    Text(message.payload)
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun BackendCertificateDialog(
     info: TlsCertificateInfo?,
     error: String?,
@@ -900,11 +984,8 @@ private fun MqttInputCard(
     portText: String,
     onPortChange: (String) -> Unit,
     portLabel: String,
-    showPortField: Boolean = true,
     trustAnyTls: Boolean,
     onTrustAnyTlsChange: (Boolean) -> Unit,
-    webSocketPath: String?,
-    onWebSocketPathChange: ((String) -> Unit)?,
     clientId: String,
     onClientIdChange: (String) -> Unit,
     topic: String,
@@ -939,24 +1020,13 @@ private fun MqttInputCard(
             label = { Text(hostLabel) },
             modifier = Modifier.fillMaxWidth()
         )
-        if (showPortField) {
-            Spacer(modifier = Modifier.height(8.dp))
-            OutlinedTextField(
-                value = portText,
-                onValueChange = onPortChange,
-                label = { Text(portLabel) },
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-        if (webSocketPath != null && onWebSocketPathChange != null) {
-            Spacer(modifier = Modifier.height(8.dp))
-            OutlinedTextField(
-                value = webSocketPath,
-                onValueChange = onWebSocketPathChange,
-                label = { Text("Websocket Path") },
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+            value = portText,
+            onValueChange = onPortChange,
+            label = { Text(portLabel) },
+            modifier = Modifier.fillMaxWidth()
+        )
         Spacer(modifier = Modifier.height(4.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically

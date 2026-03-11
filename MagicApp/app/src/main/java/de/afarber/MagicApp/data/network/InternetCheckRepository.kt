@@ -2,10 +2,10 @@ package de.afarber.MagicApp.data.network
 
 import android.util.Log
 import de.afarber.MagicApp.data.config.BackendEndpoints
+import de.afarber.MagicApp.data.http.KtorHttpClientFactory
+import io.ktor.client.request.get
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.net.HttpURLConnection
-import java.net.URL
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -14,36 +14,22 @@ class InternetCheckRepository {
 
     suspend fun runCheck(): InternetCheckState = withContext(Dispatchers.IO) {
         val timestamp = LocalDateTime.now().format(formatter)
-        var connection: HttpURLConnection? = null
+        val client = KtorHttpClientFactory.create(
+            trustAnyTls = false,
+            timeoutMillis = 6_000L
+        )
 
         try {
-            connection = (URL(BackendEndpoints.HTTP_URL).openConnection() as HttpURLConnection).apply {
-                requestMethod = "GET"
-                connectTimeout = 6000
-                readTimeout = 6000
-                useCaches = false
-            }
-
-            val statusCode = connection.responseCode
+            val response = client.get(BackendEndpoints.HTTP_URL)
+            val statusCode = response.status.value
             if (statusCode in 200..299) {
-                connection.inputStream.bufferedReader().use { it.readText() }
                 InternetCheckState(
                     status = InternetStatus.Success,
                     timestamp = timestamp,
                     details = "HTTP $statusCode"
                 )
             } else {
-                val errorBody = connection.errorStream
-                    ?.bufferedReader()
-                    ?.use { it.readText() }
-                    ?.take(160)
-                    ?.ifBlank { null }
-                val detail = buildString {
-                    append("HTTP ").append(statusCode)
-                    if (!errorBody.isNullOrBlank()) {
-                        append(" - ").append(errorBody)
-                    }
-                }
+                val detail = "HTTP $statusCode"
                 Log.e(TAG, "Internet check failed: $detail")
                 InternetCheckState(
                     status = InternetStatus.Error,
@@ -60,7 +46,7 @@ class InternetCheckRepository {
                 details = detail
             )
         } finally {
-            connection?.disconnect()
+            client.close()
         }
     }
 
