@@ -20,7 +20,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -70,6 +72,7 @@ private fun DesktopLayout(
         MagicNavPanel(
             selectedSection = selectedSection,
             onSectionSelected = onSectionSelected,
+            logoPulseTriggerKey = selectedSection.ordinal,
             modifier = Modifier
                 .width(220.dp)
                 .fillMaxHeight()
@@ -93,6 +96,13 @@ private fun CompactLayout(
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    var logoPulseTriggerKey by rememberSaveable { mutableIntStateOf(0) }
+
+    LaunchedEffect(drawerState.currentValue) {
+        if (drawerState.currentValue == DrawerValue.Open) {
+            logoPulseTriggerKey += 1
+        }
+    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -104,6 +114,7 @@ private fun CompactLayout(
                         onSectionSelected(it)
                         scope.launch { drawerState.close() }
                     },
+                    logoPulseTriggerKey = logoPulseTriggerKey,
                     modifier = Modifier.fillMaxHeight()
                 )
             }

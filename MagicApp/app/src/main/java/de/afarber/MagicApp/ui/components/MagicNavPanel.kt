@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,6 +26,7 @@ import de.afarber.MagicApp.ui.navigation.MenuSection
 fun MagicNavPanel(
     selectedSection: MenuSection,
     onSectionSelected: (MenuSection) -> Unit,
+    logoPulseTriggerKey: Int,
     modifier: Modifier = Modifier
 ) {
     val dark = isSystemInDarkTheme()
@@ -42,7 +42,7 @@ fun MagicNavPanel(
             .padding(horizontal = 10.dp, vertical = 14.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            BoxLogo()
+            PulsatingLogo(pulseTriggerKey = logoPulseTriggerKey)
             Spacer(modifier = Modifier.width(10.dp))
             Text(
                 text = "MAGIC\nEngineering\nMenu",
@@ -78,24 +78,5 @@ fun MagicNavPanel(
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun BoxLogo() {
-    androidx.compose.foundation.layout.Box(
-        modifier = Modifier
-            .size(44.dp)
-            .clip(CircleShape)
-            .background(accentColor().copy(alpha = 0.25f))
-            .padding(6.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        androidx.compose.foundation.layout.Box(
-            modifier = Modifier
-                .size(28.dp)
-                .clip(CircleShape)
-                .background(accentColor())
-        )
     }
 }
