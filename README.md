@@ -82,6 +82,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-questions/master/LaunchMaps/screenshot.png)
 
 
+[MagicApp](https://github.com/afarber/android-questions/tree/master/MagicApp) a Kotlin / Jetpack Compose app mimicking a MAGIC Engineering Menu:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/MagicApp/screenshot.png)
+
+
 [MyBars](https://github.com/afarber/android-questions/tree/master/MyBars)
 uses CC BY-SA 3.0 licensed SVG-file by 
 [Denelson83, Wikimedia Commons](http://en.wikipedia.org/wiki/File:Blank_Scrabble_board_with_coordinates.svg)
@@ -263,9 +268,8 @@ uses CC BY-SA 3.0 licensed SVG-file by
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/ZXingTestActivity/screenshot.png)
 
-==========
+---
 
 ![StackOverflow](http://stackoverflow.com/users/flair/165071.png)
 
 [My Android-related questions at StackOverflow](http://stackoverflow.com/search?q=user:165071+[android])
-
