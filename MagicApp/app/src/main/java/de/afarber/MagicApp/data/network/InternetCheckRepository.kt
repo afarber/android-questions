@@ -1,6 +1,7 @@
 package de.afarber.MagicApp.data.network
 
 import android.util.Log
+import de.afarber.MagicApp.data.config.BackendEndpoints
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.HttpURLConnection
@@ -16,7 +17,7 @@ class InternetCheckRepository {
         var connection: HttpURLConnection? = null
 
         try {
-            connection = (URL(TEST_URL).openConnection() as HttpURLConnection).apply {
+            connection = (URL(BackendEndpoints.HTTP_URL).openConnection() as HttpURLConnection).apply {
                 requestMethod = "GET"
                 connectTimeout = 6000
                 readTimeout = 6000
@@ -65,6 +66,5 @@ class InternetCheckRepository {
 
     private companion object {
         const val TAG = "MagicApp-HTTP"
-        const val TEST_URL = "http://network-test.debian.org/nm"
     }
 }

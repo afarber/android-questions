@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.OutlinedTextField
@@ -33,18 +34,46 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.afarber.MagicApp.BuildConfig
+import de.afarber.MagicApp.data.config.BackendEndpoints
 import de.afarber.MagicApp.data.connectivity.ConnectivityRepository
 import de.afarber.MagicApp.data.connectivity.NetworkStateUiModel
+import de.afarber.MagicApp.data.http.HttpProbeRepository
+import de.afarber.MagicApp.data.http.HttpProbeState
+import de.afarber.MagicApp.data.http.HttpProbeStatus
 import de.afarber.MagicApp.data.mqtt.MqttConnectionState
 import de.afarber.MagicApp.data.mqtt.MqttRepository
 import de.afarber.MagicApp.data.mqtt.MqttRuntimeState
 import de.afarber.MagicApp.data.network.InternetCheckRepository
 import de.afarber.MagicApp.data.network.InternetCheckState
 import de.afarber.MagicApp.data.network.InternetStatus
+import de.afarber.MagicApp.data.tls.TlsCertificateInfo
+import de.afarber.MagicApp.data.tls.TlsCertificateInspector
 import de.afarber.MagicApp.ui.components.MagicCard
 import de.afarber.MagicApp.ui.components.isWideScreen
 import de.afarber.MagicApp.ui.navigation.MenuSection
 import kotlinx.coroutines.launch
+
+private data class ParsedWebSocketEndpoint(
+    val host: String,
+    val port: Int,
+    val path: String
+)
+
+private data class ParsedHostPort(
+    val host: String,
+    val port: Int
+)
+
+private fun parseHostPortFromUrl(rawUrl: String, defaultPort: Int): ParsedHostPort? {
+    val endpoint = runCatching {
+        val normalized = if (rawUrl.contains("://")) rawUrl else "tcp://$rawUrl"
+        java.net.URI(normalized)
+    }.getOrNull() ?: return null
+
+    val host = endpoint.host ?: return null
+    val port = if (endpoint.port > 0) endpoint.port else defaultPort
+    return ParsedHostPort(host = host, port = port)
+}
 
 @Composable
 fun SectionContent(selectedSection: MenuSection, onInfoClick: () -> Unit) {
@@ -52,6 +81,8 @@ fun SectionContent(selectedSection: MenuSection, onInfoClick: () -> Unit) {
         MenuSection.Connectivity -> ConnectivitySection(onInfoClick)
         MenuSection.AccountService -> AccountServiceSection(onInfoClick)
         MenuSection.ServiceManagement -> ServiceManagementSection(onInfoClick)
+        MenuSection.HTTP -> HttpSection(onInfoClick)
+        MenuSection.Websockets -> WebsocketsSection(onInfoClick)
         MenuSection.MQTT -> MqttSection(onInfoClick)
         MenuSection.MagicService -> MagicServiceSection(onInfoClick)
     }
@@ -213,18 +244,288 @@ private fun ServiceManagementSection(onInfoClick: () -> Unit) {
 }
 
 @Composable
+private fun HttpSection(onInfoClick: () -> Unit) {
+    val repository = remember { HttpProbeRepository() }
+    val httpState by repository.state.collectAsStateWithLifecycle()
+    val tlsInspector = remember { TlsCertificateInspector() }
+    val scope = rememberCoroutineScope()
+
+    var url by rememberSaveable { mutableStateOf(BackendEndpoints.HTTPS_URL) }
+    var trustAnyTls by rememberSaveable { mutableStateOf(true) }
+    var localError by rememberSaveable { mutableStateOf<String?>(null) }
+
+    var certInfo by remember { mutableStateOf<TlsCertificateInfo?>(null) }
+    var certError by rememberSaveable { mutableStateOf<String?>(null) }
+
+    val requestAction: () -> Unit = {
+        localError = null
+        scope.launch {
+            repository.runRequest(url = url, trustAnyTls = trustAnyTls)
+        }
+    }
+    val reloadAction: () -> Unit = requestAction
+
+    val showCertAction: () -> Unit = showHttpCert@{
+        val parsed = runCatching { java.net.URL(url.trim()) }.getOrNull()
+        if (parsed == null || parsed.host.isNullOrBlank()) {
+            localError = "Enter a valid URL first"
+            return@showHttpCert
+        }
+        val host = parsed.host
+        val port = if (parsed.port > 0) parsed.port else 443
+        localError = null
+        scope.launch {
+            runCatching {
+                tlsInspector.fetchCertificateInfo(host = host, port = port, trustAnyTls = trustAnyTls)
+            }.onSuccess { info ->
+                certInfo = info
+                certError = null
+            }.onFailure { error ->
+                certInfo = null
+                certError = "${error.javaClass.simpleName}: ${error.message ?: "Unknown error"}"
+            }
+        }
+    }
+
+    if (certInfo != null || certError != null) {
+        BackendCertificateDialog(
+            info = certInfo,
+            error = certError,
+            onDismiss = {
+                certInfo = null
+                certError = null
+            }
+        )
+    }
+
+    TransportTwoPane(
+        left = {
+            HttpInputCard(
+                url = url,
+                onUrlChange = { url = it },
+                trustAnyTls = trustAnyTls,
+                onTrustAnyTlsChange = { trustAnyTls = it },
+                onRequestClick = requestAction,
+                onShowCertClick = showCertAction,
+                onInfoClick = onInfoClick,
+                onReloadClick = reloadAction
+            )
+        },
+        right = {
+            HttpOutputCard(
+                state = httpState,
+                localError = localError,
+                onClearClick = {
+                    localError = null
+                    repository.clearOutput()
+                },
+                onInfoClick = onInfoClick,
+                onReloadClick = reloadAction
+            )
+        }
+    )
+}
+
+@Composable
+private fun WebsocketsSection(onInfoClick: () -> Unit) {
+    val repository = remember { MqttRepository() }
+    val mqttState by repository.state.collectAsStateWithLifecycle()
+    val tlsInspector = remember { TlsCertificateInspector() }
+    val scope = rememberCoroutineScope()
+
+    var wsUrl by rememberSaveable { mutableStateOf(BackendEndpoints.WS_URL) }
+    var clientId by rememberSaveable { mutableStateOf(MqttRepository.generateClientId(prefix = "MagicWs")) }
+    var topic by rememberSaveable { mutableStateOf("de/afarber/magicapp/test") }
+    var payload by rememberSaveable { mutableStateOf("") }
+    var trustAnyTls by rememberSaveable { mutableStateOf(true) }
+    var localError by rememberSaveable { mutableStateOf<String?>(null) }
+
+    var certInfo by remember { mutableStateOf<TlsCertificateInfo?>(null) }
+    var certError by rememberSaveable { mutableStateOf<String?>(null) }
+
+    DisposableEffect(repository) {
+        onDispose {
+            repository.close()
+        }
+    }
+
+    fun parseEndpointOrReport(): ParsedWebSocketEndpoint? {
+        val endpoint = runCatching { java.net.URL(wsUrl.trim()) }.getOrNull()
+        if (endpoint == null || endpoint.host.isNullOrBlank()) {
+            localError = "Websocket URL is invalid"
+            return null
+        }
+        val scheme = endpoint.protocol?.lowercase().orEmpty()
+        if (scheme !in setOf("http", "https", "ws", "wss")) {
+            localError = "Websocket URL must use http/https/ws/wss"
+            return null
+        }
+        val defaultPort = if (scheme == "http" || scheme == "ws") 80 else 443
+        val port = if (endpoint.port > 0) endpoint.port else defaultPort
+        val query = endpoint.query?.let { "?$it" }.orEmpty()
+        val path = (endpoint.path?.ifBlank { "/" } ?: "/") + query
+        return ParsedWebSocketEndpoint(
+            host = endpoint.host,
+            port = port,
+            path = path
+        ).also {
+            localError = null
+        }
+    }
+
+    val connectAction: () -> Unit = {
+        if (mqttState.connectionState == MqttConnectionState.Connected) {
+            scope.launch { repository.disconnect() }
+        } else {
+            val endpoint = parseEndpointOrReport()
+            if (endpoint != null) {
+                scope.launch {
+                    repository.connect(
+                        host = endpoint.host,
+                        port = endpoint.port,
+                        clientId = clientId.trim(),
+                        insecureTls = trustAnyTls,
+                        webSocketPath = endpoint.path
+                    )
+                }
+            }
+        }
+    }
+
+    val reloadAction: () -> Unit = {
+        val endpoint = parseEndpointOrReport()
+        if (endpoint != null) {
+            scope.launch {
+                repository.reconnect(
+                    host = endpoint.host,
+                    port = endpoint.port,
+                    clientId = clientId.trim(),
+                    insecureTls = trustAnyTls,
+                    webSocketPath = endpoint.path
+                )
+            }
+        }
+    }
+
+    val subscribeAction: () -> Unit = {
+        if (mqttState.isSubscribed) {
+            scope.launch { repository.unsubscribe() }
+        } else if (topic.isBlank()) {
+            localError = "Topic is empty"
+        } else {
+            localError = null
+            scope.launch { repository.subscribe(topic = topic.trim()) }
+        }
+    }
+
+    val publishAction: () -> Unit = {
+        if (topic.isBlank()) {
+            localError = "Topic is empty"
+        } else {
+            localError = null
+            scope.launch { repository.publish(topic = topic.trim(), payload = payload) }
+        }
+    }
+
+    val showCertAction: () -> Unit = showWsCert@{
+        val endpoint = parseEndpointOrReport() ?: return@showWsCert
+        scope.launch {
+            runCatching {
+                tlsInspector.fetchCertificateInfo(
+                    host = endpoint.host,
+                    port = endpoint.port,
+                    trustAnyTls = trustAnyTls
+                )
+            }.onSuccess { info ->
+                certInfo = info
+                certError = null
+            }.onFailure { error ->
+                certInfo = null
+                certError = "${error.javaClass.simpleName}: ${error.message ?: "Unknown error"}"
+            }
+        }
+    }
+
+    if (certInfo != null || certError != null) {
+        BackendCertificateDialog(
+            info = certInfo,
+            error = certError,
+            onDismiss = {
+                certInfo = null
+                certError = null
+            }
+        )
+    }
+
+    TransportTwoPane(
+        left = {
+            MqttInputCard(
+                title = "Websockets Input",
+                host = wsUrl,
+                onHostChange = { wsUrl = it },
+                hostLabel = "Websocket URL",
+                portText = "",
+                onPortChange = {},
+                portLabel = "Broker Port",
+                showPortField = false,
+                trustAnyTls = trustAnyTls,
+                onTrustAnyTlsChange = { trustAnyTls = it },
+                webSocketPath = null,
+                onWebSocketPathChange = null,
+                clientId = clientId,
+                onClientIdChange = { clientId = it },
+                topic = topic,
+                onTopicChange = { topic = it },
+                payload = payload,
+                onPayloadChange = { payload = it },
+                mqttState = mqttState,
+                onConnectClick = connectAction,
+                onSubscribeClick = subscribeAction,
+                onPublishClick = publishAction,
+                onShowCertClick = showCertAction,
+                onInfoClick = onInfoClick,
+                onReloadClick = reloadAction
+            )
+        },
+        right = {
+            MqttOutputCard(
+                title = "Websockets Output",
+                mqttState = mqttState,
+                localError = localError,
+                onClearMessagesClick = {
+                    localError = null
+                    repository.clearOutput()
+                },
+                onInfoClick = onInfoClick,
+                onReloadClick = reloadAction
+            )
+        }
+    )
+}
+
+@Composable
 private fun MqttSection(onInfoClick: () -> Unit) {
     val repository = remember { MqttRepository() }
     val mqttState by repository.state.collectAsStateWithLifecycle()
+    val tlsInspector = remember { TlsCertificateInspector() }
     val scope = rememberCoroutineScope()
+    val mqttEndpointDefaults = remember {
+        parseHostPortFromUrl(
+            rawUrl = BackendEndpoints.MQTT_URL,
+            defaultPort = 8883
+        )
+    }
 
-    var host by rememberSaveable { mutableStateOf("broker.hivemq.com") }
-    var portText by rememberSaveable { mutableStateOf("1883") }
+    var host by rememberSaveable { mutableStateOf(mqttEndpointDefaults?.host ?: "broker.hivemq.com") }
+    var portText by rememberSaveable { mutableStateOf((mqttEndpointDefaults?.port ?: 8883).toString()) }
     var clientId by rememberSaveable { mutableStateOf(MqttRepository.generateClientId()) }
     var topic by rememberSaveable { mutableStateOf("de/afarber/magicapp/test") }
     var payload by rememberSaveable { mutableStateOf("") }
-    var insecureTls by rememberSaveable { mutableStateOf(false) }
+    var trustAnyTls by rememberSaveable { mutableStateOf(true) }
     var localError by rememberSaveable { mutableStateOf<String?>(null) }
+
+    var certInfo by remember { mutableStateOf<TlsCertificateInfo?>(null) }
+    var certError by rememberSaveable { mutableStateOf<String?>(null) }
 
     DisposableEffect(repository) {
         onDispose {
@@ -254,7 +555,7 @@ private fun MqttSection(onInfoClick: () -> Unit) {
                         host = host.trim(),
                         port = parsedPort,
                         clientId = clientId.trim(),
-                        insecureTls = insecureTls
+                        insecureTls = trustAnyTls
                     )
                 }
             }
@@ -269,7 +570,7 @@ private fun MqttSection(onInfoClick: () -> Unit) {
                     host = host.trim(),
                     port = parsedPort,
                     clientId = clientId.trim(),
-                    insecureTls = insecureTls
+                    insecureTls = trustAnyTls
                 )
             }
         }
@@ -302,86 +603,79 @@ private fun MqttSection(onInfoClick: () -> Unit) {
         }
     }
 
-    if (isWideScreen(1000)) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            MqttInputCard(
-                host = host,
-                onHostChange = { host = it },
-                portText = portText,
-                onPortChange = { portText = it },
-                insecureTls = insecureTls,
-                onInsecureTlsChange = { insecureTls = it },
-                clientId = clientId,
-                onClientIdChange = { clientId = it },
-                topic = topic,
-                onTopicChange = { topic = it },
-                payload = payload,
-                onPayloadChange = { payload = it },
-                mqttState = mqttState,
-                onConnectClick = connectAction,
-                onSubscribeClick = subscribeAction,
-                onPublishClick = publishAction,
-                onInfoClick = onInfoClick,
-                onReloadClick = reconnectAction,
-                modifier = Modifier.weight(1f)
-            )
-            MqttOutputCard(
-                mqttState = mqttState,
-                localError = localError,
-                onClearMessagesClick = {
-                    localError = null
-                    repository.clearOutput()
-                },
-                onInfoClick = onInfoClick,
-                onReloadClick = reconnectAction,
-                modifier = Modifier.weight(1f)
-            )
-        }
-    } else {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            MqttInputCard(
-                host = host,
-                onHostChange = { host = it },
-                portText = portText,
-                onPortChange = { portText = it },
-                insecureTls = insecureTls,
-                onInsecureTlsChange = { insecureTls = it },
-                clientId = clientId,
-                onClientIdChange = { clientId = it },
-                topic = topic,
-                onTopicChange = { topic = it },
-                payload = payload,
-                onPayloadChange = { payload = it },
-                mqttState = mqttState,
-                onConnectClick = connectAction,
-                onSubscribeClick = subscribeAction,
-                onPublishClick = publishAction,
-                onInfoClick = onInfoClick,
-                onReloadClick = reconnectAction
-            )
-            MqttOutputCard(
-                mqttState = mqttState,
-                localError = localError,
-                onClearMessagesClick = {
-                    localError = null
-                    repository.clearOutput()
-                },
-                onInfoClick = onInfoClick,
-                onReloadClick = reconnectAction
-            )
+    val showCertAction: () -> Unit = showMqttCert@{
+        val parsedPort = parsePortOrReport() ?: return@showMqttCert
+        scope.launch {
+            runCatching {
+                tlsInspector.fetchCertificateInfo(
+                    host = host.trim(),
+                    port = parsedPort,
+                    trustAnyTls = trustAnyTls
+                )
+            }.onSuccess { info ->
+                certInfo = info
+                certError = null
+            }.onFailure { error ->
+                certInfo = null
+                certError = "${error.javaClass.simpleName}: ${error.message ?: "Unknown error"}"
+            }
         }
     }
+
+    if (certInfo != null || certError != null) {
+        BackendCertificateDialog(
+            info = certInfo,
+            error = certError,
+            onDismiss = {
+                certInfo = null
+                certError = null
+            }
+        )
+    }
+
+    TransportTwoPane(
+        left = {
+            MqttInputCard(
+                title = "MQTT Input",
+                host = host,
+                onHostChange = { host = it },
+                hostLabel = "Broker Host",
+                portText = portText,
+                onPortChange = { portText = it },
+                portLabel = "Broker Port",
+                trustAnyTls = trustAnyTls,
+                onTrustAnyTlsChange = { trustAnyTls = it },
+                webSocketPath = null,
+                onWebSocketPathChange = null,
+                clientId = clientId,
+                onClientIdChange = { clientId = it },
+                topic = topic,
+                onTopicChange = { topic = it },
+                payload = payload,
+                onPayloadChange = { payload = it },
+                mqttState = mqttState,
+                onConnectClick = connectAction,
+                onSubscribeClick = subscribeAction,
+                onPublishClick = publishAction,
+                onShowCertClick = showCertAction,
+                onInfoClick = onInfoClick,
+                onReloadClick = reconnectAction
+            )
+        },
+        right = {
+            MqttOutputCard(
+                title = "MQTT Output",
+                mqttState = mqttState,
+                localError = localError,
+                onClearMessagesClick = {
+                    localError = null
+                    repository.clearOutput()
+                },
+                onInfoClick = onInfoClick,
+                onReloadClick = reconnectAction
+            )
+        }
+    )
 }
 
 @Composable
@@ -439,13 +733,178 @@ private fun PlaceholderTwoColumnSection(
 }
 
 @Composable
+private fun TransportTwoPane(
+    left: @Composable () -> Unit,
+    right: @Composable () -> Unit
+) {
+    if (isWideScreen(1000)) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Box(modifier = Modifier.weight(1f)) { left() }
+            Box(modifier = Modifier.weight(1f)) { right() }
+        }
+    } else {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            left()
+            right()
+        }
+    }
+}
+
+@Composable
+private fun HttpInputCard(
+    url: String,
+    onUrlChange: (String) -> Unit,
+    trustAnyTls: Boolean,
+    onTrustAnyTlsChange: (Boolean) -> Unit,
+    onRequestClick: () -> Unit,
+    onShowCertClick: () -> Unit,
+    onInfoClick: () -> Unit,
+    onReloadClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    MagicCard(
+        title = "HTTP Input",
+        onInfoClick = onInfoClick,
+        onReloadClick = onReloadClick,
+        modifier = modifier
+    ) {
+        OutlinedTextField(
+            value = url,
+            onValueChange = onUrlChange,
+            label = { Text("Request URL") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Checkbox(
+                checked = trustAnyTls,
+                onCheckedChange = onTrustAnyTlsChange
+            )
+            Text("Trust any TLS certificate")
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = onShowCertClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Show Backend TLS Cert")
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = onRequestClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Request")
+        }
+    }
+}
+
+@Composable
+private fun HttpOutputCard(
+    state: HttpProbeState,
+    localError: String?,
+    onClearClick: () -> Unit,
+    onInfoClick: () -> Unit,
+    onReloadClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val statusText = when (state.status) {
+        HttpProbeStatus.Idle -> "Idle"
+        HttpProbeStatus.Running -> "Running"
+        HttpProbeStatus.Success -> "Success"
+        HttpProbeStatus.Failure -> "Failure"
+    }
+
+    MagicCard(
+        title = "HTTP Output",
+        onInfoClick = onInfoClick,
+        onReloadClick = onReloadClick,
+        modifier = modifier.heightIn(min = 280.dp)
+    ) {
+        Text("Status: $statusText")
+        Text("Timestamp: ${state.timestamp.orEmpty()}")
+        Text("Response Code: ${state.responseCode?.toString() ?: "-"}")
+        Text("Last Error: ${localError ?: state.lastError ?: "-"}")
+        Text("Details: ${state.details ?: "-"}")
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = onClearClick,
+            modifier = Modifier.align(Alignment.End)
+        ) {
+            Text("Clear")
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 160.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            if (state.logLines.isEmpty()) {
+                Text("No messages")
+            } else {
+                state.logLines.forEach { line ->
+                    Text(line)
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BackendCertificateDialog(
+    info: TlsCertificateInfo?,
+    error: String?,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        text = {
+            if (info != null) {
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text("Subject: ${info.subject}")
+                    Text("Issuer: ${info.issuer}")
+                    Text("Not Before: ${info.notBefore}")
+                    Text("Not After: ${info.notAfter}")
+                }
+            } else {
+                Text("TLS certificate lookup failed: ${error ?: "Unknown error"}")
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Close")
+            }
+        }
+    )
+}
+
+@Composable
 private fun MqttInputCard(
+    title: String,
     host: String,
     onHostChange: (String) -> Unit,
+    hostLabel: String,
     portText: String,
     onPortChange: (String) -> Unit,
-    insecureTls: Boolean,
-    onInsecureTlsChange: (Boolean) -> Unit,
+    portLabel: String,
+    showPortField: Boolean = true,
+    trustAnyTls: Boolean,
+    onTrustAnyTlsChange: (Boolean) -> Unit,
+    webSocketPath: String?,
+    onWebSocketPathChange: ((String) -> Unit)?,
     clientId: String,
     onClientIdChange: (String) -> Unit,
     topic: String,
@@ -456,6 +915,7 @@ private fun MqttInputCard(
     onConnectClick: () -> Unit,
     onSubscribeClick: () -> Unit,
     onPublishClick: () -> Unit,
+    onShowCertClick: () -> Unit,
     onInfoClick: () -> Unit,
     onReloadClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -468,7 +928,7 @@ private fun MqttInputCard(
     val subscribeLabel = if (mqttState.isSubscribed) "Unsubscribe" else "Subscribe"
 
     MagicCard(
-        title = "MQTT Input",
+        title = title,
         onInfoClick = onInfoClick,
         onReloadClick = onReloadClick,
         modifier = modifier
@@ -476,25 +936,43 @@ private fun MqttInputCard(
         OutlinedTextField(
             value = host,
             onValueChange = onHostChange,
-            label = { Text("Broker Host") },
+            label = { Text(hostLabel) },
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
-            value = portText,
-            onValueChange = onPortChange,
-            label = { Text("Broker Port") },
-            modifier = Modifier.fillMaxWidth()
-        )
+        if (showPortField) {
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedTextField(
+                value = portText,
+                onValueChange = onPortChange,
+                label = { Text(portLabel) },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+        if (webSocketPath != null && onWebSocketPathChange != null) {
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedTextField(
+                value = webSocketPath,
+                onValueChange = onWebSocketPathChange,
+                label = { Text("Websocket Path") },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
         Spacer(modifier = Modifier.height(4.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(
-                checked = insecureTls,
-                onCheckedChange = onInsecureTlsChange
+                checked = trustAnyTls,
+                onCheckedChange = onTrustAnyTlsChange
             )
-            Text("Insecure TLS (debug, only applies to 8883)")
+            Text("Trust any TLS certificate")
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = onShowCertClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Show Backend TLS Cert")
         }
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
@@ -543,6 +1021,7 @@ private fun MqttInputCard(
 
 @Composable
 private fun MqttOutputCard(
+    title: String,
     mqttState: MqttRuntimeState,
     localError: String?,
     onClearMessagesClick: () -> Unit,
@@ -557,7 +1036,7 @@ private fun MqttOutputCard(
     }
 
     MagicCard(
-        title = "MQTT Output",
+        title = title,
         onInfoClick = onInfoClick,
         onReloadClick = onReloadClick,
         modifier = modifier.heightIn(min = 280.dp)
@@ -680,7 +1159,7 @@ private fun InternetConnectivityCard(
     val timestamp = state.timestamp?.let { " ($it)" }.orEmpty()
     val display = when (state.status) {
         InternetStatus.Success -> "Success$timestamp"
-        InternetStatus.Error -> "Error$timestamp"
+        InternetStatus.Error -> "Failure$timestamp"
         InternetStatus.Idle -> "Not checked"
     }
 
@@ -697,10 +1176,6 @@ private fun InternetConnectivityCard(
             label = { Text("HTTP request status") },
             modifier = Modifier.fillMaxWidth()
         )
-        if (!state.details.isNullOrBlank()) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Text("Details: ${state.details}")
-        }
     }
 }
 

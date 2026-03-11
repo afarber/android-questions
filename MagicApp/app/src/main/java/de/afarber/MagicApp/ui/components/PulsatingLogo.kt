@@ -31,7 +31,7 @@ fun PulsatingLogo(
             launch {
                 haloScale.snapTo(1f)
                 haloScale.animateTo(
-                    targetValue = 1.9f,
+                    targetValue = 2f,
                     animationSpec = tween(durationMillis = 600, easing = LinearEasing)
                 )
             }
