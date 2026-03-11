@@ -1,11 +1,14 @@
 [versions]
-agp = "8.6.1"
-kotlin = "2.0.21"
-coreKtx = "1.15.0"
-activityCompose = "1.10.1"
-lifecycleRuntime = "2.8.7"
-composeBom = "2025.02.00"
-googleMaterial = "1.12.0"
+agp = "8.13.2"
+kotlin = "2.3.10"
+coreKtx = "1.17.0"
+activityCompose = "1.12.4"
+lifecycleRuntime = "2.10.0"
+composeBom = "2026.02.01"
+googleMaterial = "1.13.0"
+junit4 = "4.13.2"
+androidxJunit = "1.2.1"
+espressoCore = "3.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -21,9 +24,9 @@ androidx-compose-material-icons-extended = { group = "androidx.compose.material"
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
-junit = { group = "junit", name = "junit", version = "4.13.2" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version = "1.2.1" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version = "3.6.1" }
+junit = { group = "junit", name = "junit", version.ref = "junit4" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxJunit" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version = "1.9.0" }
 google-material = { group = "com.google.android.material", name = "material", version.ref = "googleMaterial" }
 
