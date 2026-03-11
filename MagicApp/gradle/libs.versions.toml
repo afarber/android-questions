@@ -12,6 +12,8 @@ espressoCore = "3.6.1"
 pahoMqtt = "1.2.5"
 ktor = "2.3.13"
 nvWebsocketClient = "2.14"
+detekt = "2.0.0-alpha.2"
+spotless = "8.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -41,3 +43,5 @@ nv-websocket-client = { group = "com.neovisionaries", name = "nv-websocket-clien
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+detekt = { id = "dev.detekt", version.ref = "detekt" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
