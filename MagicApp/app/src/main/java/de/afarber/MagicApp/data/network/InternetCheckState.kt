@@ -8,12 +8,14 @@ enum class InternetStatus {
 
 data class InternetCheckState(
     val status: InternetStatus,
-    val timestamp: String?
+    val timestamp: String?,
+    val details: String? = null
 ) {
     companion object {
         fun idle() = InternetCheckState(
             status = InternetStatus.Idle,
-            timestamp = null
+            timestamp = null,
+            details = null
         )
     }
 }

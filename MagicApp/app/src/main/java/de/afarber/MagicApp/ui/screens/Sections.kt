@@ -13,10 +13,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,6 +35,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.afarber.MagicApp.BuildConfig
 import de.afarber.MagicApp.data.connectivity.ConnectivityRepository
 import de.afarber.MagicApp.data.connectivity.NetworkStateUiModel
+import de.afarber.MagicApp.data.mqtt.MqttConnectionState
+import de.afarber.MagicApp.data.mqtt.MqttRepository
+import de.afarber.MagicApp.data.mqtt.MqttRuntimeState
 import de.afarber.MagicApp.data.network.InternetCheckRepository
 import de.afarber.MagicApp.data.network.InternetCheckState
 import de.afarber.MagicApp.data.network.InternetStatus
@@ -209,13 +214,174 @@ private fun ServiceManagementSection(onInfoClick: () -> Unit) {
 
 @Composable
 private fun MqttSection(onInfoClick: () -> Unit) {
-    PlaceholderTwoColumnSection(
-        leftTitle = "MQTT Input",
-        leftFields = listOf("Topic"),
-        rightTitle = "MQTT Output",
-        rightFields = listOf("Payload"),
-        onInfoClick = onInfoClick
-    )
+    val repository = remember { MqttRepository() }
+    val mqttState by repository.state.collectAsStateWithLifecycle()
+    val scope = rememberCoroutineScope()
+
+    var host by rememberSaveable { mutableStateOf("broker.hivemq.com") }
+    var portText by rememberSaveable { mutableStateOf("1883") }
+    var clientId by rememberSaveable { mutableStateOf(MqttRepository.generateClientId()) }
+    var topic by rememberSaveable { mutableStateOf("de/afarber/magicapp/test") }
+    var payload by rememberSaveable { mutableStateOf("") }
+    var insecureTls by rememberSaveable { mutableStateOf(false) }
+    var localError by rememberSaveable { mutableStateOf<String?>(null) }
+
+    DisposableEffect(repository) {
+        onDispose {
+            repository.close()
+        }
+    }
+
+    fun parsePortOrReport(): Int? {
+        val parsed = portText.toIntOrNull()
+        return if (parsed == null || parsed <= 0 || parsed > 65535) {
+            localError = "Port must be between 1 and 65535"
+            null
+        } else {
+            localError = null
+            parsed
+        }
+    }
+
+    val connectAction: () -> Unit = {
+        if (mqttState.connectionState == MqttConnectionState.Connected) {
+            scope.launch { repository.disconnect() }
+        } else {
+            val parsedPort = parsePortOrReport()
+            if (parsedPort != null) {
+                scope.launch {
+                    repository.connect(
+                        host = host.trim(),
+                        port = parsedPort,
+                        clientId = clientId.trim(),
+                        insecureTls = insecureTls
+                    )
+                }
+            }
+        }
+    }
+
+    val reconnectAction: () -> Unit = {
+        val parsedPort = parsePortOrReport()
+        if (parsedPort != null) {
+            scope.launch {
+                repository.reconnect(
+                    host = host.trim(),
+                    port = parsedPort,
+                    clientId = clientId.trim(),
+                    insecureTls = insecureTls
+                )
+            }
+        }
+    }
+
+    val subscribeAction: () -> Unit = {
+        if (mqttState.isSubscribed) {
+            scope.launch { repository.unsubscribe() }
+        } else {
+            if (topic.isBlank()) {
+                localError = "Topic is empty"
+            } else {
+                localError = null
+                scope.launch { repository.subscribe(topic = topic.trim()) }
+            }
+        }
+    }
+
+    val publishAction: () -> Unit = {
+        if (topic.isBlank()) {
+            localError = "Topic is empty"
+        } else {
+            localError = null
+            scope.launch {
+                repository.publish(
+                    topic = topic.trim(),
+                    payload = payload
+                )
+            }
+        }
+    }
+
+    if (isWideScreen(1000)) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            MqttInputCard(
+                host = host,
+                onHostChange = { host = it },
+                portText = portText,
+                onPortChange = { portText = it },
+                insecureTls = insecureTls,
+                onInsecureTlsChange = { insecureTls = it },
+                clientId = clientId,
+                onClientIdChange = { clientId = it },
+                topic = topic,
+                onTopicChange = { topic = it },
+                payload = payload,
+                onPayloadChange = { payload = it },
+                mqttState = mqttState,
+                onConnectClick = connectAction,
+                onSubscribeClick = subscribeAction,
+                onPublishClick = publishAction,
+                onInfoClick = onInfoClick,
+                onReloadClick = reconnectAction,
+                modifier = Modifier.weight(1f)
+            )
+            MqttOutputCard(
+                mqttState = mqttState,
+                localError = localError,
+                onClearMessagesClick = {
+                    localError = null
+                    repository.clearOutput()
+                },
+                onInfoClick = onInfoClick,
+                onReloadClick = reconnectAction,
+                modifier = Modifier.weight(1f)
+            )
+        }
+    } else {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            MqttInputCard(
+                host = host,
+                onHostChange = { host = it },
+                portText = portText,
+                onPortChange = { portText = it },
+                insecureTls = insecureTls,
+                onInsecureTlsChange = { insecureTls = it },
+                clientId = clientId,
+                onClientIdChange = { clientId = it },
+                topic = topic,
+                onTopicChange = { topic = it },
+                payload = payload,
+                onPayloadChange = { payload = it },
+                mqttState = mqttState,
+                onConnectClick = connectAction,
+                onSubscribeClick = subscribeAction,
+                onPublishClick = publishAction,
+                onInfoClick = onInfoClick,
+                onReloadClick = reconnectAction
+            )
+            MqttOutputCard(
+                mqttState = mqttState,
+                localError = localError,
+                onClearMessagesClick = {
+                    localError = null
+                    repository.clearOutput()
+                },
+                onInfoClick = onInfoClick,
+                onReloadClick = reconnectAction
+            )
+        }
+    }
 }
 
 @Composable
@@ -268,6 +434,160 @@ private fun PlaceholderTwoColumnSection(
                 onInfoClick = onInfoClick,
                 onReloadClick = {}
             )
+        }
+    }
+}
+
+@Composable
+private fun MqttInputCard(
+    host: String,
+    onHostChange: (String) -> Unit,
+    portText: String,
+    onPortChange: (String) -> Unit,
+    insecureTls: Boolean,
+    onInsecureTlsChange: (Boolean) -> Unit,
+    clientId: String,
+    onClientIdChange: (String) -> Unit,
+    topic: String,
+    onTopicChange: (String) -> Unit,
+    payload: String,
+    onPayloadChange: (String) -> Unit,
+    mqttState: MqttRuntimeState,
+    onConnectClick: () -> Unit,
+    onSubscribeClick: () -> Unit,
+    onPublishClick: () -> Unit,
+    onInfoClick: () -> Unit,
+    onReloadClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val connectLabel = if (mqttState.connectionState == MqttConnectionState.Connected) {
+        "Disconnect"
+    } else {
+        "Connect"
+    }
+    val subscribeLabel = if (mqttState.isSubscribed) "Unsubscribe" else "Subscribe"
+
+    MagicCard(
+        title = "MQTT Input",
+        onInfoClick = onInfoClick,
+        onReloadClick = onReloadClick,
+        modifier = modifier
+    ) {
+        OutlinedTextField(
+            value = host,
+            onValueChange = onHostChange,
+            label = { Text("Broker Host") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+            value = portText,
+            onValueChange = onPortChange,
+            label = { Text("Broker Port") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+                checked = insecureTls,
+                onCheckedChange = onInsecureTlsChange
+            )
+            Text("Insecure TLS (debug, only applies to 8883)")
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+            value = clientId,
+            onValueChange = onClientIdChange,
+            label = { Text("Client ID") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+            value = topic,
+            onValueChange = onTopicChange,
+            label = { Text("Topic") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+            value = payload,
+            onValueChange = onPayloadChange,
+            label = { Text("Payload") },
+            minLines = 2,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Button(onClick = onConnectClick, modifier = Modifier.weight(1f)) {
+                Text(connectLabel)
+            }
+            Button(onClick = onSubscribeClick, modifier = Modifier.weight(1f)) {
+                Text(subscribeLabel)
+            }
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = onPublishClick,
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Text("Publish")
+        }
+    }
+}
+
+@Composable
+private fun MqttOutputCard(
+    mqttState: MqttRuntimeState,
+    localError: String?,
+    onClearMessagesClick: () -> Unit,
+    onInfoClick: () -> Unit,
+    onReloadClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val statusText = when (mqttState.connectionState) {
+        MqttConnectionState.Disconnected -> "Disconnected"
+        MqttConnectionState.Connecting -> "Connecting"
+        MqttConnectionState.Connected -> "Connected"
+    }
+
+    MagicCard(
+        title = "MQTT Output",
+        onInfoClick = onInfoClick,
+        onReloadClick = onReloadClick,
+        modifier = modifier.heightIn(min = 280.dp)
+    ) {
+        Text("Status: $statusText")
+        Text("Subscribed Topic: ${mqttState.subscribedTopic.orEmpty()}")
+        Text("Last Error: ${localError ?: mqttState.lastError ?: "-"}")
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = onClearMessagesClick,
+            modifier = Modifier.align(Alignment.End)
+        ) {
+            Text("Clear")
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 160.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            if (mqttState.messages.isEmpty()) {
+                Text("No messages")
+            } else {
+                mqttState.messages.forEach { message ->
+                    Text("${message.timestamp} ${message.topic}")
+                    Text(message.payload)
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
         }
     }
 }
@@ -377,6 +697,10 @@ private fun InternetConnectivityCard(
             label = { Text("HTTP request status") },
             modifier = Modifier.fillMaxWidth()
         )
+        if (!state.details.isNullOrBlank()) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text("Details: ${state.details}")
+        }
     }
 }
 

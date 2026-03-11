@@ -1,5 +1,6 @@
 package de.afarber.MagicApp.data.network
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.HttpURLConnection
@@ -27,18 +28,35 @@ class InternetCheckRepository {
                 connection.inputStream.bufferedReader().use { it.readText() }
                 InternetCheckState(
                     status = InternetStatus.Success,
-                    timestamp = timestamp
+                    timestamp = timestamp,
+                    details = "HTTP $statusCode"
                 )
             } else {
+                val errorBody = connection.errorStream
+                    ?.bufferedReader()
+                    ?.use { it.readText() }
+                    ?.take(160)
+                    ?.ifBlank { null }
+                val detail = buildString {
+                    append("HTTP ").append(statusCode)
+                    if (!errorBody.isNullOrBlank()) {
+                        append(" - ").append(errorBody)
+                    }
+                }
+                Log.e(TAG, "Internet check failed: $detail")
                 InternetCheckState(
                     status = InternetStatus.Error,
-                    timestamp = timestamp
+                    timestamp = timestamp,
+                    details = detail
                 )
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            val detail = "${e.javaClass.simpleName}: ${e.message ?: "Unknown error"}"
+            Log.e(TAG, "Internet check exception: $detail", e)
             InternetCheckState(
                 status = InternetStatus.Error,
-                timestamp = timestamp
+                timestamp = timestamp,
+                details = detail
             )
         } finally {
             connection?.disconnect()
@@ -46,6 +64,7 @@ class InternetCheckRepository {
     }
 
     private companion object {
+        const val TAG = "MagicApp-HTTP"
         const val TEST_URL = "http://network-test.debian.org/nm"
     }
 }

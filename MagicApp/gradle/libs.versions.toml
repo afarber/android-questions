@@ -9,6 +9,7 @@ googleMaterial = "1.13.0"
 junit4 = "4.13.2"
 androidxJunit = "1.2.1"
 espressoCore = "3.6.1"
+pahoMqtt = "1.2.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -29,6 +30,7 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "a
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version = "1.9.0" }
 google-material = { group = "com.google.android.material", name = "material", version.ref = "googleMaterial" }
+eclipse-paho-mqttv3 = { group = "org.eclipse.paho", name = "org.eclipse.paho.client.mqttv3", version.ref = "pahoMqtt" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
