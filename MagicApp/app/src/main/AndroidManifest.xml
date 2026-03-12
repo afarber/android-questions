@@ -14,7 +14,7 @@
         android:theme="@style/Theme.MagicApp"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".MainActivity"
+            android:name="de.afarber.magicapp.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
