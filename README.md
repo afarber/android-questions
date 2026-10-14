@@ -181,7 +181,7 @@ uses CC BY-SA 3.0 licensed SVG-file by
 
 [OverlayAlpha](https://github.com/afarber/android-questions/tree/master/OverlayAlpha) a Java app using OpenMapView to change the alpha of a topo map layer:
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/OverlayAlpha/screenshot.png)
+![screenshot](https://raw.github.com/afarber/android-questions/master/OverlayAlpha/screenshot.gif)
 
 
 [Planets](https://github.com/afarber/android-questions/tree/master/Planets):
