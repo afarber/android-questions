@@ -279,6 +279,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-questions/master/ZXingTestActivity/screenshot.png)
 
 
+[ZeroSetupMap](https://github.com/afarber/android-questions/tree/master/ZeroSetupMap) a Kotlin app using OpenMapView to show map tiles without storage permissions or cache setup:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/ZeroSetupMap/screenshot.png)
+
+
 [ZoomToLocation](https://github.com/afarber/android-questions/tree/master/ZoomToLocation) a Java app using OpenMapView to zoom to the user's location:
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/ZoomToLocation/screenshot.png)
