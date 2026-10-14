@@ -268,6 +268,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/ZXingTestActivity/screenshot.png)
 
+
+[ZoomToLocation](https://github.com/afarber/android-questions/tree/master/ZoomToLocation) a Java app using OpenMapView to zoom to the user's location:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/ZoomToLocation/screenshot.png)
+
 ---
 
 ![StackOverflow](http://stackoverflow.com/users/flair/165071.png)
