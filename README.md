@@ -92,6 +92,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-questions/master/MagicApp/screenshot.png)
 
 
+[MapInTabs](https://github.com/afarber/android-questions/tree/master/MapInTabs) a Kotlin / Jetpack Compose app using OpenMapView in a tab, keeping the map position when switching tabs:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/MapInTabs/screenshot.gif)
+
+
 [MapSnapshot](https://github.com/afarber/android-questions/tree/master/MapSnapshot) a Kotlin / Jetpack Compose app using OpenMapView to save a screenshot of a running track:
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/MapSnapshot/screenshot.png)
