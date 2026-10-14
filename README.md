@@ -224,6 +224,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-questions/master/SampleLoginWithAmazonAppForAndroid/screenshot.png)
 
 
+[SimpleMapStyle](https://github.com/afarber/android-questions/tree/master/SimpleMapStyle) a Kotlin app using OpenMapView to switch between map styles without an API key:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/SimpleMapStyle/screenshot.png)
+
+
 [SwipeBooks](https://github.com/afarber/android-questions/tree/master/SwipeBooks):
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/SwipeBooks/screenshot.png)

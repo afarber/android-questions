@@ -1,0 +1,13 @@
+[versions]
+agp = "9.4.1"
+kotlin = "2.4.21"
+appcompat = "1.8.0"
+openmapview = "0.17.1"
+
+[libraries]
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+openmapview = { group = "de.afarber", name = "openmapview", version.ref = "openmapview" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
