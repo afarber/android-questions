@@ -18,6 +18,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-questions/master/BottomSheet1/screenshot.png)
 
 
+[ComposeMap](https://github.com/afarber/android-questions/tree/master/ComposeMap) a Kotlin / Jetpack Compose app with a reusable OpenStreetMap composable using OpenMapView:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/ComposeMap/screenshot.gif)
+
+
 [CriminalIntent](https://github.com/afarber/android-questions/tree/master/CriminalIntent):
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/CriminalIntent/screenshot.png)
