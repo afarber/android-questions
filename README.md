@@ -33,6 +33,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-questions/master/DragAndDraw/screenshot.png)
 
 
+[DraggableMarker](https://github.com/afarber/android-questions/tree/master/DraggableMarker) a Kotlin app using OpenMapView to drag a marker with a custom icon:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/DraggableMarker/screenshot.png)
+
+
 [DrivingRoute](https://github.com/afarber/android-questions/tree/master/DrivingRoute) a Kotlin app for AAOS using public OSRM backend for routing:
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/DrivingRoute/screenshot.gif)
