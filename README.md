@@ -87,6 +87,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-questions/master/MagicApp/screenshot.png)
 
 
+[MapSnapshot](https://github.com/afarber/android-questions/tree/master/MapSnapshot) a Kotlin / Jetpack Compose app using OpenMapView to save a screenshot of a running track:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/MapSnapshot/screenshot.png)
+
+
 [MyBars](https://github.com/afarber/android-questions/tree/master/MyBars)
 uses CC BY-SA 3.0 licensed SVG-file by 
 [Denelson83, Wikimedia Commons](http://en.wikipedia.org/wiki/File:Blank_Scrabble_board_with_coordinates.svg)
