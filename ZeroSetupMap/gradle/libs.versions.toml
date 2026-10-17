@@ -2,7 +2,7 @@
 agp = "9.4.1"
 kotlin = "2.4.21"
 appcompat = "1.8.0"
-openmapview = "0.24.0"
+openmapview = "0.25.0"
 
 [libraries]
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
