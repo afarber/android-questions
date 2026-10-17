@@ -15,7 +15,6 @@ class MainActivity : ComponentActivity() {
         setContentView(R.layout.activity_main)
 
         map = findViewById(R.id.map)
-        lifecycle.addObserver(map)
 
         map.setCenter(LatLng(47.9, 1.9))
         map.setZoom(16f)

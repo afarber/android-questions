@@ -5,4 +5,4 @@ Kotlin / Jetpack Compose app using [OpenMapView](https://github.com/afarber/Open
 
 Answer to the Stack Overflow question [how to get screen shot with OSMDroid](https://stackoverflow.com/q/79513346).
 
-![screenshot](screenshot.png)
+![screenshot](screenshot.gif)

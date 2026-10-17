@@ -43,10 +43,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         map = findViewById(R.id.map);
-        getLifecycle().addObserver(map);
         map.getUiSettings().setZoomControlsEnabled(true);
 
-        redDot = BitmapDescriptorFactory.INSTANCE.fromBitmap(createRedDot(60));
+        redDot = BitmapDescriptorFactory.fromBitmap(createRedDot(60));
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
     }
 
@@ -88,18 +87,20 @@ public class MainActivity extends AppCompatActivity {
     private void showUserLocation(@NonNull Location location) {
         LatLng userPoint = new LatLng(location.getLatitude(), location.getLongitude());
 
-        if (userMarker != null) {
-            map.removeMarker(userMarker);
+        if (userMarker == null) {
+            userMarker = map.addMarker(new MarkerOptions()
+                    .position(userPoint)
+                    .title("You are here")
+                    .icon(redDot)
+                    .anchor(0.5f, 0.5f));
+        } else {
+            // The marker is a live handle: moving it redraws the map
+            userMarker.setPosition(userPoint);
         }
-        userMarker = map.addMarker(new MarkerOptions()
-                .position(userPoint)
-                .title("You are here")
-                .icon(redDot)
-                .anchor(0.5f, 0.5f));
 
         // Zoom in only on the first fix, so that the user can pan the map afterwards
         if (!hasCenteredOnce) {
-            map.animateCamera(CameraUpdateFactory.INSTANCE.newLatLngZoom(userPoint, 17f));
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(userPoint, 17f));
             hasCenteredOnce = true;
         }
     }

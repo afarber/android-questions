@@ -23,7 +23,6 @@ class MainActivity : AppCompatActivity() {
 
         positionText = findViewById(R.id.positionText)
         mapView = findViewById(R.id.mapView)
-        lifecycle.addObserver(mapView)
 
         val thePoint = LatLng(52.5163, 13.3777)
         mapView.setZoom(15f)

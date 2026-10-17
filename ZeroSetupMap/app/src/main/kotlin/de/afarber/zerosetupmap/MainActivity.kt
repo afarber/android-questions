@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity() {
 
         statusText = findViewById(R.id.statusText)
         map = findViewById(R.id.map)
-        lifecycle.addObserver(map)
 
         map.setCenter(LatLng(51.4779, -0.0015))
         map.setZoom(15f)

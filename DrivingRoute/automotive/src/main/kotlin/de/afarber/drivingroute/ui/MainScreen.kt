@@ -27,17 +27,22 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import de.afarber.drivingroute.R
 import de.afarber.drivingroute.model.AppState
 import de.afarber.drivingroute.ui.theme.Red500
+import de.afarber.openmapview.CameraPosition
+import de.afarber.openmapview.CameraUpdateFactory
+import de.afarber.openmapview.LatLng
+import de.afarber.openmapview.compose.rememberCameraPositionState
+import kotlinx.coroutines.launch
 
 
 private const val LOG_TAG = "MainScreen"
@@ -46,16 +51,14 @@ private const val LOG_TAG = "MainScreen"
 fun MainScreen(
     viewModel: MainViewModel = viewModel()
 ) {
-    //val context = LocalContext.current
-    //val scope = rememberCoroutineScope()
-    val lifecycleOwner = LocalLifecycleOwner.current
+    val scope = rememberCoroutineScope()
+    // The camera starts over Wolfsburg and is kept when the Activity is recreated
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition(LatLng(52.4227, 10.7865), 15f)
+    }
 
     val snackbarHostState = remember { SnackbarHostState() }
     var isSnackbarVisible by remember { mutableStateOf(false) }
-
-    // Store zoom control functions provided by MapViewContainer
-    var zoomIn by remember { mutableStateOf({}) }
-    var zoomOut by remember { mutableStateOf({}) }
 
     val appState by viewModel.appState.collectAsState()
     val startMarker by viewModel.startMarker.collectAsState()
@@ -89,16 +92,13 @@ fun MainScreen(
                 .padding(paddingValues)
         ) {
             MapViewContainer(
+                cameraPositionState = cameraPositionState,
                 startMarker = startMarker,
                 finishMarker = finishMarker,
                 routePoints = routePoints,
                 onMapClick = { latLng ->
                     viewModel.handleMapClick(latLng)
                 },
-                // Receive zoom functions from MapViewContainer and store them
-                onZoomIn = { fn -> zoomIn = fn },
-                onZoomOut = { fn -> zoomOut = fn },
-                lifecycleOwner = lifecycleOwner
             )
 
             // Show route info card when route is available
@@ -122,7 +122,7 @@ fun MainScreen(
             ) {
                 Row {
                     FilledIconButton(
-                        onClick = { zoomOut() },
+                        onClick = { scope.launch { cameraPositionState.animate(CameraUpdateFactory.zoomOut()) } },
                         modifier = Modifier.size(56.dp),
                         shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp),
                         colors = IconButtonDefaults.filledIconButtonColors(
@@ -135,7 +135,7 @@ fun MainScreen(
                         )
                     }
                     FilledIconButton(
-                        onClick = { zoomIn() },
+                        onClick = { scope.launch { cameraPositionState.animate(CameraUpdateFactory.zoomIn()) } },
                         modifier = Modifier.size(56.dp),
                         shape = RoundedCornerShape(topEnd = 12.dp, bottomEnd = 12.dp),
                         colors = IconButtonDefaults.filledIconButtonColors(

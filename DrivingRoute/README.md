@@ -43,7 +43,7 @@ A modern Android Automotive OS (AAOS) route planning application built with Jetp
    - `routeInfo`: String? for distance/duration toast
    - `errorMessage`: String? for snackbar errors
 4. **RouteRepository** - Ktor HttpClient with Android engine, 10-second timeouts, logging plugin
-5. **OpenMapView Integration** - AndroidView wrapper with lifecycle observer, markers, polylines, and camera animations
+5. **OpenMapView Integration** - `OpenMap` composable with markers, a polyline and camera animations
 
 ### State Flow
 
@@ -205,31 +205,32 @@ class MainActivity : ComponentActivity() {
 
 ### OpenMapView Integration
 
-OpenMapView is integrated using `AndroidView` with proper lifecycle management:
+OpenMapView is integrated with the `OpenMap` composable from `openmapview-compose`:
 
 ```kotlin
-AndroidView(
-    factory = { ctx ->
-        OpenMapView(ctx).apply {
-            lifecycleOwner.lifecycle.addObserver(this)
-            setZoom(15.0)
-            setCenter(LatLng(52.4227, 10.7865))
-            setOnMapClickListener { latLng -> onMapClick(latLng) }
-        }
-    },
-    update = { mapView ->
-        mapView.clearMarkers()
-        mapView.clearPolylines()
-        // Re-add markers and polylines based on current state
+OpenMap(
+    modifier = Modifier.fillMaxSize(),
+    cameraPositionState = cameraPositionState,
+    onMapClick = onMapClick,
+) {
+    startMarker?.let { start ->
+        Marker(
+            state = remember(start) { MarkerState(start) },
+            title = "Start",
+            icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN),
+        )
     }
-)
+    if (routePoints.isNotEmpty()) {
+        Polyline(points = routePoints, strokeColor = RouteBlue, strokeWidth = 8f)
+    }
+}
 ```
 
 **Key Points:**
-- OpenMapView implements LifecycleObserver for proper lifecycle handling
-- `update` block runs on every recomposition - must clear before re-adding
-- Uses `BitmapDescriptorFactory.defaultMarker()` for colored markers
-- Polyline strokeColor requires Int (not Compose Color)
+- The map follows the lifecycle of its Activity by itself
+- Markers and polylines are declared in the content block and follow the state, nothing has to be cleared
+- `cameraPositionState.animate(CameraUpdateFactory.newLatLngBounds(bounds, 100))` fits the route into view
+- Polyline `strokeColor` is a Compose `Color`
 
 ### HTTP Client Implementation
 
@@ -320,11 +321,11 @@ val response = client.get {
 ### Markers
 - **Start Marker**: Green marker using `BitmapDescriptorFactory.HUE_GREEN`
 - **Finish Marker**: Red marker using `BitmapDescriptorFactory.HUE_RED`
-- **Placement**: Created via OpenMapView's Marker class
-- **Lifecycle**: Cleared and re-added on state changes
+- **Placement**: Declared with the `Marker` composable
+- **Updates**: Follow the state, a new position replaces the marker
 
 ### Route Polyline
-- **Color**: Blue (defined as Int in theme/Color.kt)
+- **Color**: Blue (`RouteBlue` in theme/Color.kt)
 - **Width**: 8f stroke
 - **Auto-zoom**: 1.3x padding factor using MapUtils.createBoundingBoxWithPadding()
 - **Animation**: Smooth camera transition via CameraUpdateFactory.newLatLngBounds()

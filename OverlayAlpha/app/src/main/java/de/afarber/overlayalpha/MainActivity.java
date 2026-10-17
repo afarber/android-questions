@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
 
         alphaText = findViewById(R.id.alphaText);
         map = findViewById(R.id.map);
-        getLifecycle().addObserver(map);
 
         // The base map shows the standard OpenStreetMap tiles
         map.setCenter(new LatLng(47.4210, 10.9863));
@@ -42,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 showAlpha(progress);
+                // The overlay is a live handle: the map redraws it at once, keeping its tiles
+                topoOverlay.setTransparency(1f - progress / 100f);
             }
 
             @Override
@@ -50,9 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                // The overlay is immutable, so replace it by a copy with the new transparency
-                map.removeTileOverlay(topoOverlay);
-                topoOverlay = map.addTileOverlay(topoOverlay.withTransparency(1f - seekBar.getProgress() / 100f));
             }
         });
     }

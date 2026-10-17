@@ -15,21 +15,20 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.lifecycle.compose.LocalLifecycleOwner
+import de.afarber.openmapview.CameraPosition
 import de.afarber.openmapview.CameraUpdateFactory
 import de.afarber.openmapview.LatLng
-import de.afarber.openmapview.MarkerOptions
-import de.afarber.openmapview.OpenMapView
+import de.afarber.openmapview.compose.Marker
+import de.afarber.openmapview.compose.OpenMap
+import de.afarber.openmapview.compose.rememberCameraPositionState
+import de.afarber.openmapview.compose.rememberMarkerState
 
 private val places =
     mapOf(
@@ -44,57 +43,47 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MaterialTheme {
-                var selected by remember { mutableStateOf(places.keys.first()) }
-
-                Column(modifier = Modifier.fillMaxSize().safeDrawingPadding()) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        places.keys.forEach { name ->
-                            FilterChip(
-                                selected = name == selected,
-                                onClick = { selected = name },
-                                label = { Text(name) },
-                            )
-                        }
-                    }
-                    OpenStreetMap(center = places.getValue(selected), zoom = 15f, modifier = Modifier.fillMaxSize())
-                }
+                MapScreen()
             }
         }
     }
 }
 
 @Composable
-fun OpenStreetMap(
-    center: LatLng,
-    zoom: Float,
-    modifier: Modifier = Modifier,
-) {
-    val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
-    val mapView = remember { OpenMapView(context) }
+fun MapScreen() {
+    var selected by rememberSaveable { mutableStateOf(places.keys.first()) }
+    // The camera of the map, also kept when the Activity is recreated
+    val cameraPositionState =
+        rememberCameraPositionState {
+            position = CameraPosition(places.getValue(selected), 15f)
+        }
 
-    // Forward onResume, onPause, onDestroy of the Activity to the map
-    DisposableEffect(lifecycleOwner) {
-        lifecycleOwner.lifecycle.addObserver(mapView)
-        onDispose { lifecycleOwner.lifecycle.removeObserver(mapView) }
+    // Fly to the selected place
+    LaunchedEffect(selected) {
+        cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(places.getValue(selected), 15f), 1000)
     }
 
-    AndroidView(
-        // The map view would draw its tiles over the neighbor composables otherwise
-        modifier = modifier.clipToBounds(),
-        factory = {
-            mapView.apply {
-                setCenter(center)
-                setZoom(zoom)
-                places.forEach { (name, position) ->
-                    addMarker(MarkerOptions().position(position).title(name))
-                }
+    Column(modifier = Modifier.fillMaxSize().safeDrawingPadding()) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            places.keys.forEach { name ->
+                FilterChip(
+                    selected = name == selected,
+                    onClick = { selected = name },
+                    label = { Text(name) },
+                )
             }
-        },
-        // Called again whenever center or zoom change
-        update = { it.animateCamera(CameraUpdateFactory.newLatLngZoom(center, zoom), 1000) },
-    )
+        }
+
+        OpenMap(
+            modifier = Modifier.fillMaxSize(),
+            cameraPositionState = cameraPositionState,
+        ) {
+            places.forEach { (name, position) ->
+                Marker(state = rememberMarkerState(position), title = name)
+            }
+        }
+    }
 }

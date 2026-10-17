@@ -40,7 +40,7 @@ Screenshots
 
 [DraggableMarker](https://github.com/afarber/android-questions/tree/master/DraggableMarker) a Kotlin app using OpenMapView to drag a marker with a custom icon:
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/DraggableMarker/screenshot.png)
+![screenshot](https://raw.github.com/afarber/android-questions/master/DraggableMarker/screenshot.gif)
 
 
 [DrivingRoute](https://github.com/afarber/android-questions/tree/master/DrivingRoute) a Kotlin app for AAOS using public OSRM backend for routing:
@@ -104,7 +104,7 @@ Screenshots
 
 [MapSnapshot](https://github.com/afarber/android-questions/tree/master/MapSnapshot) a Kotlin / Jetpack Compose app using OpenMapView to save a screenshot of a running track:
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/MapSnapshot/screenshot.png)
+![screenshot](https://raw.github.com/afarber/android-questions/master/MapSnapshot/screenshot.gif)
 
 
 [MyBars](https://github.com/afarber/android-questions/tree/master/MyBars)
@@ -241,7 +241,7 @@ uses CC BY-SA 3.0 licensed SVG-file by
 
 [SimpleMapStyle](https://github.com/afarber/android-questions/tree/master/SimpleMapStyle) a Kotlin app using OpenMapView to switch between map styles without an API key:
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/SimpleMapStyle/screenshot.png)
+![screenshot](https://raw.github.com/afarber/android-questions/master/SimpleMapStyle/screenshot.gif)
 
 
 [SwipeBooks](https://github.com/afarber/android-questions/tree/master/SwipeBooks):
@@ -301,12 +301,12 @@ uses CC BY-SA 3.0 licensed SVG-file by
 
 [ZeroSetupMap](https://github.com/afarber/android-questions/tree/master/ZeroSetupMap) a Kotlin app using OpenMapView to show map tiles without storage permissions or cache setup:
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/ZeroSetupMap/screenshot.png)
+![screenshot](https://raw.github.com/afarber/android-questions/master/ZeroSetupMap/screenshot.gif)
 
 
 [ZoomToLocation](https://github.com/afarber/android-questions/tree/master/ZoomToLocation) a Java app using OpenMapView to zoom to the user's location:
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/ZoomToLocation/screenshot.png)
+![screenshot](https://raw.github.com/afarber/android-questions/master/ZoomToLocation/screenshot.gif)
 
 ---
 

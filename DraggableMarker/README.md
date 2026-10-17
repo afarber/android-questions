@@ -5,4 +5,4 @@ Kotlin app using [OpenMapView](https://github.com/afarber/OpenMapView) to show a
 
 Answer to the Stack Overflow question [Marker in osmdroid map](https://stackoverflow.com/q/79250427).
 
-![screenshot](screenshot.png)
+![screenshot](screenshot.gif)

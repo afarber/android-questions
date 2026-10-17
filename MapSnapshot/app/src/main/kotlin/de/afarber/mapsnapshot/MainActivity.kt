@@ -17,7 +17,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,13 +28,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import de.afarber.openmapview.CameraUpdateFactory
 import de.afarber.openmapview.LatLng
 import de.afarber.openmapview.LatLngBounds
-import de.afarber.openmapview.OpenMapView
-import de.afarber.openmapview.Polyline
+import de.afarber.openmapview.compose.MapEffect
+import de.afarber.openmapview.compose.OpenMap
+import de.afarber.openmapview.compose.Polyline
+import de.afarber.openmapview.compose.rememberCameraPositionState
 import java.io.File
 
 // A short run through the Tiergarten park in Berlin
@@ -110,35 +109,22 @@ fun TrackerMap(
     onSnapshot: (Bitmap) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
-    val mapView = remember { OpenMapView(context) }
+    val cameraPositionState = rememberCameraPositionState()
 
-    DisposableEffect(lifecycleOwner) {
-        lifecycleOwner.lifecycle.addObserver(mapView)
-        onDispose { lifecycleOwner.lifecycle.removeObserver(mapView) }
+    // Show the whole run; the map applies it once it has got its size
+    LaunchedEffect(locations) {
+        val bounds = LatLngBounds.builder().apply { locations.forEach { include(it) } }.build()
+        cameraPositionState.move(CameraUpdateFactory.newLatLngBounds(bounds, 100))
     }
 
-    LaunchedEffect(isRunFinished) {
-        if (isRunFinished) {
-            mapView.snapshot { bitmap -> bitmap?.let(onSnapshot) }
+    OpenMap(modifier = modifier.fillMaxSize(), cameraPositionState = cameraPositionState) {
+        Polyline(points = locations, strokeColor = Color(0xFFE53935), strokeWidth = 12f)
+
+        // Runs with the map view when the run is finished
+        MapEffect(isRunFinished) { map ->
+            if (isRunFinished) {
+                map.snapshot { bitmap -> bitmap?.let(onSnapshot) }
+            }
         }
     }
-
-    AndroidView(
-        modifier = modifier.fillMaxSize(),
-        factory = {
-            mapView.apply {
-                // Show the whole run, after the map view has got its size
-                post {
-                    val bounds = LatLngBounds.builder().apply { locations.forEach { include(it) } }.build()
-                    moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
-                }
-            }
-        },
-        update = { view ->
-            view.clearPolylines()
-            view.addPolyline(Polyline(points = locations, strokeColor = Color(0xFFE53935), strokeWidth = 12f))
-        },
-    )
 }

@@ -59,7 +59,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     // OpenMapView
-    implementation(libs.openmapview)
+    implementation(libs.openmapview.compose)
 
     // Networking
     implementation(libs.ktor.client.android)
