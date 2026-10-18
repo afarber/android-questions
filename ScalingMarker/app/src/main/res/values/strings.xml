@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Scaling Marker</string>
+    <string name="hint">Tap the red spot or the blue circle</string>
+</resources>

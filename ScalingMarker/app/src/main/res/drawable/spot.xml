@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A round icon, so its center is the spot on the map. 96dp, because the drawable is
+     turned into a bitmap of this size and then scaled to the overlay size in meters -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp"
+    android:height="96dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#D32F2F"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:pathData="M12,1.5 A10.5,10.5 0 1,1 11.99,1.5 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M12,8 A4,4 0 1,1 11.99,8 Z" />
+</vector>

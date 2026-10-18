@@ -249,6 +249,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-questions/master/SampleLoginWithAmazonAppForAndroid/screenshot.png)
 
 
+[ScalingMarker](https://github.com/afarber/android-questions/tree/master/ScalingMarker) a Java app with OpenMapView, showing a clickable ground overlay and circle sized in meters, which grow and shrink with the zoom:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/ScalingMarker/screenshot.gif)
+
+
 [SimpleMapStyle](https://github.com/afarber/android-questions/tree/master/SimpleMapStyle) a Kotlin app using OpenMapView to switch between map styles without an API key:
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/SimpleMapStyle/screenshot.gif)
