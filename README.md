@@ -249,6 +249,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-questions/master/SwipeBooks/screenshot.png)
 
 
+[TabRowMap](https://github.com/afarber/android-questions/tree/master/TabRowMap) a Kotlin / Jetpack Compose app with OpenMapView below a TabRow, which stays visible when the map tab is shown:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/TabRowMap/screenshot.gif)
+
+
 [Test](https://github.com/afarber/android-questions/tree/master/Test):
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/Test/screenshot.png)
