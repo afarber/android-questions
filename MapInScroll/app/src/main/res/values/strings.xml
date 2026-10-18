@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Map In Scroll</string>
+    <string name="title">New area</string>
+    <string name="name_hint">Name of the area</string>
+    <string name="notes_hint">Notes</string>
+    <string name="kind">Kind of area</string>
+    <string name="kind_city">City</string>
+    <string name="kind_region">Region</string>
+    <string name="kind_country">Country</string>
+    <string name="map_hint">Drag the map to choose the bounding box. Drag the form to scroll the page.</string>
+    <string name="save">Save</string>
+</resources>

@@ -107,6 +107,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-questions/master/MagicApp/screenshot.png)
 
 
+[MapInScroll](https://github.com/afarber/android-questions/tree/master/MapInScroll) a Java app with OpenMapView at the end of a ScrollView form, where dragging the map pans it instead of scrolling the page:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/MapInScroll/screenshot.gif)
+
+
 [MapInTabs](https://github.com/afarber/android-questions/tree/master/MapInTabs) a Kotlin / Jetpack Compose app using OpenMapView in a tab, keeping the map position when switching tabs:
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/MapInTabs/screenshot.gif)
