@@ -1,14 +1,9 @@
 package de.afarber.darkmodemap
 
-import android.graphics.ColorMatrix
-import android.graphics.ColorMatrixColorFilter
-import android.graphics.RenderEffect
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,17 +17,15 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asComposeRenderEffect
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import de.afarber.openmapview.CameraPosition
 import de.afarber.openmapview.LatLng
+import de.afarber.openmapview.compose.ComposeMapColorScheme
 import de.afarber.openmapview.compose.Marker
 import de.afarber.openmapview.compose.OpenMap
 import de.afarber.openmapview.compose.Polygon
@@ -40,13 +33,6 @@ import de.afarber.openmapview.compose.rememberCameraPositionState
 import de.afarber.openmapview.compose.rememberMarkerState
 
 private val BOCHUM = LatLng(51.4661, 7.2491)
-
-// LatLng is not Parcelable, so the points are saved as latitude, longitude, latitude, ...
-private val LatLngListSaver =
-    Saver<List<LatLng>, List<Double>>(
-        save = { points -> points.flatMap { listOf(it.latitude, it.longitude) } },
-        restore = { values -> values.chunked(2) { LatLng(it[0], it[1]) } },
-    )
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,19 +49,23 @@ class MainActivity : ComponentActivity() {
 
 // No ViewModel holding the map and no onPause()/onResume() calls: switching dark mode
 // recreates the Activity, and with it a new map view. The camera and the polygon points
-// are saved state, so the new map shows the same place and polygon.
+// are saved state (LatLng is Parcelable), so the new map shows the same place and polygon.
 @Composable
 fun MapScreen(useDarkScheme: Boolean) {
     val cameraPositionState =
         rememberCameraPositionState {
             position = CameraPosition(BOCHUM, 13f)
         }
-    var points by rememberSaveable(stateSaver = LatLngListSaver) { mutableStateOf(emptyList<LatLng>()) }
+    var points by rememberSaveable { mutableStateOf(emptyList<LatLng>()) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         OpenMap(
-            modifier = Modifier.fillMaxSize().then(darkTiles(useDarkScheme)),
+            modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
+            // Dark tiles without an API key, on every Android version. Only the tiles are
+            // darkened, the markers and the polygon keep their colors. For a designed dark
+            // style use MapType.CARTO_DARK, which needs a CARTO API key.
+            mapColorScheme = if (useDarkScheme) ComposeMapColorScheme.DARK else ComposeMapColorScheme.LIGHT,
             onMapClick = { points = points + it },
         ) {
             points.forEach { Marker(state = rememberMarkerState(it)) }
@@ -101,42 +91,3 @@ fun MapScreen(useDarkScheme: Boolean) {
         }
     }
 }
-
-// A workaround, not a real dark map style: the OSM tiles are inverted and their hue is
-// turned by 180 degrees, so roads and water keep roughly their colors. It also changes the
-// markers and the polygon, and needs Android 12. A real dark style is MapType.CARTO_DARK,
-// which needs a CARTO API key.
-private fun darkTiles(useDarkScheme: Boolean): Modifier =
-    if (useDarkScheme && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        Modifier.graphicsLayer { renderEffect = invertedColors() }
-    } else {
-        Modifier
-    }
-
-@RequiresApi(Build.VERSION_CODES.S)
-private fun invertedColors() =
-    RenderEffect
-        .createColorFilterEffect(
-            ColorMatrixColorFilter(
-                ColorMatrix(
-                    floatArrayOf(
-                        -1f, 0f, 0f, 0f, 255f,
-                        0f, -1f, 0f, 0f, 255f,
-                        0f, 0f, -1f, 0f, 255f,
-                        0f, 0f, 0f, 1f, 0f,
-                    ),
-                ).apply {
-                    // Hue rotation by 180 degrees, applied after the inversion
-                    postConcat(
-                        ColorMatrix(
-                            floatArrayOf(
-                                -0.574f, 1.430f, 0.144f, 0f, 0f,
-                                0.426f, 0.430f, 0.144f, 0f, 0f,
-                                0.426f, 1.430f, -0.856f, 0f, 0f,
-                                0f, 0f, 0f, 1f, 0f,
-                            ),
-                        ),
-                    )
-                },
-            ),
-        ).asComposeRenderEffect()
