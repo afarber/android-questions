@@ -23,6 +23,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-questions/master/ComposeMap/screenshot.gif)
 
 
+[ComposeOnlyMap](https://github.com/afarber/android-questions/tree/master/ComposeOnlyMap) a Kotlin / Jetpack Compose app showing OpenMapView without any XML layout or User-Agent setup:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/ComposeOnlyMap/screenshot.png)
+
+
 [CriminalIntent](https://github.com/afarber/android-questions/tree/master/CriminalIntent):
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/CriminalIntent/screenshot.png)
