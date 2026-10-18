@@ -234,6 +234,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-questions/master/PingMe/screenshot.png)
 
 
+[RemoveMarkers](https://github.com/afarber/android-questions/tree/master/RemoveMarkers) a Java app with OpenMapView, removing a single marker on tap or all markers at once:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/RemoveMarkers/screenshot.gif)
+
+
 [RoundedQRCode](https://github.com/afarber/android-questions/tree/master/RoundedQRCode) - rounded QR code drawn in [Telegram](https://github.com/DrKLO/Telegram):
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/RoundedQRCode/screenshot.png)

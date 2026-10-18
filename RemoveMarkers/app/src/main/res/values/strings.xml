@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Remove Markers</string>
+    <string name="remove_all">Remove all</string>
+    <string name="add_all">Add all</string>
+</resources>
