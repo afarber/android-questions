@@ -63,6 +63,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-questions/master/FastAdapterScrollingIssue/screenshot.png)
 
 
+[FitAllMarkers](https://github.com/afarber/android-questions/tree/master/FitAllMarkers) a Java app with OpenMapView, zooming the map to show all markers with newLatLngBounds:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/FitAllMarkers/screenshot.gif)
+
+
 [flutter_app](https://github.com/afarber/android-questions/tree/master/flutter_app) can be launched with *flutter run*:
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/flutter_app/screenshot.png)
