@@ -33,6 +33,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-questions/master/CriminalIntent/screenshot.png)
 
 
+[DarkModeMap](https://github.com/afarber/android-questions/tree/master/DarkModeMap) a Kotlin / Jetpack Compose app with OpenMapView, keeping the camera and a drawn polygon when switching to dark mode:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/DarkModeMap/screenshot.gif)
+
+
 [DialogCountDown](https://github.com/afarber/android-questions/tree/master/DialogCountDown):
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/DialogCountDown/screenshot.png)
