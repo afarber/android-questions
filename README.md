@@ -43,6 +43,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-questions/master/DialogCountDown/screenshot.png)
 
 
+[DottedTrack](https://github.com/afarber/android-questions/tree/master/DottedTrack) a Java app with OpenMapView, drawing a GPX track as a solid, dashed or dotted polyline:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/DottedTrack/screenshot.gif)
+
+
 [DragAndDraw](https://github.com/afarber/android-questions/tree/master/DragAndDraw):
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/DragAndDraw/screenshot.png)

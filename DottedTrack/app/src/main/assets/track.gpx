@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- A sample track around the Aussenalster in Hamburg, in two segments -->
+<gpx version="1.1" creator="DottedTrack" xmlns="http://www.topografix.com/GPX/1/1">
+  <trk>
+    <name>Aussenalster</name>
+    <trkseg>
+      <trkpt lat="53.576200" lon="10.006300" />
+      <trkpt lat="53.576121" lon="10.007540" />
+      <trkpt lat="53.575887" lon="10.008759" />
+      <trkpt lat="53.575500" lon="10.009935" />
+      <trkpt lat="53.574967" lon="10.011050" />
+      <trkpt lat="53.574299" lon="10.012083" />
+      <trkpt lat="53.573505" lon="10.013018" />
+      <trkpt lat="53.572601" lon="10.013837" />
+      <trkpt lat="53.571600" lon="10.014527" />
+      <trkpt lat="53.570521" lon="10.015077" />
+      <trkpt lat="53.569381" lon="10.015476" />
+      <trkpt lat="53.568201" lon="10.015719" />
+      <trkpt lat="53.567000" lon="10.015800" />
+      <trkpt lat="53.565799" lon="10.015719" />
+      <trkpt lat="53.564619" lon="10.015476" />
+      <trkpt lat="53.563479" lon="10.015077" />
+      <trkpt lat="53.562400" lon="10.014527" />
+      <trkpt lat="53.561399" lon="10.013837" />
+      <trkpt lat="53.560495" lon="10.013018" />
+      <trkpt lat="53.559701" lon="10.012083" />
+      <trkpt lat="53.559033" lon="10.011050" />
+      <trkpt lat="53.558500" lon="10.009935" />
+      <trkpt lat="53.558113" lon="10.008759" />
+      <trkpt lat="53.557879" lon="10.007540" />
+      <trkpt lat="53.557800" lon="10.006300" />
+    </trkseg>
+    <trkseg>
+      <trkpt lat="53.557800" lon="10.006300" />
+      <trkpt lat="53.557879" lon="10.005060" />
+      <trkpt lat="53.558113" lon="10.003841" />
+      <trkpt lat="53.558500" lon="10.002665" />
+      <trkpt lat="53.559033" lon="10.001550" />
+      <trkpt lat="53.559701" lon="10.000517" />
+      <trkpt lat="53.560495" lon="9.999582" />
+      <trkpt lat="53.561399" lon="9.998763" />
+      <trkpt lat="53.562400" lon="9.998073" />
+      <trkpt lat="53.563479" lon="9.997523" />
+      <trkpt lat="53.564619" lon="9.997124" />
+      <trkpt lat="53.565799" lon="9.996881" />
+      <trkpt lat="53.567000" lon="9.996800" />
+      <trkpt lat="53.568201" lon="9.996881" />
+      <trkpt lat="53.569381" lon="9.997124" />
+      <trkpt lat="53.570521" lon="9.997523" />
+      <trkpt lat="53.571600" lon="9.998073" />
+      <trkpt lat="53.572601" lon="9.998763" />
+      <trkpt lat="53.573505" lon="9.999582" />
+      <trkpt lat="53.574299" lon="10.000517" />
+      <trkpt lat="53.574967" lon="10.001550" />
+      <trkpt lat="53.575500" lon="10.002665" />
+      <trkpt lat="53.575887" lon="10.003841" />
+      <trkpt lat="53.576121" lon="10.005060" />
+      <trkpt lat="53.576200" lon="10.006300" />
+    </trkseg>
+  </trk>
+</gpx>
