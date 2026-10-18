@@ -98,6 +98,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-questions/master/HmsSample/screenshot.png)
 
 
+[InfoWindowClick](https://github.com/afarber/android-questions/tree/master/InfoWindowClick) a Java app with OpenMapView, opening a dialog when the user taps the info window of a marker:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/InfoWindowClick/screenshot.gif)
+
+
 [InteractiveChart](https://github.com/afarber/android-questions/tree/master/InteractiveChart) the custom view with overscroller and edge effects from the Google guide [Animate a scroll gesture](https://developer.android.com/develop/ui/views/touch-and-input/gestures/scroll):
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/InteractiveChart/screenshot.png)
