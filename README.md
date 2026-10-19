@@ -229,7 +229,7 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-questions/master/NavigationDrawerExample/screenshot.png)
 
 
-[NavigationOffset](https://github.com/afarber/android-questions/tree/master/NavigationOffset) a Java app with OpenMapView, showing the current location near the bottom of the map in navigation mode with setMapPadding:
+[NavigationOffset](https://github.com/afarber/android-questions/tree/master/NavigationOffset) a Java app with OpenMapView, showing the current location near the bottom of a heading-up map in navigation mode with setMapPadding and a camera bearing:
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/NavigationOffset/screenshot.gif)
 

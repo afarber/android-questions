@@ -1,7 +1,6 @@
 package de.afarber.navigationoffset;
 
 import android.animation.ValueAnimator;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,12 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.afarber.openmapview.BitmapDescriptorFactory;
+import de.afarber.openmapview.CameraPosition;
 import de.afarber.openmapview.CameraUpdateFactory;
 import de.afarber.openmapview.LatLng;
 import de.afarber.openmapview.Marker;
 import de.afarber.openmapview.MarkerOptions;
 import de.afarber.openmapview.OpenMapView;
 import de.afarber.openmapview.PolylineOptions;
+import de.afarber.openmapview.SphericalUtil;
 
 public class MainActivity extends AppCompatActivity {
     // A car route from Potsdamer Platz to Alexanderplatz in Berlin, from the public OSRM server
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     // A simulated location update every second, 15 m further along the route
     private static final long FIX_INTERVAL_MS = 1000;
-    private static final float FIX_STEP_METERS = 15f;
+    private static final double FIX_STEP_METERS = 15;
 
     // In navigation mode the location is shown at 80 % of the map height
     private static final float LOCATION_AT = 0.8f;
@@ -43,11 +44,11 @@ public class MainActivity extends AppCompatActivity {
     private final List<LatLng> route = new ArrayList<>();
     private OpenMapView mapView;
     private Marker car;
-    private Button offsetButton;
-    private boolean bottomOffset = true;
+    private Button modeButton;
+    private boolean navigation = true;
     private int paddingTop;
-    private float driven;
-    private LatLng currentLocation;
+    private double driven;
+    private float bearing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,19 +57,23 @@ public class MainActivity extends AppCompatActivity {
         for (double[] p : ROUTE) {
             route.add(new LatLng(p[0], p[1]));
         }
-        currentLocation = route.get(0);
 
         mapView = findViewById(R.id.map);
-        mapView.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 17f));
+        bearing = headingAt(0);
+        mapView.moveCamera(CameraUpdateFactory.newCameraPosition(
+                CameraPosition.builder().target(route.get(0)).zoom(17f).bearing(bearing).build()));
         mapView.addPolyline(new PolylineOptions().addAll(route).color(0xFF42A5F5).width(14f));
+        // A flat icon turns with the map: with the rotation set to the heading it points up
+        // in navigation mode and to the driving direction in the north up overview
         car = mapView.addMarker(new MarkerOptions()
-                .position(currentLocation)
+                .position(route.get(0))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.arrow))
-                .anchor(0.5f, 0.5f));
+                .anchor(0.5f, 0.5f)
+                .flat(true));
 
-        offsetButton = findViewById(R.id.offset);
-        offsetButton.setOnClickListener(v -> {
-            bottomOffset = !bottomOffset;
+        modeButton = findViewById(R.id.offset);
+        modeButton.setOnClickListener(v -> {
+            navigation = !navigation;
             applyOffset(true);
         });
         // The padding depends on the map height, which is known after the layout
@@ -84,11 +89,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // The camera target is the center of the area inside the map padding: a top padding
-    // of 60 % of the height puts it at 80 %. The padding is kept, so every following
-    // camera update shows the location there, with no scrollBy() and no second animation.
+    // of 60 % of the height puts it at 80 %. The map also turns around this point. The padding
+    // is kept, so every following camera update shows the location there.
     private void applyOffset(boolean animated) {
-        int target = bottomOffset ? (int) (mapView.getHeight() * (2 * LOCATION_AT - 1)) : 0;
-        offsetButton.setText(bottomOffset ? "Location: bottom" : "Location: center");
+        int target = navigation ? (int) (mapView.getHeight() * (2 * LOCATION_AT - 1)) : 0;
+        modeButton.setText(navigation ? "Navigation" : "Overview");
         if (!animated) {
             setPaddingTop(target);
             return;
@@ -104,70 +109,59 @@ public class MainActivity extends AppCompatActivity {
         mapView.setMapPadding(0, top, 0, 0);
     }
 
-    // A new location fix: glide to it in the time until the next fix, moving the marker
-    // and the camera together in every frame
+    // A new location fix: glide to it in the time until the next fix. The marker and the
+    // camera are set together in every frame, and the map turns the shorter way to the heading.
     private final Runnable nextFix = new Runnable() {
         @Override
         public void run() {
-            float from = driven;
-            driven = driven + FIX_STEP_METERS >= routeLength() ? 0f : driven + FIX_STEP_METERS;
-            ValueAnimator animator = ValueAnimator.ofFloat(from, driven);
+            double from = driven;
+            double length = SphericalUtil.computeLength(route);
+            driven = driven + FIX_STEP_METERS >= length ? 0 : driven + FIX_STEP_METERS;
+            float fromBearing = bearing;
+            float toBearing = navigation ? headingAt(driven) : 0f;
+            float turn = ((toBearing - fromBearing) % 360 + 540) % 360 - 180;
+
+            ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
             animator.setDuration(FIX_INTERVAL_MS);
             animator.setInterpolator(new LinearInterpolator());
             animator.addUpdateListener(a -> {
-                float distance = (float) a.getAnimatedValue();
-                currentLocation = positionAt(distance);
-                // The map is north up, so the arrow turns instead of the map
+                float f = (float) a.getAnimatedValue();
+                double distance = from + (driven - from) * f;
+                LatLng currentLocation = positionAt(distance);
+                bearing = fromBearing + turn * f;
                 car.setRotation(headingAt(distance));
                 car.setPosition(currentLocation);
-                mapView.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+                mapView.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.builder()
+                        .target(currentLocation)
+                        .zoom(mapView.getCameraPosition().zoom)
+                        .bearing(bearing)
+                        .build()));
             });
             animator.start();
             handler.postDelayed(this, FIX_INTERVAL_MS);
         }
     };
 
-    private float segmentLength(int i, float[] results) {
-        LatLng a = route.get(i);
-        LatLng b = route.get(i + 1);
-        Location.distanceBetween(a.latitude, a.longitude, b.latitude, b.longitude, results);
-        return results[0];
-    }
-
-    private float routeLength() {
-        float[] results = new float[2];
-        float length = 0f;
+    private LatLng positionAt(double distance) {
         for (int i = 0; i < route.size() - 1; i++) {
-            length += segmentLength(i, results);
-        }
-        return length;
-    }
-
-    private LatLng positionAt(float distance) {
-        float[] results = new float[2];
-        for (int i = 0; i < route.size() - 1; i++) {
-            float length = segmentLength(i, results);
+            double length = SphericalUtil.computeDistanceBetween(route.get(i), route.get(i + 1));
             if (distance <= length) {
-                double f = distance / length;
-                LatLng a = route.get(i);
-                LatLng b = route.get(i + 1);
-                return new LatLng(a.latitude + (b.latitude - a.latitude) * f,
-                        a.longitude + (b.longitude - a.longitude) * f);
+                return SphericalUtil.interpolate(route.get(i), route.get(i + 1), distance / length);
             }
             distance -= length;
         }
         return route.get(route.size() - 1);
     }
 
-    private float headingAt(float distance) {
-        float[] results = new float[2];
-        for (int i = 0; i < route.size() - 1; i++) {
-            float length = segmentLength(i, results);
+    private float headingAt(double distance) {
+        int last = route.size() - 2;
+        for (int i = 0; i < last; i++) {
+            double length = SphericalUtil.computeDistanceBetween(route.get(i), route.get(i + 1));
             if (distance < length) {
-                return results[1];
+                return (float) SphericalUtil.computeHeading(route.get(i), route.get(i + 1));
             }
             distance -= length;
         }
-        return results[1];
+        return (float) SphericalUtil.computeHeading(route.get(last), route.get(last + 1));
     }
 }
