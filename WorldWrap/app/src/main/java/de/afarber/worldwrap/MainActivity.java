@@ -1,6 +1,7 @@
 package de.afarber.worldwrap;
 
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import java.util.Locale;
 
 import de.afarber.openmapview.CameraUpdateFactory;
 import de.afarber.openmapview.LatLng;
+import de.afarber.openmapview.LatLngBounds;
 import de.afarber.openmapview.MarkerOptions;
 import de.afarber.openmapview.OpenMapView;
 import de.afarber.openmapview.PolylineOptions;
@@ -17,8 +19,12 @@ public class MainActivity extends AppCompatActivity {
     private static final LatLng BEIJING = new LatLng(39.9042, 116.4074);
     private static final LatLng SAN_FRANCISCO = new LatLng(37.7749, -122.4194);
 
+    // The camera target stays within one world, so panning stops just before the date line
+    private static final LatLngBounds ONE_WORLD = new LatLngBounds(new LatLng(-85, -179), new LatLng(85, 179));
+
     private OpenMapView map;
     private TextView myTxt;
+    private Button limitBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +49,19 @@ public class MainActivity extends AppCompatActivity {
 
         map.setOnCameraMoveListener(this::showTarget);
         map.setOnCameraIdleListener(this::showTarget);
+
+        limitBtn = findViewById(R.id.limitBtn);
+        limitBtn.setOnClickListener(v -> toggleLimit());
+        showLimit();
+    }
+
+    private void toggleLimit() {
+        map.setLatLngBoundsForCameraTarget(map.getLatLngBoundsForCameraTarget() == null ? ONE_WORLD : null);
+        showLimit();
+    }
+
+    private void showLimit() {
+        limitBtn.setText(map.getLatLngBoundsForCameraTarget() == null ? "Stop at the date line" : "Pan around the world");
     }
 
     private void showTarget() {

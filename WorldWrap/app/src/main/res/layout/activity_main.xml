@@ -11,10 +11,17 @@
         android:layout_margin="8dp"
         android:textSize="18sp" />
 
+    <Button
+        android:id="@+id/limitBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="4dp" />
+
     <de.afarber.openmapview.OpenMapView
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/myTxt" />
+        android:layout_below="@id/limitBtn" />
 
 </RelativeLayout>
