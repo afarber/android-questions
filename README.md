@@ -43,6 +43,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-questions/master/CustomMarkerIcon/screenshot.gif)
 
 
+[CustomZoom](https://github.com/afarber/android-questions/tree/master/CustomZoom) a Java app with OpenMapView, using custom buttons to animate the zoom with the built-in controls disabled:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/CustomZoom/screenshot.gif)
+
+
 [DarkModeMap](https://github.com/afarber/android-questions/tree/master/DarkModeMap) a Kotlin / Jetpack Compose app with OpenMapView, keeping the camera and a drawn polygon when switching to dark mode:
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/DarkModeMap/screenshot.gif)

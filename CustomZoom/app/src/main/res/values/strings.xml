@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Custom Zoom</string>
+    <string name="landmark">Brandenburg Gate</string>
+    <string name="zoom_in">Zoom in (+)</string>
+    <string name="zoom_out">Zoom out (−)</string>
+    <string name="zoom_status">Zoom: %1$.1f (12–14)</string>
+</resources>
