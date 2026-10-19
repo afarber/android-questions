@@ -78,6 +78,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-questions/master/FitAllMarkers/screenshot.gif)
 
 
+[FitRoute](https://github.com/afarber/android-questions/tree/master/FitRoute) a Java app with OpenMapView, zooming the map to a route with newLatLngBounds called before the layout:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/FitRoute/screenshot.gif)
+
+
 [flutter_app](https://github.com/afarber/android-questions/tree/master/flutter_app) can be launched with *flutter run*:
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/flutter_app/screenshot.png)
