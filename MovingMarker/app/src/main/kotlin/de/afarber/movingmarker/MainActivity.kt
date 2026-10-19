@@ -1,6 +1,5 @@
 package de.afarber.movingmarker
 
-import android.location.Location
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import de.afarber.openmapview.BitmapDescriptorFactory
 import de.afarber.openmapview.CameraPosition
 import de.afarber.openmapview.LatLng
+import de.afarber.openmapview.SphericalUtil
 import de.afarber.openmapview.compose.Marker
 import de.afarber.openmapview.compose.OpenMap
 import de.afarber.openmapview.compose.Polyline
@@ -104,46 +104,28 @@ fun DrivingScreen() {
     }
 }
 
-// Distances and headings along a route, with the platform's Location.distanceBetween()
+// Distances, headings and positions along a route, with SphericalUtil as in android-maps-utils
 private class Route(
     private val points: List<LatLng>,
 ) {
-    private val segmentLengths = FloatArray(points.size - 1)
-    private val segmentHeadings = FloatArray(points.size - 1)
-    val length: Float
-
-    init {
-        val results = FloatArray(2)
-        for (i in segmentLengths.indices) {
-            val a = points[i]
-            val b = points[i + 1]
-            Location.distanceBetween(a.latitude, a.longitude, b.latitude, b.longitude, results)
-            segmentLengths[i] = results[0]
-            segmentHeadings[i] = results[1]
-        }
-        length = segmentLengths.sum()
-    }
+    private val segmentLengths = points.zipWithNext { a, b -> SphericalUtil.computeDistanceBetween(a, b) }
+    val length = SphericalUtil.computeLength(points).toFloat()
 
     fun positionAt(distance: Float): LatLng {
-        var rest = distance.coerceIn(0f, length)
+        var rest = distance.coerceIn(0f, length).toDouble()
         for (i in segmentLengths.indices) {
-            if (rest <= segmentLengths[i]) {
-                val f = (rest / segmentLengths[i]).toDouble()
-                val a = points[i]
-                val b = points[i + 1]
-                return LatLng(a.latitude + (b.latitude - a.latitude) * f, a.longitude + (b.longitude - a.longitude) * f)
-            }
+            if (rest <= segmentLengths[i]) return SphericalUtil.interpolate(points[i], points[i + 1], rest / segmentLengths[i])
             rest -= segmentLengths[i]
         }
         return points.last()
     }
 
     fun headingAt(distance: Float): Float {
-        var rest = distance.coerceIn(0f, length)
-        for (i in segmentLengths.indices) {
-            if (rest < segmentLengths[i]) return segmentHeadings[i]
+        var rest = distance.coerceIn(0f, length).toDouble()
+        for (i in 0 until segmentLengths.lastIndex) {
+            if (rest < segmentLengths[i]) return SphericalUtil.computeHeading(points[i], points[i + 1]).toFloat()
             rest -= segmentLengths[i]
         }
-        return segmentHeadings.last()
+        return SphericalUtil.computeHeading(points[points.size - 2], points.last()).toFloat()
     }
 }
