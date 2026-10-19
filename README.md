@@ -142,6 +142,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-questions/master/MapSnapshot/screenshot.gif)
 
 
+[MovingMarker](https://github.com/afarber/android-questions/tree/master/MovingMarker) a Kotlin / Jetpack Compose app with OpenMapView, moving a navigation arrow smoothly along a route with the map following it:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/MovingMarker/screenshot.gif)
+
+
 [MyBars](https://github.com/afarber/android-questions/tree/master/MyBars)
 uses CC BY-SA 3.0 licensed SVG-file by 
 [Denelson83, Wikimedia Commons](http://en.wikipedia.org/wiki/File:Blank_Scrabble_board_with_coordinates.svg)
