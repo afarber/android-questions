@@ -369,6 +369,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-questions/master/WordGame/screenshot.png)
 
 
+[WorldWrap](https://github.com/afarber/android-questions/tree/master/WorldWrap) a Java app with OpenMapView, repeating the world only horizontally, like Google Maps:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/WorldWrap/screenshot.gif)
+
+
 [ZXingTestActivity](https://github.com/afarber/android-questions/tree/master/ZXingTestActivity) (by ZXing project, Apache License):
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/ZXingTestActivity/screenshot.png)
