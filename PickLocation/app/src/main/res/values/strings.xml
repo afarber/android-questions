@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pick Location</string>
+    <string name="hint_nom">Nom de l\'étape</string>
+    <string name="hint_long">Longitude (Appuyez sur la carte à l\'emplacement souhaité)</string>
+    <string name="hint_lat">Latitude (Appuyez sur la carte à l\'emplacement souhaité)</string>
+</resources>

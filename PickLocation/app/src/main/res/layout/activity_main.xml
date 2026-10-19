@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:padding="20dp">
+
+    <EditText
+        android:id="@+id/edit_nom_etape"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_nom"
+        android:importantForAutofill="no"
+        android:inputType="text" />
+
+    <TextView
+        android:id="@+id/edit_long_etape"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_nom_etape"
+        android:layout_marginTop="8dp"
+        android:background="?attr/editTextBackground"
+        android:hint="@string/hint_long"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/edit_lat_etape"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_long_etape"
+        android:layout_marginTop="8dp"
+        android:background="?attr/editTextBackground"
+        android:hint="@string/hint_lat"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <de.afarber.openmapview.OpenMapView
+        android:id="@+id/map_form_etape"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/edit_lat_etape"
+        android:layout_marginTop="8dp" />
+
+</RelativeLayout>

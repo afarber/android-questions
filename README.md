@@ -229,6 +229,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-questions/master/OverlayAlpha/screenshot.gif)
 
 
+[PickLocation](https://github.com/afarber/android-questions/tree/master/PickLocation) a Java app with OpenMapView, filling the longitude and latitude fields of a form with a tap on the map:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/PickLocation/screenshot.gif)
+
+
 [Planets](https://github.com/afarber/android-questions/tree/master/Planets):
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/Planets/screenshot.png)
