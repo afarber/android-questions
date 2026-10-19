@@ -63,6 +63,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-questions/master/DraggableMarker/screenshot.gif)
 
 
+[DragPolyline](https://github.com/afarber/android-questions/tree/master/DragPolyline) a Java app with OpenMapView, dragging the points of a polyline with markers:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/DragPolyline/screenshot.gif)
+
+
 [DrivingRoute](https://github.com/afarber/android-questions/tree/master/DrivingRoute) a Kotlin app for AAOS using public OSRM backend for routing:
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/DrivingRoute/screenshot.gif)

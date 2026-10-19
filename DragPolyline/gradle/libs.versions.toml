@@ -1,0 +1,11 @@
+[versions]
+agp = "9.4.1"
+appcompat = "1.8.0"
+openmapview = "0.28.0"
+
+[libraries]
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+openmapview = { group = "de.afarber", name = "openmapview", version.ref = "openmapview" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
