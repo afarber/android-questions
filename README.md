@@ -224,6 +224,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-questions/master/NavigationDrawerExample/screenshot.png)
 
 
+[NavigationOffset](https://github.com/afarber/android-questions/tree/master/NavigationOffset) a Java app with OpenMapView, showing the current location near the bottom of the map in navigation mode with setMapPadding:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/NavigationOffset/screenshot.gif)
+
+
 [NFCStudentTracking](https://github.com/afarber/android-questions/tree/master/NFCStudentTracking) from the book [Professional NFC Application Development for Android](http://www.wrox.com/WileyCDA/WroxTitle/Professional-NFC-Application-Development-for-Android.productCd-1118380096.html):
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/NFCStudentTracking/screenshot.png)
