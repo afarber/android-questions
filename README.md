@@ -33,6 +33,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-questions/master/CriminalIntent/screenshot.png)
 
 
+[CurvedLine](https://github.com/afarber/android-questions/tree/master/CurvedLine) a Kotlin / Jetpack Compose app with OpenMapView, drawing a geodesic line and a Bezier arc between two draggable markers:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/CurvedLine/screenshot.gif)
+
+
 [CustomMarkerIcon](https://github.com/afarber/android-questions/tree/master/CustomMarkerIcon) a Java app with OpenMapView, showing bus stops with a custom round icon anchored at its center:
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/CustomMarkerIcon/screenshot.gif)
