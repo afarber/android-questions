@@ -1,7 +1,7 @@
 CustomZoom
 ==========
 
-Java / XML app with MIT-licensed [OpenMapView](https://github.com/afarber/OpenMapView) 0.29.1, showing custom zoom buttons with the built-in controls and zoom gestures disabled. Map panning remains enabled.
+Java / XML app with MIT-licensed [OpenMapView](https://github.com/afarber/OpenMapView), showing custom zoom buttons with the built-in controls and zoom gestures disabled. Map panning remains enabled.
 
 Each button has an explicit click listener:
 
@@ -18,6 +18,6 @@ Answer to the Stack Overflow question [Custom zoom buttons for osmdroid](https:/
 
 ![Custom buttons animating the map zoom](screenshot.gif)
 
-The dependency is `implementation("de.afarber:openmapview:0.29.1")`. Build and install with `./gradlew :app:installDebug`.
+Build and install with `./gradlew :app:installDebug`. The OpenMapView dependency version is defined in [gradle/libs.versions.toml](gradle/libs.versions.toml).
 
 With the 1408x792 automotive emulator running, run `./record-gif.sh` to reproduce the sequence **13 → 14 → 13 → 12 → 13**. The script uses `~/src/OpenMapView/scripts/capture-gif.sh` unchanged and crops out the system bars.

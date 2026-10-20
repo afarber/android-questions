@@ -1,7 +1,7 @@
 CurvedLine
 ==========
 
-Kotlin / Jetpack Compose app with MIT-licensed [OpenMapView](https://github.com/afarber/OpenMapView) 0.29.1, which draws curved lines between two draggable markers:
+Kotlin / Jetpack Compose app with MIT-licensed [OpenMapView](https://github.com/afarber/OpenMapView), which draws curved lines between two draggable markers:
 
 - Gray: a straight reference line on the map.
 - Blue: a great-circle path using `Polyline(geodesic = true)`.
@@ -13,4 +13,6 @@ Answer to the Stack Overflow question [How to draw a curved line between two coo
 
 ![screenshot](screenshot.gif)
 
-Build and install with `./gradlew :app:installDebug`. With the 1408x792 automotive emulator running and the tiles loaded, run `./record-gif.sh` to reproduce the 12-second recording. The script uses `~/src/OpenMapView/scripts/capture-gif.sh` unchanged and crops out the system bars.
+Build and install with `./gradlew :app:installDebug`. The OpenMapView dependency version is defined in [gradle/libs.versions.toml](gradle/libs.versions.toml).
+
+With the 1408x792 automotive emulator running and the tiles loaded, run `./record-gif.sh` to reproduce the 12-second recording. The script uses `~/src/OpenMapView/scripts/capture-gif.sh` unchanged and crops out the system bars.
