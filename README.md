@@ -142,6 +142,11 @@ Screenshots
 ![screenshot](https://raw.github.com/afarber/android-questions/master/LaunchMaps/screenshot.png)
 
 
+[LiveMarker](https://github.com/afarber/android-questions/tree/master/LiveMarker) a Java app with OpenMapView, showing a drawable marker at the device's live location:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/LiveMarker/screenshot.gif)
+
+
 [MagicApp](https://github.com/afarber/android-questions/tree/master/MagicApp) a Kotlin / Jetpack Compose app mimicking a MAGIC Engineering Menu:
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/MagicApp/screenshot.png)

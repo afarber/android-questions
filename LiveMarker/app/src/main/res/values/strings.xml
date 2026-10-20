@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Live Marker</string>
+    <string name="marker_title">Current location</string>
+    <string name="coordinates">%1$.5f, %2$.5f</string>
+    <string name="location_status">%1$s location: %2$.5f, %3$.5f\nOne marker; camera centers on the first fix</string>
+    <string name="precise">Precise</string>
+    <string name="approximate">Approximate</string>
+    <string name="permission_required">Allow location access to show your position</string>
+    <string name="enable_location">Enable location</string>
+    <string name="location_disabled">Location is disabled</string>
+    <string name="location_disabled_last_fix">Location is disabled; marker shows the last fix</string>
+    <string name="no_provider">No location provider is available for this permission</string>
+    <string name="location_settings">Location settings</string>
+    <string name="app_settings">App settings</string>
+    <string name="waiting">Waiting for a location fix…</string>
+    <string name="waiting_last_fix">Waiting for a new fix; marker shows the last fix</string>
+    <string name="center">Center</string>
+</resources>
