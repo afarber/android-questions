@@ -137,6 +137,11 @@ Screenshots
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/InteractiveChart/screenshot.png)
 
+[LabelMarker](https://github.com/afarber/android-questions/tree/master/LabelMarker) a Kotlin / Jetpack Compose app with OpenMapView, drawing a hollow pin and updating its rounded two-line label:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/LabelMarker/screenshot.gif)
+
+
 [LaunchMaps](https://github.com/afarber/android-questions/tree/master/LaunchMaps):
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/LaunchMaps/screenshot.png)
