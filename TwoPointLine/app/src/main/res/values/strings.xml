@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Two Point Line</string>
+    <string name="status">2 points · 1 segment · Zoom: %1$.1f</string>
+    <string name="fit_endpoints">Fit endpoints</string>
+    <string name="start">Start</string>
+    <string name="end">End</string>
+</resources>

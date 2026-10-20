@@ -374,6 +374,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-questions/master/TopPlayers/screenshot.png)
 
 
+[TwoPointLine](https://github.com/afarber/android-questions/tree/master/TwoPointLine) a Java / XML app with OpenMapView, drawing a red polyline between two fixed coordinates:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/TwoPointLine/screenshot.gif)
+
+
 [ValidatePrefs](https://github.com/afarber/android-questions/tree/master/ValidatePrefs):
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/ValidatePrefs/screenshot.png)
