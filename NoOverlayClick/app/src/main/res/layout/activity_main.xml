@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <de.afarber.openmapview.OpenMapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_margin="16dp"
+        android:background="#FFFFFF"
+        android:elevation="4dp"
+        android:padding="12dp"
+        android:textColor="#212121"
+        android:textSize="18sp" />
+
+    <CheckBox
+        android:id="@+id/suppress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="16dp"
+        android:background="#FFFFFF"
+        android:checked="true"
+        android:elevation="4dp"
+        android:minHeight="48dp"
+        android:padding="8dp"
+        android:text="@string/suppress"
+        android:textColor="#212121"
+        android:textSize="18sp" />
+</FrameLayout>

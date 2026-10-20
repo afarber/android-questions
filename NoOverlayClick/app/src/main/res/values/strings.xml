@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">No Overlay Click</string>
+    <string name="suppress">Suppress overlay clicks</string>
+    <string name="landmark">Brandenburg Gate</string>
+    <string name="marker_snippet">This window opens only when suppression is off</string>
+    <string name="tap_hint">Tap the blue route, orange polygon, or marker</string>
+    <string name="map_event">Map clicked: non-clickable shapes pass taps through</string>
+    <string name="route_event">Route clicked</string>
+    <string name="polygon_event">Polygon clicked</string>
+    <string name="marker_consumed">Marker consumed: no info window or camera movement</string>
+    <string name="marker_default">Marker default: info window opens</string>
+    <string name="suppression_on">Suppression on: shapes pass through; marker consumes</string>
+    <string name="suppression_off">Suppression off: shape callbacks and marker info window</string>
+    <string name="status">%1$s\nMap: %2$d   Route: %3$d   Polygon: %4$d   Marker: %5$d</string>
+</resources>

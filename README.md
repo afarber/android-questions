@@ -254,6 +254,11 @@ uses CC BY-SA 3.0 licensed SVG-file by
 ![screenshot](https://raw.github.com/afarber/android-questions/master/NFCStudentTracking/screenshot.png)
 
 
+[NoOverlayClick](https://github.com/afarber/android-questions/tree/master/NoOverlayClick) a Java app with OpenMapView, comparing non-clickable shapes and consumed marker clicks with normal overlay interactions:
+
+![screenshot](https://raw.github.com/afarber/android-questions/master/NoOverlayClick/screenshot.gif)
+
+
 [OverlayAlpha](https://github.com/afarber/android-questions/tree/master/OverlayAlpha) a Java app using OpenMapView to change the alpha of a topo map layer:
 
 ![screenshot](https://raw.github.com/afarber/android-questions/master/OverlayAlpha/screenshot.gif)
