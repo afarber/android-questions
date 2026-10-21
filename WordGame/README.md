@@ -1,6 +1,10 @@
 # WordGame
 
-Dialogs for choosing a letter, swapping tiles, and finding a word.
+Dialog examples for choosing a letter, selecting tiles to swap, and entering a word.
+
+## Details
+
+RecyclerView presents the letter grid and swap list, while an EditText collects a search word. Dialog callbacks return the chosen values to MainActivity for feedback.
 
 ## Build and run
 
@@ -13,6 +17,6 @@ From this directory:
 ./gradlew :app:installDebug
 ```
 
-The original emulator-skin screenshot is intentionally preserved.
+## Screenshot
 
-![Screenshot](screenshot.png)
+![WordGame screenshot](screenshot.png)

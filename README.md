@@ -1,355 +1,534 @@
-android-questions
-==========
-
-Small projects for asking at Stackoverflow
+# android-questions
 
 The files are public domain - unless there is a different note (by their respective authors) on the top of some files.
 
-Screenshots
-==========
-
 ## Maps
 
-[ComposeMap](https://github.com/afarber/android-questions/tree/master/ComposeMap) a Kotlin / Jetpack Compose app with a reusable OpenStreetMap composable using OpenMapView:
+[ComposeMap](ComposeMap/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/ComposeMap/screenshot.gif)
+Kotlin/Compose example wrapping OpenMapView in a reusable OpenStreetMap composable and moving its camera when the selected place changes.
 
-[ComposeOnlyMap](https://github.com/afarber/android-questions/tree/master/ComposeOnlyMap) a Kotlin / Jetpack Compose app showing OpenMapView without any XML layout or User-Agent setup:
+![ComposeMap screenshot](ComposeMap/screenshot.gif)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/ComposeOnlyMap/screenshot.png)
+[ComposeOnlyMap](ComposeOnlyMap/)
 
-[CurvedLine](https://github.com/afarber/android-questions/tree/master/CurvedLine) a Kotlin / Jetpack Compose app with OpenMapView, drawing a geodesic line and a Bezier arc between two draggable markers:
+Kotlin/Compose example displaying OpenMapView without an XML layout or explicit User-Agent configuration.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/CurvedLine/screenshot.gif)
+![ComposeOnlyMap screenshot](ComposeOnlyMap/screenshot.png)
 
-[CustomMarkerIcon](https://github.com/afarber/android-questions/tree/master/CustomMarkerIcon) a Java app with OpenMapView, showing bus stops with a custom round icon anchored at its center:
+[CurvedLine](CurvedLine/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/CustomMarkerIcon/screenshot.gif)
+Compose map comparing a straight line, a geodesic, and a Bezier arc between two draggable markers.
 
-[CustomZoom](https://github.com/afarber/android-questions/tree/master/CustomZoom) a Java app with OpenMapView, using custom buttons to animate the zoom with the built-in controls disabled:
+![CurvedLine screenshot](CurvedLine/screenshot.gif)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/CustomZoom/screenshot.gif)
+[CustomMarkerIcon](CustomMarkerIcon/)
 
-[DarkModeMap](https://github.com/afarber/android-questions/tree/master/DarkModeMap) a Kotlin / Jetpack Compose app with OpenMapView, keeping the camera and a drawn polygon when switching to dark mode:
+Java map example displaying bus-stop markers with a custom round drawable anchored at its center.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/DarkModeMap/screenshot.gif)
+![CustomMarkerIcon screenshot](CustomMarkerIcon/screenshot.gif)
 
-[DottedTrack](https://github.com/afarber/android-questions/tree/master/DottedTrack) a Java app with OpenMapView, drawing a GPX track as a solid, dashed or dotted polyline:
+[CustomZoom](CustomZoom/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/DottedTrack/screenshot.gif)
+Java map example with custom buttons that animate zoom while built-in zoom controls and zoom gestures are disabled.
 
-[DraggableMarker](https://github.com/afarber/android-questions/tree/master/DraggableMarker) a Kotlin app using OpenMapView to drag a marker with a custom icon:
+![CustomZoom screenshot](CustomZoom/screenshot.gif)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/DraggableMarker/screenshot.gif)
+[DarkModeMap](DarkModeMap/)
 
-[DragPolyline](https://github.com/afarber/android-questions/tree/master/DragPolyline) a Java app with OpenMapView, dragging the points of a polyline with markers:
+Compose map preserving its camera and a user-drawn polygon when switching between light and dark mode.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/DragPolyline/screenshot.gif)
+![DarkModeMap screenshot](DarkModeMap/screenshot.gif)
 
-[DrivingRoute](https://github.com/afarber/android-questions/tree/master/DrivingRoute) a Kotlin app for AAOS using public OSRM backend for routing:
+[DottedTrack](DottedTrack/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/DrivingRoute/screenshot.gif)
+Java map example drawing the same GPX track as a solid, dashed, or dotted polyline.
 
-[FitAllMarkers](https://github.com/afarber/android-questions/tree/master/FitAllMarkers) a Java app with OpenMapView, zooming the map to show all markers with newLatLngBounds:
+![DottedTrack screenshot](DottedTrack/screenshot.gif)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/FitAllMarkers/screenshot.gif)
+[DraggableMarker](DraggableMarker/)
 
-[FitRoute](https://github.com/afarber/android-questions/tree/master/FitRoute) a Java app with OpenMapView, zooming the map to a route with newLatLngBounds called before the layout:
+Kotlin map example with a draggable marker using a custom icon.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/FitRoute/screenshot.gif)
+![DraggableMarker screenshot](DraggableMarker/screenshot.gif)
 
-[InfoWindowClick](https://github.com/afarber/android-questions/tree/master/InfoWindowClick) a Java app with OpenMapView, opening a dialog when the user taps the info window of a marker:
+[DragPolyline](DragPolyline/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/InfoWindowClick/screenshot.gif)
+Java map example reshaping a polyline by dragging markers at its vertices.
 
-[LabelMarker](https://github.com/afarber/android-questions/tree/master/LabelMarker) a Kotlin / Jetpack Compose app with OpenMapView, drawing a hollow pin and updating its rounded two-line label:
+![DragPolyline screenshot](DragPolyline/screenshot.gif)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/LabelMarker/screenshot.gif)
+[DrivingRoute](DrivingRoute/)
 
-[LaunchMaps](https://github.com/afarber/android-questions/tree/master/LaunchMaps):
+Android Automotive route planner using Compose, OpenMapView, and the public OSRM backend to route between two tapped locations.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/LaunchMaps/screenshot.png)
+![DrivingRoute screenshot](DrivingRoute/screenshot.gif)
 
-[LiveMarker](https://github.com/afarber/android-questions/tree/master/LiveMarker) a Java app with OpenMapView, showing a drawable marker at the device's live location:
+[FitAllMarkers](FitAllMarkers/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/LiveMarker/screenshot.gif)
+Java map example fitting the camera to a collection of markers with newLatLngBounds.
 
-[MapInScroll](https://github.com/afarber/android-questions/tree/master/MapInScroll) a Java app with OpenMapView at the end of a ScrollView form, where dragging the map pans it instead of scrolling the page:
+![FitAllMarkers screenshot](FitAllMarkers/screenshot.gif)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/MapInScroll/screenshot.gif)
+[FitRoute](FitRoute/)
 
-[MapInTabs](https://github.com/afarber/android-questions/tree/master/MapInTabs) a Kotlin / Jetpack Compose app using OpenMapView in a tab, keeping the map position when switching tabs:
+Java map example fitting a route with newLatLngBounds before the map has completed layout.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/MapInTabs/screenshot.gif)
+![FitRoute screenshot](FitRoute/screenshot.gif)
 
-[MapSnapshot](https://github.com/afarber/android-questions/tree/master/MapSnapshot) a Kotlin / Jetpack Compose app using OpenMapView to save a screenshot of a running track:
+[InfoWindowClick](InfoWindowClick/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/MapSnapshot/screenshot.gif)
+Java map example opening a dialog when a marker's info window is tapped.
 
-[MovingMarker](https://github.com/afarber/android-questions/tree/master/MovingMarker) a Kotlin / Jetpack Compose app with OpenMapView, moving a navigation arrow smoothly along a route with the map following it:
+![InfoWindowClick screenshot](InfoWindowClick/screenshot.gif)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/MovingMarker/screenshot.gif)
+[LabelMarker](LabelMarker/)
 
-[NavigationOffset](https://github.com/afarber/android-questions/tree/master/NavigationOffset) a Java app with OpenMapView, showing the current location near the bottom of a heading-up map in navigation mode with setMapPadding and a camera bearing:
+Compose map example drawing a hollow pin with a rounded two-line label that can change at runtime.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/NavigationOffset/screenshot.gif)
+![LabelMarker screenshot](LabelMarker/screenshot.gif)
 
-[NoOverlayClick](https://github.com/afarber/android-questions/tree/master/NoOverlayClick) a Java app with OpenMapView, comparing non-clickable shapes and consumed marker clicks with normal overlay interactions:
+[LaunchMaps](LaunchMaps/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/NoOverlayClick/screenshot.gif)
+Java example launching an installed map application with a geo URI containing a labeled coordinate.
 
-[OverlayAlpha](https://github.com/afarber/android-questions/tree/master/OverlayAlpha) a Java app using OpenMapView to change the alpha of a topo map layer:
+![LaunchMaps screenshot](LaunchMaps/screenshot.png)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/OverlayAlpha/screenshot.gif)
+[LiveMarker](LiveMarker/)
 
-[PickLocation](https://github.com/afarber/android-questions/tree/master/PickLocation) a Java app with OpenMapView, filling the longitude and latitude fields of a form with a tap on the map:
+Java map example moving one drawable marker to the device's live location and centering the camera on the first fix.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/PickLocation/screenshot.gif)
+![LiveMarker screenshot](LiveMarker/screenshot.gif)
 
-[RemoveMarkers](https://github.com/afarber/android-questions/tree/master/RemoveMarkers) a Java app with OpenMapView, removing a single marker on tap or all markers at once:
+[MapInScroll](MapInScroll/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/RemoveMarkers/screenshot.gif)
+Java form with an OpenMapView inside a ScrollView, allowing map drags to pan while form drags scroll the page.
 
-[ScalingMarker](https://github.com/afarber/android-questions/tree/master/ScalingMarker) a Java app with OpenMapView, showing a clickable ground overlay and circle sized in meters, which grow and shrink with the zoom:
+![MapInScroll screenshot](MapInScroll/screenshot.gif)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/ScalingMarker/screenshot.gif)
+[MapInTabs](MapInTabs/)
 
-[SimpleMapStyle](https://github.com/afarber/android-questions/tree/master/SimpleMapStyle) a Kotlin app using OpenMapView to switch between map styles without an API key:
+Compose navigation-tab example preserving a map's camera when switching to another tab and back.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/SimpleMapStyle/screenshot.gif)
+![MapInTabs screenshot](MapInTabs/screenshot.gif)
 
-[TabRowMap](https://github.com/afarber/android-questions/tree/master/TabRowMap) a Kotlin / Jetpack Compose app with OpenMapView below a TabRow, which stays visible when the map tab is shown:
+[MapSnapshot](MapSnapshot/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/TabRowMap/screenshot.gif)
+Compose map example saving a map image containing a running track as run.png.
 
-[TwoPointLine](https://github.com/afarber/android-questions/tree/master/TwoPointLine) a Java / XML app with OpenMapView, drawing a red polyline between two fixed coordinates:
+![MapSnapshot screenshot](MapSnapshot/screenshot.gif)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/TwoPointLine/screenshot.gif)
+[MovingMarker](MovingMarker/)
 
-[WorldWrap](https://github.com/afarber/android-questions/tree/master/WorldWrap) a Java app with OpenMapView, repeating the world only horizontally, like Google Maps:
+Compose map example animating a navigation arrow along a predefined route while the camera follows it.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/WorldWrap/screenshot.gif)
+![MovingMarker screenshot](MovingMarker/screenshot.gif)
 
-[ZeroSetupMap](https://github.com/afarber/android-questions/tree/master/ZeroSetupMap) a Kotlin app using OpenMapView to show map tiles without storage permissions or cache setup:
+[MyMarker](MyMarker/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/ZeroSetupMap/screenshot.gif)
+Legacy Google Maps example adding markers for Hamburg and Kiel, including a custom icon.
 
-[ZoomToLocation](https://github.com/afarber/android-questions/tree/master/ZoomToLocation) a Java app using OpenMapView to zoom to the user's location:
+![MyMarker screenshot](MyMarker/screenshot.png)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/ZoomToLocation/screenshot.gif)
+[NavigationOffset](NavigationOffset/)
+
+Java map example placing the current-location marker near the bottom of a heading-up map using camera bearing and map padding.
+
+![NavigationOffset screenshot](NavigationOffset/screenshot.gif)
+
+[NoOverlayClick](NoOverlayClick/)
+
+Java map example comparing normal overlay clicks with shapes that pass taps through and a marker that consumes its clicks.
+
+![NoOverlayClick screenshot](NoOverlayClick/screenshot.gif)
+
+[OverlayAlpha](OverlayAlpha/)
+
+Java map example adjusting the transparency of a topographic tile overlay.
+
+![OverlayAlpha screenshot](OverlayAlpha/screenshot.gif)
+
+[PickLocation](PickLocation/)
+
+Java map form filling longitude and latitude fields from a tap on OpenMapView.
+
+![PickLocation screenshot](PickLocation/screenshot.gif)
+
+[RemoveMarkers](RemoveMarkers/)
+
+Java map example removing a single marker by tapping it or clearing all markers with a button.
+
+![RemoveMarkers screenshot](RemoveMarkers/screenshot.gif)
+
+[ScalingMarker](ScalingMarker/)
+
+Java map example showing a clickable ground overlay and circle whose sizes are specified in meters.
+
+![ScalingMarker screenshot](ScalingMarker/screenshot.gif)
+
+[SimpleMapStyle](SimpleMapStyle/)
+
+Kotlin map example switching between OpenMapView map styles without an API key.
+
+![SimpleMapStyle screenshot](SimpleMapStyle/screenshot.gif)
+
+[TabRowMap](TabRowMap/)
+
+Compose example keeping an OpenMapView and its camera state beneath a TabRow when switching tabs.
+
+![TabRowMap screenshot](TabRowMap/screenshot.gif)
+
+[TwoPointLine](TwoPointLine/)
+
+Java/XML map example drawing a red polyline between two fixed Berlin coordinates and fitting both endpoints in view.
+
+![TwoPointLine screenshot](TwoPointLine/screenshot.gif)
+
+[WorldWrap](WorldWrap/)
+
+Java map example repeating the world horizontally while preventing vertical repetition.
+
+![WorldWrap screenshot](WorldWrap/screenshot.gif)
+
+[ZeroSetupMap](ZeroSetupMap/)
+
+Kotlin map example displaying OpenStreetMap tiles without storage permissions or explicit cache initialization.
+
+![ZeroSetupMap screenshot](ZeroSetupMap/screenshot.gif)
+
+[ZoomToLocation](ZoomToLocation/)
+
+Java map example moving the camera to the device's location.
+
+![ZoomToLocation screenshot](ZoomToLocation/screenshot.gif)
 
 ## Word
 
-[MyBars](https://github.com/afarber/android-questions/tree/master/MyBars)
-uses CC BY-SA 3.0 licensed SVG-file by
-[Denelson83, Wikimedia Commons](http://en.wikipedia.org/wiki/File:Blank_Scrabble_board_with_coordinates.svg)
+[MyBars](MyBars/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/MyBars/screenshot.png)
+Custom word-game board with a separate tile rack, draggable letter tiles, and board panning and zooming.
 
-[MyDecoder](https://github.com/afarber/android-questions/tree/master/MyDecoder):
+![MyBars screenshot](MyBars/screenshot.png)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/MyDecoder/screenshot.png)
+[MyDecoder](MyDecoder/)
 
-[MyDecoder2](https://github.com/afarber/android-questions/tree/master/MyDecoder2):
+Word-game board experiment decoding individual letter images from sprite sheets with BitmapRegionDecoder.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/MyDecoder2/screenshot.png)
+![MyDecoder screenshot](MyDecoder/screenshot.png)
 
-[MyTiles](https://github.com/afarber/android-questions/tree/master/MyTiles):
+[MyDecoder2](MyDecoder2/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/MyTiles/screenshot.png)
+Variant of the sprite-sheet word board that caches scaled letter bitmaps for small tiles and enlarged drag previews.
 
-[MyTiles2](https://github.com/afarber/android-questions/tree/master/MyTiles2):
+![MyDecoder2 screenshot](MyDecoder2/screenshot.png)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/MyTiles2/screenshot.png)
+[MyMask](MyMask/)
 
-[MyViewPager](https://github.com/afarber/android-questions/tree/master/MyViewPager) a navigation drawer selecting games with Moves, Game, and Chat pages:
+Canvas experiment drawing a bitmap overlay on a word-game board.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/MyViewPager/screenshot.gif)
+![MyMask screenshot](MyMask/screenshot.png)
 
-[PinchZoom](https://github.com/afarber/android-questions/tree/master/PinchZoom) the Matrix usage suggested by [pskink](https://stackoverflow.com/users/2252830/pskink):
+[MyTiles](MyTiles/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/PinchZoom/screenshot.gif)
+Custom word board with draggable letter tiles, grid snapping, and corner masks that respond to neighboring tiles.
 
-[TopPlayers](https://github.com/afarber/android-questions/tree/master/TopPlayers):
+![MyTiles screenshot](MyTiles/screenshot.png)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/TopPlayers/screenshot.png)
+[MyTiles2](MyTiles2/)
 
-[WordGame](https://github.com/afarber/android-questions/tree/master/WordGame) dialogs for choosing a letter, swapping tiles, and finding a word:
+Word-board variant combining grid-snapped tile dragging with constrained scrolling, flinging, and zooming.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/WordGame/screenshot.png)
+![MyTiles2 screenshot](MyTiles2/screenshot.png)
+
+[MyViewPager](MyViewPager/)
+
+Navigation-drawer example selecting games with separate Moves, Game, and Chat pages.
+
+![MyViewPager screenshot](MyViewPager/screenshot.gif)
+
+[PinchZoom](PinchZoom/)
+
+Custom board view demonstrating focal-point zooming, panning, and flinging with a transformation matrix.
+
+![PinchZoom screenshot](PinchZoom/screenshot.gif)
+
+[TopPlayers](TopPlayers/)
+
+Word-game leaderboard loading player rankings and statistics into a list backed by Room and LiveData.
+
+![TopPlayers screenshot](TopPlayers/screenshot.png)
+
+[WordGame](WordGame/)
+
+Dialog examples for choosing a letter, selecting tiles to swap, and entering a word.
+
+![WordGame screenshot](WordGame/screenshot.png)
 
 ## QR Codes and NFC
 
-[NFCStudentTracking](https://github.com/afarber/android-questions/tree/master/NFCStudentTracking) from the book [Professional NFC Application Development for Android](http://www.wrox.com/WileyCDA/WroxTitle/Professional-NFC-Application-Development-for-Android.productCd-1118380096.html):
+[NFC2BT](NFC2BT/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/NFCStudentTracking/screenshot.png)
+Unfinished experiment exchanging Bluetooth addresses and ECDH public keys over NFC for out-of-band pairing.
 
-[QR_BT_Pairing](https://github.com/afarber/android-questions/tree/master/QR_BT_Pairing):
+![NFC2BT screenshot](NFC2BT/screenshot.png)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/QR_BT_Pairing/screenshot.png)
+[NFCStudentTracking](NFCStudentTracking/)
 
-[QREncoder](https://github.com/afarber/android-questions/tree/master/QREncoder) a fixed QR code generated with ZXing:
+NFC student-transport example reading tag data to maintain a group of students and display it in a list.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/QREncoder/screenshot.png)
+![NFCStudentTracking screenshot](NFCStudentTracking/screenshot.png)
 
-[QRScanner](https://github.com/afarber/android-questions/tree/master/QRScanner):
+[QR_BT_Pairing](QR_BT_Pairing/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/QRScanner/screenshot.png)
+Bluetooth device-list example scanning a QR code for an address and asking to pair with the matching device.
 
-[RoundedQRCode](https://github.com/afarber/android-questions/tree/master/RoundedQRCode) - rounded QR code drawn in [Telegram](https://github.com/DrKLO/Telegram):
+![QR_BT_Pairing screenshot](QR_BT_Pairing/screenshot.png)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/RoundedQRCode/screenshot.gif)
+[QREncoder](QREncoder/)
 
-[ZXingTestActivity](https://github.com/afarber/android-questions/tree/master/ZXingTestActivity) (by ZXing project, Apache License):
+Java example generating a fixed QR code with ZXing and displaying it in an ImageView.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/ZXingTestActivity/screenshot.png)
+![QREncoder screenshot](QREncoder/screenshot.png)
+
+[QRScanner](QRScanner/)
+
+Java example launching ZXing Barcode Scanner and displaying a scanned code or cancellation result.
+
+![QRScanner screenshot](QRScanner/screenshot.png)
+
+[RoundedQRCode](RoundedQRCode/)
+
+Java example generating a rounded QR code from entered text using drawing code adapted from Telegram.
+
+![RoundedQRCode screenshot](RoundedQRCode/screenshot.gif)
+
+[ZXingTestActivity](ZXingTestActivity/)
+
+ZXing test application exercising Barcode Scanner intents, result handling, and barcode benchmarks.
+
+![ZXingTestActivity screenshot](ZXingTestActivity/screenshot.png)
 
 ## UI
 
-[BottomSheet1](https://github.com/afarber/android-questions/tree/master/BottomSheet1) persistent and modal Material bottom sheets with state callbacks:
+[BottomSheet1](BottomSheet1/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/BottomSheet1/screenshot.gif)
+Material example showing persistent and modal bottom sheets with state-change callbacks.
 
-[DialogCountDown](https://github.com/afarber/android-questions/tree/master/DialogCountDown) a dialog whose Cancel button counts down before it dismisses automatically:
+![BottomSheet1 screenshot](BottomSheet1/screenshot.gif)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/DialogCountDown/screenshot.gif)
+[DialogCountDown](DialogCountDown/)
 
-[DragAndDraw](https://github.com/afarber/android-questions/tree/master/DragAndDraw):
+Dialog example updating its Cancel button with a countdown before automatically dismissing.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/DragAndDraw/screenshot.png)
+![DialogCountDown screenshot](DialogCountDown/screenshot.gif)
 
-[FastAdapterScrollingIssue](https://github.com/afarber/android-questions/tree/master/FastAdapterScrollingIssue):
+[DragAndDraw](DragAndDraw/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/FastAdapterScrollingIssue/screenshot.png)
+Custom drawing-view example creating translucent rectangles from touch drags alongside sample letter tiles.
 
-[InteractiveChart](https://github.com/afarber/android-questions/tree/master/InteractiveChart) the custom view with overscroller and edge effects from the Google guide [Animate a scroll gesture](https://developer.android.com/develop/ui/views/touch-and-input/gestures/scroll):
+![DragAndDraw screenshot](DragAndDraw/screenshot.png)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/InteractiveChart/screenshot.gif)
+[FastAdapterScrollingIssue](FastAdapterScrollingIssue/)
 
-[MyCoordinator](https://github.com/afarber/android-questions/tree/master/MyCoordinator) a collapsing toolbar with a palette-colored header, RecyclerView, and animated floating button:
+Reproduction project combining a FastAdapter game list with filtering, timestamp sorting, and DiffUtil updates.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/MyCoordinator/screenshot.png)
+![FastAdapterScrollingIssue screenshot](FastAdapterScrollingIssue/screenshot.png)
 
-[MyList](https://github.com/afarber/android-questions/tree/master/MyList):
+[InteractiveChart](InteractiveChart/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/MyList/screenshot.png)
+Custom chart-view example demonstrating animated zoom, scrolling, flinging, and edge effects.
 
-[MyPrefs](https://github.com/afarber/android-questions/tree/master/MyPrefs):
+![InteractiveChart screenshot](InteractiveChart/screenshot.gif)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/MyPrefs/screenshot.png)
+[MyActionBar](MyActionBar/)
 
-[MyScroll](https://github.com/afarber/android-questions/tree/master/MyScroll):
+Legacy framework ActionBar example showing an indeterminate progress indicator while the Activity is resumed.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/MyScroll/screenshot.png)
+![MyActionBar screenshot](MyActionBar/screenshot.png)
 
-[MyStripe](https://github.com/afarber/android-questions/tree/master/MyStripe):
+[MyCoordinator](MyCoordinator/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/MyStripe/screenshot.png)
+Collapsing-toolbar example with a palette-colored header, RecyclerView, and animated floating action button.
 
-[NaviFab](https://github.com/afarber/android-questions/tree/master/NaviFab) a navigation drawer with a circular profile image and account fragments:
+![MyCoordinator screenshot](MyCoordinator/screenshot.png)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/NaviFab/screenshot.png)
+[MyList](MyList/)
 
-[NavigationDrawerExample](https://github.com/afarber/android-questions/tree/master/NavigationDrawerExample):
+Fragment-based list picker preserving the selected item index in SharedPreferences.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/NavigationDrawerExample/screenshot.png)
+![MyList screenshot](MyList/screenshot.png)
 
-[Planets](https://github.com/afarber/android-questions/tree/master/Planets) a RecyclerView list of planets with click feedback:
+[MyPrefs](MyPrefs/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/Planets/screenshot.png)
+Preference-screen example with checkboxes, text fields, sliders, and a custom number-picker dialog.
 
-[RotatedList](https://github.com/afarber/android-questions/tree/master/RotatedList) a fragment-based account list with circular images and click feedback:
+![MyPrefs screenshot](MyPrefs/screenshot.png)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/RotatedList/screenshot.png)
+[MyScroll](MyScroll/)
 
-[Test](https://github.com/afarber/android-questions/tree/master/Test):
+ListView experiment appending one item per second and clearing the list with a button or double-tap.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/Test/screenshot.png)
+![MyScroll screenshot](MyScroll/screenshot.png)
 
-[TestAbs](https://github.com/afarber/android-questions/tree/master/TestAbs):
+[MyStripe](MyStripe/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/TestAbs/screenshot.png)
+Word-board experiment drawing draggable letter tiles from regions of horizontal sprite strips.
 
-[TestScroll](https://github.com/afarber/android-questions/tree/master/TestScroll):
+![MyStripe screenshot](MyStripe/screenshot.png)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/TestScroll/screenshot.png)
+[NaviFab](NaviFab/)
 
-[TestScroll2](https://github.com/afarber/android-questions/tree/master/TestScroll2):
+Navigation-drawer example combining a circular profile image, game entries, and account fragments.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/TestScroll2/screenshot.png)
+![NaviFab screenshot](NaviFab/screenshot.png)
 
-[TestScroll3](https://github.com/afarber/android-questions/tree/master/TestScroll3):
+[NavigationDrawerExample](NavigationDrawerExample/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/TestScroll3/screenshot.png)
+Two-sided navigation-drawer example with a planet list on the left and music actions on the right.
 
-[ValidatePrefs](https://github.com/afarber/android-questions/tree/master/ValidatePrefs) preference validation for an address, username, and password:
+![NavigationDrawerExample screenshot](NavigationDrawerExample/screenshot.png)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/ValidatePrefs/screenshot.png)
+[Planets](Planets/)
+
+RecyclerView example displaying planets with star icons and click feedback.
+
+![Planets screenshot](Planets/screenshot.png)
+
+[RotatedList](RotatedList/)
+
+Fragment-navigation example opening an account-provider list with a circular profile image and click feedback.
+
+![RotatedList screenshot](RotatedList/screenshot.png)
+
+[Test](Test/)
+
+Minimal custom View drawing an eight-by-eight checkerboard.
+
+![Test screenshot](Test/screenshot.png)
+
+[TestAbs](TestAbs/)
+
+Legacy AbsoluteLayout experiment positioning and dragging custom letter-tile child views.
+
+![TestAbs screenshot](TestAbs/screenshot.png)
+
+[TestScroll](TestScroll/)
+
+Custom board-view experiment using canvas translation and scaling for scrolling, flinging, and zooming.
+
+![TestScroll screenshot](TestScroll/screenshot.png)
+
+[TestScroll2](TestScroll2/)
+
+Board-view experiment combining a transformation matrix, tile dragging, and an enlarged drag preview.
+
+![TestScroll2 screenshot](TestScroll2/screenshot.png)
+
+[TestScroll3](TestScroll3/)
+
+Custom board-view experiment combining View scrolling, inertial flinging, and focal-point scaling.
+
+![TestScroll3 screenshot](TestScroll3/screenshot.png)
+
+[ValidatePrefs](ValidatePrefs/)
+
+Preference-validation example checking an address, username, and password before saving changes.
+
+![ValidatePrefs screenshot](ValidatePrefs/screenshot.png)
 
 ## Authentication and Messaging
 
-[GoogleAuth](https://github.com/afarber/android-questions/tree/master/GoogleAuth) requires [app/google-services.json](https://console.developers.google.com) file:
+[GoogleAuth](GoogleAuth/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/GoogleAuth/screenshot.png)
+Multi-provider sign-in example combining Google, Facebook, VK, and Odnoklassniki account flows with local user data.
 
-[HmsSample](https://github.com/afarber/android-questions/tree/master/HmsSample) HUAWEI Mobile Services sample:
+![GoogleAuth screenshot](GoogleAuth/screenshot.png)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/HmsSample/screenshot.png)
+[HmsSample](HmsSample/)
 
-[HuaweiPush](https://github.com/afarber/android-questions/tree/master/HuaweiPush) Retrieve HUAWEI push token:
+Huawei Mobile Services sample with screens for Huawei ID, push messaging, social features, purchases, and games.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/HuaweiPush/screenshot.jpg)
+![HmsSample screenshot](HmsSample/screenshot.png)
 
-[MyLogin](https://github.com/afarber/android-questions/tree/master/MyLogin):
+[HuaweiPush](HuaweiPush/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/MyLogin/screenshot.png)
+Huawei Push Kit example retrieving a push token and displaying it in the app.
 
-[MyNotification](https://github.com/afarber/android-questions/tree/master/MyNotification):
+![HuaweiPush screenshot](HuaweiPush/screenshot.jpg)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/MyNotification/screenshot.png)
+[MyLogin](MyLogin/)
 
-[PingMe](https://github.com/afarber/android-questions/tree/master/PingMe):
+Fragment-based social-login experiment with provider screens and an animated login button.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/PingMe/screenshot.png)
+![MyLogin screenshot](MyLogin/screenshot.png)
 
-[SampleLoginWithAmazonAppForAndroid](https://github.com/afarber/android-questions/tree/master/SampleLoginWithAmazonAppForAndroid) from LWA doc:
+[MyNotification](MyNotification/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/SampleLoginWithAmazonAppForAndroid/screenshot.png)
+Notification-action example simulating commands to open a nearby car or flash its lights.
+
+![MyNotification screenshot](MyNotification/screenshot.png)
+
+[PingMe](PingMe/)
+
+Notification sample scheduling a reminder with editable text and snooze and dismiss actions.
+
+![PingMe screenshot](PingMe/screenshot.png)
+
+[SampleLoginWithAmazonAppForAndroid](SampleLoginWithAmazonAppForAndroid/)
+
+Login with Amazon sample requesting profile access and displaying the signed-in user's details.
+
+![SampleLoginWithAmazonAppForAndroid screenshot](SampleLoginWithAmazonAppForAndroid/screenshot.png)
 
 ## Misc
 
-[AndroidBooks](https://github.com/afarber/android-questions/tree/master/AndroidBooks):
+[AndroidBooks](AndroidBooks/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/AndroidBooks/screenshot.png)
+Book-list and description example adapting fragment navigation to the available screen layout.
 
-[CriminalIntent](https://github.com/afarber/android-questions/tree/master/CriminalIntent):
+![AndroidBooks screenshot](AndroidBooks/screenshot.png)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/CriminalIntent/screenshot.png)
+[CriminalIntent](CriminalIntent/)
 
-[flutter_app](https://github.com/afarber/android-questions/tree/master/flutter_app) can be launched with *flutter run*:
+Fragment-based crime-log exercise with a list, editable crime details, dates, and solved flags.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/flutter_app/screenshot.png)
+![CriminalIntent screenshot](CriminalIntent/screenshot.png)
 
-[GeoQuiz](https://github.com/afarber/android-questions/tree/master/GeoQuiz):
+[flutter_app](flutter_app/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/GeoQuiz/screenshot.png)
+Flutter starter application incrementing an on-screen counter with a floating action button.
 
-[HelloMoon](https://github.com/afarber/android-questions/tree/master/HelloMoon) from the book [Android Programming: The Big Nerd Ranch Guide](https://www.amazon.de/stores/Brian-Hardy/author/B00C9F5OTQ):
+![flutter_app screenshot](flutter_app/screenshot.png)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/HelloMoon/screenshot.png)
+[GeoQuiz](GeoQuiz/)
 
-[MagicApp](https://github.com/afarber/android-questions/tree/master/MagicApp) a Kotlin / Jetpack Compose app mimicking a MAGIC Engineering Menu:
+True-or-false geography quiz with next-question navigation and a separate answer-reveal screen.
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/MagicApp/screenshot.png)
+![GeoQuiz screenshot](GeoQuiz/screenshot.png)
 
-[SwipeBooks](https://github.com/afarber/android-questions/tree/master/SwipeBooks):
+[HelloMoon](HelloMoon/)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/SwipeBooks/screenshot.png)
+Fragment-based media example playing and stopping the recording of Neil Armstrong's moon landing.
 
-[Vehicles](https://github.com/afarber/android-questions/tree/master/Vehicles) for Droidcon 2019 challenge:
+![HelloMoon screenshot](HelloMoon/screenshot.png)
 
-![screenshot](https://raw.github.com/afarber/android-questions/master/Vehicles/screenshot.png)
+[MagicApp](MagicApp/)
 
+Compose engineering-menu demo with live connectivity information and configurable HTTP, WebSocket, and MQTT diagnostics.
+
+![MagicApp screenshot](MagicApp/screenshot.png)
+
+[SwipeBooks](SwipeBooks/)
+
+ViewPager example displaying three swipeable placeholder sections using fragments.
+
+![SwipeBooks screenshot](SwipeBooks/screenshot.png)
+
+[Vehicles](Vehicles/)
+
+Droidcon 2019 challenge sample fetching vehicle positions, storing them in Room, and showing them on Google Maps.
+
+![Vehicles screenshot](Vehicles/screenshot.png)
 
 ---
 

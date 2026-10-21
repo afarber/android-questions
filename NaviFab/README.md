@@ -1,6 +1,10 @@
 # NaviFab
 
-A navigation drawer with a circular profile image and account fragments.
+Navigation-drawer example combining a circular profile image, game entries, and account fragments.
+
+## Details
+
+The drawer header displays a profile and an account button. Opening accounts replaces the main content with a social-provider list, whose items navigate to another demonstration fragment.
 
 ## Build and run
 
@@ -13,6 +17,6 @@ From this directory:
 ./gradlew :app:installDebug
 ```
 
-The original emulator-skin screenshot is intentionally preserved.
+## Screenshot
 
-![Screenshot](screenshot.png)
+![NaviFab screenshot](screenshot.png)

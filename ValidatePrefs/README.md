@@ -1,6 +1,10 @@
 # ValidatePrefs
 
-Preference validation for an address, username, and password.
+Preference-validation example checking an address, username, and password before saving changes.
+
+## Details
+
+A PreferenceActivity validates proposed EditTextPreference values. Empty values are rejected, the address is parsed as a URI, and usernames and passwords must contain more than four characters.
 
 ## Build and run
 
@@ -13,6 +17,6 @@ From this directory:
 ./gradlew :app:installDebug
 ```
 
-The original emulator-skin screenshot is intentionally preserved.
+## Screenshot
 
-![Screenshot](screenshot.png)
+![ValidatePrefs screenshot](screenshot.png)

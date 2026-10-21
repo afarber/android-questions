@@ -1,6 +1,10 @@
 # Planets
 
-A RecyclerView list of planets with click feedback.
+RecyclerView example displaying planets with star icons and click feedback.
+
+## Details
+
+LinearLayoutManager lays out the planet names. Each ViewHolder handles its row click and displays a toast naming the selected planet.
 
 ## Build and run
 
@@ -13,6 +17,6 @@ From this directory:
 ./gradlew :app:installDebug
 ```
 
-The original emulator-skin screenshot is intentionally preserved.
+## Screenshot
 
-![Screenshot](screenshot.png)
+![Planets screenshot](screenshot.png)

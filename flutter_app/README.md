@@ -1,16 +1,20 @@
 # flutter_app
 
-A new Flutter application.
+Flutter starter application incrementing an on-screen counter with a floating action button.
 
-## Getting Started
+## Details
 
-This project is a starting point for a Flutter application.
+lib/main.dart contains a MaterialApp and a StatefulWidget holding the counter. Each button tap calls setState to increment the value and rebuild its text display; the project retains its original Flutter and Dart configuration.
 
-A few resources to get you started if this is your first Flutter project:
+## Build and run
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Use a Flutter SDK compatible with the constraints in [pubspec.yaml](pubspec.yaml). From this directory:
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+```sh
+flutter pub get
+flutter run
+```
+
+## Screenshot
+
+![flutter_app screenshot](screenshot.png)

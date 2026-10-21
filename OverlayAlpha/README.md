@@ -1,8 +1,15 @@
-OverlayAlpha
-============
+# OverlayAlpha
 
-Java app using [OpenMapView](https://github.com/afarber/OpenMapView) to draw an OpenTopoMap layer over the OpenStreetMap base map and change its alpha with a SeekBar.
+Java map example adjusting the transparency of a topographic tile overlay.
+
+## Details
+
+The overlay is drawn above the base map, and its alpha changes independently. This demonstrates blending a second tile layer with the map underneath it.
+
+Map rendering uses [OpenMapView](https://github.com/afarber/OpenMapView).
 
 Answer to the Stack Overflow question [OSMDroid: how do I set a fixed layer alpha?](https://stackoverflow.com/q/77871221).
 
-![screenshot](screenshot.gif)
+## Screenshot
+
+![OverlayAlpha screenshot](screenshot.gif)

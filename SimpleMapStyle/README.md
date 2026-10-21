@@ -1,8 +1,15 @@
-SimpleMapStyle
-==============
+# SimpleMapStyle
 
-Kotlin app using [OpenMapView](https://github.com/afarber/OpenMapView) to switch between the standard OpenStreetMap tiles and other map styles, which need no API key.
+Kotlin map example switching between OpenMapView map styles without an API key.
+
+## Details
+
+The style selection changes the tile presentation while retaining the map interaction. The example focuses on styles available without configuring a provider API key.
+
+Map rendering uses [OpenMapView](https://github.com/afarber/OpenMapView).
 
 Answer to the Stack Overflow question [I can't display map tiles other than MAPNIK with osmdroid, I want a simplier map](https://stackoverflow.com/q/78547714).
 
-![screenshot](screenshot.gif)
+## Screenshot
+
+![SimpleMapStyle screenshot](screenshot.gif)

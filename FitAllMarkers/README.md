@@ -1,8 +1,15 @@
-FitAllMarkers
-=============
+# FitAllMarkers
 
-Java app with [OpenMapView](https://github.com/afarber/OpenMapView), which zooms the map to show all markers with `CameraUpdateFactory.newLatLngBounds()`. It starts with two waypoints, and each new waypoint makes the camera zoom out to show all of them.
+Java map example fitting the camera to a collection of markers with newLatLngBounds.
+
+## Details
+
+The camera bounds are calculated from the marker coordinates. This demonstrates showing the whole collection in one view instead of selecting a fixed camera center and zoom.
+
+Map rendering uses [OpenMapView](https://github.com/afarber/OpenMapView).
 
 Answer to the Stack Overflow question [OSMDROID - Zoom to show all markers](https://stackoverflow.com/q/68643747).
 
-![screenshot](screenshot.gif)
+## Screenshot
+
+![FitAllMarkers screenshot](screenshot.gif)

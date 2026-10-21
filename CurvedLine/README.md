@@ -1,14 +1,19 @@
-CurvedLine
-==========
+# CurvedLine
 
-Kotlin / Jetpack Compose app with [OpenMapView](https://github.com/afarber/OpenMapView), which draws curved lines between two draggable markers:
+Compose map comparing a straight line, a geodesic, and a Bezier arc between two draggable markers.
 
-- Gray: a straight reference line on the map.
-- Blue: a great-circle path using `Polyline(geodesic = true)`.
-- Orange: a dashed polyline through the sampled points of a quadratic Bezier arc.
+## Details
 
-Drag either marker to reshape all three lines. The Bezier arc is a visual curve computed in latitude/longitude degrees; the geodesic follows the shortest path on a sphere.
+Dragging either endpoint updates all three paths. The gray path is a straight reference, the blue path follows a great circle, and the dashed orange path samples a quadratic Bezier curve in latitude/longitude coordinates.
+
+Map rendering uses [OpenMapView](https://github.com/afarber/OpenMapView).
 
 Answer to the Stack Overflow question [How to draw a curved line between two coordinates using Osmdroid library](https://stackoverflow.com/q/54502178).
 
-![screenshot](screenshot.gif)
+## Recording
+
+After installing the app on the 1408×792 Automotive emulator, run `./record-gif.sh` from this directory. The script uses ADB, FFmpeg, and `scripts/capture-gif.sh` from an OpenMapView checkout. Set `ANDROID_SERIAL` and `OPENMAPVIEW_DIR` when their defaults do not match your setup.
+
+## Screenshot
+
+![CurvedLine screenshot](screenshot.gif)

@@ -1,6 +1,10 @@
 # QREncoder
 
-A fixed QR code generated with ZXing.
+Java example generating a fixed QR code with ZXing and displaying it in an ImageView.
+
+## Details
+
+QRCodeWriter encodes a string into a BitMatrix, which is copied into a 400-by-400 bitmap. The sample has no editing controls, so its original static screenshot is retained.
 
 ## Build and run
 
@@ -13,6 +17,6 @@ From this directory:
 ./gradlew :app:installDebug
 ```
 
-The static screenshot is retained because the sample generates a fixed image.
+## Screenshot
 
-![Screenshot](screenshot.png)
+![QREncoder screenshot](screenshot.png)

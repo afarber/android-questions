@@ -1,6 +1,12 @@
 # PinchZoom
 
-A custom board view demonstrating focal-point zooming, panning, and flinging.
+Custom board view demonstrating focal-point zooming, panning, and flinging with a transformation matrix.
+
+## Details
+
+GestureDetector and ScaleGestureDetector forward gestures to Board. Double-tapping runs a four-second scale animation, and the view saves and restores the board matrix across recreation.
+
+The Matrix approach follows a suggestion by [pskink](https://stackoverflow.com/users/2252830/pskink).
 
 ## Build and run
 
@@ -23,4 +29,6 @@ After installing the app on `Automotive_1408p_landscape` (1408×792):
 
 Set `ANDROID_SERIAL` to select the emulator and `OPENMAPVIEW_DIR` if the OpenMapView checkout is elsewhere. The script uses its `scripts/capture-gif.sh` helper and FFmpeg, crops the system bars, and keeps `screenshot.gif` below 4 MiB. The original PNG is retained.
 
-![Screenshot](screenshot.gif)
+## Screenshot
+
+![PinchZoom screenshot](screenshot.gif)

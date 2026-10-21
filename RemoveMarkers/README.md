@@ -1,8 +1,15 @@
-RemoveMarkers
-=============
+# RemoveMarkers
 
-Java app with [OpenMapView](https://github.com/afarber/OpenMapView), which keeps its markers in a `Map` by id. A tap on a marker removes just that marker with `marker.remove()`, the buttons remove all markers with `clearMarkers()` and add them again.
+Java map example removing a single marker by tapping it or clearing all markers with a button.
+
+## Details
+
+Individual marker clicks remove only the selected item. Remove all clears the collection, and Add all restores the example markers so the interaction can be repeated.
+
+Map rendering uses [OpenMapView](https://github.com/afarber/OpenMapView).
 
 Answer to the Stack Overflow question [How to remove Markers from Osmdroid Map](https://stackoverflow.com/q/54574152).
 
-![screenshot](screenshot.gif)
+## Screenshot
+
+![RemoveMarkers screenshot](screenshot.gif)

@@ -1,8 +1,19 @@
-LabelMarker
-===========
+# LabelMarker
 
-Kotlin / Jetpack Compose app with [OpenMapView](https://github.com/afarber/OpenMapView), drawing an orange hollow pin with an always-visible, rounded two-line label. **Change label** redraws the text through a `MarkerComposable` key while the pin stays at the same coordinate. The complete icon is anchored at the orange tip.
+Compose map example drawing a hollow pin with a rounded two-line label that can change at runtime.
+
+## Details
+
+The custom marker combines the pin and its label. Updating the text demonstrates keeping a multi-line label attached to its geographic point while the map is panned.
+
+Map rendering uses [OpenMapView](https://github.com/afarber/OpenMapView).
 
 Answer to the Stack Overflow question [How to make such a custom marker? osmdroid](https://stackoverflow.com/q/45898293).
 
-![Changing a two-line marker label and panning the map](screenshot.gif)
+## Recording
+
+After installing the app on the 1408×792 Automotive emulator, run `./record-gif.sh` from this directory. The script uses ADB, FFmpeg, and `scripts/capture-gif.sh` from an OpenMapView checkout. Set `ANDROID_SERIAL` and `OPENMAPVIEW_DIR` when their defaults do not match your setup.
+
+## Screenshot
+
+![LabelMarker screenshot](screenshot.gif)

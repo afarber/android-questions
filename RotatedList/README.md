@@ -1,6 +1,10 @@
 # RotatedList
 
-A fragment-based account list with circular images and click feedback.
+Fragment-navigation example opening an account-provider list with a circular profile image and click feedback.
+
+## Details
+
+The main fragment's account button opens a ListFragment after a short delay. Provider rows use icons and checked-list styling, and a tap shows the selected provider's name.
 
 ## Build and run
 
@@ -13,6 +17,6 @@ From this directory:
 ./gradlew :app:installDebug
 ```
 
-The original emulator-skin screenshot is intentionally preserved.
+## Screenshot
 
-![Screenshot](screenshot.png)
+![RotatedList screenshot](screenshot.png)

@@ -1,19 +1,19 @@
-CustomZoom
-==========
+# CustomZoom
 
-Java / XML app with [OpenMapView](https://github.com/afarber/OpenMapView), showing custom zoom buttons with the built-in controls and zoom gestures disabled. Map panning remains enabled.
+Java map example with custom buttons that animate zoom while built-in zoom controls and zoom gestures are disabled.
 
-Each button has an explicit click listener:
+## Details
 
-```java
-map.getUiSettings().setZoomControlsEnabled(false);
-map.getUiSettings().setZoomGesturesEnabled(false);
-zoomIn.setOnClickListener(v -> map.animateCamera(CameraUpdateFactory.zoomIn()));
-zoomOut.setOnClickListener(v -> map.animateCamera(CameraUpdateFactory.zoomOut()));
-```
+Panning stays enabled. The map starts over Brandenburg Gate at zoom 13 with limits of 12 and 14; camera idle and cancellation callbacks restore button state after animation or interruption.
 
-The map starts at zoom 13 over Berlin's Brandenburg Gate, with limits of 12 and 14. A readout follows the animated camera zoom. Buttons are disabled during camera movement, and the corresponding button stays disabled at each zoom limit. Idle and cancellation listeners restore the controls even when a map touch interrupts a zoom animation.
+Map rendering uses [OpenMapView](https://github.com/afarber/OpenMapView).
 
 Answer to the Stack Overflow question [Custom zoom buttons for osmdroid](https://stackoverflow.com/q/46925456).
 
-![Custom buttons animating the map zoom](screenshot.gif)
+## Recording
+
+After installing the app on the 1408×792 Automotive emulator, run `./record-gif.sh` from this directory. The script uses ADB, FFmpeg, and `scripts/capture-gif.sh` from an OpenMapView checkout. Set `ANDROID_SERIAL` and `OPENMAPVIEW_DIR` when their defaults do not match your setup.
+
+## Screenshot
+
+![CustomZoom screenshot](screenshot.gif)

@@ -1,8 +1,15 @@
-FitRoute
-========
+# FitRoute
 
-Java app with [OpenMapView](https://github.com/afarber/OpenMapView), which zooms the map to a car route with `newLatLngBounds()`, called in `onCreate()` before the map has a size. The map applies the update after its layout, so no first layout listener is needed. The button animates back to the whole route.
+Java map example fitting a route with newLatLngBounds before the map has completed layout.
+
+## Details
+
+The example exercises camera fitting around the route during initial setup and provides a Fit route button to repeat the operation. It illustrates handling the layout timing of bounds-based camera updates.
+
+Map rendering uses [OpenMapView](https://github.com/afarber/OpenMapView).
 
 Answer to the Stack Overflow question [osmdroid zoomToBoundingBox not zooming to boundingBox coordinates](https://stackoverflow.com/q/57258078).
 
-![screenshot](screenshot.gif)
+## Screenshot
+
+![FitRoute screenshot](screenshot.gif)

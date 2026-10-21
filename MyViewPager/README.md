@@ -1,6 +1,10 @@
 # MyViewPager
 
-A navigation drawer selecting games with Moves, Game, and Chat pages.
+Navigation-drawer example selecting games with separate Moves, Game, and Chat pages.
+
+## Details
+
+Selecting a game replaces the content with a fragment containing a ViewPager. Swipes move between its three pages, and the chat toolbar action switches between the game and chat pages.
 
 ## Build and run
 
@@ -23,4 +27,6 @@ After installing the app on `Automotive_1408p_landscape` (1408×792):
 
 Set `ANDROID_SERIAL` to select the emulator and `OPENMAPVIEW_DIR` if the OpenMapView checkout is elsewhere. Python 3 is also required to find the drawer row. The script uses its `scripts/capture-gif.sh` helper and FFmpeg, crops the system bars, and keeps `screenshot.gif` below 4 MiB. The original PNG is retained.
 
-![Screenshot](screenshot.gif)
+## Screenshot
+
+![MyViewPager screenshot](screenshot.gif)

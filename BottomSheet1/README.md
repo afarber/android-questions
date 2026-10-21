@@ -1,6 +1,10 @@
 # BottomSheet1
 
-Persistent and modal Material bottom sheets with state callbacks.
+Material example showing persistent and modal bottom sheets with state-change callbacks.
+
+## Details
+
+Buttons expand or collapse the persistent sheet and open the modal sheet. State callbacks update the drag label and button text, while sheet items provide click feedback.
 
 ## Build and run
 
@@ -23,4 +27,6 @@ After installing the app on `Automotive_1408p_landscape` (1408×792):
 
 Set `ANDROID_SERIAL` to select the emulator and `OPENMAPVIEW_DIR` if the OpenMapView checkout is elsewhere. The script uses its `scripts/capture-gif.sh` helper and FFmpeg, crops the system bars, and keeps `screenshot.gif` below 4 MiB. The original PNG is retained.
 
-![Screenshot](screenshot.gif)
+## Screenshot
+
+![BottomSheet1 screenshot](screenshot.gif)

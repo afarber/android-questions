@@ -1,8 +1,15 @@
-MapInScroll
-===========
+# MapInScroll
 
-Java app with [OpenMapView](https://github.com/afarber/OpenMapView) at the end of a `ScrollView` with a form. A drag that starts on the map pans the map, a drag that starts on the form scrolls the page, without any touch listener. The visible bounding box is shown under the map.
+Java form with an OpenMapView inside a ScrollView, allowing map drags to pan while form drags scroll the page.
+
+## Details
+
+The form collects an area name, notes, and type before the map. Touch handling lets the embedded map receive its own drag gestures while the surrounding form retains vertical scrolling.
+
+Map rendering uses [OpenMapView](https://github.com/afarber/OpenMapView).
 
 Answer to the Stack Overflow question [Block Mapview from Scrollview interaction Android](https://stackoverflow.com/q/73364416).
 
-![screenshot](screenshot.gif)
+## Screenshot
+
+![MapInScroll screenshot](screenshot.gif)

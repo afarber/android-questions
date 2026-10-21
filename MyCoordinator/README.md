@@ -1,6 +1,10 @@
 # MyCoordinator
 
-A collapsing toolbar with a palette-colored header, RecyclerView, and animated floating button.
+Collapsing-toolbar example with a palette-colored header, RecyclerView, and animated floating action button.
+
+## Details
+
+Palette extracts a muted color from the header image for the collapsing scrim. List items show click feedback, and a Handler periodically toggles the floating button's animation.
 
 ## Build and run
 
@@ -13,6 +17,6 @@ From this directory:
 ./gradlew :app:installDebug
 ```
 
-The original emulator-skin screenshot is intentionally preserved.
+## Screenshot
 
-![Screenshot](screenshot.png)
+![MyCoordinator screenshot](screenshot.png)

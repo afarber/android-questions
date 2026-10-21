@@ -1,6 +1,12 @@
 # RoundedQRCode
 
-A rounded QR code generated from text using drawing code adapted from Telegram.
+Java example generating a rounded QR code from entered text using drawing code adapted from Telegram.
+
+## Details
+
+Submitting nonempty text generates a new ZXing QR matrix, applies the rounded drawing treatment, and updates the image. The input is cleared and the keyboard is hidden after submission.
+
+Rounded QR drawing code is adapted from the [Telegram project](https://github.com/DrKLO/Telegram); existing source notices are retained.
 
 ## Build and run
 
@@ -23,6 +29,6 @@ After installing the app on `Automotive_1408p_landscape` (1408×792):
 
 Set `ANDROID_SERIAL` to select the emulator and `OPENMAPVIEW_DIR` if the OpenMapView checkout is elsewhere. The script uses its `scripts/capture-gif.sh` helper and FFmpeg, crops the system bars, and keeps `screenshot.gif` below 4 MiB. The original PNG is retained.
 
-See the [Telegram project](https://github.com/DrKLO/Telegram) for the original rounded QR drawing code.
+## Screenshot
 
-![Screenshot](screenshot.gif)
+![RoundedQRCode screenshot](screenshot.gif)

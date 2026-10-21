@@ -1,8 +1,15 @@
-WorldWrap
-=========
+# WorldWrap
 
-Java app with [OpenMapView](https://github.com/afarber/OpenMapView), which repeats the world only horizontally, like Google Maps: the map can be panned around the world, a flight from Beijing to San Francisco continues over the Pacific, and there is no copy of the world above the north pole or below the south pole. A button limits the camera target with `setLatLngBoundsForCameraTarget`, so panning stops just before the date line.
+Java map example repeating the world horizontally while preventing vertical repetition.
+
+## Details
+
+Panning across the longitude boundary reveals another horizontal copy of the world. The example uses OpenMapView to demonstrate this wrapping behavior at the map edges.
+
+Map rendering uses [OpenMapView](https://github.com/afarber/OpenMapView).
 
 Answer to the Stack Overflow question [OSMDroid Showing more than one maps and infinite scroll](https://stackoverflow.com/q/44943357).
 
-![screenshot](screenshot.gif)
+## Screenshot
+
+![WorldWrap screenshot](screenshot.gif)

@@ -1,6 +1,12 @@
 # InteractiveChart
 
-The Android custom chart sample with animated zoom, panning, flinging, and edge effects.
+Custom chart-view example demonstrating animated zoom, scrolling, flinging, and edge effects.
+
+## Details
+
+Gesture detectors convert touch movement into chart viewport changes. The overflow menu also offers explicit zoom and pan actions, and the view draws axes and a sample curve on its canvas.
+
+Based on the Android guide [Animate a scroll gesture](https://developer.android.com/develop/ui/views/touch-and-input/gestures/scroll). Original Android Open Source Project Apache 2.0 notices remain in the source.
 
 ## Build and run
 
@@ -23,6 +29,6 @@ After installing the app on `Automotive_1408p_landscape` (1408×792):
 
 Set `ANDROID_SERIAL` to select the emulator and `OPENMAPVIEW_DIR` if the OpenMapView checkout is elsewhere. The script uses its `scripts/capture-gif.sh` helper and FFmpeg, crops the system bars, and keeps `screenshot.gif` below 4 MiB. The original PNG is retained.
 
-The original Android Open Source Project Apache 2.0 notices remain in the source files.
+## Screenshot
 
-![Screenshot](screenshot.gif)
+![InteractiveChart screenshot](screenshot.gif)

@@ -1,6 +1,10 @@
 # DialogCountDown
 
-A dialog whose Cancel button counts down before it dismisses automatically.
+Dialog example updating its Cancel button with a countdown before automatically dismissing.
+
+## Details
+
+A Handler updates the button once per second during the 20-second countdown. The fragment removes its pending callback when stopped, and the dialog can also be dismissed through its buttons.
 
 ## Build and run
 
@@ -23,4 +27,6 @@ After installing the app on `Automotive_1408p_landscape` (1408×792):
 
 Set `ANDROID_SERIAL` to select the emulator and `OPENMAPVIEW_DIR` if the OpenMapView checkout is elsewhere. The script uses its `scripts/capture-gif.sh` helper and FFmpeg, crops the system bars, and keeps `screenshot.gif` below 4 MiB. The original PNG is retained.
 
-![Screenshot](screenshot.gif)
+## Screenshot
+
+![DialogCountDown screenshot](screenshot.gif)
