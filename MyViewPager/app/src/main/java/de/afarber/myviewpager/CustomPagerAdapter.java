@@ -1,8 +1,8 @@
 package de.afarber.myviewpager;
 
-import android.support.v4.app.FragmentManager;
-//import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.FragmentManager;
+//import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 public class CustomPagerAdapter extends FragmentStatePagerAdapter {
     private int mGid;
@@ -18,7 +18,7 @@ public class CustomPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
-    public android.support.v4.app.Fragment getItem(int position) {
+    public androidx.fragment.app.Fragment getItem(int position) {
         switch (position) {
             case 0: return MovesFragment.newInstance(mGid);
             case 2: return ChatFragment.newInstance(mGid);

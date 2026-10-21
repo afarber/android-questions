@@ -40,32 +40,22 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_zoom_in:
-                mGraphView.zoomIn();
-                return true;
-
-            case R.id.action_zoom_out:
-                mGraphView.zoomOut();
-                return true;
-
-            case R.id.action_pan_left:
-                mGraphView.panLeft();
-                return true;
-
-            case R.id.action_pan_right:
-                mGraphView.panRight();
-                return true;
-
-            case R.id.action_pan_up:
-                mGraphView.panUp();
-                return true;
-
-            case R.id.action_pan_down:
-                mGraphView.panDown();
-                return true;
+        int id = item.getItemId();
+        if (id == R.id.action_zoom_in) {
+            mGraphView.zoomIn();
+        } else if (id == R.id.action_zoom_out) {
+            mGraphView.zoomOut();
+        } else if (id == R.id.action_pan_left) {
+            mGraphView.panLeft();
+        } else if (id == R.id.action_pan_right) {
+            mGraphView.panRight();
+        } else if (id == R.id.action_pan_up) {
+            mGraphView.panUp();
+        } else if (id == R.id.action_pan_down) {
+            mGraphView.panDown();
+        } else {
+            return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 }

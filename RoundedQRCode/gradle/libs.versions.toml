@@ -1,0 +1,23 @@
+[versions]
+agp = "9.4.1"
+appcompat = "1.8.0"
+material = "1.13.0"
+constraintlayout = "2.2.1"
+zxing = "3.5.4"
+junit = "4.13.2"
+androidx-junit = "1.2.1"
+espresso = "3.6.1"
+desugar = "2.1.5"
+
+[libraries]
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
+constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
+zxing = { module = "com.google.zxing:core", version.ref = "zxing" }
+junit = { module = "junit:junit", version.ref = "junit" }
+androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-junit" }
+espresso = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
+desugar = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }

@@ -1,0 +1,19 @@
+[versions]
+agp = "9.4.1"
+appcompat = "1.8.0"
+material = "1.13.0"
+recyclerview = "1.4.0"
+palette = "1.0.0"
+androidx-junit = "1.2.1"
+espresso = "3.6.1"
+
+[libraries]
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
+recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
+palette = { module = "androidx.palette:palette", version.ref = "palette" }
+androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-junit" }
+espresso = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }

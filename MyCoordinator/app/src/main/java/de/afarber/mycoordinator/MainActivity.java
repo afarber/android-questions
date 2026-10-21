@@ -4,13 +4,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.palette.graphics.Palette;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
             "Item 020"
     };
 
-    private int mMutedColor = R.attr.colorPrimary;
+    private int mMutedColor;
     private Handler mHandler = new Handler();
     private CollapsingToolbarLayout mCollapsingToolbar;
     private RecyclerView mRecyclerView;
@@ -83,12 +83,16 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         mCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout);
         mCollapsingToolbar.setTitle("Flexible space");
 
+        android.util.TypedValue primaryColor = new android.util.TypedValue();
+        getTheme().resolveAttribute(androidx.appcompat.R.attr.colorPrimary, primaryColor, true);
+        mMutedColor = primaryColor.data;
+
         ImageView header = (ImageView) findViewById(R.id.header_image_view);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.header);
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(Palette palette) {
-                mMutedColor = palette.getMutedColor(R.attr.colorPrimary);
+                mMutedColor = palette.getMutedColor(mMutedColor);
                 mCollapsingToolbar.setContentScrimColor(mMutedColor);
             }
         });

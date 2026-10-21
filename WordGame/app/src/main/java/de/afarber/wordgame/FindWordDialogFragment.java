@@ -4,8 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+import androidx.appcompat.app.AlertDialog;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
@@ -70,10 +70,14 @@ public class FindWordDialogFragment extends DialogFragment {
             }
         });
 
+        android.widget.FrameLayout content = new android.widget.FrameLayout(requireContext());
+        content.setPadding(16, 16, 16, 16);
+        content.addView(editText);
+
         return new AlertDialog.Builder(getContext())
             .setIcon(R.mipmap.ic_launcher)
             .setTitle(R.string.find_word_title)
-            .setView(editText, 16, 16, 16, 16)
+            .setView(content)
             .setPositiveButton(R.string.find_word_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

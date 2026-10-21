@@ -3,11 +3,11 @@ package de.afarber.navifab;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.navigation.NavigationView;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -88,15 +88,16 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        mGivenTextView = (TextView) findViewById(R.id.given);
-        mPlaceTextView = (TextView) findViewById(R.id.place);
-        mPhotoImageView = (CircleImageView) findViewById(R.id.photo);
+        View header = mLeftDrawer.getHeaderView(0);
+        mGivenTextView = header.findViewById(R.id.given);
+        mPlaceTextView = header.findViewById(R.id.place);
+        mPhotoImageView = header.findViewById(R.id.photo);
 
         mGivenTextView.setText("Alexander");
         mPlaceTextView.setText("Bochum");
         mPhotoImageView.setImageResource(R.drawable.farber);
 
-        mAccount = (ImageButton) findViewById(R.id.account);
+        mAccount = header.findViewById(R.id.account);
         // workaround, can not use android:onclick in headerLayout
         mAccount.setOnClickListener(new View.OnClickListener() {
             @Override

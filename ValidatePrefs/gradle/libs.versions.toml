@@ -1,0 +1,19 @@
+[versions]
+agp = "9.4.1"
+appcompat = "1.8.0"
+material = "1.13.0"
+core = "1.18.0"
+junit = "4.13.2"
+androidx-junit = "1.2.1"
+espresso = "3.6.1"
+
+[libraries]
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
+core = { module = "androidx.core:core", version.ref = "core" }
+junit = { module = "junit:junit", version.ref = "junit" }
+androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-junit" }
+espresso = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
