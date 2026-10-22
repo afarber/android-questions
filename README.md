@@ -2,6 +2,13 @@
 
 The files are public domain - unless there is a different note (by their respective authors) on the top of some files.
 
+- [Maps](#maps)
+- [Word](#word)
+- [QR Codes and NFC](#qr-codes-and-nfc)
+- [UI](#ui)
+- [Authentication and Messaging](#authentication-and-messaging)
+- [Misc](#misc)
+
 ## Maps
 
 [ComposeMap](ComposeMap/)
@@ -183,6 +190,12 @@ Compose example keeping an OpenMapView and its camera state beneath a TabRow whe
 Java/XML map example drawing a red polyline between two fixed Berlin coordinates and fitting both endpoints in view.
 
 ![TwoPointLine screenshot](TwoPointLine/screenshot.gif)
+
+[Vehicles](Vehicles/)
+
+Droidcon 2019 challenge sample fetching vehicle positions, storing them in Room, and showing them on Google Maps.
+
+![Vehicles screenshot](Vehicles/screenshot.png)
 
 [WorldWrap](WorldWrap/)
 
@@ -523,12 +536,6 @@ Compose engineering-menu demo with live connectivity information and configurabl
 ViewPager example displaying three swipeable placeholder sections using fragments.
 
 ![SwipeBooks screenshot](SwipeBooks/screenshot.png)
-
-[Vehicles](Vehicles/)
-
-Droidcon 2019 challenge sample fetching vehicle positions, storing them in Room, and showing them on Google Maps.
-
-![Vehicles screenshot](Vehicles/screenshot.png)
 
 ---
 
