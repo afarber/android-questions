@@ -1,0 +1,9 @@
+[versions]
+agp = "9.4.1"
+appcompat = "1.8.0"
+
+[libraries]
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }

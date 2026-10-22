@@ -508,7 +508,7 @@ True-or-false geography quiz with next-question navigation and a separate answer
 
 [HelloMoon](HelloMoon/)
 
-Fragment-based media example playing and stopping the recording of Neil Armstrong's moon landing.
+Fragment layout example showing the moon-landing image with Play and Stop controls.
 
 ![HelloMoon screenshot](HelloMoon/screenshot.png)
 

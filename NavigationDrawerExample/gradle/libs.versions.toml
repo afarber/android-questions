@@ -1,0 +1,15 @@
+[versions]
+agp = "9.4.1"
+appcompat = "1.8.0"
+fragment = "1.8.9"
+drawerlayout = "1.2.0"
+localbroadcastmanager = "1.1.0"
+
+[libraries]
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+fragment = { module = "androidx.fragment:fragment", version.ref = "fragment" }
+drawerlayout = { module = "androidx.drawerlayout:drawerlayout", version.ref = "drawerlayout" }
+localbroadcastmanager = { module = "androidx.localbroadcastmanager:localbroadcastmanager", version.ref = "localbroadcastmanager" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
