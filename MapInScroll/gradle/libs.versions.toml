@@ -2,7 +2,7 @@
 agp = "9.4.1"
 appcompat = "1.8.0"
 constraintlayout = "2.2.1"
-openmapview = "0.26.0"
+openmapview = "0.29.1"
 
 [libraries]
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }

@@ -21,7 +21,7 @@ Kotlin/Compose example wrapping OpenMapView in a reusable OpenStreetMap composab
 
 Kotlin/Compose example displaying OpenMapView without an XML layout or explicit User-Agent configuration.
 
-![ComposeOnlyMap screenshot](ComposeOnlyMap/screenshot.png)
+![ComposeOnlyMap screenshot](ComposeOnlyMap/screenshot.gif)
 
 [CurvedLine](CurvedLine/)
 
